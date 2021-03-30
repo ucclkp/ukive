@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TitleBarLayout
+    width="fill"
+    height="fill">
+
+    <TabView
+        id="@+id/tv_example_table"
+        width="fill"
+        height="fill" />
+
+    <TabStripView
+        id="@+id/tsv_example_strip"
+        width="fill"
+        height="auto" />
+
+</TitleBarLayout>

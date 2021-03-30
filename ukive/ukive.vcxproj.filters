@@ -1,0 +1,1481 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="window\window.cpp">
+      <Filter>window</Filter>
+    </ClCompile>
+    <ClCompile Include="window\window_manager.cpp">
+      <Filter>window</Filter>
+    </ClCompile>
+    <ClCompile Include="event\input_event.cpp">
+      <Filter>event</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\canvas.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\color.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="system\clipboard_manager.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
+    <ClCompile Include="animation\scroller.cpp">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="animation\view_animator.cpp">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="text\editable.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClCompile Include="text\text_blink.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClCompile Include="text\text_key_listener.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClCompile Include="text\span\inline_object_span.cpp">
+      <Filter>text\span</Filter>
+    </ClCompile>
+    <ClCompile Include="text\span\interactable_span.cpp">
+      <Filter>text\span</Filter>
+    </ClCompile>
+    <ClCompile Include="text\span\span.cpp">
+      <Filter>text\span</Filter>
+    </ClCompile>
+    <ClCompile Include="menu\context_menu.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="menu\inner_window.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="menu\menu_impl.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="menu\menu_item_impl.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="views\button.cpp">
+      <Filter>views</Filter>
+    </ClCompile>
+    <ClCompile Include="views\image_view.cpp">
+      <Filter>views</Filter>
+    </ClCompile>
+    <ClCompile Include="views\scroll_view.cpp">
+      <Filter>views</Filter>
+    </ClCompile>
+    <ClCompile Include="views\seek_bar.cpp">
+      <Filter>views</Filter>
+    </ClCompile>
+    <ClCompile Include="views\switch_view.cpp">
+      <Filter>views</Filter>
+    </ClCompile>
+    <ClCompile Include="views\text_view.cpp">
+      <Filter>views</Filter>
+    </ClCompile>
+    <ClCompile Include="views\view.cpp">
+      <Filter>views</Filter>
+    </ClCompile>
+    <ClCompile Include="views\layout\restraint_layout.cpp">
+      <Filter>views\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="views\list\list_view.cpp">
+      <Filter>views\list</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\cursor.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="views\list\overlay_scroll_bar.cpp">
+      <Filter>views\list</Filter>
+    </ClCompile>
+    <ClCompile Include="views\layout\root_layout.cpp">
+      <Filter>views\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="system\time_utils.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\paint.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\render_node\render_node.cpp">
+      <Filter>graphics\render_node</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\render_node\render_tree.cpp">
+      <Filter>graphics\render_node</Filter>
+    </ClCompile>
+    <ClCompile Include="views\layout\non_client_layout.cpp">
+      <Filter>views\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="views\check_box.cpp">
+      <Filter>views</Filter>
+    </ClCompile>
+    <ClCompile Include="views\list\grid_list_layouter.cpp">
+      <Filter>views\list</Filter>
+    </ClCompile>
+    <ClCompile Include="views\list\linear_list_layouter.cpp">
+      <Filter>views\list</Filter>
+    </ClCompile>
+    <ClCompile Include="views\chart_view.cpp">
+      <Filter>views</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\layout_instantiator.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\dimension_utils.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="animation\timer.cpp">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="animation\interpolator.cpp">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="animation\animation_director.cpp">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="animation\animator.cpp">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="event\velocity_calculator.cpp">
+      <Filter>event</Filter>
+    </ClCompile>
+    <ClCompile Include="views\list\list_layouter.cpp">
+      <Filter>views\list</Filter>
+    </ClCompile>
+    <ClCompile Include="views\list\flow_list_layouter.cpp">
+      <Filter>views\list</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\effects\shadow_effect.cpp">
+      <Filter>graphics\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="text\input_method_manager.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClCompile Include="text\win\tsf_editor.cpp">
+      <Filter>text\win</Filter>
+    </ClCompile>
+    <ClCompile Include="text\win\tsf_input_connection.cpp">
+      <Filter>text\win</Filter>
+    </ClCompile>
+    <ClCompile Include="text\win\tsf_manager.cpp">
+      <Filter>text\win</Filter>
+    </ClCompile>
+    <ClCompile Include="text\text_layout.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClCompile Include="text\win\dw_text_layout.cpp">
+      <Filter>text\win</Filter>
+    </ClCompile>
+    <ClCompile Include="text\win\dw_text_drawing_effect.cpp">
+      <Filter>text\win</Filter>
+    </ClCompile>
+    <ClCompile Include="text\win\dw_text_renderer.cpp">
+      <Filter>text\win</Filter>
+    </ClCompile>
+    <ClCompile Include="system\win\dynamic_windows_api.cpp">
+      <Filter>system\win</Filter>
+    </ClCompile>
+    <ClCompile Include="system\win\qpc_service.cpp">
+      <Filter>system\win</Filter>
+    </ClCompile>
+    <ClCompile Include="system\win\reg_manager.cpp">
+      <Filter>system\win</Filter>
+    </ClCompile>
+    <ClCompile Include="system\win\win10_version.cpp">
+      <Filter>system\win</Filter>
+    </ClCompile>
+    <ClCompile Include="window\window_native.cpp">
+      <Filter>window</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\direct3d\effects\shadow_effect_dx.cpp">
+      <Filter>graphics\win\direct3d\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\direct3d\space.cpp">
+      <Filter>graphics\win\direct3d</Filter>
+    </ClCompile>
+    <ClCompile Include="text\win\dwrite\text_analysis_sink.cpp">
+      <Filter>text\win\dwrite</Filter>
+    </ClCompile>
+    <ClCompile Include="text\win\dwrite\text_analysis_source.cpp">
+      <Filter>text\win\dwrite</Filter>
+    </ClCompile>
+    <ClCompile Include="window\win\window_class_manager.cpp">
+      <Filter>window\win</Filter>
+    </ClCompile>
+    <ClCompile Include="window\win\window_impl_win.cpp">
+      <Filter>window\win</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\matrix_2x3_f.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\path.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\path_win.cpp">
+      <Filter>graphics\win</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\directx_manager.cpp">
+      <Filter>graphics\win</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\offscreen_buffer_win.cpp">
+      <Filter>graphics\win</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\cyro_buffer.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="text\win\word_breaker.cpp">
+      <Filter>text\win</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\cyro_renderer_d2d.cpp">
+      <Filter>graphics\win</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\cyro_renderer.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="event\keyboard.cpp">
+      <Filter>event</Filter>
+    </ClCompile>
+    <ClCompile Include="views\tab\tab_strip_view.cpp">
+      <Filter>views\tab</Filter>
+    </ClCompile>
+    <ClCompile Include="views\tab\tab_view.cpp">
+      <Filter>views\tab</Filter>
+    </ClCompile>
+    <ClCompile Include="page\page.cpp">
+      <Filter>page</Filter>
+    </ClCompile>
+    <ClCompile Include="system\dialog\win\open_file_dialog_win.cpp">
+      <Filter>system\dialog\win</Filter>
+    </ClCompile>
+    <ClCompile Include="system\dialog\open_file_dialog.cpp">
+      <Filter>system\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="views\title_bar\circle_color_button.cpp">
+      <Filter>views\title_bar</Filter>
+    </ClCompile>
+    <ClCompile Include="text\text_breaker.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\graphic_device_manager.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="system\win\ui_utils_win.cpp">
+      <Filter>system\win</Filter>
+    </ClCompile>
+    <ClCompile Include="event\input_consts.cpp">
+      <Filter>event</Filter>
+    </ClCompile>
+    <ClCompile Include="animation\bezier_curve.cpp">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\window_buffer_win7.cpp">
+      <Filter>graphics\win</Filter>
+    </ClCompile>
+    <ClCompile Include="app\win\application_win.cpp">
+      <Filter>app\win</Filter>
+    </ClCompile>
+    <ClCompile Include="app\application.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\cyro_render_target_d2d.cpp">
+      <Filter>graphics\win</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\resource_manager.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\images\image.cpp">
+      <Filter>graphics\images</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\images\lc_image.cpp">
+      <Filter>graphics\images</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\images\lc_image_factory.cpp">
+      <Filter>graphics\images</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\images\lc_image_factory_win.cpp">
+      <Filter>graphics\win\images</Filter>
+    </ClCompile>
+    <ClCompile Include="window\context.cpp">
+      <Filter>window</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\display.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\display_win.cpp">
+      <Filter>graphics\win</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\vsync_provider.cpp">
+      <Filter>graphics\win</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\dimension.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="animation\view_animator_params.cpp">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="window\context_impl.cpp">
+      <Filter>window</Filter>
+    </ClCompile>
+    <ClCompile Include="diagnostic\statistic_drawer.cpp">
+      <Filter>diagnostic</Filter>
+    </ClCompile>
+    <ClCompile Include="diagnostic\ui_tracker.cpp">
+      <Filter>diagnostic</Filter>
+    </ClCompile>
+    <ClCompile Include="diagnostic\grid_navigator.cpp">
+      <Filter>diagnostic</Filter>
+    </ClCompile>
+    <ClCompile Include="diagnostic\grid_view.cpp">
+      <Filter>diagnostic</Filter>
+    </ClCompile>
+    <ClCompile Include="system\ipc\pipe_client_win.cpp">
+      <Filter>system\ipc</Filter>
+    </ClCompile>
+    <ClCompile Include="system\ipc\pipe_server_win.cpp">
+      <Filter>system\ipc</Filter>
+    </ClCompile>
+    <ClCompile Include="views\radio_button.cpp">
+      <Filter>views</Filter>
+    </ClCompile>
+    <ClCompile Include="views\progress_bar.cpp">
+      <Filter>views</Filter>
+    </ClCompile>
+    <ClCompile Include="event\focus_manager.cpp">
+      <Filter>event</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\dirty_region.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="text\span\text_attributes_span.cpp">
+      <Filter>text\span</Filter>
+    </ClCompile>
+    <ClCompile Include="text\span\effect_span.cpp">
+      <Filter>text\span</Filter>
+    </ClCompile>
+    <ClCompile Include="text\win\dw_inline_object.cpp">
+      <Filter>text\win</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\gpu_context_d3d.cpp">
+      <Filter>graphics\win\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\gpu_device_d3d.cpp">
+      <Filter>graphics\win\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\gpu_buffer_d3d.cpp">
+      <Filter>graphics\win\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\gpu_depth_stencil_d3d.cpp">
+      <Filter>graphics\win\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\gpu_depth_stencil_state_d3d.cpp">
+      <Filter>graphics\win\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\gpu_input_layout_d3d.cpp">
+      <Filter>graphics\win\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\gpu_rasterizer_state_d3d.cpp">
+      <Filter>graphics\win\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\gpu_render_target_d3d.cpp">
+      <Filter>graphics\win\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\gpu_sampler_state_d3d.cpp">
+      <Filter>graphics\win\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\gpu_shader_d3d.cpp">
+      <Filter>graphics\win\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\gpu_texture_d3d.cpp">
+      <Filter>graphics\win\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\gpu_shader_resource_d3d.cpp">
+      <Filter>graphics\win\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\gpu_d3d_utils.cpp">
+      <Filter>graphics\win\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\direct3d\assist_configure.cpp">
+      <Filter>graphics\win\direct3d</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\direct3d\model_configure.cpp">
+      <Filter>graphics\win\direct3d</Filter>
+    </ClCompile>
+    <ClCompile Include="views\space3d_view.cpp">
+      <Filter>views</Filter>
+    </ClCompile>
+    <ClCompile Include="event\win\keyboard_win.cpp">
+      <Filter>event\win</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\3d\camera.cpp">
+      <Filter>graphics\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\3d\drawing_object_manager.cpp">
+      <Filter>graphics\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\3d\graph_creator.cpp">
+      <Filter>graphics\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\3d\scene.cpp">
+      <Filter>graphics\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="system\win\win_app_bar.cpp">
+      <Filter>system\win</Filter>
+    </ClCompile>
+    <ClCompile Include="views\title_bar\default_title_bar.cpp">
+      <Filter>views\title_bar</Filter>
+    </ClCompile>
+    <ClCompile Include="views\title_bar\title_bar.cpp">
+      <Filter>views\title_bar</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\images\image_options.cpp">
+      <Filter>graphics\images</Filter>
+    </ClCompile>
+    <ClCompile Include="window\window_dpi_utils.cpp">
+      <Filter>window</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\images\image_options_d2d_utils.cpp">
+      <Filter>graphics\win\images</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\window_buffer_win.cpp">
+      <Filter>graphics\win</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\images\image_frame.cpp">
+      <Filter>graphics\images</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\images\lc_image_frame.cpp">
+      <Filter>graphics\images</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\images\image_frame_win.cpp">
+      <Filter>graphics\win\images</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\images\lc_image_frame_win.cpp">
+      <Filter>graphics\win\images</Filter>
+    </ClCompile>
+    <ClCompile Include="views\layout_info\restraint_layout_info.cpp">
+      <Filter>views\layout_info</Filter>
+    </ClCompile>
+    <ClCompile Include="elements\chessboard_element.cpp">
+      <Filter>elements</Filter>
+    </ClCompile>
+    <ClCompile Include="elements\color_element.cpp">
+      <Filter>elements</Filter>
+    </ClCompile>
+    <ClCompile Include="elements\element.cpp">
+      <Filter>elements</Filter>
+    </ClCompile>
+    <ClCompile Include="elements\image_element.cpp">
+      <Filter>elements</Filter>
+    </ClCompile>
+    <ClCompile Include="elements\multi_element.cpp">
+      <Filter>elements</Filter>
+    </ClCompile>
+    <ClCompile Include="elements\ripple_element.cpp">
+      <Filter>elements</Filter>
+    </ClCompile>
+    <ClCompile Include="elements\shape_element.cpp">
+      <Filter>elements</Filter>
+    </ClCompile>
+    <ClCompile Include="elements\texteditor_element.cpp">
+      <Filter>elements</Filter>
+    </ClCompile>
+    <ClCompile Include="window\win\frame\native_non_client_frame.cpp">
+      <Filter>window\win\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="window\win\frame\custom_non_client_frame.cpp">
+      <Filter>window\win\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="window\win\frame\custom_non_client_frame_win7.cpp">
+      <Filter>window\win\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="views\layout\layout_view.cpp">
+      <Filter>views\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="views\layout\title_bar_layout.cpp">
+      <Filter>views\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="views\layout\simple_layout.cpp">
+      <Filter>views\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="views\layout\sequence_layout.cpp">
+      <Filter>views\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="views\layout_info\sequence_layout_info.cpp">
+      <Filter>views\layout_info</Filter>
+    </ClCompile>
+    <ClCompile Include="views\combo_box\combo_box.cpp">
+      <Filter>views\combo_box</Filter>
+    </ClCompile>
+    <ClCompile Include="views\size_info.cpp">
+      <Filter>views</Filter>
+    </ClCompile>
+    <ClCompile Include="text\text_action_menu.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClCompile Include="text\input_method_connection.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\gpu_buffer_metal.cpp">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\gpu_context_metal.cpp">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\gpu_depth_stencil_metal.cpp">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\gpu_depth_stencil_state_metal.cpp">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\gpu_device_metal.cpp">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\gpu_input_layout_metal.cpp">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\gpu_metal_utils.cpp">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\gpu_rasterizer_state_metal.cpp">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\gpu_render_target_metal.cpp">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\gpu_sampler_state_metal.cpp">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\gpu_shader_metal.cpp">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\gpu_shader_resource_metal.cpp">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\gpu_texture_metal.cpp">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="views\layout_info\list_layout_info.cpp">
+      <Filter>views\layout_info</Filter>
+    </ClCompile>
+    <ClCompile Include="views\combo_box\combo_list_source.cpp">
+      <Filter>views\combo_box</Filter>
+    </ClCompile>
+    <ClCompile Include="views\tree\tree_source.cpp">
+      <Filter>views\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="views\list\list_source.cpp">
+      <Filter>views\list</Filter>
+    </ClCompile>
+    <ClCompile Include="views\tree\tree_node.cpp">
+      <Filter>views\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="views\tree\tree_node_button.cpp">
+      <Filter>views\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="views\list\list_columns.cpp">
+      <Filter>views\list</Filter>
+    </ClCompile>
+    <ClCompile Include="views\list\list_item.cpp">
+      <Filter>views\list</Filter>
+    </ClCompile>
+    <ClCompile Include="views\list\list_item_recycler.cpp">
+      <Filter>views\list</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="window\window.h">
+      <Filter>window</Filter>
+    </ClInclude>
+    <ClInclude Include="window\window_manager.h">
+      <Filter>window</Filter>
+    </ClInclude>
+    <ClInclude Include="event\input_event.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\canvas.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\color.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="system\clipboard_manager.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="animation\scroller.h">
+      <Filter>animation</Filter>
+    </ClInclude>
+    <ClInclude Include="animation\view_animator.h">
+      <Filter>animation</Filter>
+    </ClInclude>
+    <ClInclude Include="text\editable.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="text\text_blink.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="text\text_key_listener.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="text\span\inline_object_span.h">
+      <Filter>text\span</Filter>
+    </ClInclude>
+    <ClInclude Include="text\span\interactable_span.h">
+      <Filter>text\span</Filter>
+    </ClInclude>
+    <ClInclude Include="text\span\span.h">
+      <Filter>text\span</Filter>
+    </ClInclude>
+    <ClInclude Include="menu\context_menu.h">
+      <Filter>menu</Filter>
+    </ClInclude>
+    <ClInclude Include="menu\context_menu_callback.h">
+      <Filter>menu</Filter>
+    </ClInclude>
+    <ClInclude Include="menu\inner_window.h">
+      <Filter>menu</Filter>
+    </ClInclude>
+    <ClInclude Include="menu\menu.h">
+      <Filter>menu</Filter>
+    </ClInclude>
+    <ClInclude Include="menu\menu_callback.h">
+      <Filter>menu</Filter>
+    </ClInclude>
+    <ClInclude Include="menu\menu_impl.h">
+      <Filter>menu</Filter>
+    </ClInclude>
+    <ClInclude Include="menu\menu_item.h">
+      <Filter>menu</Filter>
+    </ClInclude>
+    <ClInclude Include="menu\menu_item_impl.h">
+      <Filter>menu</Filter>
+    </ClInclude>
+    <ClInclude Include="views\button.h">
+      <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="views\click_listener.h">
+      <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="views\image_view.h">
+      <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="views\scroll_view.h">
+      <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="views\seek_bar.h">
+      <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="views\seek_value_changed_listener.h">
+      <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="views\switch_view.h">
+      <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="views\text_view.h">
+      <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="views\view.h">
+      <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="views\layout\restraint_layout.h">
+      <Filter>views\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="views\list\list_view.h">
+      <Filter>views\list</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\cursor.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="views\list\overlay_scroll_bar.h">
+      <Filter>views\list</Filter>
+    </ClInclude>
+    <ClInclude Include="views\layout\root_layout.h">
+      <Filter>views\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="system\time_utils.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\paint.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\render_node\render_node.h">
+      <Filter>graphics\render_node</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\render_node\render_tree.h">
+      <Filter>graphics\render_node</Filter>
+    </ClInclude>
+    <ClInclude Include="views\layout\non_client_layout.h">
+      <Filter>views\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="views\check_box.h">
+      <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="views\list\list_layouter.h">
+      <Filter>views\list</Filter>
+    </ClInclude>
+    <ClInclude Include="views\list\grid_list_layouter.h">
+      <Filter>views\list</Filter>
+    </ClInclude>
+    <ClInclude Include="views\list\linear_list_layouter.h">
+      <Filter>views\list</Filter>
+    </ClInclude>
+    <ClInclude Include="window\window_listener.h">
+      <Filter>window</Filter>
+    </ClInclude>
+    <ClInclude Include="views\chart_view.h">
+      <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\layout_instantiator.h">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\dimension_utils.h">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="animation\timer.h">
+      <Filter>animation</Filter>
+    </ClInclude>
+    <ClInclude Include="animation\interpolator.h">
+      <Filter>animation</Filter>
+    </ClInclude>
+    <ClInclude Include="animation\animation_director.h">
+      <Filter>animation</Filter>
+    </ClInclude>
+    <ClInclude Include="animation\animator.h">
+      <Filter>animation</Filter>
+    </ClInclude>
+    <ClInclude Include="event\velocity_calculator.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="views\list\flow_list_layouter.h">
+      <Filter>views\list</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\cyro_buffer.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\cyro_renderer.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\effects\cyro_effect.h">
+      <Filter>graphics\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\effects\shadow_effect.h">
+      <Filter>graphics\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="text\input_method_manager.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="text\win\tsf_editor.h">
+      <Filter>text\win</Filter>
+    </ClInclude>
+    <ClInclude Include="text\win\tsf_input_connection.h">
+      <Filter>text\win</Filter>
+    </ClInclude>
+    <ClInclude Include="text\win\tsf_manager.h">
+      <Filter>text\win</Filter>
+    </ClInclude>
+    <ClInclude Include="text\text_layout.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="text\win\dw_text_layout.h">
+      <Filter>text\win</Filter>
+    </ClInclude>
+    <ClInclude Include="text\win\dw_text_drawing_effect.h">
+      <Filter>text\win</Filter>
+    </ClInclude>
+    <ClInclude Include="text\win\dw_text_renderer.h">
+      <Filter>text\win</Filter>
+    </ClInclude>
+    <ClInclude Include="system\win\com_ptr.hpp">
+      <Filter>system\win</Filter>
+    </ClInclude>
+    <ClInclude Include="system\win\dynamic_windows_api.h">
+      <Filter>system\win</Filter>
+    </ClInclude>
+    <ClInclude Include="system\win\qpc_service.h">
+      <Filter>system\win</Filter>
+    </ClInclude>
+    <ClInclude Include="system\win\reg_manager.h">
+      <Filter>system\win</Filter>
+    </ClInclude>
+    <ClInclude Include="system\win\win10_version.h">
+      <Filter>system\win</Filter>
+    </ClInclude>
+    <ClInclude Include="window\window_native.h">
+      <Filter>window</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\direct3d\effects\shadow_effect_dx.h">
+      <Filter>graphics\win\direct3d\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\direct3d\space.h">
+      <Filter>graphics\win\direct3d</Filter>
+    </ClInclude>
+    <ClInclude Include="text\win\dwrite\text_analysis_sink.h">
+      <Filter>text\win\dwrite</Filter>
+    </ClInclude>
+    <ClInclude Include="text\win\dwrite\text_analysis_source.h">
+      <Filter>text\win\dwrite</Filter>
+    </ClInclude>
+    <ClInclude Include="window\win\frame\non_client_frame.h">
+      <Filter>window\win\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="window\win\window_class_manager.h">
+      <Filter>window\win</Filter>
+    </ClInclude>
+    <ClInclude Include="window\win\window_impl_win.h">
+      <Filter>window\win</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\matrix_2x3_f.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\path.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\path_win.h">
+      <Filter>graphics\win</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\directx_manager.h">
+      <Filter>graphics\win</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\offscreen_buffer_win.h">
+      <Filter>graphics\win</Filter>
+    </ClInclude>
+    <ClInclude Include="text\win\word_breaker.h">
+      <Filter>text\win</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\cyro_renderer_d2d.h">
+      <Filter>graphics\win</Filter>
+    </ClInclude>
+    <ClInclude Include="event\keyboard.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="system\theme_info.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="views\tab\tab_strip_view.h">
+      <Filter>views\tab</Filter>
+    </ClInclude>
+    <ClInclude Include="views\tab\tab_view.h">
+      <Filter>views\tab</Filter>
+    </ClInclude>
+    <ClInclude Include="views\tab\tab_strip_selection_listener.h">
+      <Filter>views\tab</Filter>
+    </ClInclude>
+    <ClInclude Include="views\tab\tab_selection_listener.h">
+      <Filter>views\tab</Filter>
+    </ClInclude>
+    <ClInclude Include="page\page.h">
+      <Filter>page</Filter>
+    </ClInclude>
+    <ClInclude Include="system\dialog\win\open_file_dialog_win.h">
+      <Filter>system\dialog\win</Filter>
+    </ClInclude>
+    <ClInclude Include="system\dialog\open_file_dialog.h">
+      <Filter>system\dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="views\title_bar\circle_color_button.h">
+      <Filter>views\title_bar</Filter>
+    </ClInclude>
+    <ClInclude Include="window\purpose.h">
+      <Filter>window</Filter>
+    </ClInclude>
+    <ClInclude Include="text\text_breaker.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="text\text_input_client.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\graphic_device_manager.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="system\win\ui_utils_win.h">
+      <Filter>system\win</Filter>
+    </ClInclude>
+    <ClInclude Include="system\ui_utils.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="event\input_consts.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="animation\bezier_curve.h">
+      <Filter>animation</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\window_buffer_win7.h">
+      <Filter>graphics\win</Filter>
+    </ClInclude>
+    <ClInclude Include="app\application.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\cyro_render_target.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\cyro_render_target_d2d.h">
+      <Filter>graphics\win</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\resource_manager.h">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\images\image.h">
+      <Filter>graphics\images</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\size.hpp">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\images\lc_image.h">
+      <Filter>graphics\images</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\images\lc_image_factory.h">
+      <Filter>graphics\images</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\images\image_data.h">
+      <Filter>graphics\images</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\images\lc_image_factory_win.h">
+      <Filter>graphics\win\images</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\point.hpp">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\rect.hpp">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\graphics_utils.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="window\context.h">
+      <Filter>window</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\display.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\display_win.h">
+      <Filter>graphics\win</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\vsync_provider.h">
+      <Filter>graphics\win</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\attributes.h">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\dimension.h">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="animation\view_animator_params.h">
+      <Filter>animation</Filter>
+    </ClInclude>
+    <ClInclude Include="window\context_impl.h">
+      <Filter>window</Filter>
+    </ClInclude>
+    <ClInclude Include="window\context_changed_listener.h">
+      <Filter>window</Filter>
+    </ClInclude>
+    <ClInclude Include="diagnostic\statistic_drawer.h">
+      <Filter>diagnostic</Filter>
+    </ClInclude>
+    <ClInclude Include="diagnostic\ui_tracker.h">
+      <Filter>diagnostic</Filter>
+    </ClInclude>
+    <ClInclude Include="diagnostic\grid_navigator.h">
+      <Filter>diagnostic</Filter>
+    </ClInclude>
+    <ClInclude Include="diagnostic\grid_view.h">
+      <Filter>diagnostic</Filter>
+    </ClInclude>
+    <ClInclude Include="system\ipc\pipe_client_win.h">
+      <Filter>system\ipc</Filter>
+    </ClInclude>
+    <ClInclude Include="system\ipc\pipe_server_win.h">
+      <Filter>system\ipc</Filter>
+    </ClInclude>
+    <ClInclude Include="views\check_listener.h">
+      <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="views\radio_button.h">
+      <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="views\radio_selected_listener.h">
+      <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="views\progress_bar.h">
+      <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="event\focus_manager.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\dirty_region.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="text\span\text_attributes_span.h">
+      <Filter>text\span</Filter>
+    </ClInclude>
+    <ClInclude Include="text\span\effect_span.h">
+      <Filter>text\span</Filter>
+    </ClInclude>
+    <ClInclude Include="text\range.hpp">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="text\win\dw_inline_object.h">
+      <Filter>text\win</Filter>
+    </ClInclude>
+    <ClInclude Include="text\text_custom_drawing.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="text\text_inline_object.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gpu\gpu_buffer.h">
+      <Filter>graphics\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gpu\gpu_context.h">
+      <Filter>graphics\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gpu\gpu_device.h">
+      <Filter>graphics\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gpu\gpu_shader.h">
+      <Filter>graphics\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gpu\gpu_input_layout.h">
+      <Filter>graphics\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gpu\gpu_depth_stencil.h">
+      <Filter>graphics\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gpu\gpu_depth_stencil_state.h">
+      <Filter>graphics\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gpu\gpu_rasterizer_state.h">
+      <Filter>graphics\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gpu\gpu_render_target.h">
+      <Filter>graphics\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gpu\gpu_sampler_state.h">
+      <Filter>graphics\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gpu\gpu_shader_resource.h">
+      <Filter>graphics\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gpu\gpu_texture.h">
+      <Filter>graphics\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gpu\gpu_resource.h">
+      <Filter>graphics\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gpu\gpu_types.h">
+      <Filter>graphics\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\gpu_context_d3d.h">
+      <Filter>graphics\win\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\gpu_device_d3d.h">
+      <Filter>graphics\win\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\gpu_buffer_d3d.h">
+      <Filter>graphics\win\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\gpu_depth_stencil_d3d.h">
+      <Filter>graphics\win\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\gpu_depth_stencil_state_d3d.h">
+      <Filter>graphics\win\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\gpu_input_layout_d3d.h">
+      <Filter>graphics\win\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\gpu_rasterizer_state_d3d.h">
+      <Filter>graphics\win\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\gpu_render_target_d3d.h">
+      <Filter>graphics\win\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\gpu_sampler_state_d3d.h">
+      <Filter>graphics\win\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\gpu_shader_d3d.h">
+      <Filter>graphics\win\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\gpu_texture_d3d.h">
+      <Filter>graphics\win\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\gpu_shader_resource_d3d.h">
+      <Filter>graphics\win\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\gpu_d3d_utils.h">
+      <Filter>graphics\win\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\direct3d\assist_configure.h">
+      <Filter>graphics\win\direct3d</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\direct3d\model_configure.h">
+      <Filter>graphics\win\direct3d</Filter>
+    </ClInclude>
+    <ClInclude Include="views\space3d_view.h">
+      <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\vector2.hpp">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\3d\point.hpp">
+      <Filter>graphics\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\3d\vector.hpp">
+      <Filter>graphics\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\3d\matrix.hpp">
+      <Filter>graphics\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\3d\geocal.hpp">
+      <Filter>graphics\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\3d\camera.h">
+      <Filter>graphics\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\3d\drawing_object_manager.h">
+      <Filter>graphics\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\3d\graph_creator.h">
+      <Filter>graphics\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\3d\scene.h">
+      <Filter>graphics\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="system\win\win_app_bar.h">
+      <Filter>system\win</Filter>
+    </ClInclude>
+    <ClInclude Include="views\title_bar\default_title_bar.h">
+      <Filter>views\title_bar</Filter>
+    </ClInclude>
+    <ClInclude Include="views\title_bar\title_bar.h">
+      <Filter>views\title_bar</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\graphic_context_change_listener.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\images\image_options.h">
+      <Filter>graphics\images</Filter>
+    </ClInclude>
+    <ClInclude Include="window\window_dpi_utils.h">
+      <Filter>window</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\images\image_options_d2d_utils.h">
+      <Filter>graphics\win\images</Filter>
+    </ClInclude>
+    <ClInclude Include="window\window_native_delegate.h">
+      <Filter>window</Filter>
+    </ClInclude>
+    <ClInclude Include="window\window_types.h">
+      <Filter>window</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\window_buffer_win.h">
+      <Filter>graphics\win</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\images\image_frame.h">
+      <Filter>graphics\images</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\images\lc_image_frame.h">
+      <Filter>graphics\images</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\images\image_frame_win.h">
+      <Filter>graphics\win\images</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\images\lc_image_frame_win.h">
+      <Filter>graphics\win\images</Filter>
+    </ClInclude>
+    <ClInclude Include="views\layout_info\layout_info.h">
+      <Filter>views\layout_info</Filter>
+    </ClInclude>
+    <ClInclude Include="views\layout_info\restraint_layout_info.h">
+      <Filter>views\layout_info</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\padding.hpp">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="elements\chessboard_element.h">
+      <Filter>elements</Filter>
+    </ClInclude>
+    <ClInclude Include="elements\color_element.h">
+      <Filter>elements</Filter>
+    </ClInclude>
+    <ClInclude Include="elements\element.h">
+      <Filter>elements</Filter>
+    </ClInclude>
+    <ClInclude Include="elements\image_element.h">
+      <Filter>elements</Filter>
+    </ClInclude>
+    <ClInclude Include="elements\multi_element.h">
+      <Filter>elements</Filter>
+    </ClInclude>
+    <ClInclude Include="elements\ripple_element.h">
+      <Filter>elements</Filter>
+    </ClInclude>
+    <ClInclude Include="elements\shape_element.h">
+      <Filter>elements</Filter>
+    </ClInclude>
+    <ClInclude Include="elements\texteditor_element.h">
+      <Filter>elements</Filter>
+    </ClInclude>
+    <ClInclude Include="window\win\frame\native_non_client_frame.h">
+      <Filter>window\win\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="window\win\frame\custom_non_client_frame.h">
+      <Filter>window\win\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="window\win\frame\custom_non_client_frame_win7.h">
+      <Filter>window\win\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="views\layout\layout_view.h">
+      <Filter>views\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="views\layout\title_bar_layout.h">
+      <Filter>views\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="views\layout\simple_layout.h">
+      <Filter>views\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="views\layout\sequence_layout.h">
+      <Filter>views\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="views\layout_info\sequence_layout_info.h">
+      <Filter>views\layout_info</Filter>
+    </ClInclude>
+    <ClInclude Include="views\combo_box\combo_box.h">
+      <Filter>views\combo_box</Filter>
+    </ClInclude>
+    <ClInclude Include="views\size_info.h">
+      <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="views\input_event_delegate.h">
+      <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="text\text_action_menu_callback.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="text\text_action_menu.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="text\input_method_connection.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\gpu_buffer_metal.h">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\gpu_context_metal.h">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\gpu_depth_stencil_metal.h">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\gpu_depth_stencil_state_metal.h">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\gpu_device_metal.h">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\gpu_input_layout_metal.h">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\gpu_metal_utils.h">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\gpu_rasterizer_state_metal.h">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\gpu_render_target_metal.h">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\gpu_sampler_state_metal.h">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\gpu_shader_metal.h">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\gpu_shader_resource_metal.h">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\gpu_texture_metal.h">
+      <Filter>graphics\mac\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="views\layout_info\list_layout_info.h">
+      <Filter>views\layout_info</Filter>
+    </ClInclude>
+    <ClInclude Include="views\combo_box\combo_list_source.h">
+      <Filter>views\combo_box</Filter>
+    </ClInclude>
+    <ClInclude Include="views\tree\tree_source.h">
+      <Filter>views\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="views\list\list_source.h">
+      <Filter>views\list</Filter>
+    </ClInclude>
+    <ClInclude Include="views\tree\tree_node.h">
+      <Filter>views\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="views\tree\tree_node_button.h">
+      <Filter>views\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="views\list\list_columns.h">
+      <Filter>views\list</Filter>
+    </ClInclude>
+    <ClInclude Include="views\list\list_item.h">
+      <Filter>views\list</Filter>
+    </ClInclude>
+    <ClInclude Include="views\list\list_item_recycler.h">
+      <Filter>views\list</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="window">
+      <UniqueIdentifier>{b51f6f19-acfb-4465-b930-f86996d5b4d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics">
+      <UniqueIdentifier>{be442fbf-17c4-4caa-9ad5-cec076079454}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="event">
+      <UniqueIdentifier>{318bf901-c727-4dd7-9ed4-151b56553dbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system">
+      <UniqueIdentifier>{840d816d-a64c-4941-b163-e544af4db81d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="animation">
+      <UniqueIdentifier>{98b3ec74-0764-431c-861c-8e0a081530d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{9c0be27a-aad4-47b8-93ef-aee4385a394a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text\span">
+      <UniqueIdentifier>{b978b27c-0cfd-4429-b48c-d6fc889a25bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="menu">
+      <UniqueIdentifier>{7e6ed82a-a573-4670-888e-9639681958e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="views">
+      <UniqueIdentifier>{1798bf0b-9516-4d89-9e2e-59ac0a2a3828}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="views\layout">
+      <UniqueIdentifier>{cb19e414-e8be-45fe-be55-a3e2d191edc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="views\list">
+      <UniqueIdentifier>{fe9efc35-eb80-43ea-8d5e-2974a5d8dd4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\render_node">
+      <UniqueIdentifier>{bbfb6918-d6e4-4428-8a70-2e63ad352cc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="views\title_bar">
+      <UniqueIdentifier>{58d30b33-09a0-48c8-9859-84fef49669e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{74a72a50-3993-40f9-bdd2-940dc88aa351}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\effects">
+      <UniqueIdentifier>{fdd0f737-22c2-4432-b7e6-7424e54b8679}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text\win">
+      <UniqueIdentifier>{f5e94da4-f3d5-42ae-92c4-e64bb7701f41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\win">
+      <UniqueIdentifier>{5de0bfd2-a39d-4ba2-ac26-345bb6581854}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system\win">
+      <UniqueIdentifier>{3aa5556b-3593-4bb0-af40-a9a06333fd00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\win\direct3d">
+      <UniqueIdentifier>{5f424b39-00ad-4bff-95c0-c23bea57f6df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\win\direct3d\effects">
+      <UniqueIdentifier>{0b2ac1fb-9f81-49db-8f95-9c16490293f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\win\direct3d\hlsl">
+      <UniqueIdentifier>{613c7614-09ba-406a-8a0d-2b41965040bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text\win\dwrite">
+      <UniqueIdentifier>{e67a551b-fca1-46c8-ae07-05ffc74c19be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="window\win">
+      <UniqueIdentifier>{9bee336f-adb7-48c8-a213-24eb2776265d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="window\win\frame">
+      <UniqueIdentifier>{2091cf4f-efb5-41fb-91e5-4403508214d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="views\tree">
+      <UniqueIdentifier>{e110b6cd-cc8c-4c8e-9267-c2678b4dab9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="views\tab">
+      <UniqueIdentifier>{6454c9e1-3259-4870-b47c-815fe4ac02b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="page">
+      <UniqueIdentifier>{9d965bda-e6f4-4012-a4aa-4ef1dd100719}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system\dialog">
+      <UniqueIdentifier>{e2ba084e-44dd-4fc4-9174-3e8715ca4621}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system\dialog\win">
+      <UniqueIdentifier>{70ac8b21-b272-48a3-b3ad-716f4e5472bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="app">
+      <UniqueIdentifier>{8deb09bf-4736-4750-8471-b3d5fc2001d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="app\win">
+      <UniqueIdentifier>{829e3bdb-3fbf-4617-8680-83987ee05010}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\win\images">
+      <UniqueIdentifier>{979ab423-082b-4e7b-8c1a-27ebf836df4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\images">
+      <UniqueIdentifier>{550f2c51-e13e-45d4-a02d-7612d18ffd01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="diagnostic">
+      <UniqueIdentifier>{1bf65096-ca16-4d03-8dd3-2d627b9fa870}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system\ipc">
+      <UniqueIdentifier>{0f04a561-f752-4076-8346-413f78ee4315}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\gpu">
+      <UniqueIdentifier>{aadcfd13-1e57-4858-be90-68d52168cedf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\win\gpu">
+      <UniqueIdentifier>{9357c569-b28c-4d4c-a220-990ce8853033}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\3d">
+      <UniqueIdentifier>{caa307a1-16a9-4928-97ae-43e24321be98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="event\win">
+      <UniqueIdentifier>{2e1a27ef-bbb3-41d3-9904-229821ef3dde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="views\layout_info">
+      <UniqueIdentifier>{55c832b5-b502-4569-92ce-42c5756a3645}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="elements">
+      <UniqueIdentifier>{82f525eb-fa8b-4717-b25d-e1f27276eb9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="views\combo_box">
+      <UniqueIdentifier>{7e373ab6-9ac1-48ac-b5d4-aca14d6157a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\mac">
+      <UniqueIdentifier>{97b0abd6-668f-4842-8b4c-f0ceeef2a80b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\mac\gpu">
+      <UniqueIdentifier>{5339d094-6388-4389-8536-f588a1ea7cfa}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="graphics\win\direct3d\hlsl\shadow_effect_vs.hlsl">
+      <Filter>graphics\win\direct3d\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="graphics\win\direct3d\hlsl\shadow_effect_vert_ps.hlsl">
+      <Filter>graphics\win\direct3d\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="graphics\win\direct3d\hlsl\shadow_effect_hori_ps.hlsl">
+      <Filter>graphics\win\direct3d\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="graphics\win\direct3d\hlsl\assist_pixel_shader.hlsl">
+      <Filter>graphics\win\direct3d\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="graphics\win\direct3d\hlsl\assist_vertex_shader.hlsl">
+      <Filter>graphics\win\direct3d\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="graphics\win\direct3d\hlsl\model_pixel_shader.hlsl">
+      <Filter>graphics\win\direct3d\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="graphics\win\direct3d\hlsl\model_vertex_shader.hlsl">
+      <Filter>graphics\win\direct3d\hlsl</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>

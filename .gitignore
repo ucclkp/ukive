@@ -9,6 +9,13 @@
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
+necro.exe
+
+# macOS
+.DS_Store
+
+# Xcode
+xcuserdata/
 
 # Build results
 [Dd]ebug/
@@ -21,6 +28,7 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+[Bb]uild/
 
 # Visual Studio 2015 cache/options directory
 .vs/

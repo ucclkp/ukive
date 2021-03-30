@@ -1,0 +1,689 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{6C135376-870C-4C39-B198-2FFC8E947FFD}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>ukive</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)build\$(PlatformTarget)\$(Configuration)\lib\</OutDir>
+    <IntDir>$(SolutionDir)build\$(PlatformTarget)\$(Configuration)\obj\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)build\$(PlatformTarget)\$(Configuration)\lib\</OutDir>
+    <IntDir>$(SolutionDir)build\$(PlatformTarget)\$(Configuration)\obj\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)build\$(PlatformTarget)\$(Configuration)\lib\</OutDir>
+    <IntDir>$(SolutionDir)build\$(PlatformTarget)\$(Configuration)\obj\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)build\$(PlatformTarget)\$(Configuration)\lib\</OutDir>
+    <IntDir>$(SolutionDir)build\$(PlatformTarget)\$(Configuration)\obj\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)..;$(SolutionDir)utils\</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+    <FxCompile>
+      <ObjectFileOutput>$(SolutionDir)build\x86\$(Configuration)\shaders\%(Filename).cso</ObjectFileOutput>
+      <ShaderModel>4.0</ShaderModel>
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_LIB;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)..;$(SolutionDir)utils\</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <FxCompile>
+      <ObjectFileOutput>$(SolutionDir)build\x64\$(Configuration)\shaders\%(Filename).cso</ObjectFileOutput>
+      <ShaderModel>4.0</ShaderModel>
+    </FxCompile>
+    <Lib>
+      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)..;$(SolutionDir)utils\</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <FxCompile>
+      <ObjectFileOutput>$(SolutionDir)build\x86\$(Configuration)\shaders\%(Filename).cso</ObjectFileOutput>
+      <ShaderModel>4.0</ShaderModel>
+    </FxCompile>
+    <Lib>
+      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)..;$(SolutionDir)utils\</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <FxCompile>
+      <ObjectFileOutput>$(SolutionDir)build\x64\$(Configuration)\shaders\%(Filename).cso</ObjectFileOutput>
+      <ShaderModel>4.0</ShaderModel>
+    </FxCompile>
+    <Lib>
+      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="animation\animation_director.h" />
+    <ClInclude Include="animation\animator.h" />
+    <ClInclude Include="animation\bezier_curve.h" />
+    <ClInclude Include="animation\interpolator.h" />
+    <ClInclude Include="animation\scroller.h" />
+    <ClInclude Include="animation\timer.h" />
+    <ClInclude Include="animation\view_animator.h" />
+    <ClInclude Include="animation\view_animator_params.h" />
+    <ClInclude Include="app\application.h" />
+    <ClInclude Include="diagnostic\grid_navigator.h" />
+    <ClInclude Include="diagnostic\grid_view.h" />
+    <ClInclude Include="diagnostic\statistic_drawer.h" />
+    <ClInclude Include="diagnostic\ui_tracker.h" />
+    <ClInclude Include="elements\chessboard_element.h" />
+    <ClInclude Include="elements\color_element.h" />
+    <ClInclude Include="elements\element.h" />
+    <ClInclude Include="elements\image_element.h" />
+    <ClInclude Include="elements\multi_element.h" />
+    <ClInclude Include="elements\ripple_element.h" />
+    <ClInclude Include="elements\shape_element.h" />
+    <ClInclude Include="elements\texteditor_element.h" />
+    <ClInclude Include="event\focus_manager.h" />
+    <ClInclude Include="event\input_consts.h" />
+    <ClInclude Include="event\input_event.h" />
+    <ClInclude Include="event\keyboard.h" />
+    <ClInclude Include="event\velocity_calculator.h" />
+    <ClInclude Include="graphics\3d\camera.h" />
+    <ClInclude Include="graphics\3d\drawing_object_manager.h" />
+    <ClInclude Include="graphics\3d\geocal.hpp" />
+    <ClInclude Include="graphics\3d\graph_creator.h" />
+    <ClInclude Include="graphics\3d\matrix.hpp" />
+    <ClInclude Include="graphics\3d\point.hpp" />
+    <ClInclude Include="graphics\3d\scene.h" />
+    <ClInclude Include="graphics\3d\vector.hpp" />
+    <ClInclude Include="graphics\canvas.h" />
+    <ClInclude Include="graphics\color.h" />
+    <ClInclude Include="graphics\cursor.h" />
+    <ClInclude Include="graphics\cyro_buffer.h" />
+    <ClInclude Include="graphics\cyro_renderer.h" />
+    <ClInclude Include="graphics\cyro_render_target.h" />
+    <ClInclude Include="graphics\dirty_region.h" />
+    <ClInclude Include="graphics\display.h" />
+    <ClInclude Include="graphics\effects\cyro_effect.h" />
+    <ClInclude Include="graphics\effects\shadow_effect.h" />
+    <ClInclude Include="graphics\graphics_utils.h" />
+    <ClInclude Include="graphics\gpu\gpu_buffer.h" />
+    <ClInclude Include="graphics\gpu\gpu_context.h" />
+    <ClInclude Include="graphics\gpu\gpu_depth_stencil.h" />
+    <ClInclude Include="graphics\gpu\gpu_depth_stencil_state.h" />
+    <ClInclude Include="graphics\gpu\gpu_device.h" />
+    <ClInclude Include="graphics\gpu\gpu_types.h" />
+    <ClInclude Include="graphics\gpu\gpu_input_layout.h" />
+    <ClInclude Include="graphics\gpu\gpu_rasterizer_state.h" />
+    <ClInclude Include="graphics\gpu\gpu_render_target.h" />
+    <ClInclude Include="graphics\gpu\gpu_resource.h" />
+    <ClInclude Include="graphics\gpu\gpu_sampler_state.h" />
+    <ClInclude Include="graphics\gpu\gpu_shader.h" />
+    <ClInclude Include="graphics\gpu\gpu_shader_resource.h" />
+    <ClInclude Include="graphics\gpu\gpu_texture.h" />
+    <ClInclude Include="graphics\graphic_context_change_listener.h" />
+    <ClInclude Include="graphics\graphic_device_manager.h" />
+    <ClInclude Include="graphics\images\image.h" />
+    <ClInclude Include="graphics\images\image_options.h" />
+    <ClInclude Include="graphics\images\image_data.h" />
+    <ClInclude Include="graphics\images\image_frame.h" />
+    <ClInclude Include="graphics\images\lc_image.h" />
+    <ClInclude Include="graphics\images\lc_image_factory.h" />
+    <ClInclude Include="graphics\images\lc_image_frame.h" />
+    <ClInclude Include="graphics\mac\gpu\gpu_buffer_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\gpu_context_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\gpu_depth_stencil_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\gpu_depth_stencil_state_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\gpu_device_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\gpu_input_layout_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\gpu_metal_utils.h" />
+    <ClInclude Include="graphics\mac\gpu\gpu_rasterizer_state_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\gpu_render_target_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\gpu_sampler_state_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\gpu_shader_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\gpu_shader_resource_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\gpu_texture_metal.h" />
+    <ClInclude Include="graphics\matrix_2x3_f.h" />
+    <ClInclude Include="graphics\padding.hpp" />
+    <ClInclude Include="graphics\paint.h" />
+    <ClInclude Include="graphics\path.h" />
+    <ClInclude Include="graphics\point.hpp" />
+    <ClInclude Include="graphics\rect.hpp" />
+    <ClInclude Include="graphics\render_node\render_node.h" />
+    <ClInclude Include="graphics\render_node\render_tree.h" />
+    <ClInclude Include="graphics\size.hpp" />
+    <ClInclude Include="graphics\vector2.hpp" />
+    <ClInclude Include="graphics\win\cyro_renderer_d2d.h" />
+    <ClInclude Include="graphics\win\cyro_render_target_d2d.h" />
+    <ClInclude Include="graphics\win\direct3d\assist_configure.h" />
+    <ClInclude Include="graphics\win\direct3d\effects\shadow_effect_dx.h" />
+    <ClInclude Include="graphics\win\direct3d\model_configure.h" />
+    <ClInclude Include="graphics\win\direct3d\space.h" />
+    <ClInclude Include="graphics\win\directx_manager.h" />
+    <ClInclude Include="graphics\win\display_win.h" />
+    <ClInclude Include="graphics\win\images\image_frame_win.h" />
+    <ClInclude Include="graphics\win\images\image_options_d2d_utils.h" />
+    <ClInclude Include="graphics\win\images\lc_image_factory_win.h" />
+    <ClInclude Include="graphics\win\images\lc_image_frame_win.h" />
+    <ClInclude Include="graphics\win\gpu\gpu_buffer_d3d.h" />
+    <ClInclude Include="graphics\win\gpu\gpu_context_d3d.h" />
+    <ClInclude Include="graphics\win\gpu\gpu_d3d_utils.h" />
+    <ClInclude Include="graphics\win\gpu\gpu_depth_stencil_d3d.h" />
+    <ClInclude Include="graphics\win\gpu\gpu_depth_stencil_state_d3d.h" />
+    <ClInclude Include="graphics\win\gpu\gpu_device_d3d.h" />
+    <ClInclude Include="graphics\win\gpu\gpu_input_layout_d3d.h" />
+    <ClInclude Include="graphics\win\gpu\gpu_rasterizer_state_d3d.h" />
+    <ClInclude Include="graphics\win\gpu\gpu_render_target_d3d.h" />
+    <ClInclude Include="graphics\win\gpu\gpu_sampler_state_d3d.h" />
+    <ClInclude Include="graphics\win\gpu\gpu_shader_d3d.h" />
+    <ClInclude Include="graphics\win\gpu\gpu_shader_resource_d3d.h" />
+    <ClInclude Include="graphics\win\gpu\gpu_texture_d3d.h" />
+    <ClInclude Include="graphics\win\offscreen_buffer_win.h" />
+    <ClInclude Include="graphics\win\path_win.h" />
+    <ClInclude Include="graphics\win\vsync_provider.h" />
+    <ClInclude Include="graphics\win\window_buffer_win7.h" />
+    <ClInclude Include="graphics\win\window_buffer_win.h" />
+    <ClInclude Include="menu\context_menu.h" />
+    <ClInclude Include="menu\context_menu_callback.h" />
+    <ClInclude Include="menu\inner_window.h" />
+    <ClInclude Include="menu\menu.h" />
+    <ClInclude Include="menu\menu_callback.h" />
+    <ClInclude Include="menu\menu_impl.h" />
+    <ClInclude Include="menu\menu_item.h" />
+    <ClInclude Include="menu\menu_item_impl.h" />
+    <ClInclude Include="page\page.h" />
+    <ClInclude Include="resources\attributes.h" />
+    <ClInclude Include="resources\dimension.h" />
+    <ClInclude Include="resources\dimension_utils.h" />
+    <ClInclude Include="resources\layout_instantiator.h" />
+    <ClInclude Include="resources\resource_manager.h" />
+    <ClInclude Include="system\clipboard_manager.h" />
+    <ClInclude Include="system\dialog\open_file_dialog.h" />
+    <ClInclude Include="system\dialog\win\open_file_dialog_win.h" />
+    <ClInclude Include="system\ipc\pipe_client_win.h" />
+    <ClInclude Include="system\ipc\pipe_server_win.h" />
+    <ClInclude Include="system\theme_info.h" />
+    <ClInclude Include="system\time_utils.h" />
+    <ClInclude Include="system\ui_utils.h" />
+    <ClInclude Include="system\win\com_ptr.hpp" />
+    <ClInclude Include="system\win\dynamic_windows_api.h" />
+    <ClInclude Include="system\win\qpc_service.h" />
+    <ClInclude Include="system\win\reg_manager.h" />
+    <ClInclude Include="system\win\ui_utils_win.h" />
+    <ClInclude Include="system\win\win10_version.h" />
+    <ClInclude Include="system\win\win_app_bar.h" />
+    <ClInclude Include="text\editable.h" />
+    <ClInclude Include="text\input_method_manager.h" />
+    <ClInclude Include="text\range.hpp" />
+    <ClInclude Include="text\text_breaker.h" />
+    <ClInclude Include="text\input_method_connection.h" />
+    <ClInclude Include="text\span\inline_object_span.h" />
+    <ClInclude Include="text\span\interactable_span.h" />
+    <ClInclude Include="text\span\span.h" />
+    <ClInclude Include="text\span\text_attributes_span.h" />
+    <ClInclude Include="text\span\effect_span.h" />
+    <ClInclude Include="text\text_action_menu.h" />
+    <ClInclude Include="text\text_action_menu_callback.h" />
+    <ClInclude Include="text\text_blink.h" />
+    <ClInclude Include="text\text_custom_drawing.h" />
+    <ClInclude Include="text\text_inline_object.h" />
+    <ClInclude Include="text\text_input_client.h" />
+    <ClInclude Include="text\text_key_listener.h" />
+    <ClInclude Include="text\text_layout.h" />
+    <ClInclude Include="text\win\dwrite\text_analysis_sink.h" />
+    <ClInclude Include="text\win\dwrite\text_analysis_source.h" />
+    <ClInclude Include="text\win\dw_inline_object.h" />
+    <ClInclude Include="text\win\dw_text_drawing_effect.h" />
+    <ClInclude Include="text\win\dw_text_layout.h" />
+    <ClInclude Include="text\win\dw_text_renderer.h" />
+    <ClInclude Include="text\win\tsf_editor.h" />
+    <ClInclude Include="text\win\tsf_input_connection.h" />
+    <ClInclude Include="text\win\tsf_manager.h" />
+    <ClInclude Include="text\win\word_breaker.h" />
+    <ClInclude Include="views\button.h" />
+    <ClInclude Include="views\chart_view.h" />
+    <ClInclude Include="views\check_box.h" />
+    <ClInclude Include="views\check_listener.h" />
+    <ClInclude Include="views\click_listener.h" />
+    <ClInclude Include="views\combo_box\combo_box.h" />
+    <ClInclude Include="views\combo_box\combo_list_source.h" />
+    <ClInclude Include="views\layout_info\layout_info.h" />
+    <ClInclude Include="views\layout_info\list_layout_info.h" />
+    <ClInclude Include="views\layout_info\sequence_layout_info.h" />
+    <ClInclude Include="views\layout_info\restraint_layout_info.h" />
+    <ClInclude Include="views\list\list_item.h" />
+    <ClInclude Include="views\size_info.h" />
+    <ClInclude Include="views\space3d_view.h" />
+    <ClInclude Include="views\image_view.h" />
+    <ClInclude Include="views\input_event_delegate.h" />
+    <ClInclude Include="views\layout\title_bar_layout.h" />
+    <ClInclude Include="views\layout\non_client_layout.h" />
+    <ClInclude Include="views\layout\root_layout.h" />
+    <ClInclude Include="views\layout\simple_layout.h" />
+    <ClInclude Include="views\layout\sequence_layout.h" />
+    <ClInclude Include="views\layout\restraint_layout.h" />
+    <ClInclude Include="views\layout\layout_view.h" />
+    <ClInclude Include="views\list\flow_list_layouter.h" />
+    <ClInclude Include="views\list\grid_list_layouter.h" />
+    <ClInclude Include="views\list\linear_list_layouter.h" />
+    <ClInclude Include="views\list\list_source.h" />
+    <ClInclude Include="views\list\list_layouter.h" />
+    <ClInclude Include="views\list\list_columns.h" />
+    <ClInclude Include="views\list\list_view.h" />
+    <ClInclude Include="views\list\overlay_scroll_bar.h" />
+    <ClInclude Include="views\list\list_item_recycler.h" />
+    <ClInclude Include="views\progress_bar.h" />
+    <ClInclude Include="views\radio_button.h" />
+    <ClInclude Include="views\radio_selected_listener.h" />
+    <ClInclude Include="views\scroll_view.h" />
+    <ClInclude Include="views\seek_bar.h" />
+    <ClInclude Include="views\seek_value_changed_listener.h" />
+    <ClInclude Include="views\switch_view.h" />
+    <ClInclude Include="views\tab\tab_selection_listener.h" />
+    <ClInclude Include="views\tab\tab_strip_selection_listener.h" />
+    <ClInclude Include="views\tab\tab_strip_view.h" />
+    <ClInclude Include="views\tab\tab_view.h" />
+    <ClInclude Include="views\text_view.h" />
+    <ClInclude Include="views\title_bar\circle_color_button.h" />
+    <ClInclude Include="views\title_bar\default_title_bar.h" />
+    <ClInclude Include="views\title_bar\title_bar.h" />
+    <ClInclude Include="views\tree\tree_source.h" />
+    <ClInclude Include="views\tree\tree_node.h" />
+    <ClInclude Include="views\tree\tree_node_button.h" />
+    <ClInclude Include="views\view.h" />
+    <ClInclude Include="window\context.h" />
+    <ClInclude Include="window\context_changed_listener.h" />
+    <ClInclude Include="window\context_impl.h" />
+    <ClInclude Include="window\purpose.h" />
+    <ClInclude Include="window\window.h" />
+    <ClInclude Include="window\window_dpi_utils.h" />
+    <ClInclude Include="window\window_listener.h" />
+    <ClInclude Include="window\window_manager.h" />
+    <ClInclude Include="window\window_native.h" />
+    <ClInclude Include="window\window_native_delegate.h" />
+    <ClInclude Include="window\window_types.h" />
+    <ClInclude Include="window\win\frame\native_non_client_frame.h" />
+    <ClInclude Include="window\win\frame\custom_non_client_frame.h" />
+    <ClInclude Include="window\win\frame\custom_non_client_frame_win7.h" />
+    <ClInclude Include="window\win\frame\non_client_frame.h" />
+    <ClInclude Include="window\win\window_class_manager.h" />
+    <ClInclude Include="window\win\window_impl_win.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="animation\animation_director.cpp" />
+    <ClCompile Include="animation\animator.cpp" />
+    <ClCompile Include="animation\bezier_curve.cpp" />
+    <ClCompile Include="animation\interpolator.cpp" />
+    <ClCompile Include="animation\scroller.cpp" />
+    <ClCompile Include="animation\timer.cpp" />
+    <ClCompile Include="animation\view_animator.cpp" />
+    <ClCompile Include="animation\view_animator_params.cpp" />
+    <ClCompile Include="app\application.cpp" />
+    <ClCompile Include="app\win\application_win.cpp" />
+    <ClCompile Include="diagnostic\grid_navigator.cpp" />
+    <ClCompile Include="diagnostic\grid_view.cpp" />
+    <ClCompile Include="diagnostic\statistic_drawer.cpp" />
+    <ClCompile Include="diagnostic\ui_tracker.cpp" />
+    <ClCompile Include="elements\chessboard_element.cpp" />
+    <ClCompile Include="elements\color_element.cpp" />
+    <ClCompile Include="elements\element.cpp" />
+    <ClCompile Include="elements\image_element.cpp" />
+    <ClCompile Include="elements\multi_element.cpp" />
+    <ClCompile Include="elements\ripple_element.cpp" />
+    <ClCompile Include="elements\shape_element.cpp" />
+    <ClCompile Include="elements\texteditor_element.cpp" />
+    <ClCompile Include="event\focus_manager.cpp" />
+    <ClCompile Include="event\input_consts.cpp" />
+    <ClCompile Include="event\input_event.cpp" />
+    <ClCompile Include="event\keyboard.cpp" />
+    <ClCompile Include="event\velocity_calculator.cpp" />
+    <ClCompile Include="event\win\keyboard_win.cpp" />
+    <ClCompile Include="graphics\3d\camera.cpp" />
+    <ClCompile Include="graphics\3d\drawing_object_manager.cpp" />
+    <ClCompile Include="graphics\3d\graph_creator.cpp" />
+    <ClCompile Include="graphics\3d\scene.cpp" />
+    <ClCompile Include="graphics\canvas.cpp" />
+    <ClCompile Include="graphics\color.cpp" />
+    <ClCompile Include="graphics\cursor.cpp" />
+    <ClCompile Include="graphics\cyro_buffer.cpp" />
+    <ClCompile Include="graphics\cyro_renderer.cpp" />
+    <ClCompile Include="graphics\dirty_region.cpp" />
+    <ClCompile Include="graphics\display.cpp" />
+    <ClCompile Include="graphics\effects\shadow_effect.cpp" />
+    <ClCompile Include="graphics\graphic_device_manager.cpp" />
+    <ClCompile Include="graphics\images\image.cpp" />
+    <ClCompile Include="graphics\images\image_frame.cpp" />
+    <ClCompile Include="graphics\images\image_options.cpp" />
+    <ClCompile Include="graphics\images\lc_image.cpp" />
+    <ClCompile Include="graphics\images\lc_image_factory.cpp" />
+    <ClCompile Include="graphics\images\lc_image_frame.cpp" />
+    <ClCompile Include="graphics\mac\gpu\gpu_buffer_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\gpu_context_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\gpu_depth_stencil_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\gpu_depth_stencil_state_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\gpu_device_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\gpu_input_layout_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\gpu_metal_utils.cpp" />
+    <ClCompile Include="graphics\mac\gpu\gpu_rasterizer_state_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\gpu_render_target_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\gpu_sampler_state_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\gpu_shader_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\gpu_shader_resource_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\gpu_texture_metal.cpp" />
+    <ClCompile Include="graphics\matrix_2x3_f.cpp" />
+    <ClCompile Include="graphics\paint.cpp" />
+    <ClCompile Include="graphics\path.cpp" />
+    <ClCompile Include="graphics\render_node\render_node.cpp" />
+    <ClCompile Include="graphics\render_node\render_tree.cpp" />
+    <ClCompile Include="graphics\win\cyro_renderer_d2d.cpp" />
+    <ClCompile Include="graphics\win\cyro_render_target_d2d.cpp" />
+    <ClCompile Include="graphics\win\direct3d\assist_configure.cpp" />
+    <ClCompile Include="graphics\win\direct3d\effects\shadow_effect_dx.cpp" />
+    <ClCompile Include="graphics\win\direct3d\model_configure.cpp" />
+    <ClCompile Include="graphics\win\direct3d\space.cpp" />
+    <ClCompile Include="graphics\win\directx_manager.cpp" />
+    <ClCompile Include="graphics\win\display_win.cpp" />
+    <ClCompile Include="graphics\win\images\image_frame_win.cpp" />
+    <ClCompile Include="graphics\win\images\image_options_d2d_utils.cpp" />
+    <ClCompile Include="graphics\win\images\lc_image_factory_win.cpp" />
+    <ClCompile Include="graphics\win\images\lc_image_frame_win.cpp" />
+    <ClCompile Include="graphics\win\gpu\gpu_buffer_d3d.cpp" />
+    <ClCompile Include="graphics\win\gpu\gpu_context_d3d.cpp" />
+    <ClCompile Include="graphics\win\gpu\gpu_d3d_utils.cpp" />
+    <ClCompile Include="graphics\win\gpu\gpu_depth_stencil_d3d.cpp" />
+    <ClCompile Include="graphics\win\gpu\gpu_depth_stencil_state_d3d.cpp" />
+    <ClCompile Include="graphics\win\gpu\gpu_device_d3d.cpp" />
+    <ClCompile Include="graphics\win\gpu\gpu_input_layout_d3d.cpp" />
+    <ClCompile Include="graphics\win\gpu\gpu_rasterizer_state_d3d.cpp" />
+    <ClCompile Include="graphics\win\gpu\gpu_render_target_d3d.cpp" />
+    <ClCompile Include="graphics\win\gpu\gpu_sampler_state_d3d.cpp" />
+    <ClCompile Include="graphics\win\gpu\gpu_shader_d3d.cpp" />
+    <ClCompile Include="graphics\win\gpu\gpu_shader_resource_d3d.cpp" />
+    <ClCompile Include="graphics\win\gpu\gpu_texture_d3d.cpp" />
+    <ClCompile Include="graphics\win\offscreen_buffer_win.cpp" />
+    <ClCompile Include="graphics\win\path_win.cpp" />
+    <ClCompile Include="graphics\win\vsync_provider.cpp" />
+    <ClCompile Include="graphics\win\window_buffer_win7.cpp" />
+    <ClCompile Include="graphics\win\window_buffer_win.cpp" />
+    <ClCompile Include="menu\context_menu.cpp" />
+    <ClCompile Include="menu\inner_window.cpp" />
+    <ClCompile Include="menu\menu_impl.cpp" />
+    <ClCompile Include="menu\menu_item_impl.cpp" />
+    <ClCompile Include="page\page.cpp" />
+    <ClCompile Include="resources\dimension.cpp" />
+    <ClCompile Include="resources\dimension_utils.cpp" />
+    <ClCompile Include="resources\layout_instantiator.cpp" />
+    <ClCompile Include="resources\resource_manager.cpp" />
+    <ClCompile Include="system\clipboard_manager.cpp" />
+    <ClCompile Include="system\dialog\open_file_dialog.cpp" />
+    <ClCompile Include="system\dialog\win\open_file_dialog_win.cpp" />
+    <ClCompile Include="system\ipc\pipe_client_win.cpp" />
+    <ClCompile Include="system\ipc\pipe_server_win.cpp" />
+    <ClCompile Include="system\time_utils.cpp" />
+    <ClCompile Include="system\win\dynamic_windows_api.cpp" />
+    <ClCompile Include="system\win\qpc_service.cpp" />
+    <ClCompile Include="system\win\reg_manager.cpp" />
+    <ClCompile Include="system\win\ui_utils_win.cpp" />
+    <ClCompile Include="system\win\win10_version.cpp" />
+    <ClCompile Include="system\win\win_app_bar.cpp" />
+    <ClCompile Include="text\editable.cpp" />
+    <ClCompile Include="text\input_method_manager.cpp" />
+    <ClCompile Include="text\text_breaker.cpp" />
+    <ClCompile Include="text\input_method_connection.cpp" />
+    <ClCompile Include="text\span\inline_object_span.cpp" />
+    <ClCompile Include="text\span\interactable_span.cpp" />
+    <ClCompile Include="text\span\span.cpp" />
+    <ClCompile Include="text\span\text_attributes_span.cpp" />
+    <ClCompile Include="text\span\effect_span.cpp" />
+    <ClCompile Include="text\text_action_menu.cpp" />
+    <ClCompile Include="text\text_blink.cpp" />
+    <ClCompile Include="text\text_key_listener.cpp" />
+    <ClCompile Include="text\text_layout.cpp" />
+    <ClCompile Include="text\win\dwrite\text_analysis_sink.cpp" />
+    <ClCompile Include="text\win\dwrite\text_analysis_source.cpp" />
+    <ClCompile Include="text\win\dw_inline_object.cpp" />
+    <ClCompile Include="text\win\dw_text_drawing_effect.cpp" />
+    <ClCompile Include="text\win\dw_text_layout.cpp" />
+    <ClCompile Include="text\win\dw_text_renderer.cpp" />
+    <ClCompile Include="text\win\tsf_editor.cpp" />
+    <ClCompile Include="text\win\tsf_input_connection.cpp" />
+    <ClCompile Include="text\win\tsf_manager.cpp" />
+    <ClCompile Include="text\win\word_breaker.cpp" />
+    <ClCompile Include="views\button.cpp" />
+    <ClCompile Include="views\chart_view.cpp" />
+    <ClCompile Include="views\check_box.cpp" />
+    <ClCompile Include="views\combo_box\combo_box.cpp" />
+    <ClCompile Include="views\combo_box\combo_list_source.cpp" />
+    <ClCompile Include="views\layout_info\list_layout_info.cpp" />
+    <ClCompile Include="views\layout_info\sequence_layout_info.cpp" />
+    <ClCompile Include="views\layout_info\restraint_layout_info.cpp" />
+    <ClCompile Include="views\list\list_item.cpp" />
+    <ClCompile Include="views\size_info.cpp" />
+    <ClCompile Include="views\space3d_view.cpp" />
+    <ClCompile Include="views\image_view.cpp" />
+    <ClCompile Include="views\layout\title_bar_layout.cpp" />
+    <ClCompile Include="views\layout\non_client_layout.cpp" />
+    <ClCompile Include="views\layout\root_layout.cpp" />
+    <ClCompile Include="views\layout\simple_layout.cpp" />
+    <ClCompile Include="views\layout\sequence_layout.cpp" />
+    <ClCompile Include="views\layout\restraint_layout.cpp" />
+    <ClCompile Include="views\layout\layout_view.cpp" />
+    <ClCompile Include="views\list\flow_list_layouter.cpp" />
+    <ClCompile Include="views\list\grid_list_layouter.cpp" />
+    <ClCompile Include="views\list\linear_list_layouter.cpp" />
+    <ClCompile Include="views\list\list_source.cpp" />
+    <ClCompile Include="views\list\list_layouter.cpp" />
+    <ClCompile Include="views\list\list_columns.cpp" />
+    <ClCompile Include="views\list\list_view.cpp" />
+    <ClCompile Include="views\list\overlay_scroll_bar.cpp" />
+    <ClCompile Include="views\list\list_item_recycler.cpp" />
+    <ClCompile Include="views\progress_bar.cpp" />
+    <ClCompile Include="views\radio_button.cpp" />
+    <ClCompile Include="views\scroll_view.cpp" />
+    <ClCompile Include="views\seek_bar.cpp" />
+    <ClCompile Include="views\switch_view.cpp" />
+    <ClCompile Include="views\tab\tab_strip_view.cpp" />
+    <ClCompile Include="views\tab\tab_view.cpp" />
+    <ClCompile Include="views\text_view.cpp" />
+    <ClCompile Include="views\title_bar\circle_color_button.cpp" />
+    <ClCompile Include="views\title_bar\default_title_bar.cpp" />
+    <ClCompile Include="views\title_bar\title_bar.cpp" />
+    <ClCompile Include="views\tree\tree_source.cpp" />
+    <ClCompile Include="views\tree\tree_node.cpp" />
+    <ClCompile Include="views\tree\tree_node_button.cpp" />
+    <ClCompile Include="views\view.cpp" />
+    <ClCompile Include="window\context.cpp" />
+    <ClCompile Include="window\context_impl.cpp" />
+    <ClCompile Include="window\window.cpp" />
+    <ClCompile Include="window\window_dpi_utils.cpp" />
+    <ClCompile Include="window\window_manager.cpp" />
+    <ClCompile Include="window\window_native.cpp" />
+    <ClCompile Include="window\win\frame\native_non_client_frame.cpp" />
+    <ClCompile Include="window\win\frame\custom_non_client_frame.cpp" />
+    <ClCompile Include="window\win\frame\custom_non_client_frame_win7.cpp" />
+    <ClCompile Include="window\win\window_class_manager.cpp" />
+    <ClCompile Include="window\win\window_impl_win.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="graphics\win\direct3d\hlsl\assist_pixel_shader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="graphics\win\direct3d\hlsl\assist_vertex_shader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="graphics\win\direct3d\hlsl\model_pixel_shader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="graphics\win\direct3d\hlsl\model_vertex_shader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="graphics\win\direct3d\hlsl\shadow_effect_hori_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="graphics\win\direct3d\hlsl\shadow_effect_vert_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="graphics\win\direct3d\hlsl\shadow_effect_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

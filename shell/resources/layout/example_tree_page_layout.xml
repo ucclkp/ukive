@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RestraintLayout
+    id="@+id/rl_tree_root"
+    width="fill"
+    height="fill">
+
+    <ListView
+        id="@+id/lv_test_tree"
+        width="fill"
+        height="fill"
+        margin="4, 4, 4, 4"
+        handle_start="@id/rl_tree_root"
+        handle_top="@id/rl_tree_root"
+        handle_end="@id/rl_tree_root"
+        handle_bottom="@id/rl_tree_root" />
+
+</RestraintLayout>

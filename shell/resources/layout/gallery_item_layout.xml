@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SequenceLayout
+    orientation="vertical"
+    width="fill"
+    height="auto"
+    margin="12"
+    shadow_radius="2">
+
+    <TextView
+        id="@+id/tv_gallery_item_title"
+        width="fill"
+        height="auto"
+        margin="12"
+        text_size="14" />
+
+    <ImageView
+        id="@+id/iv_gallery_item_img"
+        width="fill"
+        height="270"
+        margin="12" />
+
+</SequenceLayout>

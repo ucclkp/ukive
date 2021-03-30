@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <Group
+      location = "group:"
+      name = "sub_deps">
+      <FileRef
+         location = "group:utils/utils/utils.xcodeproj">
+      </FileRef>
+   </Group>
+   <FileRef
+      location = "group:shell/shell.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:necro/necro.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:ukive/ukive.xcodeproj">
+   </FileRef>
+</Workspace>

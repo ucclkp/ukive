@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="resources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="app">
+      <UniqueIdentifier>{24b177a4-4f3e-49b8-ad07-7bb24754e535}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lod">
+      <UniqueIdentifier>{1ec5d5e9-1489-4b0d-b497-18b4c1265263}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\layout">
+      <UniqueIdentifier>{32702468-1b1f-4d2b-9b1a-7679a1ce6bf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gallery">
+      <UniqueIdentifier>{32361416-4611-41ef-b82c-77a001d2fe81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gallery\picture">
+      <UniqueIdentifier>{7631e548-1fc9-42d3-98ba-f53acf3281ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shadow">
+      <UniqueIdentifier>{06d0fcd8-fb1a-4a35-9c4f-26795d3f5c45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{bc6c9ed1-f5de-4d31-9217-3435ba1564ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="examples">
+      <UniqueIdentifier>{4b5aa076-80a2-48fc-826d-2aa67e5d4c0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="examples\pages">
+      <UniqueIdentifier>{a8f2332f-6b01-4240-a8e8-69e842d7590d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="grid">
+      <UniqueIdentifier>{3c4bccc0-4119-4bab-8900-a6dc774b4b8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="visualize">
+      <UniqueIdentifier>{bb57c95f-6f55-48d4-9d1d-7bfa5c3b2cc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lod\direct3d">
+      <UniqueIdentifier>{5d05ccaa-f1d4-4e21-9946-f9fea37b7366}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lod\direct3d\hlsl">
+      <UniqueIdentifier>{33406f95-be4f-41a0-8ce6-1b26417c866e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="app\shell.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
+    <ClCompile Include="lod\lod_window.cpp">
+      <Filter>lod</Filter>
+    </ClCompile>
+    <ClCompile Include="lod\qtree_node.cpp">
+      <Filter>lod</Filter>
+    </ClCompile>
+    <ClCompile Include="lod\terrain_scene.cpp">
+      <Filter>lod</Filter>
+    </ClCompile>
+    <ClCompile Include="lod\lod_generator.cpp">
+      <Filter>lod</Filter>
+    </ClCompile>
+    <ClCompile Include="lod\terrain_configure.cpp">
+      <Filter>lod</Filter>
+    </ClCompile>
+    <ClCompile Include="gallery\gallery_window.cpp">
+      <Filter>gallery</Filter>
+    </ClCompile>
+    <ClCompile Include="gallery\gallery_utils.cpp">
+      <Filter>gallery</Filter>
+    </ClCompile>
+    <ClCompile Include="gallery\thumbnail_fetcher.cpp">
+      <Filter>gallery</Filter>
+    </ClCompile>
+    <ClCompile Include="gallery\picture\slide_image_view.cpp">
+      <Filter>gallery\picture</Filter>
+    </ClCompile>
+    <ClCompile Include="gallery\picture\picture_window.cpp">
+      <Filter>gallery\picture</Filter>
+    </ClCompile>
+    <ClCompile Include="text\text_window.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClCompile Include="shadow\shadow_window.cpp">
+      <Filter>shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\pages\example_list_page.cpp">
+      <Filter>examples\pages</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\pages\example_misc_page.cpp">
+      <Filter>examples\pages</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\pages\example_tree_page.cpp">
+      <Filter>examples\pages</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example_window.cpp">
+      <Filter>examples</Filter>
+    </ClCompile>
+    <ClCompile Include="grid\grid_window.cpp">
+      <Filter>grid</Filter>
+    </ClCompile>
+    <ClCompile Include="visualize\visualization_window.cpp">
+      <Filter>visualize</Filter>
+    </ClCompile>
+    <ClCompile Include="visualize\visual_layout_scene.cpp">
+      <Filter>visualize</Filter>
+    </ClCompile>
+    <ClCompile Include="gallery\gallery_list_source.cpp">
+      <Filter>gallery</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example_list_source.cpp">
+      <Filter>examples</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resources\resource.h">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="lod\lod_window.h">
+      <Filter>lod</Filter>
+    </ClInclude>
+    <ClInclude Include="lod\qtree_node.h">
+      <Filter>lod</Filter>
+    </ClInclude>
+    <ClInclude Include="lod\terrain_scene.h">
+      <Filter>lod</Filter>
+    </ClInclude>
+    <ClInclude Include="lod\lod_generator.h">
+      <Filter>lod</Filter>
+    </ClInclude>
+    <ClInclude Include="lod\terrain_configure.h">
+      <Filter>lod</Filter>
+    </ClInclude>
+    <ClInclude Include="gallery\gallery_window.h">
+      <Filter>gallery</Filter>
+    </ClInclude>
+    <ClInclude Include="gallery\gallery_utils.h">
+      <Filter>gallery</Filter>
+    </ClInclude>
+    <ClInclude Include="gallery\thumbnail_fetcher.h">
+      <Filter>gallery</Filter>
+    </ClInclude>
+    <ClInclude Include="gallery\picture\slide_image_view.h">
+      <Filter>gallery\picture</Filter>
+    </ClInclude>
+    <ClInclude Include="gallery\picture\picture_window.h">
+      <Filter>gallery\picture</Filter>
+    </ClInclude>
+    <ClInclude Include="text\text_window.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="shadow\shadow_window.h">
+      <Filter>shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="examples\pages\example_list_page.h">
+      <Filter>examples\pages</Filter>
+    </ClInclude>
+    <ClInclude Include="examples\pages\example_misc_page.h">
+      <Filter>examples\pages</Filter>
+    </ClInclude>
+    <ClInclude Include="examples\pages\example_tree_page.h">
+      <Filter>examples\pages</Filter>
+    </ClInclude>
+    <ClInclude Include="examples\example_window.h">
+      <Filter>examples</Filter>
+    </ClInclude>
+    <ClInclude Include="grid\grid_window.h">
+      <Filter>grid</Filter>
+    </ClInclude>
+    <ClInclude Include="visualize\visualization_window.h">
+      <Filter>visualize</Filter>
+    </ClInclude>
+    <ClInclude Include="visualize\visual_layout_scene.h">
+      <Filter>visualize</Filter>
+    </ClInclude>
+    <ClInclude Include="gallery\gallery_list_source.h">
+      <Filter>gallery</Filter>
+    </ClInclude>
+    <ClInclude Include="examples\example_list_source.h">
+      <Filter>examples</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\shell.ico">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="resources\small.ico">
+      <Filter>resources</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources\shell.rc">
+      <Filter>resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="application.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="resources\layout\gallery_item_layout.xml">
+      <Filter>resources\layout</Filter>
+    </Xml>
+    <Xml Include="resources\layout\gallery_window_layout.xml">
+      <Filter>resources\layout</Filter>
+    </Xml>
+    <Xml Include="resources\layout\example_window_layout.xml">
+      <Filter>resources\layout</Filter>
+    </Xml>
+    <Xml Include="resources\layout\example_tree_page_layout.xml">
+      <Filter>resources\layout</Filter>
+    </Xml>
+    <Xml Include="resources\layout\example_list_page_layout.xml">
+      <Filter>resources\layout</Filter>
+    </Xml>
+    <Xml Include="resources\layout\example_misc_page_layout.xml">
+      <Filter>resources\layout</Filter>
+    </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="lod\direct3d\hlsl\terrain_pixel_shader.hlsl">
+      <Filter>lod\direct3d\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="lod\direct3d\hlsl\terrain_vertex_shader.hlsl">
+      <Filter>lod\direct3d\hlsl</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>

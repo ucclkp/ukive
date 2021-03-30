@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RestraintLayout
+    id="@+id/rl_gallery_window_root"
+    width="fill"
+    height="fill">
+
+    <Button
+        id="@+id/bt_gallery_window_back"
+        width="auto"
+        height="auto"
+        text="后退"
+        margin="8, 8"
+        handle_start="@id/rl_gallery_window_root"
+        handle_top="@id/rl_gallery_window_root" />
+
+    <TextView
+        id="@+id/tv_gallery_window_name"
+        width="fill"
+        height="auto"
+        text=""
+        auto_wrap="false"
+        margin="12, 0, 12, 0"
+        handle_start="@id/bt_gallery_window_back, end"
+        handle_top="@id/bt_gallery_window_back"
+        handle_end="@id/rl_gallery_window_root"
+        handle_bottom="@id/bt_gallery_window_back" />
+
+    <ListView
+        id="@+id/lv_gallery_window_list"
+        width="fill"
+        height="fill"
+        margin="0, 8"
+        handle_start="@id/rl_gallery_window_root"
+        handle_top="@id/bt_gallery_window_back, bottom"
+        handle_end="@id/rl_gallery_window_root"
+        handle_bottom="@id/rl_gallery_window_root" />
+
+</RestraintLayout>
