@@ -9,6 +9,8 @@
 
 #include <vector>
 
+#include "utils/stl_utils.h"
+
 #include "ukive/views/view.h"
 #include "ukive/event/input_event.h"
 
@@ -65,6 +67,14 @@ namespace ukive {
         void removeView(View* v, bool del = true, bool req_layout = true);
 
         /**
+         * 移除 LayoutView 中的指定子 View。
+         * @param index 要移除的子 View 的索引。
+         * @param del 指定是否要删除已被移除的 v。
+         * @param req_layout 指定是否请求重布局。
+         */
+        void removeView(size_t index, bool del = true, bool req_layout = true);
+
+        /**
          * 移除 LayoutView 中所有的子 View。
          * @param del 指定是否要删除已被移除的子 View。
          * @param req_layout 指定是否请求重布局。
@@ -83,18 +93,7 @@ namespace ukive {
         void determineChildSize(View* child, const SizeInfo& parent_info);
         void determineChildrenSize(const SizeInfo& parent_info);
 
-        std::vector<View*>::iterator begin() { return views_.begin(); }
-        std::vector<View*>::iterator end() { return views_.end(); }
-        std::vector<View*>::const_iterator begin() const { return views_.begin(); }
-        std::vector<View*>::const_iterator end() const { return views_.end(); }
-        std::vector<View*>::reverse_iterator rbegin() { return views_.rbegin(); }
-        std::vector<View*>::reverse_iterator rend() { return views_.rend(); }
-        std::vector<View*>::const_reverse_iterator rbegin() const { return views_.rbegin(); }
-        std::vector<View*>::const_reverse_iterator rend() const { return views_.rend(); }
-        std::vector<View*>::const_iterator cbegin() const { return views_.cbegin(); }
-        std::vector<View*>::const_iterator cend() const { return views_.cend(); }
-        std::vector<View*>::const_reverse_iterator crbegin() const { return views_.crbegin(); }
-        std::vector<View*>::const_reverse_iterator crend() const { return views_.crend(); }
+        STL_VECTOR_ITERATORS(View*, views_);
 
     protected:
         // 重置 LayoutView 记录的事件拦截状态。
@@ -119,6 +118,8 @@ namespace ukive {
 
     private:
         using super = View;
+
+        void isolateChild(View* child, bool attached, bool del);
 
         void prepareHookingStatus(InputEvent* e);
         void updateHookingStatus(InputEvent* e);

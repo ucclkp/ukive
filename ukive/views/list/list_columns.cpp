@@ -38,20 +38,20 @@ namespace ukive {
         items_.push_back(item);
     }
 
-    void Column::addItem(ListItem* item, int index) {
+    void Column::addItem(ListItem* item, size_t index) {
         items_.insert(items_.begin() + index, item);
     }
 
-    void Column::removeItem(int index) {
+    void Column::removeItem(size_t index) {
         items_.erase(items_.begin() + index);
     }
 
-    void Column::removeItems(int start) {
+    void Column::removeItems(size_t start) {
         items_.erase(items_.begin() + start, items_.end());
     }
 
-    void Column::removeItems(int start, int length) {
-        int end = start + length;
+    void Column::removeItems(size_t start, size_t length) {
+        auto end = start + length;
         items_.erase(items_.begin() + start, items_.begin() + end);
     }
 
@@ -85,8 +85,8 @@ namespace ukive {
         return top_;
     }
 
-    int Column::getItemCount() const {
-        return utl::num_cast<int>(items_.size());
+    size_t Column::getItemCount() const {
+        return items_.size();
     }
 
     int Column::getFinalScroll(int dy) const {
@@ -102,37 +102,41 @@ namespace ukive {
         return dy;
     }
 
-    int Column::getIndexOfItem(int data_pos) const {
-        int index = 0;
-        for (auto it = items_.cbegin(); it != items_.cend(); ++it, ++index) {
+    bool Column::getIndexOfItem(size_t data_pos, size_t* index) const {
+        size_t i = 0;
+        for (auto it = items_.cbegin(); it != items_.cend(); ++it, ++i) {
             if ((*it)->data_pos == data_pos) {
-                return index;
+                *index = i;
+                return true;
             }
             if ((*it)->data_pos > data_pos) {
                 break;
             }
         }
-        return -1;
+        return false;
     }
 
-    int Column::getIndexOfFirstVisible(int dy) const {
-        int index = 0;
-        for (auto it = items_.cbegin(); it != items_.cend(); ++it, ++index) {
+    bool Column::getIndexOfFirstVisible(int dy, size_t* index) const {
+        size_t i = 0;
+        for (auto it = items_.cbegin(); it != items_.cend(); ++it, ++i) {
             if ((*it)->getMgdBottom() + dy > top_) {
-                return index;
+                *index = i;
+                return true;
             }
         }
-        return -1;
+        return false;
     }
 
-    int Column::getIndexOfLastVisible(int dy) const {
-        int index = getItemCount() - 1;
-        for (auto it = items_.crbegin(); it != items_.crend(); ++it, --index) {
+    bool Column::getIndexOfLastVisible(int dy, size_t* index) const {
+        size_t i = getItemCount();
+        for (auto it = items_.crbegin(); it != items_.crend(); ++it) {
+            --i;
             if ((*it)->getMgdTop() + dy < bottom_) {
-                return index;
+                *index = i;
+                return true;
             }
         }
-        return -1;
+        return false;
     }
 
     ListItem* Column::getFront() const {
@@ -149,8 +153,8 @@ namespace ukive {
         return nullptr;
     }
 
-    ListItem* Column::getItem(int index) const {
-        if (index >= 0 && index < utl::num_cast<int>(items_.size())) {
+    ListItem* Column::getItem(size_t index) const {
+        if (index < items_.size()) {
             return items_[index];
         }
         return nullptr;
@@ -174,7 +178,7 @@ namespace ukive {
         return nullptr;
     }
 
-    ListItem* Column::getItemByPos(int data_pos) const {
+    ListItem* Column::getItemByPos(size_t data_pos) const {
         for (auto it = items_.cbegin(); it != items_.cend(); ++it) {
             if ((*it)->data_pos == data_pos) {
                 return *it;
@@ -186,8 +190,8 @@ namespace ukive {
         return nullptr;
     }
 
-    ListItem* Column::findAndInsertItem(int start_index, int item_id) {
-        if (start_index < 0 || start_index >= utl::num_cast<int>(items_.size())) {
+    ListItem* Column::findAndInsertItem(size_t start_index, int item_id) {
+        if (start_index >= items_.size()) {
             return nullptr;
         }
 
@@ -255,16 +259,16 @@ namespace ukive {
 
 
     // ColumnCollection
-    ColumnCollection::ColumnCollection(int col_count)
+    ColumnCollection::ColumnCollection(size_t col_count)
         : col_count_(col_count) {
           columns_.assign(col_count, {});
     }
 
-    Column& ColumnCollection::operator[](int col) {
+    Column& ColumnCollection::operator[](size_t col) {
         return columns_[col];
     }
 
-    const Column& ColumnCollection::operator[](int col) const {
+    const Column& ColumnCollection::operator[](size_t col) const {
         return columns_[col];
     }
 
@@ -278,7 +282,7 @@ namespace ukive {
         int cur_left = left;
         int child_width = (right - left) / static_cast<float>(col_count_);
         int remained_width = (right - left) - col_count_ * child_width;
-        for (int i = 0; i < col_count_; ++i) {
+        for (size_t i = 0; i < col_count_; ++i) {
             if (remained_width > 0) {
                 columns_[i].setHorizontal(cur_left, cur_left + child_width + 1);
                 cur_left += child_width + 1;
@@ -312,11 +316,11 @@ namespace ukive {
     }
 
     ListItem* ColumnCollection::getLast() const {
-        int count = columns_[0].getItemCount();
+        auto count = columns_[0].getItemCount();
         if (count <= 0) {
             return nullptr;
         }
-        for (int i = col_count_ - 1; i >= 0; --i) {
+        for (auto i = col_count_; i-- > 0;) {
             auto item = columns_[i].getItem(count - 1);
             if (item) {
                 return item;
@@ -326,8 +330,8 @@ namespace ukive {
     }
 
     ListItem* ColumnCollection::getTopStart() const {
-        int index = 0;
-        int max_data_pos = 0;
+        size_t index = 0;
+        size_t max_data_pos = 0;
         ListItem* start_item = nullptr;
         for (const auto& col : columns_) {
             auto front = col.getFront();
@@ -348,8 +352,8 @@ namespace ukive {
     }
 
     ListItem* ColumnCollection::getBottomStart() const {
-        int index = col_count_ - 1;
-        int min_data_pos = 0;
+        size_t index = col_count_ - 1;
+        size_t min_data_pos = 0;
         ListItem* start_item = nullptr;
         for (auto it = columns_.crbegin(); it != columns_.crend(); ++it) {
             auto rear = (*it).getRear();
@@ -369,9 +373,9 @@ namespace ukive {
         return start_item;
     }
 
-    ListItem* ColumnCollection::getItemByPos(int data_pos) const {
+    ListItem* ColumnCollection::getItemByPos(size_t data_pos) const {
         //int row = data_pos / columns_.size();
-        int col = data_pos % columns_.size();
+        size_t col = data_pos % columns_.size();
         return columns_[col].getItemByPos(data_pos);
     }
 
@@ -464,7 +468,7 @@ namespace ukive {
         return false;
     }
 
-    bool ColumnCollection::isAllAtCeil(int item_count) const {
+    bool ColumnCollection::isAllAtCeil(size_t item_count) const {
         for (const auto& c : columns_) {
             auto front = c.getFront();
             if (front) {
@@ -476,7 +480,7 @@ namespace ukive {
         return true;
     }
 
-    bool ColumnCollection::isAllAtFloor(int item_count) const {
+    bool ColumnCollection::isAllAtFloor(size_t item_count) const {
         for (const auto& c : columns_) {
             auto rear = c.getRear();
             if (rear) {

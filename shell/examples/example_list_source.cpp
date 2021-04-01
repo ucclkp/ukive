@@ -8,7 +8,6 @@
 
 #include "utils/log.h"
 #include "utils/convert.h"
-#include "utils/number.hpp"
 
 #include "ukive/views/layout/restraint_layout.h"
 #include "ukive/views/layout_info/restraint_layout_info.h"
@@ -20,8 +19,16 @@
 
 namespace shell {
 
+    ExampleListItem::ExampleListItem(ukive::View* v)
+        : ListItem(v)
+    {
+        title_label = reinterpret_cast<ukive::TextView*>(v->findView(ID_TITLE));
+        summary_label = reinterpret_cast<ukive::TextView*>(v->findView(ID_SUMMARY));
+        avatar_image = reinterpret_cast<ukive::ImageView*>(v->findView(ID_AVATAR));
+    }
+
     ukive::ListItem* ExampleListSource::onListCreateItem(
-        ukive::LayoutView* parent, int position) {
+        ukive::LayoutView* parent, size_t position) {
 
         auto layout = new ukive::RestraintLayout(parent->getContext());
         layout->setBackground(new ukive::ColorElement(ukive::Color::Blue100));
@@ -67,7 +74,7 @@ namespace shell {
         return new ExampleListItem(layout);
     }
 
-    void ExampleListSource::onListSetItemData(ukive::ListItem* item, int position) {
+    void ExampleListSource::onListSetItemData(ukive::ListItem* item, size_t position) {
         auto& data = data_list_.at(position);
         ExampleListItem* example_list_item = reinterpret_cast<ExampleListItem*>(item);
 
@@ -80,8 +87,8 @@ namespace shell {
         //LOG(INFO) << "ListSource::onListSetItemData():" << position << " data has been bound.";
     }
 
-    int ExampleListSource::onListGetDataCount() {
-        return utl::num_cast<int>(data_list_.size());
+    size_t ExampleListSource::onListGetDataCount() const {
+        return data_list_.size();
     }
 
     void ExampleListSource::addItem(int image_res_id, const std::u16string& title, const std::u16string& summary) {
@@ -94,25 +101,17 @@ namespace shell {
         notifyDataChanged();
     }
 
-    void ExampleListSource::addItem(int pos, int image_res_id, const std::u16string& title, const std::u16string& summary) {
+    void ExampleListSource::addItem(size_t pos, int image_res_id, const std::u16string& title, const std::u16string& summary) {
         BindData data;
         data.image_resource_id = image_res_id;
         data.title = title;
         data.summary = summary;
 
-        if (data_list_.size() == 0)
-            data_list_.push_back(data);
-        else {
-            int index = 0;
-            for (auto it = data_list_.begin();
-                it != data_list_.end(); ++it, ++index) {
-                if (pos == index) {
-                    data_list_.insert(it, data);
-                    break;
-                }
-            }
+        if (pos > data_list_.size()) {
+            pos = data_list_.size();
         }
 
+        data_list_.insert(data_list_.begin() + pos, data);
         notifyDataChanged();
     }
 
@@ -129,8 +128,7 @@ namespace shell {
     }
 
     void ExampleListSource::removeItem(const std::u16string& title) {
-        for (auto it = data_list_.begin();
-            it != data_list_.end();) {
+        for (auto it = data_list_.begin(); it != data_list_.end();) {
             if ((*it).title == title) {
                 it = data_list_.erase(it);
             } else {
@@ -141,16 +139,12 @@ namespace shell {
         notifyDataChanged();
     }
 
-    void ExampleListSource::removeItem(int pos) {
-        int index = 0;
-        for (auto it = data_list_.begin();
-            it != data_list_.end(); ++index, ++it) {
-            if (index == pos) {
-                data_list_.erase(it);
-                break;
-            }
+    void ExampleListSource::removeItem(size_t pos) {
+        if (pos >= data_list_.size()) {
+            return;
         }
 
+        data_list_.erase(data_list_.begin() + pos);
         notifyDataChanged();
     }
 

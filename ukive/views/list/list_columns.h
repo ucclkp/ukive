@@ -23,10 +23,10 @@ namespace ukive {
         void setHorizontal(int left, int right);
 
         void addItem(ListItem* item);
-        void addItem(ListItem* item, int index);
-        void removeItem(int index);
-        void removeItems(int start);
-        void removeItems(int start, int length);
+        void addItem(ListItem* item, size_t index);
+        void removeItem(size_t index);
+        void removeItems(size_t start);
+        void removeItems(size_t start, size_t length);
         void clear();
 
         int getLeft() const;
@@ -34,18 +34,18 @@ namespace ukive {
         int getWidth() const;
         int getItemsTop() const;
         int getItemsBottom() const;
-        int getItemCount() const;
+        size_t getItemCount() const;
         int getFinalScroll(int dy) const;
-        int getIndexOfItem(int data_pos) const;
-        int getIndexOfFirstVisible(int dy) const;
-        int getIndexOfLastVisible(int dy) const;
+        bool getIndexOfItem(size_t data_pos, size_t* index) const;
+        bool getIndexOfFirstVisible(int dy, size_t* index) const;
+        bool getIndexOfLastVisible(int dy, size_t* index) const;
         ListItem* getFront() const;
         ListItem* getRear() const;
-        ListItem* getItem(int index) const;
+        ListItem* getItem(size_t index) const;
         ListItem* getFirstVisible(int dy = 0) const;
         ListItem* getLastVisible(int dy = 0) const;
-        ListItem* getItemByPos(int data_pos) const;
-        ListItem* findAndInsertItem(int start_index, int item_id);
+        ListItem* getItemByPos(size_t data_pos) const;
+        ListItem* findAndInsertItem(size_t start_index, int item_id);
         ListItem* findItemFromView(View* v) const;
 
         bool atTop() const;
@@ -63,10 +63,10 @@ namespace ukive {
     // ColumnCollection
     class ColumnCollection {
     public:
-        explicit ColumnCollection(int col_count);
+        explicit ColumnCollection(size_t col_count);
 
-        Column& operator[](int col);
-        const Column& operator[](int col) const;
+        Column& operator[](size_t col);
+        const Column& operator[](size_t col) const;
 
         void setVertical(int top, int bottom);
         void setHorizontal(int left, int right);
@@ -78,7 +78,7 @@ namespace ukive {
         ListItem* getLast() const;
         ListItem* getTopStart() const;
         ListItem* getBottomStart() const;
-        ListItem* getItemByPos(int data_pos) const;
+        ListItem* getItemByPos(size_t data_pos) const;
         ListItem* getTopmost() const;
         ListItem* getBottomost() const;
         ListItem* findItemFromView(View* v) const;
@@ -100,11 +100,11 @@ namespace ukive {
 
         bool isBottomOneFilled(int dy) const;
 
-        bool isAllAtCeil(int item_count) const;
-        bool isAllAtFloor(int item_count) const;
+        bool isAllAtCeil(size_t item_count) const;
+        bool isAllAtFloor(size_t item_count) const;
 
     private:
-        int col_count_;
+        size_t col_count_;
         std::vector<Column> columns_;
     };
 

@@ -14,10 +14,9 @@ namespace ukive {
     // ListItem
     ListItem::ListItem(View* v)
         : item_view(v),
-        item_id(-1),
-        data_pos(-1),
-        recycled(false) {
-    }
+          item_id(-1),
+          data_pos(0),
+          recycled(false) {}
 
     ListItem::~ListItem() {
         if (recycled) {
@@ -27,7 +26,7 @@ namespace ukive {
 
     int ListItem::getMgdLeft() const {
         return item_view->getLeft() -
-            item_view->getLayoutMargin().start - ex_margins.left;
+            item_view->getLayoutMargin().start - ex_margins.start;
     }
 
     int ListItem::getMgdTop() const {
@@ -37,7 +36,7 @@ namespace ukive {
 
     int ListItem::getMgdRight() const {
         return item_view->getRight() +
-            item_view->getLayoutMargin().end + ex_margins.right;
+            item_view->getLayoutMargin().end + ex_margins.end;
     }
 
     int ListItem::getMgdBottom() const {
@@ -54,13 +53,11 @@ namespace ukive {
     }
 
     int ListItem::getHoriMargins() const {
-        return item_view->getLayoutMargin().hori() +
-            ex_margins.left + ex_margins.right;
+        return item_view->getLayoutMargin().hori() + ex_margins.hori();
     }
 
     int ListItem::getVertMargins() const {
-        return item_view->getLayoutMargin().vert() +
-            ex_margins.top + ex_margins.bottom;
+        return item_view->getLayoutMargin().vert() + ex_margins.vert();
     }
 
 }

@@ -22,7 +22,7 @@
 #include "ukive/views/button.h"
 #include "ukive/views/chart_view.h"
 #include "ukive/views/check_box.h"
-#include "ukive/views/combo_box/combo_box.h"
+#include "ukive/views/combo_box.h"
 #include "ukive/views/image_view.h"
 #include "ukive/views/progress_bar.h"
 #include "ukive/views/radio_button.h"

@@ -8,8 +8,6 @@
 
 #include <algorithm>
 
-#include "utils/number.hpp"
-
 #include "ukive/event/input_consts.h"
 #include "ukive/event/input_event.h"
 #include "ukive/window/window.h"
@@ -247,35 +245,8 @@ namespace ukive {
         LayoutView::requestLayout();
     }
 
-    void ListView::onClick(View* v) {
-        if (selected_listener_) {
-            auto item = layouter_->findItemFromView(v);
-            if (item) {
-                selected_listener_->onItemClicked(this, item);
-            }
-        }
-    }
-
-    bool ListView::onInputReceived(View* v, InputEvent* e, bool* ret) {
-        switch (e->getEvent()) {
-        case InputEvent::EVM_DOWN:
-        case InputEvent::EVT_DOWN:
-            if (selected_listener_) {
-                auto item = layouter_->findItemFromView(v);
-                if (item) {
-                    selected_listener_->onItemPressed(this, item);
-                }
-            }
-            break;
-
-        default:
-            break;
-        }
-        return false;
-    }
-
     void ListView::setSource(ListSource* src) {
-        if (source_.get() == src) {
+        if (source_ == src) {
             return;
         }
 
@@ -294,7 +265,7 @@ namespace ukive {
         }
 
         if (src) {
-            source_.reset(src);
+            source_ = src;
             source_->setNotifier(this);
             layoutAtPosition(false);
         }
@@ -305,7 +276,7 @@ namespace ukive {
     void ListView::setLayouter(ListLayouter* layouter) {
         layouter_.reset(layouter);
         if (layouter_) {
-            layouter_->bind(this, source_.get());
+            layouter_->bind(this, source_);
         }
     }
 
@@ -317,7 +288,7 @@ namespace ukive {
         }
     }
 
-    void ListView::scrollToPosition(int pos, int offset, bool smooth) {
+    void ListView::scrollToPosition(size_t pos, int offset, bool smooth) {
         if (smooth) {
             smoothScrollToPosition(pos, offset);
         } else {
@@ -325,15 +296,15 @@ namespace ukive {
         }
     }
 
-    void ListView::setItemSelectedListener(ListItemSelectedListener* l) {
-        selected_listener_ = l;
-    }
-
     void ListView::setChildRecycledListener(ListItemRecycledListener* l) {
         recycled_listener_ = l;
     }
 
-    void ListView::getCurPosition(int* pos, int* offset) const {
+    ListLayouter* ListView::getLayouter() const {
+        return layouter_.get();
+    }
+
+    void ListView::getCurPosition(size_t* pos, int* offset) const {
         if (layouter_) {
             layouter_->getCurPosition(pos, offset);
         } else {
@@ -355,7 +326,7 @@ namespace ukive {
         if (res_dy == 0) {
             return 0;
         }
-        offsetChildViewTopAndBottom(res_dy);
+        offsetChildrenVertical(res_dy);
         recordCurPositionAndOffset();
         updateOverlayScrollBar();
         return res_dy;
@@ -371,15 +342,13 @@ namespace ukive {
         return dy;
     }
 
-    void ListView::offsetChildViewTopAndBottom(int dy) {
-        int size = getChildCount();
-        for (int i = 0; i < size; ++i) {
-            auto child = getChildAt(i);
+    void ListView::offsetChildrenVertical(int dy) {
+        for (auto child : *this) {
             child->offsetVertical(dy);
         }
     }
 
-    ListItem* ListView::makeNewItem(int data_pos, int view_index) {
+    ListItem* ListView::makeNewItem(size_t data_pos, size_t view_index) {
         int item_id = source_->onListGetItemId(data_pos);
         auto new_item = recycler_->reuse(item_id, view_index);
         if (!new_item) {
@@ -390,8 +359,6 @@ namespace ukive {
         new_item->item_id = item_id;
         new_item->data_pos = data_pos;
         source_->onListSetItemData(new_item, data_pos);
-        new_item->item_view->setOnClickListener(this);
-        new_item->item_view->setOnInputEventDelegate(this);
         return new_item;
     }
 
@@ -402,22 +369,24 @@ namespace ukive {
         recycler_->recycleFromParent(item);
     }
 
-    int ListView::findViewIndexFromStart(ListItem* item) const {
+    bool ListView::findViewIndexFromStart(ListItem* item, size_t* index) const {
         for (size_t i = 0; i < getChildCount(); ++i) {
             if (getChildAt(i) == item->item_view) {
-                return utl::num_cast<int>(i);
+                *index = i;
+                return true;
             }
         }
-        return -1;
+        return false;
     }
 
-    int ListView::findViewIndexFromEnd(ListItem* item) const {
+    bool ListView::findViewIndexFromEnd(ListItem* item, size_t* index) const {
         for (size_t i = getChildCount(); i-- > 0;) {
             if (getChildAt(i) == item->item_view) {
-                return utl::num_cast<int>(i);
+                *index = i;
+                return true;
             }
         }
-        return -1;
+        return false;
     }
 
     void ListView::measureItem(ListItem* item, int max_width, int* width, int* height) {
@@ -446,11 +415,10 @@ namespace ukive {
     void ListView::layoutItem(ListItem* item, int left, int top, int width, int height) {
         auto& margin = item->item_view->getLayoutMargin();
 
-        Rect bounds;
-        bounds.left = left + margin.start + item->ex_margins.left;
-        bounds.top = top + margin.top + item->ex_margins.top;
-        bounds.right = left + width - margin.end - item->ex_margins.right;
-        bounds.bottom = top + height - margin.bottom - item->ex_margins.bottom;
+        Rect bounds(left, top, width, height);
+        bounds.insets(margin);
+        bounds.insets(item->ex_margins);
+
         item->item_view->layout(bounds);
     }
 
@@ -508,12 +476,12 @@ namespace ukive {
         if (diff > 0) {
             diff = determineVerticalScroll(diff);
             if (diff != 0) {
-                offsetChildViewTopAndBottom(diff);
+                offsetChildrenVertical(diff);
             }
         }
     }
 
-    void ListView::directScrollToPosition(int pos, int offset, bool cur) {
+    void ListView::directScrollToPosition(size_t pos, int offset, bool cur) {
         if (!layouter_) {
             return;
         }
@@ -530,7 +498,7 @@ namespace ukive {
         if (diff != 0) {
             diff = fillTopChildViews(diff);
             if (diff != 0) {
-                offsetChildViewTopAndBottom(diff);
+                offsetChildrenVertical(diff);
             }
         }
 
@@ -539,7 +507,7 @@ namespace ukive {
         requestDraw();
     }
 
-    void ListView::smoothScrollToPosition(int pos, int offset) {
+    void ListView::smoothScrollToPosition(size_t pos, int offset) {
         if (!layouter_) {
             return;
         }
@@ -563,7 +531,7 @@ namespace ukive {
             return;
         }
 
-        offsetChildViewTopAndBottom(final_dy);
+        offsetChildrenVertical(final_dy);
         recordCurPositionAndOffset();
         updateOverlayScrollBar();
         requestDraw();

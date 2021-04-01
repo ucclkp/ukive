@@ -4,7 +4,7 @@
 // This program is licensed under GPLv3 license that can be
 // found in the LICENSE file.
 
-#include "ukive/views/combo_box/combo_box.h"
+#include "combo_box.h"
 
 #include <algorithm>
 
@@ -19,7 +19,6 @@
 #include "ukive/views/list/linear_list_layouter.h"
 #include "ukive/views/list/list_view.h"
 #include "ukive/views/list/list_item.h"
-#include "ukive/views/combo_box/combo_list_source.h"
 #include "ukive/views/text_view.h"
 #include "ukive/window/window.h"
 
@@ -56,12 +55,9 @@ namespace ukive {
         button_->setLayoutSize(LS_AUTO, LS_FILL);
         addView(button_);
 
-        source_ = new ComboListSource();
-
         list_view_ = new ListView(getContext());
         list_view_->setLayouter(new LinearListLayouter());
-        list_view_->setSource(source_);
-        list_view_->setItemSelectedListener(this);
+        list_view_->setSource(this);
 
         auto shape_element = new ShapeElement(ShapeElement::RECT);
         shape_element->setRadius(2.f);
@@ -81,7 +77,8 @@ namespace ukive {
     }
 
     void ComboBox::addItem(const std::u16string& title) {
-        source_->addItem(title);
+        data_.push_back(title);
+        notifyDataChanged();
     }
 
     void ComboBox::determineViewsSize(const SizeInfo& info) {
@@ -264,6 +261,14 @@ namespace ukive {
             } else {
                 close();
             }
+        } else {
+            auto item = list_view_->getLayouter()->findItemFromView(v);
+            if (item) {
+                if (item->data_pos < data_.size()) {
+                    text_view_->setText(data_[item->data_pos]);
+                    close();
+                }
+            }
         }
     }
 
@@ -271,12 +276,27 @@ namespace ukive {
         close();
     }
 
-    void ComboBox::onItemClicked(ListView* lv, ListItem* item) {
-        int pos = item->data_pos;
-        if (pos >= 0 && pos < source_->onListGetDataCount()) {
-            text_view_->setText(source_->getItemData(pos));
-            close();
-        }
+    ListItem* ComboBox::onListCreateItem(LayoutView* parent, size_t position) {
+        auto c = parent->getContext();
+
+        auto title_tv = new TextView(c);
+        title_tv->setPadding(c.dp2pxi(16), c.dp2pxi(8), c.dp2pxi(16), c.dp2pxi(8));
+        title_tv->setClickable(true);
+        title_tv->setOnClickListener(this);
+        title_tv->setBackground(new RippleElement());
+        title_tv->setLayoutSize(LS_FILL, LS_AUTO);
+
+        return new TextViewListItem(title_tv);
+    }
+
+    void ComboBox::onListSetItemData(ListItem* item, size_t position) {
+        auto& data = data_.at(position);
+        auto combo_item = reinterpret_cast<TextViewListItem*>(item);
+        combo_item->title_label->setText(data);
+    }
+
+    size_t ComboBox::onListGetDataCount() const {
+        return data_.size();
     }
 
 }

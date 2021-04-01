@@ -380,8 +380,7 @@
     <ClInclude Include="views\check_box.h" />
     <ClInclude Include="views\check_listener.h" />
     <ClInclude Include="views\click_listener.h" />
-    <ClInclude Include="views\combo_box\combo_box.h" />
-    <ClInclude Include="views\combo_box\combo_list_source.h" />
+    <ClInclude Include="views\combo_box.h" />
     <ClInclude Include="views\layout_info\layout_info.h" />
     <ClInclude Include="views\layout_info\list_layout_info.h" />
     <ClInclude Include="views\layout_info\sequence_layout_info.h" />
@@ -422,7 +421,6 @@
     <ClInclude Include="views\title_bar\circle_color_button.h" />
     <ClInclude Include="views\title_bar\default_title_bar.h" />
     <ClInclude Include="views\title_bar\title_bar.h" />
-    <ClInclude Include="views\tree\tree_source.h" />
     <ClInclude Include="views\tree\tree_node.h" />
     <ClInclude Include="views\tree\tree_node_button.h" />
     <ClInclude Include="views\view.h" />
@@ -587,8 +585,7 @@
     <ClCompile Include="views\button.cpp" />
     <ClCompile Include="views\chart_view.cpp" />
     <ClCompile Include="views\check_box.cpp" />
-    <ClCompile Include="views\combo_box\combo_box.cpp" />
-    <ClCompile Include="views\combo_box\combo_list_source.cpp" />
+    <ClCompile Include="views\combo_box.cpp" />
     <ClCompile Include="views\layout_info\list_layout_info.cpp" />
     <ClCompile Include="views\layout_info\sequence_layout_info.cpp" />
     <ClCompile Include="views\layout_info\restraint_layout_info.cpp" />
@@ -623,7 +620,6 @@
     <ClCompile Include="views\title_bar\circle_color_button.cpp" />
     <ClCompile Include="views\title_bar\default_title_bar.cpp" />
     <ClCompile Include="views\title_bar\title_bar.cpp" />
-    <ClCompile Include="views\tree\tree_source.cpp" />
     <ClCompile Include="views\tree\tree_node.cpp" />
     <ClCompile Include="views\tree\tree_node_button.cpp" />
     <ClCompile Include="views\view.cpp" />

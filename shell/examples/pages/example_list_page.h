@@ -26,6 +26,7 @@ namespace shell {
 
         // ukive::Page
         ukive::View* onCreate(ukive::LayoutView* parent) override;
+        void onDestroy() override;
 
         // ukive::OnClickListener
         void onClick(ukive::View* v) override;

@@ -10,11 +10,11 @@
 #include "ukive/views/list/grid_list_layouter.h"
 #include "ukive/views/list/linear_list_layouter.h"
 #include "ukive/views/list/list_view.h"
+#include "ukive/window/window.h"
 #include "ukive/resources/layout_instantiator.h"
 
 #include "shell/examples/example_list_source.h"
 #include "shell/resources/necro_resources_id.h"
-#include "ukive/window/window.h"
 
 
 namespace shell {
@@ -42,6 +42,11 @@ namespace shell {
         list_view_->setSource(list_source_);
 
         return v;
+    }
+
+    void ExampleListPage::onDestroy() {
+        delete list_source_;
+        list_source_ = nullptr;
     }
 
     void ExampleListPage::onClick(ukive::View* v) {

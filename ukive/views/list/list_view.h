@@ -13,8 +13,6 @@
 #include "ukive/event/velocity_calculator.h"
 #include "ukive/views/layout/layout_view.h"
 #include "ukive/views/list/list_source.h"
-#include "ukive/views/click_listener.h"
-#include "ukive/views/input_event_delegate.h"
 
 
 namespace ukive {
@@ -32,20 +30,10 @@ namespace ukive {
         virtual void onChildRecycled(ListView* lv, ListItem* item) = 0;
     };
 
-    class ListItemSelectedListener {
-    public:
-        virtual ~ListItemSelectedListener() = default;
-
-        virtual void onItemPressed(ListView* lv, ListItem* item) {}
-        virtual void onItemClicked(ListView* lv, ListItem* item) {}
-    };
-
 
     class ListView :
         public LayoutView,
-        public ListItemChangedNotifier,
-        public OnClickListener,
-        public OnInputEventDelegate
+        public ListItemChangedNotifier
     {
     public:
         explicit ListView(Context c);
@@ -54,12 +42,11 @@ namespace ukive {
         void setSource(ListSource* src);
         void setLayouter(ListLayouter* layouter);
         void setSecDimUnknown(bool unknown);
-        void scrollToPosition(int pos, int offset, bool smooth);
-
-        void setItemSelectedListener(ListItemSelectedListener* l);
+        void scrollToPosition(size_t pos, int offset, bool smooth);
         void setChildRecycledListener(ListItemRecycledListener* l);
 
-        void getCurPosition(int* pos, int* offset) const;
+        ListLayouter* getLayouter() const;
+        void getCurPosition(size_t* pos, int* offset) const;
 
         // View
         void requestLayout() override;
@@ -75,12 +62,6 @@ namespace ukive {
         void onDrawOverChildren(Canvas* canvas) override;
         void onPreDraw() override;
 
-        // OnClickListener
-        void onClick(View* v) override;
-
-        // OnInputEventListener
-        bool onInputReceived(View* v, InputEvent* e, bool* ret) override;
-
     private:
         struct SizeCache {
             bool available = false;
@@ -93,13 +74,13 @@ namespace ukive {
 
         int processVerticalScroll(int dy);
         int determineVerticalScroll(int dy);
-        void offsetChildViewTopAndBottom(int dy);
+        void offsetChildrenVertical(int dy);
 
-        ListItem* makeNewItem(int data_pos, int view_index);
+        ListItem* makeNewItem(size_t data_pos, size_t view_index);
         void recycleItem(ListItem* item);
 
-        int findViewIndexFromStart(ListItem* item) const;
-        int findViewIndexFromEnd(ListItem* item) const;
+        bool findViewIndexFromStart(ListItem* item, size_t* index) const;
+        bool findViewIndexFromEnd(ListItem* item, size_t* index) const;
 
         void measureItem(ListItem* item, int max_width, int* width, int* height);
         void layoutItem(ListItem* item, int left, int top, int width, int height);
@@ -111,8 +92,8 @@ namespace ukive {
         int fillBottomChildViews(int dy);
 
         void layoutAtPosition(bool cur);
-        void directScrollToPosition(int pos, int offset, bool cur);
-        void smoothScrollToPosition(int pos, int offset);
+        void directScrollToPosition(size_t pos, int offset, bool cur);
+        void smoothScrollToPosition(size_t pos, int offset);
 
         void onScrollBarChanged(int dy);
 
@@ -133,13 +114,12 @@ namespace ukive {
         Scroller scroller_;
         VelocityCalculator velocity_calculator_;
 
-        std::unique_ptr<ListSource> source_;
+        ListSource* source_ = nullptr;
         std::unique_ptr<ListLayouter> layouter_;
         std::unique_ptr<OverlayScrollBar> scroll_bar_;
         std::unique_ptr<ListItemRecycler> recycler_;
 
         ListItemRecycledListener* recycled_listener_ = nullptr;
-        ListItemSelectedListener* selected_listener_ = nullptr;
 
         bool is_layout_frozen_ = false;
         bool is_sec_dim_unknown_ = false;

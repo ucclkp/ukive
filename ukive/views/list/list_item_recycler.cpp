@@ -26,8 +26,8 @@ namespace ukive {
         parent_->addView(item->item_view, false);
     }
 
-    void ListItemRecycler::addToParent(ListItem* item, int pos) {
-        DCHECK(item && pos >= 0);
+    void ListItemRecycler::addToParent(ListItem* item, size_t pos) {
+        DCHECK(item);
 
         item->recycled = false;
         parent_->addView(pos, item->item_view, false);
@@ -37,7 +37,6 @@ namespace ukive {
         DCHECK(item);
 
         item->recycled = true;
-        item->data_pos = -1;
         recycled_items_[item->item_id].push_back(item);
     }
 
@@ -45,7 +44,6 @@ namespace ukive {
         DCHECK(item);
 
         item->recycled = true;
-        item->data_pos = -1;
         recycled_items_[item->item_id].push_back(item);
         parent_->removeView(item->item_view, false, false);
     }
@@ -63,9 +61,7 @@ namespace ukive {
         return item;
     }
 
-    ListItem* ListItemRecycler::reuse(int item_id, int pos) {
-        DCHECK(pos >= 0);
-
+    ListItem* ListItemRecycler::reuse(int item_id, size_t pos) {
         if (recycled_items_[item_id].empty()) {
             return nullptr;
         }
@@ -74,12 +70,11 @@ namespace ukive {
         recycled_items_[item_id].pop_back();
 
         addToParent(item, pos);
-
         return item;
     }
 
-    int ListItemRecycler::getRecycledCount(int item_id) {
-        return utl::num_cast<int>(recycled_items_[item_id].size());
+    size_t ListItemRecycler::getRecycledCount(int item_id) {
+        return recycled_items_[item_id].size();
     }
 
     void ListItemRecycler::clear() {

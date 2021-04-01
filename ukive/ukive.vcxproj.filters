@@ -502,9 +502,6 @@
     <ClCompile Include="views\layout_info\sequence_layout_info.cpp">
       <Filter>views\layout_info</Filter>
     </ClCompile>
-    <ClCompile Include="views\combo_box\combo_box.cpp">
-      <Filter>views\combo_box</Filter>
-    </ClCompile>
     <ClCompile Include="views\size_info.cpp">
       <Filter>views</Filter>
     </ClCompile>
@@ -556,12 +553,6 @@
     <ClCompile Include="views\layout_info\list_layout_info.cpp">
       <Filter>views\layout_info</Filter>
     </ClCompile>
-    <ClCompile Include="views\combo_box\combo_list_source.cpp">
-      <Filter>views\combo_box</Filter>
-    </ClCompile>
-    <ClCompile Include="views\tree\tree_source.cpp">
-      <Filter>views\tree</Filter>
-    </ClCompile>
     <ClCompile Include="views\list\list_source.cpp">
       <Filter>views\list</Filter>
     </ClCompile>
@@ -579,6 +570,9 @@
     </ClCompile>
     <ClCompile Include="views\list\list_item_recycler.cpp">
       <Filter>views\list</Filter>
+    </ClCompile>
+    <ClCompile Include="views\combo_box.cpp">
+      <Filter>views</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1236,9 +1230,6 @@
     <ClInclude Include="views\layout_info\sequence_layout_info.h">
       <Filter>views\layout_info</Filter>
     </ClInclude>
-    <ClInclude Include="views\combo_box\combo_box.h">
-      <Filter>views\combo_box</Filter>
-    </ClInclude>
     <ClInclude Include="views\size_info.h">
       <Filter>views</Filter>
     </ClInclude>
@@ -1296,12 +1287,6 @@
     <ClInclude Include="views\layout_info\list_layout_info.h">
       <Filter>views\layout_info</Filter>
     </ClInclude>
-    <ClInclude Include="views\combo_box\combo_list_source.h">
-      <Filter>views\combo_box</Filter>
-    </ClInclude>
-    <ClInclude Include="views\tree\tree_source.h">
-      <Filter>views\tree</Filter>
-    </ClInclude>
     <ClInclude Include="views\list\list_source.h">
       <Filter>views\list</Filter>
     </ClInclude>
@@ -1319,6 +1304,9 @@
     </ClInclude>
     <ClInclude Include="views\list\list_item_recycler.h">
       <Filter>views\list</Filter>
+    </ClInclude>
+    <ClInclude Include="views\combo_box.h">
+      <Filter>views</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1444,9 +1432,6 @@
     </Filter>
     <Filter Include="elements">
       <UniqueIdentifier>{82f525eb-fa8b-4717-b25d-e1f27276eb9e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="views\combo_box">
-      <UniqueIdentifier>{7e373ab6-9ac1-48ac-b5d4-aca14d6157a5}</UniqueIdentifier>
     </Filter>
     <Filter Include="graphics\mac">
       <UniqueIdentifier>{97b0abd6-668f-4842-8b4c-f0ceeef2a80b}</UniqueIdentifier>

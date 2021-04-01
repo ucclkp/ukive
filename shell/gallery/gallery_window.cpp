@@ -12,10 +12,13 @@
 #include "utils/string_utils.h"
 
 #include "ukive/app/application.h"
+#include "ukive/elements/ripple_element.h"
+#include "ukive/graphics/images/image_frame.h"
+#include "ukive/resources/layout_instantiator.h"
+#include "ukive/views/image_view.h"
 #include "ukive/views/list/grid_list_layouter.h"
 #include "ukive/views/button.h"
 
-#include "shell/gallery/gallery_list_source.h"
 #include "shell/resources/necro_resources_id.h"
 #include "shell/gallery/gallery_utils.h"
 #include "shell/gallery/picture/picture_window.h"
@@ -28,11 +31,21 @@ namespace shell {
 
     namespace fs = std::filesystem;
 
+    // ExampleListItem
+    GalleryWindow::GalleryListItem::GalleryListItem(ukive::View* v)
+        : ListItem(v)
+    {
+        title_view_ = static_cast<ukive::TextView*>(v->findView(Res::Id::tv_gallery_item_title));
+        img_view_ = static_cast<ukive::ImageView*>(v->findView(Res::Id::iv_gallery_item_img));
+    }
+
     void GalleryWindow::onCreated() {
         Window::onCreated();
         setContentView(Res::Layout::gallery_window_layout_xml);
 
         showTitleBar();
+
+        thumb_fetcher_ = std::make_unique<ThumbnailFetcher>();
 
         back_btn_ = findView<ukive::Button>(Res::Id::bt_gallery_window_back);
         back_btn_->setOnClickListener(this);
@@ -41,13 +54,18 @@ namespace shell {
 
         list_view_ = findView<ukive::ListView>(Res::Id::lv_gallery_window_list);
 
-        list_source_ = new GalleryListSource(list_view_);
-
         list_view_->setLayouter(new ukive::GridListLayouter(5));
-        list_view_->setSource(list_source_);
-        list_view_->setItemSelectedListener(this);
+        list_view_->setSource(this);
+
+        list_view_->setChildRecycledListener(this);
+        thumb_fetcher_->setListener(this);
+        thumb_fetcher_->launch();
 
         navigateTo(fs::path(ROOT_PATH), false);
+    }
+
+    void GalleryWindow::onDestroyed() {
+        thumb_fetcher_->shutdown();
     }
 
     bool GalleryWindow::onInputEvent(ukive::InputEvent* e) {
@@ -69,34 +87,103 @@ namespace shell {
         return result;
     }
 
-    void GalleryWindow::onClick(ukive::View* v) {
-        if (v == back_btn_) {
-            navigateBack();
+    ukive::ListItem* GalleryWindow::onListCreateItem(
+        ukive::LayoutView* parent, size_t position)
+    {
+        auto view = ukive::LayoutInstantiator::from(
+            parent->getContext(), parent, Res::Layout::gallery_item_layout_xml);
+        view->setClickable(true);
+        view->setOnClickListener(this);
+
+        auto bg = new ukive::RippleElement();
+        bg->setTintColor(ukive::Color::White);
+        view->setBackground(bg);
+
+        return new GalleryListItem(view);
+    }
+
+    void GalleryWindow::onListSetItemData(ukive::ListItem* item, size_t position) {
+        auto gallery_list_item = static_cast<GalleryListItem*>(item);
+
+        auto& d = data_[position];
+        if (d.ts == ThumbStatus::None) {
+            thumb_fetcher_->add(d.path, !d.is_dir, item->data_pos, d.token);
+            d.ts = ThumbStatus::Fetching;
+        }
+
+        gallery_list_item->title_view_->setText(d.title);
+        gallery_list_item->img_view_->setImage(d.img);
+        gallery_list_item->item_view->getBackground()->resetState();
+    }
+
+    size_t GalleryWindow::onListGetDataCount() const {
+        return data_.size();
+    }
+
+    void GalleryWindow::onChildRecycled(ukive::ListView* lv, ukive::ListItem* item) {
+        auto pos = item->data_pos;
+        if (pos >= onListGetDataCount()) {
+            return;
+        }
+
+        auto& d = data_[pos];
+        if (d.ts == ThumbStatus::Fetching) {
+            d.token = std::make_shared<int>();
+            d.ts = ThumbStatus::None;
         }
     }
 
-    void GalleryWindow::onItemClicked(ukive::ListView* lv, ukive::ListItem* item) {
-        auto pos = item->data_pos;
-        auto& data = list_source_->getItem(pos);
+    void GalleryWindow::onThumbnail(const Thumbnail& thumb) {
+        if (!thumb.w_token.lock()) {
+            return;
+        }
 
-        std::error_code ec;
-        auto next_file(std::filesystem::absolute(data.path, ec));
-        if (!fs::is_directory(next_file, ec)) {
-            auto slide_window = new PictureWindow();
-            slide_window->setTitle(u"XPicture");
-            slide_window->setWidth(ukive::Application::dp2pxi(600));
-            slide_window->setHeight(ukive::Application::dp2pxi(600));
-            slide_window->setOwnership(true);
-            {
-                ukive::Purpose purpose;
-                purpose.params["target"] = data.path;
-                slide_window->setPurpose(purpose);
-            }
-            slide_window->center();
-            slide_window->init(InitParams());
-            slide_window->maximize();
+        ukive::ImageFrame* img;
+        if (thumb.data.empty()) {
+            img = img = ukive::ImageFrame::create(
+                list_view_->getWindow(), thumb.ph_bmp.get());
+        }
+        else {
+            img = ukive::ImageFrame::create(
+                list_view_->getWindow(),
+                thumb.width, thumb.height,
+                reinterpret_cast<const uint8_t*>(thumb.data.data()),
+                thumb.data.size(), thumb.width * 4, thumb.options);
+        }
+
+        auto& d = data_[thumb.id];
+        d.ts = ThumbStatus::Complete;
+        d.img = std::shared_ptr<ukive::ImageFrame>(img);
+        notifyDataChanged();
+    }
+
+    void GalleryWindow::onClick(ukive::View* v) {
+        if (v == back_btn_) {
+            navigateBack();
         } else {
-            navigateTo(next_file, false);
+            auto item = list_view_->getLayouter()->findItemFromView(v);
+            auto& data = data_[item->data_pos];
+
+            std::error_code ec;
+            auto next_file(std::filesystem::absolute(data.path, ec));
+            if (!is_directory(next_file, ec)) {
+                auto slide_window = new PictureWindow();
+                slide_window->setTitle(u"XPicture");
+                slide_window->setWidth(ukive::Application::dp2pxi(600));
+                slide_window->setHeight(ukive::Application::dp2pxi(600));
+                slide_window->setOwnership(true);
+                {
+                    ukive::Purpose purpose;
+                    purpose.params["target"] = data.path;
+                    slide_window->setPurpose(purpose);
+                }
+                slide_window->center();
+                slide_window->init(ukive::Window::InitParams());
+                slide_window->maximize();
+            }
+            else {
+                navigateTo(next_file, false);
+            }
         }
     }
 
@@ -129,8 +216,9 @@ namespace shell {
         cur_dir_ = path;
         cur_dir_tv_->setText(cur_dir_.filename().u16string());
 
-        if (!back && list_source_->onListGetDataCount() > 0) {
-            int pos, offset;
+        if (!back && data_.size() > 0) {
+            size_t pos;
+            int offset;
             list_view_->getCurPosition(&pos, &offset);
             back_info_.push({ pos, offset });
         }
@@ -150,13 +238,22 @@ namespace shell {
             return ret == 1;
         });
 
-        list_source_->clearItems();
+        data_.clear();
         for (const auto& f : dirs) {
-            list_source_->addItem(f.name, f.path, true);
+            Data d;
+            d.title = f.name;
+            d.path = f.path;
+            d.is_dir = true;
+            data_.push_back(std::move(d));
         }
         for (const auto& f : files) {
-            list_source_->addItem(f.name, f.path, false);
+            Data d;
+            d.title = f.name;
+            d.path = f.path;
+            d.is_dir = false;
+            data_.push_back(std::move(d));
         }
+        notifyDataChanged();
 
         if (back && !back_info_.empty()) {
             auto& info = back_info_.top();

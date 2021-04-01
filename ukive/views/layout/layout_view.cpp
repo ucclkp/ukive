@@ -9,7 +9,6 @@
 #include <queue>
 
 #include "utils/log.h"
-#include "utils/stl_utils.h"
 
 #include "ukive/views/layout_info/layout_info.h"
 #include "ukive/graphics/canvas.h"
@@ -181,22 +180,8 @@ namespace ukive {
         bool attached = isAttachedToWindow();
         for (auto it = views_.begin(); it != views_.end(); ++it) {
             if ((*it) == v) {
-                v->discardFocus();
-                v->discardMouseCapture();
-                v->discardTouchCapture();
-                v->discardPendingOperations();
-                v->resetLayoutStatus();
-
-                if (v->isAttachedToWindow() && attached) {
-                    v->dispatchDetachFromWindow();
-                }
-
-                v->setParent(nullptr);
+                isolateChild(v, attached, del);
                 views_.erase(it);
-
-                if (del) {
-                    delete v;
-                }
 
                 if (req_layout) {
                     requestLayout();
@@ -207,24 +192,27 @@ namespace ukive {
         }
     }
 
+    void LayoutView::removeView(size_t index, bool del, bool req_layout) {
+        if (index >= views_.size()) {
+            DLOG(Log::WARNING) << "Invalid index of View";
+            return;
+        }
+
+        bool attached = isAttachedToWindow();
+        isolateChild(views_[index], attached, del);
+        views_.erase(views_.begin() + index);
+
+        if (req_layout) {
+            requestLayout();
+        }
+        requestDraw();
+    }
+
     void LayoutView::removeAllViews(bool del, bool req_layout) {
         bool attached = isAttachedToWindow();
         if (!views_.empty()) {
             for (auto child : views_) {
-                child->discardFocus();
-                child->discardMouseCapture();
-                child->discardTouchCapture();
-                child->discardPendingOperations();
-                child->resetLayoutStatus();
-
-                if (child->isAttachedToWindow() && attached) {
-                    child->dispatchDetachFromWindow();
-                }
-                child->setParent(nullptr);
-
-                if (del) {
-                    delete child;
-                }
+                isolateChild(child, attached, del);
             }
 
             views_.clear();
@@ -235,6 +223,23 @@ namespace ukive {
                 }
                 requestDraw();
             }
+        }
+    }
+
+    void LayoutView::isolateChild(View* child, bool attached, bool del) {
+        child->discardFocus();
+        child->discardMouseCapture();
+        child->discardTouchCapture();
+        child->discardPendingOperations();
+        child->resetLayoutStatus();
+
+        if (child->isAttachedToWindow() && attached) {
+            child->dispatchDetachFromWindow();
+        }
+        child->setParent(nullptr);
+
+        if (del) {
+            delete child;
         }
     }
 

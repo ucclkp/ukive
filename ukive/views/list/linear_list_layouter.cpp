@@ -6,8 +6,6 @@
 
 #include "ukive/views/list/linear_list_layouter.h"
 
-#include <algorithm>
-
 #include "utils/log.h"
 
 #include "ukive/views/list/list_view.h"
@@ -28,14 +26,14 @@ namespace ukive {
 
         parent_->freezeLayout();
 
-        int index = 0;
+        size_t index = 0;
         int total_height = 0;
-        int item_count = source_->onListGetDataCount();
+        auto item_count = source_->onListGetDataCount();
 
-        int pos = cur ? cur_position_ : 0;
+        size_t pos = cur ? cur_position_ : 0;
         int offset = cur ? cur_offset_in_position_ : 0;
 
-        for (int i = pos; i < item_count; ++i, ++index) {
+        for (auto i = pos; i < item_count; ++i, ++index) {
             if (total_height >= height + offset) {
                 break;
             }
@@ -54,7 +52,7 @@ namespace ukive {
             total_height += c_height;
         }
 
-        for (int i = index; i < column_.getItemCount(); ++i) {
+        for (auto i = index; i < column_.getItemCount(); ++i) {
             parent_->recycleItem(column_.getItem(i));
         }
         column_.removeItems(index);
@@ -69,17 +67,17 @@ namespace ukive {
 
         parent_->freezeLayout();
 
-        int index = 0;
+        size_t index = 0;
         int total_height = 0;
-        int item_count = source_->onListGetDataCount();
+        auto item_count = source_->onListGetDataCount();
         auto bounds = parent_->getContentBounds();
 
-        int pos = cur ? cur_position_ : 0;
+        size_t pos = cur ? cur_position_ : 0;
         int offset = cur ? cur_offset_in_position_ : 0;
 
         column_.setVertical(bounds.top, bounds.bottom);
 
-        for (int i = pos; i < item_count; ++i, ++index) {
+        for (auto i = pos; i < item_count; ++i, ++index) {
             if (total_height >= bounds.height() + offset) {
                 break;
             }
@@ -112,14 +110,14 @@ namespace ukive {
         return 0;
     }
 
-    int LinearListLayouter::onScrollToPosition(int pos, int offset, bool cur) {
+    int LinearListLayouter::onScrollToPosition(size_t pos, int offset, bool cur) {
         if (!isAvailable()) {
             return 0;
         }
 
-        int index = 0;
+        size_t index = 0;
         int total_height = 0;
-        int item_count = source_->onListGetDataCount();
+        auto item_count = source_->onListGetDataCount();
         auto bounds = parent_->getContentBounds();
 
         pos = cur ? cur_position_ : pos;
@@ -127,7 +125,7 @@ namespace ukive {
 
         bool to_bottom = false;
         if (pos + 1 > item_count) {
-            pos = std::max(item_count - 1, 0);
+            pos = item_count > 0 ? item_count - 1 : 0;
             offset = 0;
             to_bottom = true;
         }
@@ -137,7 +135,7 @@ namespace ukive {
 
         parent_->freezeLayout();
 
-        for (int i = pos; i < item_count; ++i, ++index) {
+        for (auto i = pos; i < item_count; ++i, ++index) {
             auto item = column_.findAndInsertItem(index, source_->onListGetItemId(i));
             if (!item || item->item_id != source_->onListGetItemId(i)) {
                 item = parent_->makeNewItem(i, index);
@@ -163,7 +161,7 @@ namespace ukive {
             }
         }
 
-        for (int i = index; i < column_.getItemCount(); ++i) {
+        for (auto i = index; i < column_.getItemCount(); ++i) {
             parent_->recycleItem(column_.getItem(i));
         }
         column_.removeItems(index);
@@ -179,7 +177,7 @@ namespace ukive {
         return 0;
     }
 
-    int LinearListLayouter::onSmoothScrollToPosition(int pos, int offset) {
+    int LinearListLayouter::onSmoothScrollToPosition(size_t pos, int offset) {
         if (!isAvailable()) {
             return 0;
         }
@@ -189,26 +187,26 @@ namespace ukive {
             return 0;
         }
         if (pos + 1 > item_count) {
-            pos = std::max(item_count - 1, 0);
+            pos = item_count > 0 ? item_count - 1 : 0;
             offset = 0;
         }
 
-        int start_pos = cur_position_;
-        int start_pos_offset = cur_offset_in_position_;
-        int terminate_pos = pos;
-        int terminate_pos_offset = offset;
+        auto start_pos = cur_position_;
+        auto start_pos_offset = cur_offset_in_position_;
+        auto terminate_pos = pos;
+        auto terminate_pos_offset = offset;
         bool front = (start_pos <= terminate_pos);
         auto bounds = parent_->getContentBounds();
 
-        int i = start_pos;
-        int index = 0;
+        auto i = start_pos;
+        size_t index = 0;
 
         int total_height = 0;
         bool full_child_reached = false;
 
         parent_->freezeLayout();
 
-        for (; (front ? (i <= terminate_pos) : (i >= terminate_pos)); (front ? ++i : --i), ++index) {
+        for (; (front ? (i <= terminate_pos) : (i-- > terminate_pos)); (front ? ++i : 0), ++index) {
             auto item = column_.findAndInsertItem(index, source_->onListGetItemId(i));
             if (!item || item->item_id != source_->onListGetItemId(i)) {
                 item = parent_->makeNewItem(i, index);
@@ -390,7 +388,7 @@ namespace ukive {
             return;
         }
 
-        int item_count = column_.getItemCount();
+        auto item_count = column_.getItemCount();
         if (item_count == 0) {
             *prev = 0; *next = 0;
             return;
@@ -398,7 +396,7 @@ namespace ukive {
 
         // 计算当前已测量的 View 高度的平均值
         int det_height = 0;
-        for (int i = 0; i < item_count; ++i) {
+        for (size_t i = 0; i < item_count; ++i) {
             auto item = column_.getItem(i);
             if (item) {
                 det_height += item->getMgdHeight();
@@ -414,7 +412,7 @@ namespace ukive {
             return;
         }
 
-        int i;
+        size_t i;
         int prev_total_height = cur_offset_in_position_ + f_item->data_pos * avgc_height;
         for (i = 0; i < fv_item->data_pos - f_item->data_pos; ++i) {
             prev_total_height += column_.getItem(i)->getMgdHeight();
@@ -460,15 +458,15 @@ namespace ukive {
         return result;
     }
 
-    void LinearListLayouter::getCurPosition(int* pos, int* offset) const {
+    void LinearListLayouter::getCurPosition(size_t* pos, int* offset) const {
         *pos = cur_position_;
         if (offset) *offset = cur_offset_in_position_;
     }
 
     void LinearListLayouter::recycleTopChildren(int dy) {
-        int index = column_.getIndexOfFirstVisible(dy);
-        if (index != -1) {
-            for (int i = 0; i < index; ++i) {
+        size_t index;
+        if (column_.getIndexOfFirstVisible(dy, &index)) {
+            for (size_t i = 0; i < index; ++i) {
                 parent_->recycleItem(column_.getItem(i));
             }
             column_.removeItems(0, index - 0);
@@ -476,10 +474,10 @@ namespace ukive {
     }
 
     void LinearListLayouter::recycleBottomChildren(int dy) {
-        int index = column_.getIndexOfLastVisible(dy);
-        if (index != -1) {
+        size_t index;
+        if (column_.getIndexOfLastVisible(dy, &index)) {
             ++index;
-            for (int i = index; i < column_.getItemCount(); ++i) {
+            for (auto i = index; i < column_.getItemCount(); ++i) {
                 parent_->recycleItem(column_.getItem(i));
             }
             column_.removeItems(index);

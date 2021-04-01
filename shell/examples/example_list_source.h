@@ -26,13 +26,7 @@ namespace shell {
 
     class ExampleListItem : public ukive::ListItem {
     public:
-        explicit ExampleListItem(ukive::View* v)
-            : ListItem(v)
-        {
-            title_label = reinterpret_cast<ukive::TextView*>(v->findView(ID_TITLE));
-            summary_label = reinterpret_cast<ukive::TextView*>(v->findView(ID_SUMMARY));
-            avatar_image = reinterpret_cast<ukive::ImageView*>(v->findView(ID_AVATAR));
-        }
+        explicit ExampleListItem(ukive::View* v);
 
         ukive::TextView* title_label;
         ukive::TextView* summary_label;
@@ -47,15 +41,15 @@ namespace shell {
             std::u16string summary;
         };
 
-        ukive::ListItem* onListCreateItem(ukive::LayoutView* parent, int position) override;
-        void onListSetItemData(ukive::ListItem* item, int position) override;
-        int onListGetDataCount() override;
+        ukive::ListItem* onListCreateItem(ukive::LayoutView* parent, size_t position) override;
+        void onListSetItemData(ukive::ListItem* item, size_t position) override;
+        size_t onListGetDataCount() const override;
 
         void addItem(int image_res_id, const std::u16string& title, const std::u16string& summary);
-        void addItem(int pos, int image_res_id, const std::u16string& title, const std::u16string& summary);
+        void addItem(size_t pos, int image_res_id, const std::u16string& title, const std::u16string& summary);
         void modifyItem(int image_res_id, const std::u16string& title, const std::u16string& summary);
         void removeItem(const std::u16string& title);
-        void removeItem(int pos);
+        void removeItem(size_t pos);
 
     private:
         std::vector<BindData> data_list_;

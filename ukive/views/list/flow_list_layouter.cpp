@@ -28,10 +28,10 @@ namespace ukive {
             return;
         }
 
-        int pos = calPreferredCurPos();
-        int item_count = source_->onListGetDataCount();
+        auto pos = calPreferredCurPos();
+        auto item_count = source_->onListGetDataCount();
 
-        std::vector<int> indices(col_count_, 0);
+        std::vector<size_t> indices(col_count_, 0);
         std::vector<int> heights(col_count_, 0);
         columns_.setVertical(0, height);
         columns_.setHorizontal(0, width);
@@ -44,10 +44,10 @@ namespace ukive {
             }
         }
 
-        int index = 0;
-        for (int i = pos; i < item_count; ++i) {
-            int row = i / col_count_;
-            int col = i % col_count_;
+        size_t index = 0;
+        for (auto i = pos; i < item_count; ++i) {
+            auto row = i / col_count_;
+            auto col = i % col_count_;
             const auto& record = cur_records_[col];
             if (record.is_null) {
                 continue;
@@ -78,7 +78,7 @@ namespace ukive {
             ++indices[col];
 
             bool is_filled = true;
-            for (int j = 0; j < col_count_; ++j) {
+            for (size_t j = 0; j < col_count_; ++j) {
                 if (heights[j] < height + cur_records_[j].cur_offset) {
                     is_filled = false;
                     break;
@@ -89,8 +89,8 @@ namespace ukive {
             }
         }
 
-        for (int i = 0; i < col_count_; ++i) {
-            for (int j = indices[i]; j < columns_[i].getItemCount(); ++j) {
+        for (size_t i = 0; i < col_count_; ++i) {
+            for (size_t j = indices[i]; j < columns_[i].getItemCount(); ++j) {
                 parent_->recycleItem(columns_[i].getItem(j));
             }
             columns_[i].removeItems(indices[i]);
@@ -104,12 +104,12 @@ namespace ukive {
             return 0;
         }
 
-        int pos = calPreferredCurPos();
-        int item_count = source_->onListGetDataCount();
+        auto pos = calPreferredCurPos();
+        auto item_count = source_->onListGetDataCount();
         auto bounds = parent_->getContentBounds();
 
-        int index = 0;
-        std::vector<int> indices(col_count_, 0);
+        size_t index = 0;
+        std::vector<size_t> indices(col_count_, 0);
         std::vector<int> heights(col_count_, 0);
         columns_.setVertical(bounds.top, bounds.bottom);
         columns_.setHorizontal(bounds.left, bounds.right);
@@ -122,9 +122,9 @@ namespace ukive {
             }
         }
 
-        for (int i = pos; i < item_count; ++i) {
-            int row = i / col_count_;
-            int col = i % col_count_;
+        for (auto i = pos; i < item_count; ++i) {
+            auto row = i / col_count_;
+            auto col = i % col_count_;
             const auto& record = cur_records_[col];
             if (record.is_null) {
                 continue;
@@ -151,7 +151,7 @@ namespace ukive {
             ++indices[col];
 
             bool is_filled = true;
-            for (int j = 0; j < col_count_; ++j) {
+            for (size_t j = 0; j < col_count_; ++j) {
                 if (heights[j] < bounds.height() + cur_records_[j].cur_offset) {
                     is_filled = false;
                     break;
@@ -182,11 +182,11 @@ namespace ukive {
         return 0;
     }
 
-    int FlowListLayouter::onScrollToPosition(int pos, int offset, bool cur) {
+    int FlowListLayouter::onScrollToPosition(size_t pos, int offset, bool cur) {
         return 0;
     }
 
-    int FlowListLayouter::onSmoothScrollToPosition(int pos, int offset) {
+    int FlowListLayouter::onSmoothScrollToPosition(size_t pos, int offset) {
         return 0;
     }
 
@@ -199,27 +199,28 @@ namespace ukive {
         if (!top_item) {
             return 0;
         }
-        auto bounds = parent_->getContentBounds();
-        auto cur_data_pos = top_item->data_pos;
-        int cur_index = parent_->findViewIndexFromStart(top_item);
 
+        auto cur_data_pos = top_item->data_pos;
+
+        size_t cur_index;
+        bool found_view = parent_->findViewIndexFromStart(top_item, &cur_index);
         parent_->freezeLayout();
 
         while (cur_data_pos > 0 && !columns_.isTopFilled(dy)) {
             --cur_data_pos;
-            int row = cur_data_pos / col_count_;
-            int col = cur_data_pos % col_count_;
+            auto row = cur_data_pos / col_count_;
+            auto col = cur_data_pos % col_count_;
             if (columns_[col].isTopFilled(dy)) {
                 continue;
             }
 
             auto cur_item = columns_.getItemByPos(cur_data_pos);
             if (cur_item) {
-                cur_index = parent_->findViewIndexFromStart(cur_item);
+                found_view = parent_->findViewIndexFromStart(cur_item, &cur_index);
                 continue;
             }
 
-            DCHECK(cur_index != -1);
+            DCHECK(found_view);
 
             int child_max_width = columns_[col].getWidth();
             auto new_item = parent_->makeNewItem(cur_data_pos, cur_index);
@@ -235,11 +236,11 @@ namespace ukive {
 
         dy = columns_.getFinalScroll(dy);
 
-        for (int i = 0; i < col_count_; ++i) {
-            int index = columns_[i].getIndexOfLastVisible(dy);
-            if (index != -1) {
+        for (size_t i = 0; i < col_count_; ++i) {
+            size_t index;
+            if (columns_[i].getIndexOfLastVisible(dy, &index)) {
                 ++index;
-                for (int j = index; j < columns_[i].getItemCount(); ++j) {
+                for (auto j = index; j < columns_[i].getItemCount(); ++j) {
                     parent_->recycleItem(columns_[i].getItem(j));
                 }
                 columns_[i].removeItems(index);
@@ -262,7 +263,9 @@ namespace ukive {
         }
         auto bounds = parent_->getContentBounds();
         auto cur_data_pos = bottom_item->data_pos;
-        int cur_index = parent_->findViewIndexFromEnd(bottom_item);
+
+        size_t cur_index;
+        bool found_view = parent_->findViewIndexFromEnd(bottom_item, &cur_index);
 
         parent_->freezeLayout();
 
@@ -276,11 +279,11 @@ namespace ukive {
 
             auto cur_item = columns_.getItemByPos(cur_data_pos);
             if (cur_item) {
-                cur_index = parent_->findViewIndexFromEnd(cur_item);
+                found_view = parent_->findViewIndexFromEnd(cur_item, &cur_index);
                 continue;
             }
 
-            DCHECK(cur_index != -1);
+            DCHECK(found_view);
 
             int child_max_width = columns_[col].getWidth();
             auto new_item = parent_->makeNewItem(cur_data_pos, cur_index + 1);
@@ -297,10 +300,10 @@ namespace ukive {
 
         dy = columns_.getFinalScroll(dy);
 
-        for (int i = 0; i < col_count_; ++i) {
-            int index = columns_[i].getIndexOfFirstVisible(dy);
-            if (index != -1) {
-                for (int j = 0; j < index; ++j) {
+        for (size_t i = 0; i < col_count_; ++i) {
+            size_t index;
+            if (columns_[i].getIndexOfFirstVisible(dy, &index)) {
+                for (size_t j = 0; j < index; ++j) {
                     parent_->recycleItem(columns_[i].getItem(j));
                 }
                 columns_[i].removeItems(0, index - 0);
@@ -340,13 +343,13 @@ namespace ukive {
             return;
         }
 
-        int max_col = 0;
-        int max_col_count = 0;
+        size_t max_col = 0;
+        size_t max_col_count = 0;
         int max_col_height = 0;
-        for (int i = 0; i < col_count_; ++i) {
+        for (size_t i = 0; i < col_count_; ++i) {
             int avg_height = 0;
-            int count = columns_[i].getItemCount();
-            for (int j = 0; j < count; ++j) {
+            auto count = columns_[i].getItemCount();
+            for (size_t j = 0; j < count; ++j) {
                 auto item = columns_[i].getItem(j);
                 avg_height += item->getMgdHeight();
             }
@@ -364,16 +367,16 @@ namespace ukive {
             child_height = max_col_height / max_col_count;
         }
 
-        int cur_row = cur_records_[max_col].cur_row;
-        int cur_offset_in_row = cur_records_[max_col].cur_offset;
+        auto cur_row = cur_records_[max_col].cur_row;
+        auto cur_offset_in_row = cur_records_[max_col].cur_offset;
 
-        int i;
+        size_t i;
         int prev_total_height = cur_offset_in_row;
         for (i = 0; i < cur_row; ++i) {
             prev_total_height += child_height;
         }
 
-        int row_count = data_count / col_count_;
+        size_t row_count = data_count / col_count_;
         if (data_count % col_count_) {
             ++row_count;
         }
@@ -403,7 +406,7 @@ namespace ukive {
             return;
         }
 
-        for (int i = 0; i < col_count_; ++i) {
+        for (size_t i = 0; i < col_count_; ++i) {
             Record record;
             auto item = columns_[i].getFirstVisible();
             if (!item) {
@@ -440,14 +443,14 @@ namespace ukive {
         return result;
     }
 
-    void FlowListLayouter::getCurPosition(int* pos, int* offset) const {
+    void FlowListLayouter::getCurPosition(size_t* pos, int* offset) const {
         *pos = 0;
         if (offset) *offset = 0;
     }
 
-    int FlowListLayouter::calPreferredCurPos() const {
-        int index = 0;
-        int pos = std::numeric_limits<int>::max();
+    size_t FlowListLayouter::calPreferredCurPos() const {
+        size_t index = 0;
+        size_t pos = std::numeric_limits<size_t>::max();
         for (const auto& r : cur_records_) {
             if (r.is_null) {
                 ++index;
@@ -463,12 +466,12 @@ namespace ukive {
     }
 
     bool FlowListLayouter::canScrollToTop() const {
-        int item_count = source_->onListGetDataCount();
+        auto item_count = source_->onListGetDataCount();
         return !(columns_.isAllAtTop() && columns_.isAllAtCeil(item_count));
     }
 
     bool FlowListLayouter::canScrollToBottom() const {
-        int item_count = source_->onListGetDataCount();
+        auto item_count = source_->onListGetDataCount();
         return !(columns_.isAllAtBottom() && columns_.isAllAtFloor(item_count));
     }
 

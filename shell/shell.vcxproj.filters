@@ -106,9 +106,6 @@
     <ClCompile Include="visualize\visual_layout_scene.cpp">
       <Filter>visualize</Filter>
     </ClCompile>
-    <ClCompile Include="gallery\gallery_list_source.cpp">
-      <Filter>gallery</Filter>
-    </ClCompile>
     <ClCompile Include="examples\example_list_source.cpp">
       <Filter>examples</Filter>
     </ClCompile>
@@ -173,9 +170,6 @@
     </ClInclude>
     <ClInclude Include="visualize\visual_layout_scene.h">
       <Filter>visualize</Filter>
-    </ClInclude>
-    <ClInclude Include="gallery\gallery_list_source.h">
-      <Filter>gallery</Filter>
     </ClInclude>
     <ClInclude Include="examples\example_list_source.h">
       <Filter>examples</Filter>

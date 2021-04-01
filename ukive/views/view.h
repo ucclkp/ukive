@@ -91,8 +91,8 @@ namespace ukive {
         void setReceiveOutsideInputEvent(bool receive);
         void setMinimumWidth(int width);
         void setMinimumHeight(int height);
-        void setOnClickListener(OnClickListener* l);
-        void setOnInputEventDelegate(OnInputEventDelegate* d);
+        void setOnClickListener(OnClickListener* l, int category = 0);
+        void setOnInputEventDelegate(OnInputEventDelegate* d, int category = 0);
         void setOutline(Outline outline);
 
         void setLayoutSize(int width, int height);
@@ -118,8 +118,10 @@ namespace ukive {
         int getShadowRadius() const;
         int getVisibility() const;
         int getOutline() const;
-        OnClickListener* getOnClickListener() const;
-        OnInputEventDelegate* getOnInputEventDelegate() const;
+        OnClickListener* getClickListener() const;
+        int getClickCategory() const;
+        OnInputEventDelegate* getInputEventDelegate() const;
+        int getInputEventCategory() const;
         const Size& getMinimumSize() const;
         const Size& getDeterminedSize() const;
 
@@ -366,8 +368,8 @@ namespace ukive {
         std::unique_ptr<LayoutInfo> layout_info_;
 
         LayoutView* parent_;
-        OnClickListener* click_listener_;
-        OnInputEventDelegate* ie_delegate_;
+        std::pair<OnClickListener*, int> click_listener_;
+        std::pair<OnInputEventDelegate*, int> ie_delegate_;
         InputMethodConnection* input_connection_;
     };
 

@@ -19,9 +19,7 @@
 //#include "shell/text/text_window.h"
 //#include "shell/shadow/shadow_window.h"
 //#include "shell/grid/grid_window.h"
-#include "shell/visualize/visualization_window.h"
-
-#include "utils/number.hpp"
+//#include "shell/visualize/visualization_window.h"
 
 
 GUI_MAIN() {

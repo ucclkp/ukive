@@ -36,8 +36,8 @@ namespace ukive {
 
         virtual void onMeasureAtPosition(bool cur, int width, int height) = 0;
         virtual int onLayoutAtPosition(bool cur) = 0;
-        virtual int onScrollToPosition(int pos, int offset, bool cur) = 0;
-        virtual int onSmoothScrollToPosition(int pos, int offset) = 0;
+        virtual int onScrollToPosition(size_t pos, int offset, bool cur) = 0;
+        virtual int onSmoothScrollToPosition(size_t pos, int offset) = 0;
 
         virtual int onFillTopChildren(int dy) = 0;
         virtual int onFillBottomChildren(int dy) = 0;
@@ -51,7 +51,7 @@ namespace ukive {
         virtual ListItem* findItemFromView(View* v) = 0;
 
         virtual bool canScroll(Direction dir) const = 0;
-        virtual void getCurPosition(int* pos, int* offset) const = 0;
+        virtual void getCurPosition(size_t* pos, int* offset) const = 0;
 
     protected:
         bool isAvailable() const;

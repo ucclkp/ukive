@@ -7,7 +7,7 @@
 #ifndef UKIVE_VIEWS_LIST_LIST_ITEM_H_
 #define UKIVE_VIEWS_LIST_LIST_ITEM_H_
 
-#include "ukive/graphics/rect.hpp"
+#include "ukive/graphics/padding.hpp"
 
 
 namespace ukive {
@@ -16,10 +16,10 @@ namespace ukive {
 
     class ListItem {
     public:
-        Rect ex_margins;
+        Margin ex_margins;
         View* item_view;
         int item_id;
-        int data_pos;
+        size_t data_pos;
         bool recycled;
 
         explicit ListItem(View* v);

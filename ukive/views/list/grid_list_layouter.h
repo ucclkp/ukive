@@ -15,12 +15,12 @@ namespace ukive {
 
     class GridListLayouter : public ListLayouter {
     public:
-        explicit GridListLayouter(int col_count);
+        explicit GridListLayouter(size_t col_count);
 
         void onMeasureAtPosition(bool cur, int width, int height) override;
         int onLayoutAtPosition(bool cur) override;
-        int onScrollToPosition(int pos, int offset, bool cur) override;
-        int onSmoothScrollToPosition(int pos, int offset) override;
+        int onScrollToPosition(size_t pos, int offset, bool cur) override;
+        int onSmoothScrollToPosition(size_t pos, int offset) override;
 
         int onFillTopChildren(int dy) override;
         int onFillBottomChildren(int dy) override;
@@ -34,7 +34,7 @@ namespace ukive {
         ListItem* findItemFromView(View* v) override;
 
         bool canScroll(Direction dir) const override;
-        void getCurPosition(int* pos, int* offset) const override;
+        void getCurPosition(size_t* pos, int* offset) const override;
 
     private:
         void recycleTopChildren(int dy);
@@ -48,10 +48,10 @@ namespace ukive {
         bool canScrollToLeft() const;
         bool canScrollToRight() const;
 
-        int col_count_;
+        size_t col_count_;
         ColumnCollection columns_;
 
-        int cur_row_ = 0;
+        size_t cur_row_ = 0;
         int cur_offset_ = 0;
     };
 

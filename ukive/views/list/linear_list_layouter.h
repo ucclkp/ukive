@@ -19,8 +19,8 @@ namespace ukive {
 
         void onMeasureAtPosition(bool cur, int width, int height) override;
         int onLayoutAtPosition(bool cur) override;
-        int onScrollToPosition(int pos, int offset, bool cur) override;
-        int onSmoothScrollToPosition(int pos, int offset) override;
+        int onScrollToPosition(size_t pos, int offset, bool cur) override;
+        int onSmoothScrollToPosition(size_t pos, int offset) override;
 
         int onFillTopChildren(int dy) override;
         int onFillBottomChildren(int dy) override;
@@ -34,7 +34,7 @@ namespace ukive {
         ListItem* findItemFromView(View* v) override;
 
         bool canScroll(Direction dir) const override;
-        void getCurPosition(int* pos, int* offset) const override;
+        void getCurPosition(size_t* pos, int* offset) const override;
 
     private:
         void recycleTopChildren(int dy);
@@ -47,7 +47,7 @@ namespace ukive {
 
         Column column_;
 
-        int cur_position_;
+        size_t cur_position_;
         int cur_offset_in_position_;
     };
 

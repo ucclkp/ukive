@@ -11,7 +11,7 @@
 #include "ukive/views/button.h"
 #include "ukive/views/text_view.h"
 #include "ukive/views/check_box.h"
-#include "ukive/views/combo_box/combo_box.h"
+#include "ukive/views/combo_box.h"
 #include "ukive/views/image_view.h"
 #include "ukive/views/chart_view.h"
 #include "ukive/views/scroll_view.h"

@@ -17,7 +17,7 @@
 
 namespace ukive {
 
-    GridListLayouter::GridListLayouter(int col_count)
+    GridListLayouter::GridListLayouter(size_t col_count)
         : col_count_(col_count),
           columns_(col_count_)
     {
@@ -28,24 +28,24 @@ namespace ukive {
             return;
         }
 
-        int cur_row = cur ? cur_row_ : 0;
+        size_t cur_row = cur ? cur_row_ : 0;
         int offset = cur ? cur_offset_ : 0;
-        int item_count = source_->onListGetDataCount();
+        auto item_count = source_->onListGetDataCount();
 
         columns_.setVertical(0, height);
         columns_.setHorizontal(0, width);
 
         parent_->freezeLayout();
 
-        int row_index = 0;
-        int view_index = 0;
+        size_t row_index = 0;
+        size_t view_index = 0;
         int total_height = 0;
-        int cur_col = 0;
-        for (int row = cur_row; row * col_count_ < item_count; ++row) {
-            int col;
+        size_t cur_col = 0;
+        for (auto row = cur_row; row * col_count_ < item_count; ++row) {
+            size_t col;
             int row_height = 0;
             for (col = 0; col < col_count_; ++col) {
-                int pos = row * col_count_ + col;
+                auto pos = row * col_count_ + col;
                 if (pos >= item_count) {
                     break;
                 }
@@ -84,14 +84,14 @@ namespace ukive {
             }
         }
 
-        for (int i = 0; i < col_count_; ++i) {
-            int start = row_index;
+        for (size_t i = 0; i < col_count_; ++i) {
+            auto start = row_index;
             if (cur_col > 0 && i >= cur_col) {
                 --start;
             }
 
-            int count = columns_[i].getItemCount();
-            for (int j = start; j < count; ++j) {
+            auto count = columns_[i].getItemCount();
+            for (auto j = start; j < count; ++j) {
                 parent_->recycleItem(columns_[i].getItem(j));
             }
             columns_[i].removeItems(start);
@@ -105,9 +105,9 @@ namespace ukive {
             return 0;
         }
 
-        int cur_row = cur ? cur_row_ : 0;
+        size_t cur_row = cur ? cur_row_ : 0;
         int offset = cur ? cur_offset_ : 0;
-        int item_count = source_->onListGetDataCount();
+        auto item_count = source_->onListGetDataCount();
         auto bounds = parent_->getContentBounds();
 
         columns_.setVertical(bounds.top, bounds.bottom);
@@ -115,13 +115,13 @@ namespace ukive {
 
         parent_->freezeLayout();
 
-        int row_index = 0;
-        int view_index = 0;
+        size_t row_index = 0;
+        size_t view_index = 0;
         int total_height = 0;
-        for (int row = cur_row; row * col_count_ < item_count; ++row) {
+        for (auto row = cur_row; row * col_count_ < item_count; ++row) {
             int row_height = 0;
-            for (int col = 0; col < col_count_; ++col) {
-                int pos = row * col_count_ + col;
+            for (size_t col = 0; col < col_count_; ++col) {
+                auto pos = row * col_count_ + col;
                 if (pos >= item_count) {
                     break;
                 }
@@ -168,21 +168,21 @@ namespace ukive {
         return 0;
     }
 
-    int GridListLayouter::onScrollToPosition(int pos, int offset, bool cur) {
+    int GridListLayouter::onScrollToPosition(size_t pos, int offset, bool cur) {
         if (!isAvailable()) {
             return 0;
         }
 
-        int item_count = source_->onListGetDataCount();
+        auto item_count = source_->onListGetDataCount();
         auto bounds = parent_->getContentBounds();
 
-        int cur_row = cur ? cur_row_ : pos / col_count_;
+        size_t cur_row = cur ? cur_row_ : pos / col_count_;
         offset = cur ? cur_offset_ : offset;
 
         bool to_bottom = false;
-        int row_count = (item_count + (col_count_ - 1)) / col_count_;
+        size_t row_count = (item_count + (col_count_ - 1)) / col_count_;
         if (cur_row >= row_count) {
-            cur_row = std::max(row_count - 1, 0);
+            cur_row = row_count > 0 ? row_count - 1 : 0;
             offset = 0;
             to_bottom = true;
         }
@@ -192,15 +192,15 @@ namespace ukive {
 
         parent_->freezeLayout();
 
-        int row_index = 0;
-        int view_index = 0;
+        size_t row_index = 0;
+        size_t view_index = 0;
         int total_height = 0;
-        int cur_col = 0;
-        for (int row = cur_row; row * col_count_ < item_count; ++row) {
-            int col;
+        size_t cur_col = 0;
+        for (auto row = cur_row; row * col_count_ < item_count; ++row) {
+            size_t col;
             int row_height = 0;
             for (col = 0; col < col_count_; ++col) {
-                int i_pos = row * col_count_ + col;
+                auto i_pos = row * col_count_ + col;
                 if (i_pos >= item_count) {
                     break;
                 }
@@ -243,14 +243,14 @@ namespace ukive {
             }
         }
 
-        for (int i = 0; i < col_count_; ++i) {
-            int start = row_index;
+        for (size_t i = 0; i < col_count_; ++i) {
+            auto start = row_index;
             if (cur_col > 0 && i >= cur_col) {
                 --start;
             }
 
-            int count = columns_[i].getItemCount();
-            for (int j = start; j < count; ++j) {
+            auto count = columns_[i].getItemCount();
+            for (auto j = start; j < count; ++j) {
                 parent_->recycleItem(columns_[i].getItem(j));
             }
             columns_[i].removeItems(start);
@@ -267,7 +267,7 @@ namespace ukive {
         return 0;
     }
 
-    int GridListLayouter::onSmoothScrollToPosition(int pos, int offset) {
+    int GridListLayouter::onSmoothScrollToPosition(size_t pos, int offset) {
         return 0;
     }
 
@@ -289,18 +289,18 @@ namespace ukive {
         int distance_y = getColsTop() + dy - bounds.top;
         while (cur_data_pos > 0 && !columns_.isTopFilled(dy)) {
             --cur_data_pos;
-            int row = cur_data_pos / col_count_;
-            int col = cur_data_pos % col_count_;
+            auto row = cur_data_pos / col_count_;
+            auto col = cur_data_pos % col_count_;
 
-            DCHECK(col == col_count_ - 1);
+            DCHECK(col + 1 == col_count_);
 
-            int tmp_ap = cur_data_pos;
+            auto tmp_pos = cur_data_pos;
             std::vector<ListItem*> tmps;
 
             int max_height = 0;
-            for (int i = col_count_ - 1; i >= 0; --i) {
+            for (size_t i = col_count_; i-- > 0;) {
                 int child_max_width = columns_[i].getWidth();
-                auto new_item = parent_->makeNewItem(tmp_ap, 0);
+                auto new_item = parent_->makeNewItem(tmp_pos, 0);
 
                 int c_width, c_height;
                 parent_->measureItem(new_item, child_max_width, &c_width, &c_height);
@@ -308,11 +308,11 @@ namespace ukive {
                 max_height = std::max(max_height, c_height);
                 tmps.push_back(new_item);
 
-                --tmp_ap;
+                --tmp_pos;
             }
 
             int cur_top = columns_[0].getItemsTop() - max_height;
-            for (int i = col_count_ - 1; i >= 0; --i) {
+            for (size_t i = col_count_; i-- > 0;) {
                 auto new_item = tmps[col_count_ - 1 - i];
                 int child_width = columns_[i].getWidth();
                 int height = new_item->item_view->getDeterminedSize().height + new_item->getVertMargins();
@@ -361,23 +361,24 @@ namespace ukive {
         int distance_y = getColsBottom() + dy - bounds.bottom;
         while (cur_data_pos + 1 < source_->onListGetDataCount() && !columns_.isBottomOneFilled(dy)) {
             ++cur_data_pos;
-            int row = cur_data_pos / col_count_;
-            int col = cur_data_pos % col_count_;
+            auto row = cur_data_pos / col_count_;
+            auto col = cur_data_pos % col_count_;
 
             DCHECK(col == 0);
 
             int prev_bottom = 0;
             if (row > 0) {
-                int prev_index = columns_[col].getItemCount() - 1;
-                if (prev_index >= 0) {
-                    for (int i = 0; i < col_count_; ++i) {
+                auto prev_index = columns_[col].getItemCount();
+                if (prev_index > 0) {
+                    --prev_index;
+                    for (size_t i = 0; i < col_count_; ++i) {
                         prev_bottom = std::max(prev_bottom, columns_[i].getItem(prev_index)->getMgdBottom());
                     }
                 }
             }
 
             int max_height = 0;
-            for (int i = col; i < col_count_; ++i) {
+            for (auto i = col; i < col_count_; ++i) {
                 int child_max_width = columns_[i].getWidth();
                 auto new_item = parent_->makeNewItem(cur_data_pos, parent_->getChildCount());
 
@@ -393,7 +394,7 @@ namespace ukive {
                     max_height = c_height;
                 }
 
-                if (i < col_count_ - 1) {
+                if (i + 1 < col_count_) {
                     ++cur_data_pos;
                     if (cur_data_pos >= source_->onListGetDataCount()) {
                         break;
@@ -445,15 +446,15 @@ namespace ukive {
             return;
         }
 
-        int count = columns_[0].getItemCount();
+        auto count = columns_[0].getItemCount();
 
         static std::vector<int> row_heights;
         row_heights.clear();
 
         int avg_height = 0;
-        for (int i = 0; i < count; ++i) {
+        for (size_t i = 0; i < count; ++i) {
             int row_height = 0;
-            for (int j = 0; j < col_count_; ++j) {
+            for (size_t j = 0; j < col_count_; ++j) {
                 auto item = columns_[j].getItem(i);
                 if (item) {
                     row_height = std::max(row_height, item->getMgdHeight());
@@ -471,12 +472,12 @@ namespace ukive {
         }
 
         // 计算之前的高度
-        auto fv_item_idx = 0;
+        size_t fv_item_idx = 0;
         {
             bool is_first = true;
-            for (int i = 0; i < col_count_; ++i) {
-                auto index = columns_[i].getIndexOfFirstVisible(0);
-                if (index != -1) {
+            for (size_t i = 0; i < col_count_; ++i) {
+                size_t index;
+                if (columns_[i].getIndexOfFirstVisible(0, &index)) {
                     if (is_first) {
                         fv_item_idx = index;
                         is_first = false;
@@ -489,13 +490,13 @@ namespace ukive {
             }
         }
 
-        int i;
+        size_t i;
         int prev_total_height = cur_offset_ + cur_row_ * child_height;
         for (i = 0; i < fv_item_idx - 0; ++i) {
             prev_total_height += row_heights[i];
         }
 
-        int row_count = item_count / col_count_;
+        auto row_count = item_count / col_count_;
         if (item_count % col_count_) {
             ++row_count;
         }
@@ -529,26 +530,26 @@ namespace ukive {
             return;
         }
 
-        int tmp_ap = 0;
+        size_t tmp_pos = 0;
         int tmp_offset = 0;
         bool is_first = true;
-        for (int i = 0; i < col_count_; ++i) {
+        for (size_t i = 0; i < col_count_; ++i) {
             auto item = columns_[i].getFirstVisible();
             if (item) {
                 if (is_first) {
-                    tmp_ap = item->data_pos;
+                    tmp_pos = item->data_pos;
                     tmp_offset = bounds.top - item->getMgdTop();
                     is_first = false;
                 } else {
-                    if (item->data_pos < tmp_ap) {
-                        tmp_ap = item->data_pos;
+                    if (item->data_pos < tmp_pos) {
+                        tmp_pos = item->data_pos;
                         tmp_offset = bounds.top - item->getMgdTop();
                     }
                 }
             }
         }
 
-        cur_row_ = tmp_ap / col_count_;
+        cur_row_ = tmp_pos / col_count_;
         cur_offset_ = tmp_offset;
     }
 
@@ -573,15 +574,15 @@ namespace ukive {
         return result;
     }
 
-    void GridListLayouter::getCurPosition(int* pos, int* offset) const {
+    void GridListLayouter::getCurPosition(size_t* pos, int* offset) const {
         *pos = cur_row_ * col_count_;
         if (offset) *offset = cur_offset_;
     }
 
     void GridListLayouter::recycleTopChildren(int dy) {
-        int min_col = 0;
-        int min_data_pos = std::numeric_limits<int>::max();
-        for (int i = 0; i < col_count_; ++i) {
+        size_t min_col = 0;
+        size_t min_data_pos = std::numeric_limits<size_t>::max();
+        for (size_t i = 0; i < col_count_; ++i) {
             auto item = columns_[i].getFirstVisible(dy);
             if (item && item->data_pos < min_data_pos) {
                 min_col = i;
@@ -589,10 +590,11 @@ namespace ukive {
             }
         }
 
-        int index = columns_[min_col].getIndexOfFirstVisible(dy);
+        size_t index = 0;
+        columns_[min_col].getIndexOfFirstVisible(dy, &index);
         if (index > 0) {
-            for (int i = 0; i < col_count_; ++i) {
-                for (int j = 0; j < index; ++j) {
+            for (size_t i = 0; i < col_count_; ++i) {
+                for (size_t j = 0; j < index; ++j) {
                     parent_->recycleItem(columns_[i].getItem(j));
                 }
                 columns_[i].removeItems(0, index - 0);
@@ -601,11 +603,11 @@ namespace ukive {
     }
 
     void GridListLayouter::recycleBottomChildren(int dy) {
-        for (int i = 0; i < col_count_; ++i) {
-            int index = columns_[i].getIndexOfLastVisible(dy);
-            if (index != -1) {
+        for (size_t i = 0; i < col_count_; ++i) {
+            size_t index;
+            if (columns_[i].getIndexOfLastVisible(dy, &index)) {
                 ++index;
-                for (int j = index; j < columns_[i].getItemCount(); ++j) {
+                for (auto j = index; j < columns_[i].getItemCount(); ++j) {
                     parent_->recycleItem(columns_[i].getItem(j));
                 }
                 columns_[i].removeItems(index);
@@ -623,7 +625,7 @@ namespace ukive {
 
     int GridListLayouter::getColsBottom() const {
         int bottom = 0;
-        for (int i = 0; i < col_count_; ++i) {
+        for (size_t i = 0; i < col_count_; ++i) {
             auto rear = columns_[i].getRear();
             if (!rear) {
                 continue;
@@ -637,12 +639,12 @@ namespace ukive {
     }
 
     bool GridListLayouter::canScrollToTop() const {
-        int item_count = source_->onListGetDataCount();
+        auto item_count = source_->onListGetDataCount();
         return !(columns_.isAllAtTop() && columns_.isAllAtCeil(item_count));
     }
 
     bool GridListLayouter::canScrollToBottom() const {
-        int item_count = source_->onListGetDataCount();
+        auto item_count = source_->onListGetDataCount();
         return !(columns_.isAllAtBottom() && columns_.isAllAtFloor(item_count));
     }
 

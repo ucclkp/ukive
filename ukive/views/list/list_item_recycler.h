@@ -23,12 +23,12 @@ namespace ukive {
         explicit ListItemRecycler(LayoutView* parent);
 
         void addToParent(ListItem* item);
-        void addToParent(ListItem* item, int pos);
+        void addToParent(ListItem* item, size_t pos);
         void addToRecycler(ListItem* item);
         void recycleFromParent(ListItem* item);
         ListItem* reuse(int item_id);
-        ListItem* reuse(int item_id, int pos);
-        int getRecycledCount(int item_id);
+        ListItem* reuse(int item_id, size_t pos);
+        size_t getRecycledCount(int item_id);
         void clear();
 
     private:

@@ -11,14 +11,19 @@
 #include <stack>
 
 #include "ukive/window/window.h"
+#include "ukive/views/list/list_item.h"
 #include "ukive/views/list/list_view.h"
 #include "ukive/views/click_listener.h"
+
+#include "shell/gallery/thumbnail_fetcher.h"
 
 
 namespace ukive {
     class Button;
     class ListView;
     class TextView;
+    class ImageView;
+    class ImageFrame;
 }
 
 namespace shell {
@@ -27,24 +32,59 @@ namespace shell {
 
     class GalleryWindow :
         public ukive::Window,
-        public ukive::ListItemSelectedListener,
-        public ukive::OnClickListener
+        public ukive::ListSource,
+        public ukive::ListItemRecycledListener,
+        public ukive::OnClickListener,
+        public ThumbnailFetchingListener
     {
     public:
         // ukive::Window
         void onCreated() override;
+        void onDestroyed() override;
         bool onInputEvent(ukive::InputEvent* e) override;
+
+        // ukive::ListSource
+        ukive::ListItem* onListCreateItem(ukive::LayoutView* parent, size_t position) override;
+        void onListSetItemData(ukive::ListItem* item, size_t position) override;
+        size_t onListGetDataCount() const override;
+
+        // ukive::ListItemRecycledListener
+        void onChildRecycled(ukive::ListView* lv, ukive::ListItem* item) override;
+
+        // ThumbnailFetchingListener
+        void onThumbnail(const Thumbnail& thumb) override;
 
         // ukive::OnClickListener
         void onClick(ukive::View* v) override;
 
-        // ukive::ListItemSelectedListener
-        void onItemClicked(ukive::ListView* lv, ukive::ListItem* item) override;
-
     private:
+        class GalleryListItem : public ukive::ListItem {
+        public:
+            explicit GalleryListItem(ukive::View* v);
+
+            ukive::TextView* title_view_;
+            ukive::ImageView* img_view_;
+        };
+
+        enum class ThumbStatus {
+            None,
+            Fetching,
+            Complete,
+        };
+
         struct Info {
-            int position;
+            size_t position;
             int offset;
+        };
+
+        struct Data {
+            std::u16string title;
+            std::u16string path;
+            std::u16string first_img_name;
+            std::shared_ptr<ukive::ImageFrame> img;
+            bool is_dir;
+            ThumbStatus ts = ThumbStatus::None;
+            std::shared_ptr<int> token = std::make_shared<int>(0);
         };
 
         void navigateTo(const std::filesystem::path& path, bool back);
@@ -53,10 +93,12 @@ namespace shell {
         ukive::Button* back_btn_ = nullptr;
         ukive::TextView* cur_dir_tv_ = nullptr;
         ukive::ListView* list_view_ = nullptr;
-        GalleryListSource* list_source_ = nullptr;
 
         std::filesystem::path cur_dir_;
         std::stack<Info> back_info_;
+
+        std::vector<Data> data_;
+        std::unique_ptr<ThumbnailFetcher> thumb_fetcher_;
     };
 
 }

@@ -7,7 +7,7 @@
 #ifndef UKIVE_VIEWS_LIST_LIST_SOURCE_H_
 #define UKIVE_VIEWS_LIST_LIST_SOURCE_H_
 
-#include "ukive/views/view.h"
+#include <cstddef>
 
 
 namespace ukive {
@@ -38,10 +38,10 @@ namespace ukive {
         void notifyItemInserted(size_t start_pos, size_t count);
         void notifyItemRemoved(size_t start_pos, size_t count);
 
-        virtual ListItem* onListCreateItem(LayoutView* parent, int position) = 0;
-        virtual void onListSetItemData(ListItem* item, int position) = 0;
-        virtual int onListGetItemId(int position) { return 0; }
-        virtual int onListGetDataCount() = 0;
+        virtual ListItem* onListCreateItem(LayoutView* parent, size_t position) = 0;
+        virtual void onListSetItemData(ListItem* item, size_t position) = 0;
+        virtual int onListGetItemId(size_t position) const { return 0; }
+        virtual size_t onListGetDataCount() const = 0;
 
     private:
         ListItemChangedNotifier* notifier_;

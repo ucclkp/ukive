@@ -231,7 +231,6 @@ $(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro" -d "$(OutDir)necro\"</
     <ClCompile Include="examples\pages\example_tree_page.cpp" />
     <ClCompile Include="examples\example_list_source.cpp" />
     <ClCompile Include="examples\example_window.cpp" />
-    <ClCompile Include="gallery\gallery_list_source.cpp" />
     <ClCompile Include="gallery\gallery_utils.cpp" />
     <ClCompile Include="gallery\gallery_window.cpp" />
     <ClCompile Include="gallery\picture\slide_image_view.cpp" />
@@ -259,7 +258,6 @@ $(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro" -d "$(OutDir)necro\"</
     <ClInclude Include="examples\pages\example_tree_page.h" />
     <ClInclude Include="examples\example_list_source.h" />
     <ClInclude Include="examples\example_window.h" />
-    <ClInclude Include="gallery\gallery_list_source.h" />
     <ClInclude Include="gallery\gallery_utils.h" />
     <ClInclude Include="gallery\gallery_window.h" />
     <ClInclude Include="gallery\picture\slide_image_view.h" />
