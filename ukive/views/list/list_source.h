@@ -15,6 +15,7 @@ namespace ukive {
     class View;
     class LayoutView;
     class ListItem;
+    class ListItemEventRouter;
 
     class ListItemChangedNotifier {
     public:
@@ -38,10 +39,13 @@ namespace ukive {
         void notifyItemInserted(size_t start_pos, size_t count);
         void notifyItemRemoved(size_t start_pos, size_t count);
 
-        virtual ListItem* onListCreateItem(LayoutView* parent, size_t position) = 0;
-        virtual void onListSetItemData(ListItem* item, size_t position) = 0;
-        virtual int onListGetItemId(size_t position) const { return 0; }
-        virtual size_t onListGetDataCount() const = 0;
+        virtual ListItem* onCreateListItem(
+            LayoutView* parent, ListItemEventRouter* router, size_t position) = 0;
+        virtual void onSetListItemData(
+            LayoutView* parent, ListItemEventRouter* router, ListItem* item) = 0;
+        virtual int onGetListItemId(
+            LayoutView* parent, size_t position) const { return 0; }
+        virtual size_t onGetListDataCount(LayoutView* parent) const = 0;
 
     private:
         ListItemChangedNotifier* notifier_;

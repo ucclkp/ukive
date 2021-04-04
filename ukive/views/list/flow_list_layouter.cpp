@@ -29,7 +29,7 @@ namespace ukive {
         }
 
         auto pos = calPreferredCurPos();
-        auto item_count = source_->onListGetDataCount();
+        auto item_count = source_->onGetListDataCount(parent_);
 
         std::vector<size_t> indices(col_count_, 0);
         std::vector<int> heights(col_count_, 0);
@@ -59,13 +59,13 @@ namespace ukive {
                 continue;
             }
 
-            auto item = columns_[col].findAndInsertItem(indices[col], source_->onListGetItemId(i));
+            auto item = columns_[col].findAndInsertItem(
+                indices[col], source_->onGetListItemId(parent_, i));
             if (!item) {
                 item = parent_->makeNewItem(i, index);
                 columns_[col].addItem(item, indices[col]);
             } else {
-                item->data_pos = i;
-                source_->onListSetItemData(item, i);
+                parent_->setItemData(item, i);
             }
 
             int child_max_width = columns_[col].getWidth();
@@ -105,7 +105,7 @@ namespace ukive {
         }
 
         auto pos = calPreferredCurPos();
-        auto item_count = source_->onListGetDataCount();
+        auto item_count = source_->onGetListDataCount(parent_);
         auto bounds = parent_->getContentBounds();
 
         size_t index = 0;
@@ -182,7 +182,7 @@ namespace ukive {
         return 0;
     }
 
-    int FlowListLayouter::onScrollToPosition(size_t pos, int offset, bool cur) {
+    int FlowListLayouter::onDataChangedAtPosition(size_t pos, int offset, bool cur) {
         return 0;
     }
 
@@ -269,7 +269,7 @@ namespace ukive {
 
         parent_->freezeLayout();
 
-        while (cur_data_pos + 1 < source_->onListGetDataCount() && !columns_.isBottomFilled(dy)) {
+        while (cur_data_pos + 1 < source_->onGetListDataCount(parent_) && !columns_.isBottomFilled(dy)) {
             ++cur_data_pos;
             int row = cur_data_pos / col_count_;
             int col = cur_data_pos % col_count_;
@@ -324,10 +324,6 @@ namespace ukive {
     }
 
     void FlowListLayouter::onClear() {
-        if (!isAvailable()) {
-            return;
-        }
-
         columns_.clear();
     }
 
@@ -337,7 +333,7 @@ namespace ukive {
             return;
         }
 
-        auto data_count = source_->onListGetDataCount();
+        auto data_count = source_->onGetListDataCount(parent_);
         if (data_count == 0) {
             *next = *prev = 0;
             return;
@@ -466,12 +462,12 @@ namespace ukive {
     }
 
     bool FlowListLayouter::canScrollToTop() const {
-        auto item_count = source_->onListGetDataCount();
+        auto item_count = source_->onGetListDataCount(parent_);
         return !(columns_.isAllAtTop() && columns_.isAllAtCeil(item_count));
     }
 
     bool FlowListLayouter::canScrollToBottom() const {
-        auto item_count = source_->onListGetDataCount();
+        auto item_count = source_->onGetListDataCount(parent_);
         return !(columns_.isAllAtBottom() && columns_.isAllAtFloor(item_count));
     }
 

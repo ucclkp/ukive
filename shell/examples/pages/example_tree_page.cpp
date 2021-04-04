@@ -58,8 +58,8 @@ namespace shell {
     void ExampleTreePage::onDestroy() {
     }
 
-    ukive::ListItem* ExampleTreePage::onListCreateItem(
-        ukive::LayoutView* parent, size_t position)
+    ukive::ListItem* ExampleTreePage::onCreateListItem(
+        ukive::LayoutView* parent, ukive::ListItemEventRouter* router, size_t position)
     {
         auto c = parent->getContext();
 
@@ -113,9 +113,12 @@ namespace shell {
         return root;
     }
 
-    void ExampleTreePage::onListSetItemData(ukive::ListItem* item, size_t position) {
+    void ExampleTreePage::onSetListItemData(
+        ukive::LayoutView* parent, ukive::ListItemEventRouter* router,
+        ukive::ListItem* item)
+    {
         auto node = static_cast<ExampleTreeNode*>(
-            root_node_.getExpandedDescendantAt(position));
+            root_node_.getExpandedDescendantAt(item->data_pos));
         auto tree_item = static_cast<ExampleTreeItem*>(item);
 
         tree_item->expand_button_->setOnClickListener(this);
@@ -148,16 +151,15 @@ namespace shell {
             }
         }
 
-        //LOG(INFO) << "ListSource::onListSetItemData():" << position << " data has been bound.";
+        //LOG(INFO) << "ListSource::onSetListItemData():" << position << " data has been bound.";
     }
 
-    size_t ExampleTreePage::onListGetDataCount() const {
+    size_t ExampleTreePage::onGetListDataCount(ukive::LayoutView* parent) const {
         return root_node_.getExpandedDescendantCount();
     }
 
     void ExampleTreePage::onClick(ukive::View* v) {
-        auto item = static_cast<ExampleTreeItem*>(
-            list_view_->getLayouter()->findItemFromView(v->getParent()));
+        auto item = static_cast<ExampleTreeItem*>(list_view_->findItemFromView(v));
         if (v == item->expand_button_) {
             auto node = root_node_.getExpandedDescendantAt(item->data_pos);
             node->setExpanded(!node->isExpanded());
@@ -176,7 +178,7 @@ namespace shell {
 
     void ExampleTreePage::onDoubleClick(ukive::View* v) {
         auto item = static_cast<ExampleTreeItem*>(
-            list_view_->getLayouter()->findItemFromView(v->getParent()));
+            list_view_->findItemFromView(v));
         if (v == item->text_label) {
             auto node = root_node_.getExpandedDescendantAt(item->data_pos);
             node->setExpanded(!node->isExpanded());

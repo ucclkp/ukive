@@ -386,6 +386,7 @@
     <ClInclude Include="views\layout_info\sequence_layout_info.h" />
     <ClInclude Include="views\layout_info\restraint_layout_info.h" />
     <ClInclude Include="views\list\list_item.h" />
+    <ClInclude Include="views\list\list_item_event_router.h" />
     <ClInclude Include="views\size_info.h" />
     <ClInclude Include="views\space3d_view.h" />
     <ClInclude Include="views\image_view.h" />
@@ -590,6 +591,7 @@
     <ClCompile Include="views\layout_info\sequence_layout_info.cpp" />
     <ClCompile Include="views\layout_info\restraint_layout_info.cpp" />
     <ClCompile Include="views\list\list_item.cpp" />
+    <ClCompile Include="views\list\list_item_event_router.cpp" />
     <ClCompile Include="views\size_info.cpp" />
     <ClCompile Include="views\space3d_view.cpp" />
     <ClCompile Include="views\image_view.cpp" />

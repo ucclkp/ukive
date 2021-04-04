@@ -13,6 +13,7 @@
 #include "ukive/window/window.h"
 #include "ukive/views/list/list_item.h"
 #include "ukive/views/list/list_view.h"
+#include "ukive/views/list/list_item_event_router.h"
 #include "ukive/views/click_listener.h"
 
 #include "shell/gallery/thumbnail_fetcher.h"
@@ -34,6 +35,7 @@ namespace shell {
         public ukive::Window,
         public ukive::ListSource,
         public ukive::ListItemRecycledListener,
+        public ukive::ListItemEventListener,
         public ukive::OnClickListener,
         public ThumbnailFetchingListener
     {
@@ -44,9 +46,13 @@ namespace shell {
         bool onInputEvent(ukive::InputEvent* e) override;
 
         // ukive::ListSource
-        ukive::ListItem* onListCreateItem(ukive::LayoutView* parent, size_t position) override;
-        void onListSetItemData(ukive::ListItem* item, size_t position) override;
-        size_t onListGetDataCount() const override;
+        ukive::ListItem* onCreateListItem(
+            ukive::LayoutView* parent, ukive::ListItemEventRouter* router,
+            size_t position) override;
+        void onSetListItemData(
+            ukive::LayoutView* parent, ukive::ListItemEventRouter* router,
+            ukive::ListItem* item) override;
+        size_t onGetListDataCount(ukive::LayoutView* parent) const override;
 
         // ukive::ListItemRecycledListener
         void onChildRecycled(ukive::ListView* lv, ukive::ListItem* item) override;
@@ -56,6 +62,10 @@ namespace shell {
 
         // ukive::OnClickListener
         void onClick(ukive::View* v) override;
+
+        // ukive::ListItemEventListener
+        void onItemClicked(
+            ukive::ListView* list_view, ukive::ListItem* item, ukive::View* v) override;
 
     private:
         class GalleryListItem : public ukive::ListItem {

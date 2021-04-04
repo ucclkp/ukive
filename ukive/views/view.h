@@ -74,6 +74,7 @@ namespace ukive {
 
         void setId(int id);
         void setTag(int tag);
+        void setCategory(int category);
         void setScrollX(int x);
         void setScrollY(int y);
         void setVisibility(int visibility);
@@ -91,8 +92,8 @@ namespace ukive {
         void setReceiveOutsideInputEvent(bool receive);
         void setMinimumWidth(int width);
         void setMinimumHeight(int height);
-        void setOnClickListener(OnClickListener* l, int category = 0);
-        void setOnInputEventDelegate(OnInputEventDelegate* d, int category = 0);
+        void setOnClickListener(OnClickListener* l);
+        void setOnInputEventDelegate(OnInputEventDelegate* d);
         void setOutline(Outline outline);
 
         void setLayoutSize(int width, int height);
@@ -107,6 +108,7 @@ namespace ukive {
 
         int getId() const;
         int getTag() const;
+        int getCategory() const;
         int getScrollX() const;
         int getScrollY() const;
         int getLeft() const;
@@ -119,9 +121,7 @@ namespace ukive {
         int getVisibility() const;
         int getOutline() const;
         OnClickListener* getClickListener() const;
-        int getClickCategory() const;
         OnInputEventDelegate* getInputEventDelegate() const;
-        int getInputEventCategory() const;
         const Size& getMinimumSize() const;
         const Size& getDeterminedSize() const;
 
@@ -314,6 +314,7 @@ namespace ukive {
 
         int id_;
         int tag_ = 0;
+        int category_ = 0;
 
         // 相对于父 View 的位置
         Rect bounds_;
@@ -368,8 +369,8 @@ namespace ukive {
         std::unique_ptr<LayoutInfo> layout_info_;
 
         LayoutView* parent_;
-        std::pair<OnClickListener*, int> click_listener_;
-        std::pair<OnInputEventDelegate*, int> ie_delegate_;
+        OnClickListener* click_listener_ = nullptr;
+        OnInputEventDelegate* ie_delegate_ = nullptr;
         InputMethodConnection* input_connection_;
     };
 

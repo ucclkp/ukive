@@ -24,16 +24,13 @@ namespace ukive {
     void OverlayScrollBar::update(int content_height, float percent) {
         content_height_ = content_height;
 
-        if (content_height_ <= 0 ||
-            view_bounds_.empty() ||
-            view_bounds_.empty())
-        {
-            return;
-        }
-
         int view_height = view_bounds_.height();
         if (view_height >= content_height_) {
             thumb_bounds_.set(0, 0, 0, 0);
+            return;
+        }
+
+        if (content_height_ <= 0 || view_bounds_.empty()) {
             return;
         }
 

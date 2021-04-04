@@ -19,7 +19,7 @@ namespace ukive {
 
         void onMeasureAtPosition(bool cur, int width, int height) override;
         int onLayoutAtPosition(bool cur) override;
-        int onScrollToPosition(size_t pos, int offset, bool cur) override;
+        int onDataChangedAtPosition(size_t pos, int offset, bool cur) override;
         int onSmoothScrollToPosition(size_t pos, int offset) override;
 
         int onFillTopChildren(int dy) override;

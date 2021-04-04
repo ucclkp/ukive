@@ -125,7 +125,7 @@ namespace ukive {
         return lp;
     }
 
-    bool RestraintLayout::checkExtraLayoutInfo(LayoutInfo* lp) const {
+    bool RestraintLayout::isValidExtraLayoutInfo(LayoutInfo* lp) const {
         return typeid(*lp) == typeid(RestraintLayoutInfo);
     }
 

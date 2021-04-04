@@ -28,7 +28,7 @@ namespace ukive {
         // LayoutView
         LayoutInfo* makeExtraLayoutInfo() const override;
         LayoutInfo* makeExtraLayoutInfo(AttrsRef attrs) const override;
-        bool checkExtraLayoutInfo(LayoutInfo* lp) const override;
+        bool isValidExtraLayoutInfo(LayoutInfo* lp) const override;
 
     private:
         void clearMeasureFlag();

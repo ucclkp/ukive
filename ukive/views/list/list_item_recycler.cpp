@@ -17,7 +17,7 @@
 namespace ukive {
 
     ListItemRecycler::ListItemRecycler(LayoutView* parent)
-        :parent_(parent) {}
+        : parent_(parent) {}
 
     void ListItemRecycler::addToParent(ListItem* item) {
         DCHECK(item);

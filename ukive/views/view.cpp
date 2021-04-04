@@ -111,6 +111,10 @@ namespace ukive {
         tag_ = tag;
     }
 
+    void View::setCategory(int category) {
+        category_ = category;
+    }
+
     void View::setScrollX(int x) {
         if (scroll_x_ != x) {
             scroll_x_ = x;
@@ -399,14 +403,12 @@ namespace ukive {
         min_size_.height = height;
     }
 
-    void View::setOnClickListener(OnClickListener* l, int category) {
-        click_listener_.first = l;
-        click_listener_.second = category;
+    void View::setOnClickListener(OnClickListener* l) {
+        click_listener_ = l;
     }
 
-    void View::setOnInputEventDelegate(OnInputEventDelegate* d, int category) {
-        ie_delegate_.first = d;
-        click_listener_.second = category;
+    void View::setOnInputEventDelegate(OnInputEventDelegate* d) {
+        ie_delegate_ = d;
     }
 
     void View::setOutline(Outline outline) {
@@ -460,6 +462,10 @@ namespace ukive {
 
     int View::getTag() const {
         return tag_;
+    }
+
+    int View::getCategory() const {
+        return category_;
     }
 
     int View::getScrollX() const {
@@ -523,19 +529,11 @@ namespace ukive {
     }
 
     OnClickListener* View::getClickListener() const {
-        return click_listener_.first;
-    }
-
-    int View::getClickCategory() const {
-        return click_listener_.second;
+        return click_listener_;
     }
 
     OnInputEventDelegate* View::getInputEventDelegate() const {
-        return ie_delegate_.first;
-    }
-
-    int View::getInputEventCategory() const {
-        return ie_delegate_.second;
+        return ie_delegate_;
     }
 
     LayoutView* View::getParent() const {
@@ -808,14 +806,14 @@ namespace ukive {
     }
 
     void View::performClick() {
-        if (click_listener_.first) {
-            click_listener_.first->onClick(this);
+        if (click_listener_) {
+            click_listener_->onClick(this);
         }
     }
 
     void View::performDoubleClick() {
-        if (click_listener_.first) {
-            click_listener_.first->onDoubleClick(this);
+        if (click_listener_) {
+            click_listener_->onDoubleClick(this);
         }
     }
 
@@ -1055,9 +1053,9 @@ namespace ukive {
     }
 
     bool View::invokeOnInputEvent(InputEvent* e) {
-        if (ie_delegate_.first) {
+        if (ie_delegate_) {
             bool ret = false;
-            if (ie_delegate_.first->onInputReceived(this, e, &ret)) {
+            if (ie_delegate_->onInputReceived(this, e, &ret)) {
                 return ret;
             }
         }
@@ -1233,7 +1231,7 @@ namespace ukive {
     }
 
     void View::processPointerUp() {
-        if (!click_listener_.first) {
+        if (!click_listener_) {
             return;
         }
 

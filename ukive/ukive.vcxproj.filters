@@ -574,6 +574,9 @@
     <ClCompile Include="views\combo_box.cpp">
       <Filter>views</Filter>
     </ClCompile>
+    <ClCompile Include="views\list\list_item_event_router.cpp">
+      <Filter>views\list</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">
@@ -1307,6 +1310,9 @@
     </ClInclude>
     <ClInclude Include="views\combo_box.h">
       <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="views\list\list_item_event_router.h">
+      <Filter>views\list</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

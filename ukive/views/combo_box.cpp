@@ -58,6 +58,7 @@ namespace ukive {
         list_view_ = new ListView(getContext());
         list_view_->setLayouter(new LinearListLayouter());
         list_view_->setSource(this);
+        list_view_->setItemEventRouter(new ListItemEventRouter(this));
 
         auto shape_element = new ShapeElement(ShapeElement::RECT);
         shape_element->setRadius(2.f);
@@ -261,14 +262,13 @@ namespace ukive {
             } else {
                 close();
             }
-        } else {
-            auto item = list_view_->getLayouter()->findItemFromView(v);
-            if (item) {
-                if (item->data_pos < data_.size()) {
-                    text_view_->setText(data_[item->data_pos]);
-                    close();
-                }
-            }
+        }
+    }
+
+    void ComboBox::onItemClicked(ListView* list_view, ListItem* item, View* v) {
+        if (item->data_pos < data_.size()) {
+            text_view_->setText(data_[item->data_pos]);
+            close();
         }
     }
 
@@ -276,26 +276,30 @@ namespace ukive {
         close();
     }
 
-    ListItem* ComboBox::onListCreateItem(LayoutView* parent, size_t position) {
+    ListItem* ComboBox::onCreateListItem(
+        LayoutView* parent, ListItemEventRouter* router, size_t position)
+    {
         auto c = parent->getContext();
 
         auto title_tv = new TextView(c);
         title_tv->setPadding(c.dp2pxi(16), c.dp2pxi(8), c.dp2pxi(16), c.dp2pxi(8));
         title_tv->setClickable(true);
-        title_tv->setOnClickListener(this);
+        title_tv->setOnClickListener(router);
         title_tv->setBackground(new RippleElement());
         title_tv->setLayoutSize(LS_FILL, LS_AUTO);
 
         return new TextViewListItem(title_tv);
     }
 
-    void ComboBox::onListSetItemData(ListItem* item, size_t position) {
-        auto& data = data_.at(position);
+    void ComboBox::onSetListItemData(
+        LayoutView* parent, ListItemEventRouter* router, ListItem* item)
+    {
+        auto& data = data_.at(item->data_pos);
         auto combo_item = reinterpret_cast<TextViewListItem*>(item);
         combo_item->title_label->setText(data);
     }
 
-    size_t ComboBox::onListGetDataCount() const {
+    size_t ComboBox::onGetListDataCount(LayoutView* parent) const {
         return data_.size();
     }
 

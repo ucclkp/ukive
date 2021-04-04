@@ -53,11 +53,11 @@ namespace shell {
         cur_dir_tv_ = findView<ukive::TextView>(Res::Id::tv_gallery_window_name);
 
         list_view_ = findView<ukive::ListView>(Res::Id::lv_gallery_window_list);
-
         list_view_->setLayouter(new ukive::GridListLayouter(5));
         list_view_->setSource(this);
-
         list_view_->setChildRecycledListener(this);
+        list_view_->setItemEventRouter(new ukive::ListItemEventRouter(this));
+
         thumb_fetcher_->setListener(this);
         thumb_fetcher_->launch();
 
@@ -87,13 +87,13 @@ namespace shell {
         return result;
     }
 
-    ukive::ListItem* GalleryWindow::onListCreateItem(
-        ukive::LayoutView* parent, size_t position)
+    ukive::ListItem* GalleryWindow::onCreateListItem(
+        ukive::LayoutView* parent, ukive::ListItemEventRouter* router, size_t position)
     {
         auto view = ukive::LayoutInstantiator::from(
             parent->getContext(), parent, Res::Layout::gallery_item_layout_xml);
         view->setClickable(true);
-        view->setOnClickListener(this);
+        view->setOnClickListener(router);
 
         auto bg = new ukive::RippleElement();
         bg->setTintColor(ukive::Color::White);
@@ -102,10 +102,13 @@ namespace shell {
         return new GalleryListItem(view);
     }
 
-    void GalleryWindow::onListSetItemData(ukive::ListItem* item, size_t position) {
+    void GalleryWindow::onSetListItemData(
+        ukive::LayoutView* parent, ukive::ListItemEventRouter* router,
+        ukive::ListItem* item)
+    {
         auto gallery_list_item = static_cast<GalleryListItem*>(item);
 
-        auto& d = data_[position];
+        auto& d = data_[item->data_pos];
         if (d.ts == ThumbStatus::None) {
             thumb_fetcher_->add(d.path, !d.is_dir, item->data_pos, d.token);
             d.ts = ThumbStatus::Fetching;
@@ -116,13 +119,13 @@ namespace shell {
         gallery_list_item->item_view->getBackground()->resetState();
     }
 
-    size_t GalleryWindow::onListGetDataCount() const {
+    size_t GalleryWindow::onGetListDataCount(ukive::LayoutView* parent) const {
         return data_.size();
     }
 
     void GalleryWindow::onChildRecycled(ukive::ListView* lv, ukive::ListItem* item) {
         auto pos = item->data_pos;
-        if (pos >= onListGetDataCount()) {
+        if (pos >= onGetListDataCount(lv)) {
             return;
         }
 
@@ -160,30 +163,33 @@ namespace shell {
     void GalleryWindow::onClick(ukive::View* v) {
         if (v == back_btn_) {
             navigateBack();
-        } else {
-            auto item = list_view_->getLayouter()->findItemFromView(v);
-            auto& data = data_[item->data_pos];
+        }
+    }
 
-            std::error_code ec;
-            auto next_file(std::filesystem::absolute(data.path, ec));
-            if (!is_directory(next_file, ec)) {
-                auto slide_window = new PictureWindow();
-                slide_window->setTitle(u"XPicture");
-                slide_window->setWidth(ukive::Application::dp2pxi(600));
-                slide_window->setHeight(ukive::Application::dp2pxi(600));
-                slide_window->setOwnership(true);
-                {
-                    ukive::Purpose purpose;
-                    purpose.params["target"] = data.path;
-                    slide_window->setPurpose(purpose);
-                }
-                slide_window->center();
-                slide_window->init(ukive::Window::InitParams());
-                slide_window->maximize();
+    void GalleryWindow::onItemClicked(
+        ukive::ListView* list_view, ukive::ListItem* item, ukive::View* v)
+    {
+        auto& data = data_[item->data_pos];
+
+        std::error_code ec;
+        auto next_file(std::filesystem::absolute(data.path, ec));
+        if (!is_directory(next_file, ec)) {
+            auto slide_window = new PictureWindow();
+            slide_window->setTitle(u"XPicture");
+            slide_window->setWidth(ukive::Application::dp2pxi(600));
+            slide_window->setHeight(ukive::Application::dp2pxi(600));
+            slide_window->setOwnership(true);
+            {
+                ukive::Purpose purpose;
+                purpose.params["target"] = data.path;
+                slide_window->setPurpose(purpose);
             }
-            else {
-                navigateTo(next_file, false);
-            }
+            slide_window->center();
+            slide_window->init(InitParams());
+            slide_window->maximize();
+        }
+        else {
+            navigateTo(next_file, false);
         }
     }
 

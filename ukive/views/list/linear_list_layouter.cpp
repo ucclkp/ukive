@@ -28,7 +28,7 @@ namespace ukive {
 
         size_t index = 0;
         int total_height = 0;
-        auto item_count = source_->onListGetDataCount();
+        auto item_count = source_->onGetListDataCount(parent_);
 
         size_t pos = cur ? cur_position_ : 0;
         int offset = cur ? cur_offset_in_position_ : 0;
@@ -38,13 +38,12 @@ namespace ukive {
                 break;
             }
 
-            auto item = column_.findAndInsertItem(index, source_->onListGetItemId(i));
+            auto item = column_.findAndInsertItem(index, source_->onGetListItemId(parent_, i));
             if (!item) {
                 item = parent_->makeNewItem(i, index);
                 column_.addItem(item, index);
             } else {
-                item->data_pos = i;
-                source_->onListSetItemData(item, i);
+                parent_->setItemData(item, i);
             }
 
             int c_width, c_height;
@@ -69,7 +68,7 @@ namespace ukive {
 
         size_t index = 0;
         int total_height = 0;
-        auto item_count = source_->onListGetDataCount();
+        auto item_count = source_->onGetListDataCount(parent_);
         auto bounds = parent_->getContentBounds();
 
         size_t pos = cur ? cur_position_ : 0;
@@ -110,14 +109,14 @@ namespace ukive {
         return 0;
     }
 
-    int LinearListLayouter::onScrollToPosition(size_t pos, int offset, bool cur) {
+    int LinearListLayouter::onDataChangedAtPosition(size_t pos, int offset, bool cur) {
         if (!isAvailable()) {
             return 0;
         }
 
         size_t index = 0;
         int total_height = 0;
-        auto item_count = source_->onListGetDataCount();
+        auto item_count = source_->onGetListDataCount(parent_);
         auto bounds = parent_->getContentBounds();
 
         pos = cur ? cur_position_ : pos;
@@ -136,13 +135,12 @@ namespace ukive {
         parent_->freezeLayout();
 
         for (auto i = pos; i < item_count; ++i, ++index) {
-            auto item = column_.findAndInsertItem(index, source_->onListGetItemId(i));
-            if (!item || item->item_id != source_->onListGetItemId(i)) {
+            auto item = column_.findAndInsertItem(index, source_->onGetListItemId(parent_, i));
+            if (!item || item->item_id != source_->onGetListItemId(parent_, i)) {
                 item = parent_->makeNewItem(i, index);
                 column_.addItem(item, index);
             } else {
-                item->data_pos = i;
-                source_->onListSetItemData(item, i);
+                parent_->setItemData(item, i);
             }
 
             int c_width, c_height;
@@ -182,7 +180,7 @@ namespace ukive {
             return 0;
         }
 
-        auto item_count = source_->onListGetDataCount();
+        auto item_count = source_->onGetListDataCount(parent_);
         if (item_count == 0) {
             return 0;
         }
@@ -207,13 +205,12 @@ namespace ukive {
         parent_->freezeLayout();
 
         for (; (front ? (i <= terminate_pos) : (i-- > terminate_pos)); (front ? ++i : 0), ++index) {
-            auto item = column_.findAndInsertItem(index, source_->onListGetItemId(i));
-            if (!item || item->item_id != source_->onListGetItemId(i)) {
+            auto item = column_.findAndInsertItem(index, source_->onGetListItemId(parent_, i));
+            if (!item || item->item_id != source_->onGetListItemId(parent_, i)) {
                 item = parent_->makeNewItem(i, index);
                 column_.addItem(item, index);
             } else {
-                item->data_pos = i;
-                source_->onListSetItemData(item, i);
+                parent_->setItemData(item, i);
             }
 
             int c_width, c_height;
@@ -315,7 +312,7 @@ namespace ukive {
 
         int inc_y = 0;
         int distance_y = bottom_item->getMgdBottom() + dy - bounds.bottom;
-        while (cur_data_pos + 1 < source_->onListGetDataCount() && !column_.isBottomFilled(dy)) {
+        while (cur_data_pos + 1 < source_->onGetListDataCount(parent_) && !column_.isBottomFilled(dy)) {
             ++cur_data_pos;
 
             auto new_item = parent_->makeNewItem(cur_data_pos, parent_->getChildCount());
@@ -352,10 +349,6 @@ namespace ukive {
     }
 
     void LinearListLayouter::onClear() {
-        if (!isAvailable()) {
-            return;
-        }
-
         column_.clear();
         cur_position_ = 0;
         cur_offset_in_position_ = 0;
@@ -382,7 +375,7 @@ namespace ukive {
             return;
         }
 
-        auto count = source_->onListGetDataCount();
+        auto count = source_->onGetListDataCount(parent_);
         if (count == 0) {
             *prev = 0; *next = 0;
             return;
@@ -500,7 +493,7 @@ namespace ukive {
         if (!bottom_item) {
             return false;
         }
-        if (bottom_item->data_pos + 1 == source_->onListGetDataCount() && column_.atBottom()) {
+        if (bottom_item->data_pos + 1 == source_->onGetListDataCount(parent_) && column_.atBottom()) {
             return false;
         }
         return true;

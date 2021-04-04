@@ -8,13 +8,17 @@
 
 #include <algorithm>
 
+#include "utils/log.h"
+
 #include "ukive/event/input_consts.h"
 #include "ukive/event/input_event.h"
 #include "ukive/window/window.h"
+#include "ukive/views/layout_info/list_layout_info.h"
 #include "ukive/views/list/list_item_recycler.h"
 #include "ukive/views/list/overlay_scroll_bar.h"
 #include "ukive/views/list/list_layouter.h"
 #include "ukive/views/list/list_item.h"
+#include "ukive/views/list/list_item_event_router.h"
 
 
 namespace ukive {
@@ -36,6 +40,18 @@ namespace ukive {
         setTouchCapturable(true);
     }
 
+    LayoutInfo* ListView::makeExtraLayoutInfo() const {
+        return new ListLayoutInfo();
+    }
+
+    LayoutInfo* ListView::makeExtraLayoutInfo(AttrsRef attrs) const {
+        return new ListLayoutInfo();
+    }
+
+    bool ListView::isValidExtraLayoutInfo(LayoutInfo* lp) const {
+        return typeid(*lp) == typeid(ListLayoutInfo);
+    }
+
     Size ListView::onDetermineSize(const SizeInfo& info) {
         int width = std::max(info.width.val, getMinimumSize().width);
         int height = std::max(info.height.val, getMinimumSize().height);
@@ -43,7 +59,10 @@ namespace ukive {
         scroller_.finish();
 
         if (layouter_) {
-            layouter_->onMeasureAtPosition(true, width, height);
+            layouter_->onMeasureAtPosition(
+                true,
+                std::max(0, width - getPadding().hori()),
+                std::max(0, height - getPadding().vert()));
         }
 
         return Size(width, height);
@@ -56,8 +75,7 @@ namespace ukive {
             layoutAtPosition(true);
             recordCurPositionAndOffset();
 
-            auto& size = getDeterminedSize();
-            scroll_bar_->setBounds(Rect(0, 0, size.width, size.height));
+            scroll_bar_->setBounds(Rect(0, 0, new_bounds.width(), new_bounds.height()));
             updateOverlayScrollBar();
         }
     }
@@ -264,20 +282,39 @@ namespace ukive {
             layouter_->onClear();
         }
 
-        if (src) {
-            source_ = src;
+        source_ = src;
+
+        if (source_) {
             source_->setNotifier(this);
-            layoutAtPosition(false);
         }
 
+        onDataChanged();
+        updateOverlayScrollBar();
         requestDraw();
     }
 
     void ListView::setLayouter(ListLayouter* layouter) {
+        if (layouter_.get() == layouter) {
+            return;
+        }
+
+        scroller_.finish();
+
+        if (layouter_) {
+            recycler_->clear();
+            removeAllViews();
+        }
+
         layouter_.reset(layouter);
         if (layouter_) {
+            auto bounds = getContentBounds();
             layouter_->bind(this, source_);
+            layouter_->onMeasureAtPosition(true, bounds.width(), bounds.height());
+            layoutAtPosition(true);
         }
+
+        updateOverlayScrollBar();
+        requestDraw();
     }
 
     void ListView::setSecDimUnknown(bool unknown) {
@@ -292,12 +329,23 @@ namespace ukive {
         if (smooth) {
             smoothScrollToPosition(pos, offset);
         } else {
-            directScrollToPosition(pos, offset, false);
+            refreshAtPosition(pos, offset, false);
         }
+
+        updateOverlayScrollBar();
+        requestDraw();
     }
 
     void ListView::setChildRecycledListener(ListItemRecycledListener* l) {
         recycled_listener_ = l;
+    }
+
+    void ListView::setItemEventRouter(ListItemEventRouter* router) {
+        if (event_router_.get() != router) {
+            event_router_.reset(router);
+            event_router_->setListView(this);
+            onDataChanged();
+        }
     }
 
     ListLayouter* ListView::getLayouter() const {
@@ -349,24 +397,52 @@ namespace ukive {
     }
 
     ListItem* ListView::makeNewItem(size_t data_pos, size_t view_index) {
-        int item_id = source_->onListGetItemId(data_pos);
+        int item_id = source_->onGetListItemId(this, data_pos);
         auto new_item = recycler_->reuse(item_id, view_index);
         if (!new_item) {
-            new_item = source_->onListCreateItem(this, data_pos);
+            new_item = source_->onCreateListItem(this, event_router_.get(), data_pos);
+            auto li = new_item->item_view->getExtraLayoutInfo();
+            if (!li || !isValidExtraLayoutInfo(li)) {
+                new_item->item_view->setExtraLayoutInfo(makeExtraLayoutInfo());
+            }
             recycler_->addToParent(new_item, view_index);
         }
 
         new_item->item_id = item_id;
-        new_item->data_pos = data_pos;
-        source_->onListSetItemData(new_item, data_pos);
+        setItemData(new_item, data_pos);
         return new_item;
+    }
+
+    void ListView::setItemData(ListItem* item, size_t data_pos) {
+        item->data_pos = data_pos;
+        static_cast<ListLayoutInfo*>(
+            item->item_view->getExtraLayoutInfo())->item = item;
+        source_->onSetListItemData(this, event_router_.get(), item);
     }
 
     void ListView::recycleItem(ListItem* item) {
         if (recycled_listener_) {
             recycled_listener_->onChildRecycled(this, item);
         }
+        static_cast<ListLayoutInfo*>(
+            item->item_view->getExtraLayoutInfo())->item = nullptr;
         recycler_->recycleFromParent(item);
+    }
+
+    ListItem* ListView::findItemFromView(View* v) const {
+        for (; v != nullptr;) {
+            auto li = v->getExtraLayoutInfo();
+            if (li && isValidExtraLayoutInfo(li)) {
+                auto item = static_cast<ListLayoutInfo*>(li)->item;
+                DCHECK(
+                    item &&
+                    item->item_view == v &&
+                    item->item_view->getParent() == this);
+                return item;
+            }
+            v = v->getParent();
+        }
+        return nullptr;
     }
 
     bool ListView::findViewIndexFromStart(ListItem* item, size_t* index) const {
@@ -423,12 +499,10 @@ namespace ukive {
     }
 
     void ListView::updateOverlayScrollBar() {
-        if (!layouter_) {
-            return;
+        int prev = 0, next = 0;
+        if (layouter_) {
+            layouter_->computeTotalHeight(&prev, &next);
         }
-
-        int prev, next;
-        layouter_->computeTotalHeight(&prev, &next);
         int total_height = prev + next;
 
         float percent = static_cast<float>(prev) / (total_height - getHeight());
@@ -481,7 +555,7 @@ namespace ukive {
         }
     }
 
-    void ListView::directScrollToPosition(size_t pos, int offset, bool cur) {
+    void ListView::refreshAtPosition(size_t pos, int offset, bool cur) {
         if (!layouter_) {
             return;
         }
@@ -494,7 +568,7 @@ namespace ukive {
             scroller_.finish();
         }
 
-        int diff = layouter_->onScrollToPosition(pos, offset, cur);
+        int diff = layouter_->onDataChangedAtPosition(pos, offset, cur);
         if (diff != 0) {
             diff = fillTopChildViews(diff);
             if (diff != 0) {
@@ -503,8 +577,6 @@ namespace ukive {
         }
 
         recordCurPositionAndOffset();
-        updateOverlayScrollBar();
-        requestDraw();
     }
 
     void ListView::smoothScrollToPosition(size_t pos, int offset) {
@@ -524,8 +596,10 @@ namespace ukive {
     }
 
     void ListView::onScrollBarChanged(int dy) {
-        int prev, next;
-        layouter_->computeTotalHeight(&prev, &next);
+        int prev = 0, next = 0;
+        if (layouter_) {
+            layouter_->computeTotalHeight(&prev, &next);
+        }
         int final_dy = determineVerticalScroll(prev - dy);
         if (final_dy == 0) {
             return;
@@ -539,7 +613,8 @@ namespace ukive {
 
     void ListView::onDataChanged() {
         recordCurPositionAndOffset();
-        directScrollToPosition(0, 0, true);
+        refreshAtPosition(0, 0, true);
+        updateOverlayScrollBar();
         requestDraw();
     }
 

@@ -57,7 +57,7 @@ namespace shell {
                 getWindow()->setFullscreen(true);
             }*/
 
-            list_view_->scrollToPosition(list_source_->onListGetDataCount(), 0, false);
+            list_view_->scrollToPosition(list_source_->onGetListDataCount(list_view_), 0, false);
             //list_source_->removeItem(0);
 
             /*if (isTitleBarShowing()) {

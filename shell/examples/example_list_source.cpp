@@ -27,9 +27,9 @@ namespace shell {
         avatar_image = reinterpret_cast<ukive::ImageView*>(v->findView(ID_AVATAR));
     }
 
-    ukive::ListItem* ExampleListSource::onListCreateItem(
-        ukive::LayoutView* parent, size_t position) {
-
+    ukive::ListItem* ExampleListSource::onCreateListItem(
+        ukive::LayoutView* parent, ukive::ListItemEventRouter* router, size_t position)
+    {
         auto layout = new ukive::RestraintLayout(parent->getContext());
         layout->setBackground(new ukive::ColorElement(ukive::Color::Blue100));
         layout->setLayoutSize(ukive::View::LS_FILL, ukive::View::LS_AUTO);
@@ -74,20 +74,23 @@ namespace shell {
         return new ExampleListItem(layout);
     }
 
-    void ExampleListSource::onListSetItemData(ukive::ListItem* item, size_t position) {
-        auto& data = data_list_.at(position);
+    void ExampleListSource::onSetListItemData(
+        ukive::LayoutView* parent, ukive::ListItemEventRouter* router,
+        ukive::ListItem* item)
+    {
+        auto& data = data_list_.at(item->data_pos);
         ExampleListItem* example_list_item = reinterpret_cast<ExampleListItem*>(item);
 
         std::u16string str(data.title);
-        str.append(u" ").append(utl::to_u16string(position));
+        str.append(u" ").append(utl::to_u16string(item->data_pos));
 
         example_list_item->title_label->setText(str);
         example_list_item->summary_label->setText(data.summary);
 
-        //LOG(INFO) << "ListSource::onListSetItemData():" << position << " data has been bound.";
+        //LOG(INFO) << "ListSource::onSetListItemData():" << position << " data has been bound.";
     }
 
-    size_t ExampleListSource::onListGetDataCount() const {
+    size_t ExampleListSource::onGetListDataCount(ukive::LayoutView* parent) const {
         return data_list_.size();
     }
 

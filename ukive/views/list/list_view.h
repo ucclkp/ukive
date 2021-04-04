@@ -21,7 +21,7 @@ namespace ukive {
     class ListLayouter;
     class OverlayScrollBar;
     class ListItemRecycler;
-
+    class ListItemEventRouter;
 
     class ListItemRecycledListener {
     public:
@@ -44,6 +44,9 @@ namespace ukive {
         void setSecDimUnknown(bool unknown);
         void scrollToPosition(size_t pos, int offset, bool smooth);
         void setChildRecycledListener(ListItemRecycledListener* l);
+        void setItemEventRouter(ListItemEventRouter* router);
+
+        ListItem* findItemFromView(View* v) const;
 
         ListLayouter* getLayouter() const;
         void getCurPosition(size_t* pos, int* offset) const;
@@ -53,6 +56,9 @@ namespace ukive {
 
     protected:
         // LayoutView
+        LayoutInfo* makeExtraLayoutInfo() const override;
+        LayoutInfo* makeExtraLayoutInfo(AttrsRef attrs) const override;
+        bool isValidExtraLayoutInfo(LayoutInfo* lp) const override;
         Size onDetermineSize(const SizeInfo& info) override;
         void onLayout(
             const Rect& new_bounds, const Rect& old_bounds) override;
@@ -77,6 +83,7 @@ namespace ukive {
         void offsetChildrenVertical(int dy);
 
         ListItem* makeNewItem(size_t data_pos, size_t view_index);
+        void setItemData(ListItem* item, size_t data_pos);
         void recycleItem(ListItem* item);
 
         bool findViewIndexFromStart(ListItem* item, size_t* index) const;
@@ -92,12 +99,12 @@ namespace ukive {
         int fillBottomChildViews(int dy);
 
         void layoutAtPosition(bool cur);
-        void directScrollToPosition(size_t pos, int offset, bool cur);
+        void refreshAtPosition(size_t pos, int offset, bool cur);
         void smoothScrollToPosition(size_t pos, int offset);
 
         void onScrollBarChanged(int dy);
 
-        // ListItemChangedNotifier:
+        // ListItemChangedNotifier
         void onDataChanged() override;
         void onItemInserted(size_t start_pos, size_t count) override;
         void onItemChanged(size_t start_pos, size_t count) override;
@@ -118,7 +125,7 @@ namespace ukive {
         std::unique_ptr<ListLayouter> layouter_;
         std::unique_ptr<OverlayScrollBar> scroll_bar_;
         std::unique_ptr<ListItemRecycler> recycler_;
-
+        std::unique_ptr<ListItemEventRouter> event_router_;
         ListItemRecycledListener* recycled_listener_ = nullptr;
 
         bool is_layout_frozen_ = false;

@@ -31,7 +31,7 @@ namespace ukive {
             const Rect& new_bounds, const Rect& old_bounds) override;
 
     protected:
-        bool checkExtraLayoutInfo(LayoutInfo* lp) const override;
+        bool isValidExtraLayoutInfo(LayoutInfo* lp) const override;
         LayoutInfo* makeExtraLayoutInfo() const override;
         LayoutInfo* makeExtraLayoutInfo(AttrsRef attrs) const override;
 

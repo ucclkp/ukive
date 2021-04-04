@@ -57,7 +57,7 @@ namespace ukive {
         return new SequenceLayoutInfo();
     }
 
-    bool SequenceLayout::checkExtraLayoutInfo(LayoutInfo* lp) const {
+    bool SequenceLayout::isValidExtraLayoutInfo(LayoutInfo* lp) const {
         return typeid(*lp) == typeid(SequenceLayoutInfo);
     }
 

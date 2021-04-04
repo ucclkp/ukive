@@ -10,8 +10,9 @@
 #include "utils/weak_ref_nest.hpp"
 
 #include "ukive/menu/inner_window.h"
-#include "ukive/views/layout/layout_view.h"
 #include "ukive/views/click_listener.h"
+#include "ukive/views/layout/layout_view.h"
+#include "ukive/views/list/list_item_event_router.h"
 #include "ukive/views/list/list_item.h"
 #include "ukive/views/list/list_view.h"
 
@@ -25,6 +26,7 @@ namespace ukive {
         public LayoutView,
         public OnClickListener,
         public OnInnerWindowEventListener,
+        public ListItemEventListener,
         public ListSource
     {
     public:
@@ -51,13 +53,18 @@ namespace ukive {
         // OnClickListener
         void onClick(View* v) override;
 
+        // ListItemEventListener
+        void onItemClicked(ListView* list_view, ListItem* item, View* v) override;
+
         // OnInnerWindowEventListener
         void onRequestDismissByTouchOutside(InnerWindow* iw) override;
 
         // ListSource
-        ListItem* onListCreateItem(LayoutView* parent, size_t position) override;
-        void onListSetItemData(ListItem* item, size_t position) override;
-        size_t onListGetDataCount() const override;
+        ListItem* onCreateListItem(
+            LayoutView* parent, ListItemEventRouter* router, size_t position) override;
+        void onSetListItemData(
+            LayoutView* parent, ListItemEventRouter* router, ListItem* item) override;
+        size_t onGetListDataCount(LayoutView* parent) const override;
 
     private:
         void initViews();

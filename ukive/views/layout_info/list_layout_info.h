@@ -7,24 +7,18 @@
 #ifndef UKIVE_VIEWS_LAYOUT_INFO_LIST_LAYOUT_INFO_H_
 #define UKIVE_VIEWS_LAYOUT_INFO_LIST_LAYOUT_INFO_H_
 
-#include <memory>
-
-#include "ukive/graphics/padding.hpp"
 #include "ukive/views/layout_info/layout_info.h"
 
 
 namespace ukive {
 
+    class ListItem;
+
     class ListLayoutInfo : public LayoutInfo {
     public:
         ListLayoutInfo();
 
-        int id = -1;
-        int position = -1;
-        bool recycled = false;
-        Margin margins;
-
-        std::shared_ptr<void> data;
+        ListItem* item = nullptr;
     };
 
 }

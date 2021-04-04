@@ -41,9 +41,13 @@ namespace shell {
             std::u16string summary;
         };
 
-        ukive::ListItem* onListCreateItem(ukive::LayoutView* parent, size_t position) override;
-        void onListSetItemData(ukive::ListItem* item, size_t position) override;
-        size_t onListGetDataCount() const override;
+        ukive::ListItem* onCreateListItem(
+            ukive::LayoutView* parent, ukive::ListItemEventRouter* router,
+            size_t position) override;
+        void onSetListItemData(
+            ukive::LayoutView* parent, ukive::ListItemEventRouter* router,
+            ukive::ListItem* item) override;
+        size_t onGetListDataCount(ukive::LayoutView* parent) const override;
 
         void addItem(int image_res_id, const std::u16string& title, const std::u16string& summary);
         void addItem(size_t pos, int image_res_id, const std::u16string& title, const std::u16string& summary);

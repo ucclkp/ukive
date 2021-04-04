@@ -39,7 +39,7 @@ namespace ukive {
         virtual bool onHookInputEvent(InputEvent* e);
         virtual LayoutInfo* makeExtraLayoutInfo() const;
         virtual LayoutInfo* makeExtraLayoutInfo(AttrsRef attrs) const;
-        virtual bool checkExtraLayoutInfo(LayoutInfo* lp) const;
+        virtual bool isValidExtraLayoutInfo(LayoutInfo* lp) const;
 
         bool isLayoutView() const override;
 

@@ -43,7 +43,7 @@ namespace ukive {
         return nullptr;
     }
 
-    bool LayoutView::checkExtraLayoutInfo(LayoutInfo* lp) const {
+    bool LayoutView::isValidExtraLayoutInfo(LayoutInfo* lp) const {
         return true;
     }
 
@@ -144,7 +144,7 @@ namespace ukive {
             li = makeExtraLayoutInfo();
         }
 
-        if (!checkExtraLayoutInfo(li)) {
+        if (!isValidExtraLayoutInfo(li)) {
             li = makeExtraLayoutInfo();
         }
 

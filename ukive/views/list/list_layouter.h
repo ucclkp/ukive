@@ -36,7 +36,7 @@ namespace ukive {
 
         virtual void onMeasureAtPosition(bool cur, int width, int height) = 0;
         virtual int onLayoutAtPosition(bool cur) = 0;
-        virtual int onScrollToPosition(size_t pos, int offset, bool cur) = 0;
+        virtual int onDataChangedAtPosition(size_t pos, int offset, bool cur) = 0;
         virtual int onSmoothScrollToPosition(size_t pos, int offset) = 0;
 
         virtual int onFillTopChildren(int dy) = 0;
