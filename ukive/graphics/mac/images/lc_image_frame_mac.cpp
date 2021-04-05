@@ -6,7 +6,7 @@
 
 #include "ukive/graphics/mac/images/lc_image_frame_mac.h"
 
-#include "utils/convert.h"
+#include "utils/number.hpp"
 
 
 namespace ukive {
@@ -36,7 +36,7 @@ namespace ukive {
         if (img_) {
             auto width = CGImageGetWidth(img_);
             auto height = CGImageGetHeight(img_);
-            return Size(utl::STLCInt(width), utl::STLCInt(height));
+            return Size(utl::num_cast<int>(width), utl::num_cast<int>(height));
         }
         return Size(0, 0);
     }

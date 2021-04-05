@@ -7,6 +7,8 @@
 #ifndef UKIVE_VIEWS_LIST_LIST_ITEM_H_
 #define UKIVE_VIEWS_LIST_LIST_ITEM_H_
 
+#include <cstddef>
+
 #include "ukive/graphics/padding.hpp"
 
 

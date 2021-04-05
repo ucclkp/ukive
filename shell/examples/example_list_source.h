@@ -7,6 +7,7 @@
 #ifndef SHELL_EXAMPLES_EXAMPLE_LIST_SOURCE_H_
 #define SHELL_EXAMPLES_EXAMPLE_LIST_SOURCE_H_
 
+#include <string>
 #include <vector>
 
 #include "ukive/views/list/list_item.h"
