@@ -678,10 +678,10 @@
 		6708098824BF55420062F080 /* app */ = {
 			isa = PBXGroup;
 			children = (
-				6708098E24BF55B50062F080 /* mac */,
-				6708098C24BF55B50062F080 /* win */,
 				670BD57824B229ED00DF5B85 /* application.cpp */,
 				670BD4FD24B229EC00DF5B85 /* application.h */,
+				6708098E24BF55B50062F080 /* mac */,
+				6708098C24BF55B50062F080 /* win */,
 			);
 			path = app;
 			sourceTree = "<group>";
@@ -735,8 +735,6 @@
 		670BD4B424B229EC00DF5B85 /* animation */ = {
 			isa = PBXGroup;
 			children = (
-				6723A7A524FE9C6D00F3FB53 /* view_animator_params.cpp */,
-				6723A7A624FE9C6E00F3FB53 /* view_animator_params.h */,
 				670BD4BC24B229EC00DF5B85 /* animation_director.cpp */,
 				670BD4B524B229EC00DF5B85 /* animation_director.h */,
 				670BD4C024B229EC00DF5B85 /* animator.cpp */,
@@ -749,6 +747,8 @@
 				670BD4BB24B229EC00DF5B85 /* scroller.h */,
 				670BD4B824B229EC00DF5B85 /* timer.cpp */,
 				670BD4BE24B229EC00DF5B85 /* timer.h */,
+				6723A7A524FE9C6D00F3FB53 /* view_animator_params.cpp */,
+				6723A7A624FE9C6E00F3FB53 /* view_animator_params.h */,
 				670BD4BA24B229EC00DF5B85 /* view_animator.cpp */,
 				670BD4BF24B229EC00DF5B85 /* view_animator.h */,
 			);
@@ -816,14 +816,14 @@
 			isa = PBXGroup;
 			children = (
 				6723A7A024FE9BA700F3FB53 /* attributes.h */,
+				670BD50224B229EC00DF5B85 /* dimension_utils.cpp */,
+				670BD50124B229EC00DF5B85 /* dimension_utils.h */,
 				6723A7A124FE9BA700F3FB53 /* dimension.cpp */,
 				6723A79F24FE9BA700F3FB53 /* dimension.h */,
+				670BD50024B229EC00DF5B85 /* layout_instantiator.cpp */,
+				670BD4FF24B229EC00DF5B85 /* layout_instantiator.h */,
 				6783F42624D1E43000056DA1 /* resource_manager.cpp */,
 				6783F42524D1E43000056DA1 /* resource_manager.h */,
-				670BD4FF24B229EC00DF5B85 /* layout_instantiator.h */,
-				670BD50024B229EC00DF5B85 /* layout_instantiator.cpp */,
-				670BD50124B229EC00DF5B85 /* dimension_utils.h */,
-				670BD50224B229EC00DF5B85 /* dimension_utils.cpp */,
 			);
 			path = resources;
 			sourceTree = "<group>";
@@ -831,7 +831,6 @@
 		670BD50324B229EC00DF5B85 /* event */ = {
 			isa = PBXGroup;
 			children = (
-				676023B52590F45700DA26AA /* mac */,
 				6770CE24256FB85A007B49F3 /* focus_manager.cpp */,
 				6770CE23256FB85A007B49F3 /* focus_manager.h */,
 				670BD50624B229EC00DF5B85 /* input_consts.cpp */,
@@ -840,6 +839,7 @@
 				670BD50524B229EC00DF5B85 /* input_event.h */,
 				670BD50B24B229EC00DF5B85 /* keyboard.cpp */,
 				670BD50924B229EC00DF5B85 /* keyboard.h */,
+				676023B52590F45700DA26AA /* mac */,
 				670BD50724B229EC00DF5B85 /* velocity_calculator.cpp */,
 				670BD50424B229EC00DF5B85 /* velocity_calculator.h */,
 			);
@@ -849,18 +849,18 @@
 		670BD50C24B229EC00DF5B85 /* menu */ = {
 			isa = PBXGroup;
 			children = (
+				670BD51624B229EC00DF5B85 /* context_menu_callback.h */,
+				670BD51224B229EC00DF5B85 /* context_menu.cpp */,
 				670BD50D24B229EC00DF5B85 /* context_menu.h */,
-				670BD50E24B229EC00DF5B85 /* menu_callback.h */,
 				670BD50F24B229EC00DF5B85 /* inner_window.cpp */,
+				670BD51724B229EC00DF5B85 /* inner_window.h */,
+				670BD50E24B229EC00DF5B85 /* menu_callback.h */,
 				670BD51024B229EC00DF5B85 /* menu_impl.cpp */,
 				670BD51124B229EC00DF5B85 /* menu_impl.h */,
-				670BD51224B229EC00DF5B85 /* context_menu.cpp */,
-				670BD51324B229EC00DF5B85 /* menu.h */,
 				670BD51424B229EC00DF5B85 /* menu_item_impl.cpp */,
 				670BD51524B229EC00DF5B85 /* menu_item_impl.h */,
-				670BD51624B229EC00DF5B85 /* context_menu_callback.h */,
-				670BD51724B229EC00DF5B85 /* inner_window.h */,
 				670BD51824B229EC00DF5B85 /* menu_item.h */,
+				670BD51324B229EC00DF5B85 /* menu.h */,
 			);
 			path = menu;
 			sourceTree = "<group>";
@@ -910,10 +910,10 @@
 		670BD51A24B229EC00DF5B85 /* render_node */ = {
 			isa = PBXGroup;
 			children = (
-				670BD51B24B229EC00DF5B85 /* render_node.h */,
-				670BD51C24B229EC00DF5B85 /* render_tree.h */,
-				670BD51D24B229EC00DF5B85 /* render_tree.cpp */,
 				670BD51E24B229EC00DF5B85 /* render_node.cpp */,
+				670BD51B24B229EC00DF5B85 /* render_node.h */,
+				670BD51D24B229EC00DF5B85 /* render_tree.cpp */,
+				670BD51C24B229EC00DF5B85 /* render_tree.h */,
 			);
 			path = render_node;
 			sourceTree = "<group>";
@@ -1087,10 +1087,10 @@
 		670BD5E824B229ED00DF5B85 /* system */ = {
 			isa = PBXGroup;
 			children = (
-				670BD7CC24B4C3B700DF5B85 /* mac */,
 				670BD5F724B229ED00DF5B85 /* clipboard_manager.cpp */,
 				670BD60024B229ED00DF5B85 /* clipboard_manager.h */,
 				670BD5F824B229ED00DF5B85 /* dialog */,
+				670BD7CC24B4C3B700DF5B85 /* mac */,
 				670BD5E924B229ED00DF5B85 /* theme_info.h */,
 				670BD5EA24B229ED00DF5B85 /* time_utils.cpp */,
 				670BD5FF24B229ED00DF5B85 /* time_utils.h */,
@@ -1112,12 +1112,12 @@
 		670BD7CA24B4C39F00DF5B85 /* mac */ = {
 			isa = PBXGroup;
 			children = (
-				670BD7CE24B4C46500DF5B85 /* window_impl_mac.h */,
-				670BD7D024B4C49D00DF5B85 /* window_impl_mac.mm */,
-				6783F3AC24C3072500056DA1 /* uk_root_view.h */,
-				6783F3AE24C307C000056DA1 /* uk_root_view.mm */,
 				671374E424DFBA970043047F /* uk_ns_window.h */,
 				671374E524DFBA970043047F /* uk_ns_window.mm */,
+				6783F3AC24C3072500056DA1 /* uk_root_view.h */,
+				6783F3AE24C307C000056DA1 /* uk_root_view.mm */,
+				670BD7CE24B4C46500DF5B85 /* window_impl_mac.h */,
+				670BD7D024B4C49D00DF5B85 /* window_impl_mac.mm */,
 			);
 			path = mac;
 			sourceTree = "<group>";
@@ -1148,20 +1148,20 @@
 		670BD7CD24B4C3F300DF5B85 /* mac */ = {
 			isa = PBXGroup;
 			children = (
-				6783F44824D1E56100056DA1 /* images */,
+				6783F3D524C31B6A00056DA1 /* cyro_renderer_mac.h */,
+				6783F3D424C31B6A00056DA1 /* cyro_renderer_mac.mm */,
+				6723A7C824FEA4A800F3FB53 /* display_mac.h */,
+				6723A7C724FEA4A800F3FB53 /* display_mac.mm */,
 				6783F3F024C3575300056DA1 /* effects */,
 				676D2CD424BE0CF0000F3DAE /* graphic_device_manager_mac.cpp */,
 				676D2CD524BE0CF0000F3DAE /* graphic_device_manager_mac.h */,
-				6783F3D024C317DD00056DA1 /* window_buffer_mac.mm */,
-				6783F3D124C317DD00056DA1 /* window_buffer_mac.h */,
-				6783F3D424C31B6A00056DA1 /* cyro_renderer_mac.mm */,
-				6783F3D524C31B6A00056DA1 /* cyro_renderer_mac.h */,
-				6783F3FC24C445CB00056DA1 /* path_mac.mm */,
-				6783F3FD24C445CB00056DA1 /* path_mac.h */,
-				6783F40424C45C3600056DA1 /* offscreen_buffer_mac.mm */,
+				6783F44824D1E56100056DA1 /* images */,
 				6783F40524C45C3600056DA1 /* offscreen_buffer_mac.h */,
-				6723A7C724FEA4A800F3FB53 /* display_mac.mm */,
-				6723A7C824FEA4A800F3FB53 /* display_mac.h */,
+				6783F40424C45C3600056DA1 /* offscreen_buffer_mac.mm */,
+				6783F3FD24C445CB00056DA1 /* path_mac.h */,
+				6783F3FC24C445CB00056DA1 /* path_mac.mm */,
+				6783F3D124C317DD00056DA1 /* window_buffer_mac.h */,
+				6783F3D024C317DD00056DA1 /* window_buffer_mac.mm */,
 			);
 			path = mac;
 			sourceTree = "<group>";
@@ -1177,10 +1177,10 @@
 		6765098725875E6A000DD7BC /* 3d */ = {
 			isa = PBXGroup;
 			children = (
-				6765098825875E6A000DD7BC /* vector.hpp */,
 				6765098925875E6A000DD7BC /* geocal.hpp */,
-				6765098A25875E6A000DD7BC /* point.hpp */,
 				6765098B25875E6A000DD7BC /* matrix.hpp */,
+				6765098A25875E6A000DD7BC /* point.hpp */,
+				6765098825875E6A000DD7BC /* vector.hpp */,
 			);
 			path = 3d;
 			sourceTree = "<group>";
@@ -1265,8 +1265,8 @@
 		6783F3F024C3575300056DA1 /* effects */ = {
 			isa = PBXGroup;
 			children = (
-				6783F3F124C3577800056DA1 /* shadow_effect_mac.mm */,
 				6783F3F224C3577800056DA1 /* shadow_effect_mac.h */,
+				6783F3F124C3577800056DA1 /* shadow_effect_mac.mm */,
 			);
 			path = effects;
 			sourceTree = "<group>";
@@ -1274,11 +1274,11 @@
 		6783F42D24D1E4D200056DA1 /* images */ = {
 			isa = PBXGroup;
 			children = (
-				6707AECF25DAB43D009C6685 /* image_options.cpp */,
-				6707AED025DAB43D009C6685 /* image_options.h */,
 				6783F42E24D1E4D200056DA1 /* image_data.h */,
 				6783F43724D1E4D200056DA1 /* image_frame.cpp */,
 				6783F43024D1E4D200056DA1 /* image_frame.h */,
+				6707AECF25DAB43D009C6685 /* image_options.cpp */,
+				6707AED025DAB43D009C6685 /* image_options.h */,
 				6783F42F24D1E4D200056DA1 /* image.cpp */,
 				6783F43824D1E4D200056DA1 /* image.h */,
 				6783F43224D1E4D200056DA1 /* lc_image_factory.cpp */,
@@ -1294,14 +1294,14 @@
 		6783F44824D1E56100056DA1 /* images */ = {
 			isa = PBXGroup;
 			children = (
-				6783F45524D1E99D00056DA1 /* image_frame_mac.mm */,
 				6783F45624D1E99D00056DA1 /* image_frame_mac.h */,
+				6783F45524D1E99D00056DA1 /* image_frame_mac.mm */,
+				67BD763D25EAA12200F200DB /* image_options_mac_utils.cpp */,
+				67BD763E25EAA12200F200DB /* image_options_mac_utils.h */,
 				6783F44D24D1E82900056DA1 /* lc_image_factory_mac.h */,
 				6783F44E24D1E82A00056DA1 /* lc_image_factory_mac.mm */,
 				6783F45124D1E94800056DA1 /* lc_image_frame_mac.cpp */,
 				6783F45224D1E94800056DA1 /* lc_image_frame_mac.h */,
-				67BD763D25EAA12200F200DB /* image_options_mac_utils.cpp */,
-				67BD763E25EAA12200F200DB /* image_options_mac_utils.h */,
 			);
 			path = images;
 			sourceTree = "<group>";
@@ -1534,7 +1534,7 @@
 			isa = PBXProject;
 			attributes = {
 				DefaultBuildSystemTypeForWorkspace = Original;
-				LastUpgradeCheck = 1150;
+				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = ucclkp;
 				TargetAttributes = {
 					670BD45C24B21F7C00DF5B85 = {
@@ -1737,6 +1737,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1799,6 +1800,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;

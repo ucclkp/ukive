@@ -559,7 +559,7 @@ namespace ukive {
                 -child->getTop() + getScrollY());
 
             canvas->save();
-            canvas->translate(child->getLeft(), child->getTop());
+            canvas->translate(float(child->getLeft()), float(child->getTop()));
             child->draw(canvas, dirty);
             canvas->restore();
         }

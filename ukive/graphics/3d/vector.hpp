@@ -109,7 +109,10 @@ namespace ukv3d {
 
         template<typename C>
         explicit operator Vector3T<C>() const {
-            return Vector3T<C>(x, y, z);
+            return Vector3T<C>(
+                static_cast<C>(x),
+                static_cast<C>(y),
+                static_cast<C>(z));
         }
 
         template<typename = typename F::type>

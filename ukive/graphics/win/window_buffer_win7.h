@@ -23,8 +23,8 @@ namespace ukive {
         explicit WindowBufferWin7(WindowImplWin* w);
 
         bool onCreate(
-            size_t width, size_t height, const ImageOptions& options) override;
-        GRet onResize(size_t width, size_t height) override;
+            int width, int height, const ImageOptions& options) override;
+        GRet onResize(int width, int height) override;
         void onDPIChange(float dpi_x, float dpi_y) override;
         void onDestroy() override;
 

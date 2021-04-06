@@ -14,7 +14,7 @@ namespace ukive {
     public:
         virtual ~TabSelectionListener() = default;
 
-        virtual void onTabSelectionChanged(int index) = 0;
+        virtual void onTabSelectionChanged(size_t index) = 0;
     };
 
 }

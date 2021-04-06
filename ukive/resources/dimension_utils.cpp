@@ -30,7 +30,7 @@ namespace ukive {
         if (utl::ascii::endWith(dm, "dp", false)) {
             int val = 0;
             if (utl::stringToNumber(dm.substr(0, dm.length() - 2), &val)) {
-                *out = c.dp2px(val);
+                *out = c.dp2pxi(val);
                 return true;
             }
         } else if (utl::ascii::endWith(dm, "px", false)) {
@@ -42,7 +42,7 @@ namespace ukive {
         } else {
             int val = 0;
             if (utl::stringToNumber(dm, &val)) {
-                *out = c.dp2px(val);
+                *out = c.dp2pxi(val);
                 return true;
             }
         }

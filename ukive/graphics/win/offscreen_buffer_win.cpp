@@ -7,6 +7,7 @@
 #include "ukive/graphics/win/offscreen_buffer_win.h"
 
 #include "utils/log.h"
+#include "utils/number.hpp"
 
 #include "ukive/app/application.h"
 #include "ukive/graphics/images/image_options.h"
@@ -23,22 +24,37 @@ namespace ukive {
     }
 
     bool OffscreenBufferWin::onCreate(
-        size_t width, size_t height,
+        int width, int height,
         const ImageOptions& options)
     {
+        if (width <= 0 || height <= 0) {
+            DLOG(Log::ERR) << "Invalid size value.";
+            return false;
+        }
+
         width_ = width;
         height_ = height;
         img_options_ = options;
         return createHardwareBRT(width_, height_);
     }
 
-    GRet OffscreenBufferWin::onResize(size_t width, size_t height) {
+    GRet OffscreenBufferWin::onResize(int width, int height) {
+        if (width <= 0 || height <= 0) {
+            DLOG(Log::WARNING) << "Invalid size value.";
+            return GRet::Succeeded;
+        }
+
         width_ = width;
         height_ = height;
         return createHardwareBRT(width, height) ? GRet::Succeeded : GRet::Failed;
     }
 
     void OffscreenBufferWin::onDPIChange(float dpi_x, float dpi_y) {
+        if (dpi_x <= 0 || dpi_y <= 0) {
+            DLOG(Log::ERR) << "Invalid dpi values.";
+            return;
+        }
+
         switch (img_options_.dpi_type) {
         case ImageDPIType::SPECIFIED:
             img_options_.dpi_x = dpi_x;
@@ -98,8 +114,8 @@ namespace ukive {
         Size size;
         switch (img_options_.dpi_type) {
         case ImageDPIType::SPECIFIED:
-            size.width = size_t(std::ceil(width_ * img_options_.dpi_x / kDefaultDpi));
-            size.height = size_t(std::ceil(height_ * img_options_.dpi_y / kDefaultDpi));
+            size.width = int(std::ceil(width_ * img_options_.dpi_x / kDefaultDpi));
+            size.height = int(std::ceil(height_ * img_options_.dpi_y / kDefaultDpi));
             break;
         case ImageDPIType::DEFAULT:
         default:
@@ -122,14 +138,11 @@ namespace ukive {
         return d3d_tex2d_;
     }
 
-    bool OffscreenBufferWin::createHardwareBRT(size_t width, size_t height) {
-        DCHECK(width <= std::numeric_limits<UINT>::max());
-        DCHECK(height <= std::numeric_limits<UINT>::max());
-
+    bool OffscreenBufferWin::createHardwareBRT(int width, int height) {
         switch (img_options_.dpi_type) {
         case ImageDPIType::SPECIFIED:
-            width = size_t(std::ceil(width * img_options_.dpi_x / kDefaultDpi));
-            height = size_t(std::ceil(height * img_options_.dpi_y / kDefaultDpi));
+            width = int(std::ceil(width * img_options_.dpi_x / kDefaultDpi));
+            height = int(std::ceil(height * img_options_.dpi_y / kDefaultDpi));
             break;
         case ImageDPIType::DEFAULT:
         default:
@@ -138,7 +151,7 @@ namespace ukive {
 
         d3d_tex2d_ = static_cast<DirectXManager*>(Application::getGraphicDeviceManager())->
             createTexture2D(
-                UINT(width), UINT(height),
+                utl::num_cast<UINT>(width), utl::num_cast<UINT>(height),
                 true, img_options_.pixel_format == ImagePixelFormat::HDR, false);
         if (!d3d_tex2d_) {
             return false;

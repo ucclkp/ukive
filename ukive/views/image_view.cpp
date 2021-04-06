@@ -179,12 +179,12 @@ namespace ukive {
                 float(width) / img_width,
                 float(height) / img_height);
 
-            img_width *= scale;
-            img_height *= scale;
+            img_width = int(img_width * scale);
+            img_height = int(img_height * scale);
         }
 
-        float img_x = (width - img_width) / 2.f;
-        float img_y = (height - img_height) / 2.f;
+        int img_x = (width - img_width) / 2;
+        int img_y = (height - img_height) / 2;
 
         img_element_->setBounds(
             img_x, img_y,

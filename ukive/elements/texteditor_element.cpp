@@ -41,9 +41,9 @@ namespace ukive {
         auto bound = getBounds();
 
         canvas->fillRect(
-            RectF(
+            RectF(Rect(
                 bound.left, bound.bottom - panel_line_width_,
-                bound.width(), panel_line_width_),
+                bound.width(), panel_line_width_)),
             panel_line_color_);
     }
 

@@ -10,6 +10,7 @@
 #include <fstream>
 
 #include "utils/log.h"
+#include "utils/number.hpp"
 #include "utils/files/file_utils.h"
 
 #include "ukive/app/application.h"
@@ -28,7 +29,7 @@ namespace shell {
         coe_distance_ = 30.f;
 
         max_level_ = maxLevel;
-        row_vertex_count_ = std::pow(2, max_level_) + 1;
+        row_vertex_count_ = int(std::pow(2, max_level_)) + 1;
         vertex_count_ = row_vertex_count_ * row_vertex_count_;
 
         flags_ = new char[vertex_count_];
@@ -44,7 +45,7 @@ namespace shell {
         }
         auto cpos = reader.tellg();
         reader.seekg(0, std::ios_base::end);
-        size_t charSize = reader.tellg();
+        auto charSize = utl::num_cast<size_t>(std::streamoff(reader.tellg()));
         reader.seekg(cpos);
 
         altitude_ = new char[charSize];
@@ -55,8 +56,8 @@ namespace shell {
             int row = i / row_vertex_count_;
             int column = i % row_vertex_count_;
 
-            int altitudeRow = (ALTITUDE_MAP_SIZE / float(row_vertex_count_))*row;
-            int altitudeColumn = (ALTITUDE_MAP_SIZE / float(row_vertex_count_))*column;
+            int altitudeRow = int(ALTITUDE_MAP_SIZE / float(row_vertex_count_)*row);
+            int altitudeColumn = int(ALTITUDE_MAP_SIZE / float(row_vertex_count_)*column);
 
             int altitude = altitude_[
                 (ALTITUDE_MAP_SIZE - 1 - altitudeRow) * ALTITUDE_MAP_SIZE + altitudeColumn];
@@ -65,7 +66,7 @@ namespace shell {
 
             vertices_[i].position = ukv3d::Point3F(
                 edgeLength*column / (row_vertex_count_ - 1),
-                (float)altitude * 2, edgeLength - edgeLength*row / (row_vertex_count_ - 1));
+                float(altitude) * 2, edgeLength - edgeLength*row / (row_vertex_count_ - 1));
         }
 
         index_count_ = 0;
@@ -133,15 +134,15 @@ namespace shell {
 
 
     inline int LodGenerator::calInnerStep(QTreeNode* node) {
-        return (row_vertex_count_ - 1) / std::pow(2, node->level + 1);
+        return int((row_vertex_count_ - 1) / std::pow(2, node->level + 1));
     }
 
     inline int LodGenerator::calNeighborStep(QTreeNode* node) {
-        return (row_vertex_count_ - 1) / std::pow(2, node->level);
+        return int((row_vertex_count_ - 1) / std::pow(2, node->level));
     }
 
     inline int LodGenerator::calChildStep(QTreeNode* node) {
-        return (row_vertex_count_ - 1) / std::pow(2, node->level + 2);
+        return int((row_vertex_count_ - 1) / std::pow(2, node->level + 2));
     }
 
 

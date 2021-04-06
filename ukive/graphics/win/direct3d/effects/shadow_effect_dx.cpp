@@ -204,18 +204,18 @@ namespace ukive {
         height_ = height;
         is_hdr_enabled_ = hdr;
 
-        viewport_.Width = width_;
-        viewport_.Height = height_;
+        viewport_.Width = float(width_);
+        viewport_.Height = float(height_);
         viewport_.MinDepth = 0.0f;
         viewport_.MaxDepth = 1.0f;
         viewport_.TopLeftX = 0;
         viewport_.TopLeftY = 0;
 
         VertexData vertices[] {
-            { ukv3d::Point3F(0, height, 0) },
-            { ukv3d::Point3F(width, height, 0) },
-            { ukv3d::Point3F(width, 0, 0) },
-            { ukv3d::Point3F(0, 0, 0) },
+            { ukv3d::Point3F(0,            float(height), 0) },
+            { ukv3d::Point3F(float(width), float(height), 0) },
+            { ukv3d::Point3F(float(width), 0,             0) },
+            { ukv3d::Point3F(0,            0,             0) },
         };
 
         vert_buffer_ = Space::createVertexBuffer(vertices, sizeof(VertexData), ARRAYSIZE(vertices));
@@ -415,7 +415,7 @@ namespace ukive {
         float total_weight = 0;
         std::unique_ptr<float[]> weight_matrix(new float[radius + 1]());
         for (int i = 0; i < radius + 1; ++i) {
-            float w = getWeight(radius - i, semi_radius_ * context_.getAutoScale());
+            float w = getWeight(float(radius - i), semi_radius_ * context_.getAutoScale());
             weight_matrix[i] = w;
             if (i != radius) {
                 total_weight += w;

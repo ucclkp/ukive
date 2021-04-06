@@ -32,9 +32,9 @@ namespace ukive {
         ripple_background_->add(shape_element_);
 
         setBackground(ripple_background_);
-        setShadowRadius(c.dp2px(2.0f));
+        setShadowRadius(c.dp2pxi(2.0f));
 
-        size_ = c.dp2px(18);
+        size_ = c.dp2pxi(18);
     }
 
     void CircleColorButton::setSize(int size) {

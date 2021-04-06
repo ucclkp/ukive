@@ -97,10 +97,10 @@ namespace ukive {
     }
 
     void TextBlink::calculateRect(float x_center, float top, float bottom, Rect* out) const {
-        out->left = std::round(x_center - thickness_ / 2.f);
-        out->top = std::floor(top);
-        out->right = out->left + std::round(thickness_);
-        out->bottom = std::ceil(bottom);
+        out->left = int(std::round(x_center - thickness_ / 2.f));
+        out->top = int(std::floor(top));
+        out->right = int(out->left + std::round(thickness_));
+        out->bottom = int(std::ceil(bottom));
     }
 
     void TextBlink::setColor(const Color& color) {

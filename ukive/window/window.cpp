@@ -617,7 +617,7 @@ namespace ukive {
             x = rect.right - 92;
             break;
         case View::CENTER:
-            x = rect.left - (92 - rect.width()) / 2.f;
+            x = rect.left - (92 - rect.width()) / 2;
             break;
         default:
             x = rect.left;
@@ -894,7 +894,7 @@ namespace ukive {
 
         // 平移画布，避开超出窗口可见区的部分
         canvas->save();
-        canvas->translate(bounds.left, bounds.top);
+        canvas->translate(float(bounds.left), float(bounds.top));
 
         onPreDrawCanvas(canvas);
 
@@ -1155,10 +1155,6 @@ namespace ukive {
         for (auto listener : status_changed_listeners_) {
             listener->onWindowButtonChanged(button);
         }
-    }
-
-    bool Window::onDataCopy(unsigned int id, unsigned int size, void* data) {
-        return false;
     }
 
     bool Window::onGetWindowIconName(std::u16string* icon_name, std::u16string* small_icon_name) const {

@@ -8,6 +8,7 @@
 
 #include <fstream>
 
+#include "utils/number.hpp"
 #include "utils/log.h"
 
 #include "ukive/app/application.h"
@@ -70,7 +71,7 @@ namespace ukive {
 
         auto cpos = reader.tellg();
         reader.seekg(0, std::ios_base::end);
-        auto charSize = reader.tellg();
+        auto charSize = utl::num_cast<size_t>(std::streamoff(reader.tellg()));
         reader.seekg(cpos);
 
         std::unique_ptr<char[]> buf(new char[charSize]());
@@ -107,7 +108,7 @@ namespace ukive {
 
         auto cpos = reader.tellg();
         reader.seekg(0, std::ios_base::end);
-        auto charSize = reader.tellg();
+        auto charSize = utl::num_cast<size_t>(std::streamoff(reader.tellg()));
         reader.seekg(cpos);
 
         std::unique_ptr<char[]> buf(new char[charSize]());

@@ -6,6 +6,8 @@
 
 #include "word_breaker.h"
 
+#include "utils/number.hpp"
+
 
 namespace ukive {
 
@@ -255,7 +257,7 @@ namespace ukive {
 
     bool WordBreaker::breakText(std::wstring text)
     {
-        return breakText(text, 0, text.length());
+        return breakText(text, 0, utl::num_cast<ULONG>(text.length()));
     }
 
     bool WordBreaker::breakText(std::wstring text, ULONG start, ULONG end)

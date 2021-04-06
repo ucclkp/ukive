@@ -163,8 +163,8 @@ namespace ukive {
 
         if (!w->hasSizeBorder()) {
             auto c = getContext();
-            nc_padding_.set(c.dp2px(0), c.dp2px(0), c.dp2px(0), c.dp2px(0));
-            sh_padding_.set(c.dp2px(4), c.dp2px(4), c.dp2px(4), c.dp2px(4));
+            nc_padding_.set(c.dp2pxi(0), c.dp2pxi(0), c.dp2pxi(0), c.dp2pxi(0));
+            sh_padding_.set(c.dp2pxi(4), c.dp2pxi(4), c.dp2pxi(4), c.dp2pxi(4));
         }
     }
 

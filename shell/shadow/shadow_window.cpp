@@ -48,10 +48,10 @@ namespace shell {
         ce_button_->setText(u"Shadow Effect");
         ce_button_->setTextAlignment(ukive::TextLayout::Alignment::CENTER);
         ce_button_->setParagraphAlignment(ukive::TextLayout::Alignment::CENTER);
-        ce_button_->setTextSize(getContext().dp2px(12));
+        ce_button_->setTextSize(getContext().dp2pxi(12));
         ce_button_->setTextWeight(ukive::TextLayout::FontWeight::BOLD);
         ce_button_->setShadowRadius(18);
-        ce_button_->setLayoutSize(getContext().dp2px(100), getContext().dp2px(50));
+        ce_button_->setLayoutSize(getContext().dp2pxi(100), getContext().dp2pxi(50));
 
         auto ce_button_lp = Rlp::Builder()
             .start(layout->getId()).top(layout->getId())
@@ -114,7 +114,7 @@ namespace shell {
     }
 
     void ShadowWindow::onAnimationProgress(ukive::Animator* animator) {
-        shadow_effect_->setRadius(animator->getCurValue());
+        shadow_effect_->setRadius(int(animator->getCurValue()));
         shadow_effect_->generate(getCanvas());
 
         shadow_img_ = shadow_effect_->getOutput();

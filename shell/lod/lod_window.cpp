@@ -80,12 +80,12 @@ namespace shell {
         ukive::Space3DView* lodView = new ukive::Space3DView(getContext(), terrain_scene_);
         lodView->setLayoutSize(0, ukive::View::LS_FILL);
         lodView->setLayoutMargin(
-            getContext().dp2px(8), getContext().dp2px(8), getContext().dp2px(8), getContext().dp2px(8));
+            getContext().dp2pxi(8), getContext().dp2pxi(8), getContext().dp2pxi(8), getContext().dp2pxi(8));
         ukive::SequenceLayoutInfo *d3dViewLp = new ukive::SequenceLayoutInfo();
         d3dViewLp->weight = 2;
         lodView->setExtraLayoutInfo(d3dViewLp);
         lodView->setBackground(new ukive::ColorElement(ukive::Color::White));
-        lodView->setShadowRadius(getContext().dp2px(2));
+        lodView->setShadowRadius(getContext().dp2pxi(2));
 
         lod_view_ = lodView;
 
@@ -120,9 +120,9 @@ namespace shell {
         c1Label->setIsEditable(false);
         c1Label->setIsSelectable(false);
         c1Label->setText(u"C1值:");
-        c1Label->setTextSize(getContext().dp2px(13));
+        c1Label->setTextSize(getContext().dp2pxi(13));
         c1Label->setLayoutSize(ukive::View::LS_AUTO, ukive::View::LS_AUTO);
-        c1Label->setLayoutMargin(getContext().dp2px(8), getContext().dp2px(12), 0, 0);
+        c1Label->setLayoutMargin(getContext().dp2pxi(8), getContext().dp2pxi(12), 0, 0);
 
         auto c1LabelLp = Rlp::Builder()
             .start(ID_RIGHT_RESTRAIN, Rlp::START)
@@ -138,7 +138,7 @@ namespace shell {
         c1_seekbar_->setProgress(2.f - 1.f);
         c1_seekbar_->setOnSeekValueChangedListener(this);
         c1_seekbar_->setLayoutSize(ukive::View::LS_FILL, ukive::View::LS_AUTO);
-        c1_seekbar_->setLayoutMargin(getContext().dp2px(4), 0, getContext().dp2px(4), 0);
+        c1_seekbar_->setLayoutMargin(getContext().dp2pxi(4), 0, getContext().dp2pxi(4), 0);
 
         auto c1SeekBarLp = Rlp::Builder()
             .start(ID_C1_LABEL, Rlp::END)
@@ -155,9 +155,9 @@ namespace shell {
         c1_value_tv_->setIsEditable(false);
         c1_value_tv_->setIsSelectable(false);
         c1_value_tv_->setText(u"2.00");
-        c1_value_tv_->setTextSize(getContext().dp2px(13));
-        c1_value_tv_->setLayoutSize(getContext().dp2px(36), ukive::View::LS_AUTO);
-        c1_value_tv_->setLayoutMargin(0, 0, getContext().dp2px(8), 0);
+        c1_value_tv_->setTextSize(getContext().dp2pxi(13));
+        c1_value_tv_->setLayoutSize(getContext().dp2pxi(36), ukive::View::LS_AUTO);
+        c1_value_tv_->setLayoutMargin(0, 0, getContext().dp2pxi(8), 0);
 
         auto c1ValueLp = Rlp::Builder()
             .top(ID_C1_LABEL)
@@ -174,9 +174,9 @@ namespace shell {
         c2Label->setIsEditable(false);
         c2Label->setIsSelectable(false);
         c2Label->setText(u"C2值:");
-        c2Label->setTextSize(getContext().dp2px(13));
+        c2Label->setTextSize(getContext().dp2pxi(13));
         c2Label->setLayoutSize(ukive::View::LS_AUTO, ukive::View::LS_AUTO);
-        c2Label->setLayoutMargin(getContext().dp2px(8), getContext().dp2px(8), 0, 0);
+        c2Label->setLayoutMargin(getContext().dp2pxi(8), getContext().dp2pxi(8), 0, 0);
 
         auto c2LabelLp = Rlp::Builder()
             .start(ID_RIGHT_RESTRAIN, Rlp::START)
@@ -192,7 +192,7 @@ namespace shell {
         c2_seekbar_->setProgress(30.f - 1.f);
         c2_seekbar_->setOnSeekValueChangedListener(this);
         c2_seekbar_->setLayoutSize(ukive::View::LS_FILL, ukive::View::LS_AUTO);
-        c2_seekbar_->setLayoutMargin(getContext().dp2px(4), 0, getContext().dp2px(4), 0);
+        c2_seekbar_->setLayoutMargin(getContext().dp2pxi(4), 0, getContext().dp2pxi(4), 0);
 
         auto c2SeekBarLp = Rlp::Builder()
             .start(ID_C2_LABEL, Rlp::END)
@@ -209,9 +209,9 @@ namespace shell {
         c2_value_tv_->setIsEditable(false);
         c2_value_tv_->setIsSelectable(false);
         c2_value_tv_->setText(u"30.00");
-        c2_value_tv_->setTextSize(getContext().dp2px(13));
-        c2_value_tv_->setLayoutSize(getContext().dp2px(36), ukive::View::LS_AUTO);
-        c2_value_tv_->setLayoutMargin(0, 0, getContext().dp2px(8), 0);
+        c2_value_tv_->setTextSize(getContext().dp2pxi(13));
+        c2_value_tv_->setLayoutSize(getContext().dp2pxi(36), ukive::View::LS_AUTO);
+        c2_value_tv_->setLayoutMargin(0, 0, getContext().dp2pxi(8), 0);
 
         auto c2ValueLp = Rlp::Builder()
             .top(ID_C2_LABEL)
@@ -228,9 +228,9 @@ namespace shell {
         splitLabel->setIsEditable(false);
         splitLabel->setIsSelectable(false);
         splitLabel->setText(u"分割:");
-        splitLabel->setTextSize(getContext().dp2px(13));
+        splitLabel->setTextSize(getContext().dp2pxi(13));
         splitLabel->setLayoutSize(ukive::View::LS_AUTO, ukive::View::LS_AUTO);
-        splitLabel->setLayoutMargin(getContext().dp2px(8), getContext().dp2px(16), 0, 0);
+        splitLabel->setLayoutMargin(getContext().dp2pxi(8), getContext().dp2pxi(16), 0, 0);
 
         auto splitLabelLp = Rlp::Builder()
             .start(ID_RIGHT_RESTRAIN, Rlp::START)
@@ -246,7 +246,7 @@ namespace shell {
         split_seekbar_->setProgress(5.f - 1.f);
         split_seekbar_->setOnSeekValueChangedListener(this);
         split_seekbar_->setLayoutSize(ukive::View::LS_FILL, ukive::View::LS_AUTO);
-        split_seekbar_->setLayoutMargin(0, 0, getContext().dp2px(4), 0);
+        split_seekbar_->setLayoutMargin(0, 0, getContext().dp2pxi(4), 0);
 
         auto splitSeekBarLp = Rlp::Builder()
             .start(ID_C2_SEEKBAR)
@@ -263,9 +263,9 @@ namespace shell {
         split_value_tv_->setIsEditable(false);
         split_value_tv_->setIsSelectable(false);
         split_value_tv_->setText(u"5");
-        split_value_tv_->setTextSize(getContext().dp2px(13));
-        split_value_tv_->setLayoutSize(getContext().dp2px(36), ukive::View::LS_AUTO);
-        split_value_tv_->setLayoutMargin(0, 0, getContext().dp2px(8), 0);
+        split_value_tv_->setTextSize(getContext().dp2pxi(13));
+        split_value_tv_->setLayoutSize(getContext().dp2pxi(36), ukive::View::LS_AUTO);
+        split_value_tv_->setLayoutMargin(0, 0, getContext().dp2pxi(8), 0);
 
         auto splitValueLp = Rlp::Builder()
             .end(ID_RIGHT_RESTRAIN, Rlp::END)
@@ -280,10 +280,10 @@ namespace shell {
         auto submitBT = new ukive::Button(getContext());
         submitBT->setId(ID_SUBMIT_BUTTON);
         submitBT->setText(u"提交");
-        submitBT->setTextSize(getContext().dp2px(12));
+        submitBT->setTextSize(getContext().dp2pxi(12));
         submitBT->setOnClickListener(this);
         submitBT->setLayoutSize(ukive::View::LS_AUTO, ukive::View::LS_AUTO);
-        submitBT->setLayoutMargin(0, getContext().dp2px(16), getContext().dp2px(8), 0);
+        submitBT->setLayoutMargin(0, getContext().dp2pxi(16), getContext().dp2pxi(8), 0);
 
         auto submitBTLp = Rlp::Builder()
             .end(ID_RIGHT_RESTRAIN, Rlp::END)
@@ -296,13 +296,13 @@ namespace shell {
         auto vsyncBT = new ukive::Button(getContext());
         vsyncBT->setId(ID_VSYNC_BUTTON);
         vsyncBT->setText(u"VSYNC ON");
-        vsyncBT->setTextSize(getContext().dp2px(12));
+        vsyncBT->setTextSize(getContext().dp2pxi(12));
         vsyncBT->setTextColor(ukive::Color::White);
         vsyncBT->setTextWeight(ukive::TextLayout::FontWeight::BOLD);
         vsyncBT->setButtonColor(ukive::Color::Blue500);
         vsyncBT->setOnClickListener(this);
         vsyncBT->setLayoutSize(ukive::View::LS_AUTO, ukive::View::LS_AUTO);
-        vsyncBT->setLayoutMargin(0, getContext().dp2px(8), getContext().dp2px(8), 0);
+        vsyncBT->setLayoutMargin(0, getContext().dp2pxi(8), getContext().dp2pxi(8), 0);
 
         auto vsyncBTLp = Rlp::Builder()
             .end(ID_RIGHT_RESTRAIN, Rlp::END)
@@ -318,10 +318,10 @@ namespace shell {
         render_info_->setIsEditable(false);
         render_info_->setIsSelectable(false);
         render_info_->setText(u"Render info.");
-        render_info_->setTextSize(getContext().dp2px(12));
+        render_info_->setTextSize(getContext().dp2pxi(12));
         render_info_->setLayoutSize(ukive::View::LS_FILL, ukive::View::LS_AUTO);
         render_info_->setLayoutMargin(
-            getContext().dp2px(8), getContext().dp2px(16), getContext().dp2px(8), 0);
+            getContext().dp2pxi(8), getContext().dp2pxi(16), getContext().dp2pxi(8), 0);
 
         auto renderInfoTVLp = Rlp::Builder()
             .start(ID_RIGHT_RESTRAIN, Rlp::START)
@@ -342,14 +342,14 @@ namespace shell {
         \n►鼠标滚轮可进行缩放。\
         \n►按住Shift键和鼠标左键拖动可旋转摄像机。\
         \n►按住Ctrl键和鼠标左键拖动可移动摄像机");
-        helperTV->setTextSize(getContext().dp2px(14));
+        helperTV->setTextSize(getContext().dp2pxi(14));
         helperTV->setBackground(new ukive::TextEditorElement(getContext()));
         helperTV->setPadding(
-            getContext().dp2px(4), getContext().dp2px(4),
-            getContext().dp2px(4), getContext().dp2px(4));
+            getContext().dp2pxi(4), getContext().dp2pxi(4),
+            getContext().dp2pxi(4), getContext().dp2pxi(4));
         helperTV->setLayoutSize(ukive::View::LS_FILL, ukive::View::LS_AUTO);
         helperTV->setLayoutMargin(
-            getContext().dp2px(8), getContext().dp2px(24), getContext().dp2px(8), 0);
+            getContext().dp2pxi(8), getContext().dp2pxi(24), getContext().dp2pxi(8), 0);
 
         auto helperTVLp = Rlp::Builder()
             .start(ID_RIGHT_RESTRAIN, Rlp::START)

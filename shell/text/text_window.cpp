@@ -61,7 +61,7 @@ namespace shell {
         editorTV->setIsEditable(true);
         editorTV->setIsSelectable(true);
         //editorTV->setFontFamilyName(L"Consolas");
-        editorTV->setTextSize(getContext().dp2px(14));
+        editorTV->setTextSize(getContext().dp2pxi(14));
         editorTV->setPadding(18, 18, 18, 18);
         editorTV->setLineSpacing(ukive::TextLayout::LineSpacing::PROPORTIONAL, 1.2f);
         editorTV->autoWrap(false);
@@ -96,7 +96,7 @@ namespace shell {
         ukive::TextView *font = new ukive::TextView(getContext());
         font->setId(ID_TOOLBAR_ITEM_FONT);
         font->setText(u"字体");
-        font->setTextSize(getContext().dp2px(13));
+        font->setTextSize(getContext().dp2pxi(13));
         font->setPadding(16, 8, 16, 8);
         font->setBackground(new ukive::RippleElement());
         font->setOnClickListener(this);
@@ -108,7 +108,7 @@ namespace shell {
         ukive::TextView *format = new ukive::TextView(getContext());
         format->setId(ID_TOOLBAR_ITEM_FORMAT);
         format->setText(u"格式");
-        format->setTextSize(getContext().dp2px(13));
+        format->setTextSize(getContext().dp2pxi(13));
         format->setPadding(16, 8, 16, 8);
         format->setBackground(new ukive::RippleElement());
         format->setOnClickListener(this);

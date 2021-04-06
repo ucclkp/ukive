@@ -29,7 +29,7 @@ namespace ukive {
         if (attrs.find(necro::kAttrTextViewText) == attrs.end()) {
             setText(u"Button");
         }
-        setTextSize(c.dp2px(13));
+        setTextSize(c.dp2pxi(13));
         setIsEditable(false);
         setIsSelectable(false);
         setClickable(true);
@@ -48,12 +48,12 @@ namespace ukive {
         ripple_background_->add(shape_element_);
 
         setPadding(
-            getContext().dp2px(24),
-            getContext().dp2px(6),
-            getContext().dp2px(24),
-            getContext().dp2px(6));
+            getContext().dp2pxi(24),
+            getContext().dp2pxi(6),
+            getContext().dp2pxi(24),
+            getContext().dp2pxi(6));
         setBackground(ripple_background_);
-        setShadowRadius(getContext().dp2px(2.0f));
+        setShadowRadius(getContext().dp2pxi(2.0f));
     }
 
     void Button::setButtonColor(Color color) {
@@ -97,9 +97,9 @@ namespace ukive {
         ripple_background->add(shape_element);
         setBackground(ripple_background);
 
-        tri_length_ = getContext().dp2px(10);
-        tri_height_ = getContext().dp2px(6);
-        button_size_ = getContext().dp2px(28);
+        tri_length_ = getContext().dp2pxi(10);
+        tri_height_ = getContext().dp2pxi(6);
+        button_size_ = getContext().dp2pxi(28);
 
         // 设为偶数
         if (tri_length_ & 1) { ++tri_length_; }
@@ -109,8 +109,8 @@ namespace ukive {
         tri_path_.reset(Path::create());
         if (tri_path_->open()) {
             tri_path_->begin(PointF(0, 0), true);
-            tri_path_->addLine(PointF(tri_length_, 0));
-            tri_path_->addLine(PointF(tri_length_ / 2, tri_height_));
+            tri_path_->addLine(PointF(float(tri_length_), 0));
+            tri_path_->addLine(PointF(Point(tri_length_ / 2, tri_height_)));
             tri_path_->addLine(PointF(0, 0));
             tri_path_->end(true);
             tri_path_->close();
@@ -128,7 +128,7 @@ namespace ukive {
         int y = (getHeight() - tri_height_) / 2;
 
         canvas->save();
-        canvas->translate(x, y + 1);
+        canvas->translate(float(x), float(y + 1));
 
         canvas->fillPath(tri_path_.get(), Color::Grey500);
 

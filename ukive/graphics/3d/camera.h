@@ -60,7 +60,7 @@ namespace ukv3d {
 
         int width_;
         int height_;
-        float radius_;
+        double radius_;
     };
 
 }

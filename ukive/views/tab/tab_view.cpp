@@ -30,7 +30,7 @@ namespace ukive {
         }
     }
 
-    void TabView::onTabStripSelectionChanged(int index) {
+    void TabView::onTabStripSelectionChanged(size_t index) {
         setSelectedPage(index);
     }
 
@@ -134,7 +134,7 @@ namespace ukive {
         return pages_.size();
     }
 
-    void TabView::addViewByPageId(View* v, int page_id) {
+    void TabView::addViewByPageId(View* v, size_t page_id) {
         for (size_t i = page_id + 1; i < pages_.size(); ++i) {
             auto page = pages_[i];
             if (page->isCreated()) {

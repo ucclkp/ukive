@@ -348,7 +348,7 @@ namespace ukive {
             if (is_touch_down_) {
                 int dx = e->getX() - start_touch_x_;
                 int dy = e->getY() - start_touch_y_;
-                int r = getContext().dp2px(kTouchScrollingThreshold);
+                int r = getContext().dp2pxi(kTouchScrollingThreshold);
 
                 if (/*dx * dx +*/ dy * dy > r * r) {
                     start_touch_x_ = e->getX();

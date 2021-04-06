@@ -45,7 +45,6 @@ namespace ukive {
         virtual bool onInputEvent(InputEvent* e) { return false; }
         virtual HitPoint onNCHitTest(int x, int y) { return HitPoint::CLIENT; }
         virtual void onWindowButtonChanged(WindowButton button) {}
-        virtual bool onDataCopy(unsigned int id, unsigned int size, void* data) { return false; }
         virtual bool onGetWindowIconName(
             std::u16string* icon_name, std::u16string* small_icon_name) const { return false; }
 

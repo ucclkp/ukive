@@ -210,7 +210,7 @@ namespace ukive {
         bool onInputEvent(InputEvent* e);
         void onDpiChanged(int dpi_x, int dpi_y);
         void onStyleChanged(bool normal, bool ext, const STYLESTRUCT* ss);
-        bool onDataCopy(unsigned int id, unsigned int size, void* data);
+        bool onDataCopy(ULONG_PTR id, DWORD size, void* data);
 
         void setLayered(bool enabled);
         void setBlurBehind(bool enabled);

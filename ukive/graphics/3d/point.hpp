@@ -63,8 +63,11 @@ namespace ukv3d {
         bool operator!=(const Point3T& rhs) const { return !isEqual(rhs); }
 
         template<typename C>
-        operator Point3T<C>() const {
-            return Point3T<C>(x, y, z);
+        explicit operator Point3T<C>() const {
+            return Point3T<C>(
+                static_cast<C>(x),
+                static_cast<C>(y),
+                static_cast<C>(z));
         }
 
         Point3T& add(const Vector3T<T>& rhs) {

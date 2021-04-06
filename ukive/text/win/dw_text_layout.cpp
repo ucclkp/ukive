@@ -104,13 +104,13 @@ namespace ukive {
         text_format_.reset();
     }
 
-    void DWTextLayout::setMaxWidth(int max_width) {
-        HRESULT hr = text_layout_->SetMaxWidth(float(max_width));
+    void DWTextLayout::setMaxWidth(float max_width) {
+        HRESULT hr = text_layout_->SetMaxWidth(max_width);
         DCHECK(SUCCEEDED(hr));
     }
 
-    void DWTextLayout::setMaxHeight(int max_height) {
-        HRESULT hr = text_layout_->SetMaxHeight(float(max_height));
+    void DWTextLayout::setMaxHeight(float max_height) {
+        HRESULT hr = text_layout_->SetMaxHeight(max_height);
         DCHECK(SUCCEEDED(hr));
     }
 
@@ -124,7 +124,7 @@ namespace ukive {
 
         HRESULT hr;
         if (attrs.size.has_value()) {
-            hr = text_layout_->SetFontSize(*attrs.size, makeTextRange(range));
+            hr = text_layout_->SetFontSize(float(*attrs.size), makeTextRange(range));
             DCHECK(SUCCEEDED(hr));
         }
         if (attrs.style.has_value()) {
@@ -273,12 +273,12 @@ namespace ukive {
         DCHECK(SUCCEEDED(hr));
     }
 
-    int DWTextLayout::getMaxWidth() const {
-        return int(text_layout_->GetMaxWidth());
+    float DWTextLayout::getMaxWidth() const {
+        return text_layout_->GetMaxWidth();
     }
 
-    int DWTextLayout::getMaxHeight() const {
-        return int(text_layout_->GetMaxHeight());
+    float DWTextLayout::getMaxHeight() const {
+        return text_layout_->GetMaxHeight();
     }
 
     bool DWTextLayout::getTextMetrics(TextMetrics* tm) {

@@ -26,7 +26,7 @@ namespace ukive {
         virtual bool removeItem(int id) = 0;
         virtual bool hasItem(int id) const = 0;
         virtual MenuItem* findItem(int id) const = 0;
-        virtual int getItemCount() const = 0;
+        virtual size_t getItemCount() const = 0;
     };
 
 }

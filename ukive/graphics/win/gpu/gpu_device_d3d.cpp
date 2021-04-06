@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "utils/log.h"
+#include "utils/number.hpp"
 
 #include "ukive/graphics/win/gpu/gpu_buffer_d3d.h"
 #include "ukive/graphics/win/gpu/gpu_input_layout_d3d.h"
@@ -86,7 +87,7 @@ namespace ukive {
 
         ComPtr<ID3D11InputLayout> d3d_layout;
         HRESULT hr = d3d_device_->CreateInputLayout(
-            layouts.data(), desc_count, shader_bc, size, &d3d_layout);
+            layouts.data(), utl::num_cast<UINT>(desc_count), shader_bc, size, &d3d_layout);
         if (FAILED(hr)) {
             return nullptr;
         }

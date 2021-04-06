@@ -33,8 +33,8 @@ namespace ukive {
             const std::u16string &locale_name) override;
         void destroy() override;
 
-        void setMaxWidth(int max_width) override;
-        void setMaxHeight(int max_height) override;
+        void setMaxWidth(float max_width) override;
+        void setMaxHeight(float max_height) override;
 
         void setFontAttributes(const FontAttributes &attrs, const Range &range) override;
         void setDrawingEffects(const DrawingEffects &effects, const Range &range) override;
@@ -47,8 +47,8 @@ namespace ukive {
         void setTextWrapping(TextWrapping tw) override;
         void setLineSpacing(LineSpacing ls, float spacing) override;
 
-        int getMaxWidth() const override;
-        int getMaxHeight() const override;
+        float getMaxWidth() const override;
+        float getMaxHeight() const override;
 
         bool getTextMetrics(TextMetrics *tm) override;
         bool getLineMetrics(std::vector<LineMetrics> *lms) override;

@@ -23,9 +23,9 @@ namespace ukive {
         OffscreenBufferWin();
 
         bool onCreate(
-            size_t width, size_t height,
+            int width, int height,
             const ImageOptions& options) override;
-        GRet onResize(size_t width, size_t height) override;
+        GRet onResize(int width, int height) override;
         void onDPIChange(float dpi_x, float dpi_y) override;
         void onDestroy() override;
 
@@ -43,9 +43,9 @@ namespace ukive {
         ComPtr<ID3D11Texture2D> getTexture() const;
 
     private:
-        bool createHardwareBRT(size_t width, size_t height);
+        bool createHardwareBRT(int width, int height);
 
-        size_t width_, height_;
+        int width_, height_;
         ImageOptions img_options_;
         ComPtr<ID3D11Texture2D> d3d_tex2d_;
         std::unique_ptr<CyroRenderTargetD2D> rt_;

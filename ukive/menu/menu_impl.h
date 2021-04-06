@@ -30,7 +30,7 @@ namespace ukive {
         bool removeItem(int id) override;
         bool hasItem(int id) const override;
         MenuItem* findItem(int id) const override;
-        int getItemCount() const override;
+        size_t getItemCount() const override;
 
         void onClick(View* v) override;
 

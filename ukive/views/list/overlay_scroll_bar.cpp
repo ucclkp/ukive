@@ -38,7 +38,7 @@ namespace ukive {
 
         int thumb_width = scrollbar_bounds_.width();
         int thumb_height = std::max(static_cast<int>(view_height * scale), scrollbar_min_height_);
-        int thumb_y = scrollbar_bounds_.top + percent * (view_height - thumb_height);
+        int thumb_y = int(scrollbar_bounds_.top + percent * (view_height - thumb_height));
 
         thumb_bounds_ = Rect(
             view_bounds_.right - thumb_width,
@@ -128,7 +128,7 @@ namespace ukive {
         thumb_bounds_.offset(0, thumb_y);
 
         float scale = thumb_bounds_.top / static_cast<float>(view_height - thumb_bounds_.height());
-        int to_y = (content_height_ - view_height) * scale;
+        int to_y = int((content_height_ - view_height) * scale);
 
         if (scroll_handler_) {
             scroll_handler_(to_y);

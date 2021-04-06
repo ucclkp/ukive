@@ -14,7 +14,7 @@ namespace ukive {
     public:
         virtual ~TabStripSelectionListener() = default;
 
-        virtual void onTabStripSelectionChanged(int index) = 0;
+        virtual void onTabStripSelectionChanged(size_t index) = 0;
     };
 
 }

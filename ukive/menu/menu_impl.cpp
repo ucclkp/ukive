@@ -99,7 +99,7 @@ namespace ukive {
         return nullptr;
     }
 
-    int MenuImpl::getItemCount() const {
+    size_t MenuImpl::getItemCount() const {
         return getChildCount();
     }
 

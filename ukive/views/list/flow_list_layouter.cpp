@@ -271,8 +271,8 @@ namespace ukive {
 
         while (cur_data_pos + 1 < source_->onGetListDataCount(parent_) && !columns_.isBottomFilled(dy)) {
             ++cur_data_pos;
-            int row = cur_data_pos / col_count_;
-            int col = cur_data_pos % col_count_;
+            auto row = cur_data_pos / col_count_;
+            auto col = cur_data_pos % col_count_;
             if (columns_[col].isBottomFilled(dy)) {
                 continue;
             }
@@ -360,7 +360,7 @@ namespace ukive {
         if (max_col_count == 0) {
             child_height = 0;
         } else {
-            child_height = max_col_height / max_col_count;
+            child_height = int(max_col_height / max_col_count);
         }
 
         auto cur_row = cur_records_[max_col].cur_row;

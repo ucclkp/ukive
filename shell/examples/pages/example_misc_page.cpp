@@ -72,7 +72,7 @@ namespace {
 
         math::VectorT<double, N> x;
         for (size_t i = 0; i < N; ++i) {
-            x(i) = i + 3;
+            x(i) = double(i + 3);
         }
 
         math::VectorT<double, N> T{
@@ -101,7 +101,7 @@ namespace {
 
         math::DMatrixT<double> x(N, 1);
         for (size_t i = 0; i < N; ++i) {
-            x(i) = i + 3;
+            x(i) = double(i + 3);
         }
 
         math::DMatrixT<double> T(N, 1);
@@ -130,12 +130,12 @@ namespace {
             : InlineObjectSpan(start, end) {}
 
         void onDrawInlineObject(ukive::Canvas* c, float x, float y) override {
-            c->fillCircle(x + 15, y, 10, ukive::Color::Blue300);
+            c->fillCircle(ukive::PointF(x + 15, y), 10.f, ukive::Color::Blue300);
         }
 
         void onGetMetrics(float* width, float* height, float* baseline) override {
-            *width = 30;
-            *height = 30;
+            *width = 30.f;
+            *height = 30.f;
             *baseline = 0;
         }
     };

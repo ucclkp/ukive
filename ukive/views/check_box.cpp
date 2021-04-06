@@ -81,8 +81,8 @@ namespace ukive {
             check_bounds, float(stroke_width), getContext().dp2px(1), Color::Blue400);
 
         if (checked_) {
-            int inner_length = check_bounds.width();
-            auto value = static_cast<float>(anim_.getCurValue());
+            int inner_length = int(check_bounds.width());
+            auto value = float(anim_.getCurValue());
 
             auto line1s = PointF(
                 check_bounds.left + stroke_width, check_bounds.top + inner_length / 2.f);

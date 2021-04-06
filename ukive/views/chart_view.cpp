@@ -57,15 +57,19 @@ namespace ukive {
         Point prev;
         bool has_prev = false;
         for (const auto& d : data_) {
-            int vx = node_radius + width / dw * (d.x - left);
-            int vy = node_radius + height / dh * (d.y - top);
+            int vx = int(node_radius + width / dw * (d.x - left));
+            int vy = int(node_radius + height / dh * (d.y - top));
             vy = bounds.height() - vy;
 
             if (d.draw_point) {
-                canvas->fillCircle(vx, vy, node_radius, Color::Blue300);
+                canvas->fillCircle(
+                    PointF(Point(vx, vy)), float(node_radius), Color::Blue300);
             }
             if (has_prev && !d.single_point) {
-                canvas->drawLine(PointF(prev), PointF(vx, vy), getContext().dp2px(1.5f), Color::Blue300);
+                canvas->drawLine(
+                    PointF(prev),
+                    PointF(Point(vx, vy)),
+                    getContext().dp2px(1.5f), Color::Blue300);
             }
 
             if (!d.single_point) {

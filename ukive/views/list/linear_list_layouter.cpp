@@ -395,7 +395,7 @@ namespace ukive {
                 det_height += item->getMgdHeight();
             }
         }
-        int avgc_height = (det_height + item_count - 1) / item_count;
+        int avgc_height = int((det_height + item_count - 1) / item_count);
 
         // 计算之前的高度
         auto f_item = column_.getFront();
@@ -406,7 +406,7 @@ namespace ukive {
         }
 
         size_t i;
-        int prev_total_height = cur_offset_in_position_ + f_item->data_pos * avgc_height;
+        int prev_total_height = int(cur_offset_in_position_ + f_item->data_pos * avgc_height);
         for (i = 0; i < fv_item->data_pos - f_item->data_pos; ++i) {
             prev_total_height += column_.getItem(i)->getMgdHeight();
         }
@@ -414,7 +414,7 @@ namespace ukive {
         // 计算之后的高度
         auto l_item = column_.getRear();
 
-        int next_total_height = -cur_offset_in_position_ + (count - l_item->data_pos - 1) * avgc_height;
+        int next_total_height = int(-cur_offset_in_position_ + (count - l_item->data_pos - 1) * avgc_height);
         for (; i <= l_item->data_pos - f_item->data_pos; ++i) {
             next_total_height += column_.getItem(i)->getMgdHeight();
         }

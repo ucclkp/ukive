@@ -121,7 +121,7 @@ namespace ukive {
 
         info.tl.reset(TextLayout::create());
         info.tl->make(
-            text, u"Consolas", getContext().dp2pxi(12),
+            text, u"Consolas", float(getContext().dp2pxi(12)),
             TextLayout::FontStyle::NORMAL, TextLayout::FontWeight::NORMAL, u"en-US");
         info.tl->setTextWrapping(TextLayout::TextWrapping::NONE);
 
@@ -188,17 +188,18 @@ namespace ukive {
 
         Point p;
         getGridPoint(0, 0, &p);
+        PointF pf(p);
+
         canvas->drawLine(
-            PointF(0, p.y),
-            PointF(bounds.width(), p.y), line_width_,
-            Color::Black);
+            PointF(0, pf.y),
+            PointF(float(bounds.width()), pf.y),
+            line_width_, Color::Black);
         canvas->drawLine(
-            PointF(p.x, 0),
-            PointF(p.x, bounds.height()), line_width_,
-            Color::Black);
+            PointF(pf.x, 0),
+            PointF(pf.x, float(bounds.height())),
+            line_width_, Color::Black);
         canvas->fillCircle(
-            p.x, p.y,
-            getContext().dp2pxi(4), Color(0, 0, 0, 1));
+            pf, float(getContext().dp2pxi(4)), Color(0, 0, 0, 1));
 
         animator_.update();
 
@@ -364,9 +365,9 @@ namespace ukive {
         for (;;) {
             if (row != 0) {
                 canvas->drawLine(
-                    PointF(0, cur_y),
-                    PointF(bounds.width(), cur_y), line_width_,
-                    Color::Grey200);
+                    PointF(0, float(cur_y)),
+                    PointF(Point(bounds.width(), cur_y)),
+                    line_width_, Color::Grey200);
             }
 
             if (flipped_y_) {
@@ -388,9 +389,9 @@ namespace ukive {
         for (;;) {
             if (col != 0) {
                 canvas->drawLine(
-                    PointF(cur_x, 0),
-                    PointF(cur_x, bounds.height()), line_width_,
-                    Color::Grey200);
+                    PointF(Point(cur_x, 0)),
+                    PointF(Point(cur_x, bounds.height())),
+                    line_width_, Color::Grey200);
             }
             cur_x += length_;
             if (cur_x > bounds.width()) {
@@ -403,15 +404,18 @@ namespace ukive {
     void GridView::drawGridPixel(
         Canvas* canvas, int col, int row, const Color& color, bool highlight)
     {
+        int inset = int(line_width_ / 2);
+
         Rect rect;
         getGridRect(col, row, &rect);
-        rect.insets(line_width_ / 2, line_width_ / 2, line_width_ / 2, line_width_ / 2);
+        rect.insets(inset, inset, inset, inset);
         canvas->fillRect(RectF(rect), color);
 
         if (highlight) {
-            int inset = getContext().dp2pxi(8) + getContext().dp2pxi(64) * (1 - animator_.getCurValue());
+            inset = getContext().dp2pxi(8) + int(getContext().dp2pxi(64) * (1 - animator_.getCurValue()));
             rect.insets(-inset, -inset, -inset, -inset);
-            canvas->drawRect(RectF(rect), getContext().dp2pxi(4), Color::Blue500);
+            canvas->drawRect(
+                RectF(rect), float(getContext().dp2pxi(4)), Color::Blue500);
         }
     }
 
@@ -419,11 +423,12 @@ namespace ukive {
         Point p;
         getGridPoint(info.col, info.row, &p);
 
-        canvas->fillCircle(p.x, p.y, info.radius, info.color);
+        canvas->fillCircle(PointF(p), float(info.radius), info.color);
 
         if (info.tl) {
             canvas->drawTextLayout(
-                p.x + info.radius, p.y + info.radius, info.tl.get(), info.text_color);
+                float(p.x + info.radius),
+                float(p.y + info.radius), info.tl.get(), info.text_color);
         }
     }
 
@@ -453,16 +458,18 @@ namespace ukive {
     }
 
     void GridView::drawGridText(Canvas* canvas, int col, int row) {
+        int inset = int(line_width_ / 2);
+
         Rect rect;
         getGridRect(col, row, &rect);
-        rect.insets(line_width_ / 2, line_width_ / 2, line_width_ / 2, line_width_ / 2);
+        rect.insets(inset, inset, inset, inset);
 
         canvas->drawTextLayout(
-            rect.left, rect.top,
+            float(rect.left), float(rect.top),
             coord_tl_.get(), Color::Yellow700);
 
         canvas->drawTextLayout(
-            rect.left, rect.top + coord_tl_->getMaxHeight(),
+            float(rect.left), rect.top + coord_tl_->getMaxHeight(),
             color_tl_.get(), Color::Yellow700);
     }
 
@@ -571,10 +578,10 @@ namespace ukive {
         int prev_length = length_;
 
         float scale = std::pow(1.3f, level);
-        length_ = init_length_ * scale;
+        length_ = int(init_length_ * scale);
 
-        off.width *= float(length_) / prev_length;
-        off.height *= float(length_) / prev_length;
+        off.width = int(off.width * float(length_) / prev_length);
+        off.height = int(off.height * float(length_) / prev_length);
 
         Point pos;
         getGridPoint(grid_pos.x, grid_pos.y, off.width, off.height, &pos);
@@ -613,11 +620,11 @@ namespace ukive {
         Rect rect;
         getGridRect(int_col, int_row, &rect);
 
-        p->x = rect.left + (col - double(int_col)) * length_;
+        p->x = int(rect.left + (col - double(int_col)) * length_);
         if (flipped_y_) {
-            p->y = rect.bottom - (row - double(int_row)) * length_;
+            p->y = int(rect.bottom - (row - double(int_row)) * length_);
         } else {
-            p->y = rect.top + (row - double(int_row)) * length_;
+            p->y = int(rect.top + (row - double(int_row)) * length_);
         }
     }
 
@@ -642,12 +649,12 @@ namespace ukive {
         return false;
     }
 
-    int GridView::getAdjustedLineWidth(int dip) const {
+    float GridView::getAdjustedLineWidth(int dip) const {
         int result = getContext().dp2pxi(dip);
         if (result % 2) {
             ++result;
         }
-        return result;
+        return float(result);
     }
 
     void GridView::showNewNav() {
@@ -661,10 +668,11 @@ namespace ukive {
 
         int col = pixels_.back().col;
         int row = pixels_.back().row;
+        int inset = int(line_width_ / 2);
 
         Rect rect;
         getGridRect(col, row, &rect);
-        rect.insets(line_width_ / 2, line_width_ / 2, line_width_ / 2, line_width_ / 2);
+        rect.insets(inset, inset, inset, inset);
         new_nav_.showNav(rect);
     }
 

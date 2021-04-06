@@ -44,7 +44,7 @@ namespace ukive {
               { 0, 0 })
     {
         // inertia
-        int dpi_x = c.getScale() * c.getDefaultDpi();
+        auto dpi_x = c.getScale() * c.getDefaultDpi();
         init_dec_ = kInertiaMU * (9.78 * 100 / 2.54 * dpi_x);
 
         // bezier
@@ -286,11 +286,11 @@ namespace ukive {
     }
 
     int Scroller::getDelta() const {
-        return delta_;
+        return int(delta_);
     }
 
     int Scroller::getCurScroll() const {
-        return cur_;
+        return int(cur_);
     }
 
 }

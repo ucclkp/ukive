@@ -8,6 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+#include "utils/log.h"
+
 #include "ukive/graphics/mac/images/image_frame_mac.h"
 #include "ukive/graphics/mac/images/image_options_mac_utils.h"
 #include "ukive/window/window_dpi_utils.h"
@@ -53,15 +55,25 @@ namespace ukive {
     }
 
     bool OffscreenBufferMac::onCreate(
-        size_t width, size_t height, const ImageOptions& options)
+        int width, int height, const ImageOptions& options)
     {
+        if (width <= 0 || height <= 0) {
+            DLOG(Log::ERR) << "Invalid size value.";
+            return false;
+        }
+
         width_ = width;
         height_ = height;
         img_options_ = options;
         return createBuffer();
     }
 
-    GRet OffscreenBufferMac::onResize(size_t width, size_t height) {
+    GRet OffscreenBufferMac::onResize(int width, int height) {
+        if (width <= 0 || height <= 0) {
+            DLOG(Log::WARNING) << "Invalid size value.";
+            return GRet::Succeeded;
+        }
+
         width_ = width;
         height_ = height;
         CGContextRelease(cg_context_);
@@ -69,6 +81,10 @@ namespace ukive {
     }
 
     void OffscreenBufferMac::onDPIChange(float dpi_x, float dpi_y) {
+        if (dpi_x <= 0 || dpi_y <= 0) {
+            DLOG(Log::ERR) << "Invalid dpi values.";
+            return;
+        }
     }
 
     void OffscreenBufferMac::onDestroy() {

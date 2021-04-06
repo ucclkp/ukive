@@ -67,12 +67,12 @@ namespace ukive {
         size_t getSelectionEnd() const;
         bool hasSelection() const;
 
-        size_t getTextPositionAtPoint(float text_x, float text_y) const;
+        size_t getTextPositionAtPoint(int text_x, int text_y) const;
         bool isTextAtPoint(
-            float text_x, float text_y,
+            int text_x, int text_y,
             size_t* hit_pos = nullptr) const;
         bool isTextAtPoint(
-            float text_x, float text_y,
+            int text_x, int text_y,
             size_t position, size_t length, size_t* hit_pos = nullptr) const;
         RectF getSelectionBounds(size_t start, size_t end) const;
 
@@ -154,7 +154,7 @@ namespace ukive {
         void blinkNavigator(int key);
 
         void locateTextBlink(size_t position);
-        void locateTextBlink(float text_x, float text_y);
+        void locateTextBlink(int text_x, int text_y);
         bool getTextBlinkLocation(size_t position, Rect* out) const;
         void makeNewTextLayout(float max_width, float max_height, bool auto_wrap);
 

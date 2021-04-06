@@ -36,17 +36,17 @@ namespace ukive {
         seek_percent_ = 0.f;
         listener_ = nullptr;
 
-        track_height_ = getContext().dp2px(2);
+        track_height_ = getContext().dp2pxi(2);
         if (track_height_ % 2 != 0) {
             ++track_height_;
         }
 
-        thumb_min_diameter_ = getContext().dp2px(10);
+        thumb_min_diameter_ = getContext().dp2pxi(10);
         if (thumb_min_diameter_ % 2 != 0) {
             ++thumb_min_diameter_;
         }
 
-        thumb_max_diameter_ = getContext().dp2px(14);
+        thumb_max_diameter_ = getContext().dp2pxi(14);
         if (thumb_max_diameter_ % 2 != 0) {
             ++thumb_max_diameter_;
         }
@@ -106,7 +106,7 @@ namespace ukive {
     }
 
     bool SeekBar::isPointerInTrack(int x, int y) {
-        float trackSpace = getWidth() - getPadding().start - getPadding().end;
+        int trackSpace = getWidth() - getPadding().start - getPadding().end;
 
         if ((x - getPadding().start) >= 0 &&
             (x - getPadding().start) <= trackSpace)
@@ -123,7 +123,7 @@ namespace ukive {
 
     void SeekBar::computePercent(int x, int y) {
         float mouse_in_track = x - getPadding().start - thumb_max_diameter_ / 2.f;
-        float track_width = getWidth() - thumb_max_diameter_ - getPadding().hori();
+        int track_width = getWidth() - thumb_max_diameter_ - getPadding().hori();
         seek_percent_ = std::max(0.f, mouse_in_track / track_width);
         seek_percent_ = std::min(1.f, seek_percent_);
 
@@ -205,7 +205,7 @@ namespace ukive {
 
         float left = thumb_max_diameter_ / 2.f;
         float top = (thumb_max_diameter_ - track_height_) / 2.f;
-        float trackWidth = getContentBounds().width() - thumb_max_diameter_;
+        int trackWidth = getContentBounds().width() - thumb_max_diameter_;
 
         float cur_pos = trackWidth * seek_percent_;
         float center_x = left + cur_pos;
@@ -213,29 +213,33 @@ namespace ukive {
 
         // 进度条
         if (center_x < thumb_min_diameter_) {
-            canvas->fillRect(RectF(left, top, trackWidth, track_height_), Color::Grey300);
+            canvas->fillRect(
+                RectF(left, top, float(trackWidth), float(track_height_)), Color::Grey300);
         } else {
-            canvas->fillRect(RectF(left, top, cur_pos, track_height_), Color::Blue400);
-            canvas->fillRect(RectF(center_x, top, trackWidth - cur_pos, track_height_), Color::Grey300);
+            canvas->fillRect(
+                RectF(left, top, cur_pos, float(track_height_)), Color::Blue400);
+            canvas->fillRect(
+                RectF(center_x, top, trackWidth - cur_pos, float(track_height_)), Color::Grey300);
         }
 
         float thumb_cur_diameter;
         if (is_on_thumb_) {
             if (thumb_animator_.isFinished() || !thumb_animator_.isStarted()) {
-                thumb_cur_diameter = thumb_max_diameter_;
+                thumb_cur_diameter = float(thumb_max_diameter_);
             } else {
                 thumb_cur_diameter = thumb_min_diameter_
                     + float((thumb_max_diameter_ - thumb_min_diameter_) * thumb_animator_.getCurValue());
             }
         } else {
             if (thumb_animator_.isFinished() || !thumb_animator_.isStarted()) {
-                thumb_cur_diameter = thumb_min_diameter_;
+                thumb_cur_diameter = float(thumb_min_diameter_);
             } else {
                 thumb_cur_diameter = thumb_min_diameter_
                     + float((thumb_max_diameter_ - thumb_min_diameter_) * (1 - thumb_animator_.getCurValue()));
             }
         }
-        canvas->fillCircle(center_x, center_y, thumb_cur_diameter / 2.f, Color::Blue400);
+        canvas->fillCircle(
+            PointF(center_x, center_y), thumb_cur_diameter / 2.f, Color::Blue400);
 
         if (thumb_animator_.isRunning()) {
             requestDraw();

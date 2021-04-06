@@ -37,7 +37,7 @@ namespace ukive {
 
         def_track_width_ = c.dp2pxi(34);
         def_track_height_ = c.dp2pxi(14);
-        def_thumb_radius_ = def_track_height_ / 2 * 1.6f;
+        def_thumb_radius_ = int(def_track_height_ / 2.f * 1.6f);
 
         setClickable(true);
         setFocusable(true);
@@ -109,7 +109,7 @@ namespace ukive {
             interpolateColor(
                 kNormalThumbColor, kCheckedThumbColor, cur_value, &target_color);
 
-            canvas->fillCircle(target_cx, float(cx), float(cx), target_color);
+            canvas->fillCircle(PointF(target_cx, float(cx)), float(cx), target_color);
         }
 
         if (anim_.isRunning()) {
@@ -137,7 +137,7 @@ namespace ukive {
         case InputEvent::EVT_MOVE:
             if (isPressed()) {
                 auto distance = e->getX() - start_x_;
-                int r = getContext().dp2px(
+                int r = getContext().dp2pxi(
                     (e->getEvent() == InputEvent::EVT_MOVE) ?
                     kTouchScrollingThreshold : kMouseScrollingThreshold);
                 if (!is_moved_ && std::abs(distance) > r) {

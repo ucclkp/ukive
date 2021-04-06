@@ -118,11 +118,13 @@ namespace ukive {
 
 
             if (orientation_ == VERTICAL) {
-                int child_h = std::round((child_li->weight / static_cast<float>(total_weight))*(parent_info.height.val - cur_size));
+                int child_h = int(std::round(
+                    child_li->weight / static_cast<float>(total_weight)*(parent_info.height.val - cur_size)));
                 child_h = std::max(0, child_h - vert_margin);
                 child_height.val = child_h;
             } else if (orientation_ == HORIZONTAL) {
-                int child_w = std::round((child_li->weight / static_cast<float>(total_weight))*(parent_info.width.val - cur_size));
+                int child_w = int(std::round(
+                    child_li->weight / static_cast<float>(total_weight)*(parent_info.width.val - cur_size)));
                 child_w = std::max(0, child_w - hori_margin);
                 child_width.val = child_w;
             }

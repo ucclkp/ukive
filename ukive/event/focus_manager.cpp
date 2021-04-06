@@ -241,7 +241,7 @@ namespace ukive {
         }
 
         bool start = false;
-        for (int i = parent->getChildCount() - 1; i >= 0; --i) {
+        for (auto i = parent->getChildCount(); i-- > 0;) {
             auto child = parent->getChildAt(i);
             if (start) {
                 auto target = findPrevFocusableOut(child, true);
@@ -269,7 +269,7 @@ namespace ukive {
             if (cur_lv->getChildCount() != 0 &&
                 cur_lv->getVisibility() == View::SHOW)
             {
-                for (int i = cur_lv->getChildCount() - 1; i >= 0; --i) {
+                for (auto i = cur_lv->getChildCount(); i-- > 0;) {
                     auto target = findPrevFocusableOut(cur_lv->getChildAt(i), true);
                     if (target) {
                         return target;

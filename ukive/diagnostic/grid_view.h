@@ -95,7 +95,7 @@ namespace ukive {
         void getGridPoint(double col, double row, Point* p);
         void getGridPosition(int x, int y, Point* pos, Size* off);
         bool getGridColor(int col, int row, Color* color);
-        int getAdjustedLineWidth(int dip) const;
+        float getAdjustedLineWidth(int dip) const;
 
         void showNewNav();
         void showOrgNav();
@@ -109,7 +109,7 @@ namespace ukive {
 
         int length_ = 0;
         int init_length_ = 0;
-        int line_width_ = 0;
+        float line_width_ = 0;
 
         int start_x_ = 0;
         int start_y_ = 0;

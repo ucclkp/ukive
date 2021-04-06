@@ -50,14 +50,14 @@ namespace ukive {
         if (!image_) {
             return 0;
         }
-        return image_->getSize().width;
+        return int(std::ceil(image_->getSize().width));
     }
 
     int ImageElement::getContentHeight() const {
         if (!image_) {
             return 0;
         }
-        return image_->getSize().height;
+        return int(std::ceil(image_->getSize().height));
     }
 
     std::shared_ptr<ImageFrame> ImageElement::getImage() const {

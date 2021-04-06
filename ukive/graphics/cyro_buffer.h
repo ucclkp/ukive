@@ -30,9 +30,9 @@ namespace ukive {
         virtual ~CyroBuffer() = default;
 
         virtual bool onCreate(
-            size_t width, size_t height,
+            int width, int height,
             const ImageOptions& options) = 0;
-        virtual GRet onResize(size_t width, size_t height) = 0;
+        virtual GRet onResize(int width, int height) = 0;
         virtual void onDPIChange(float dpi_x, float dpi_y) = 0;
         virtual void onDestroy() = 0;
 

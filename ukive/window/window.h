@@ -195,7 +195,6 @@ namespace ukive {
         bool onInputEvent(InputEvent* e) override;
         HitPoint onNCHitTest(int x, int y) override;
         void onWindowButtonChanged(WindowButton button) override;
-        bool onDataCopy(unsigned int id, unsigned int size, void* data) override;
         bool onGetWindowIconName(std::u16string* icon_name, std::u16string* small_icon_name) const override;
         void onPostLayout() override;
         void onPostRender() override;

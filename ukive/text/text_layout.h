@@ -57,7 +57,7 @@ namespace ukive {
 
         struct FontAttributes {
             bool is_removed;
-            std::optional<float> size;
+            std::optional<int> size;
             std::optional<FontStyle> style;
             std::optional<FontWeight> weight;
             std::u16string name;
@@ -102,8 +102,8 @@ namespace ukive {
             const std::u16string& locale_name) = 0;
         virtual void destroy() = 0;
 
-        virtual void setMaxWidth(int max_width) = 0;
-        virtual void setMaxHeight(int max_height) = 0;
+        virtual void setMaxWidth(float max_width) = 0;
+        virtual void setMaxHeight(float max_height) = 0;
 
         virtual void setFontAttributes(const FontAttributes& attrs, const Range& range) = 0;
         virtual void setDrawingEffects(const DrawingEffects& effects, const Range& range) = 0;
@@ -116,8 +116,8 @@ namespace ukive {
         virtual void setTextWrapping(TextWrapping tw) = 0;
         virtual void setLineSpacing(LineSpacing ls, float spacing) = 0;
 
-        virtual int getMaxWidth() const = 0;
-        virtual int getMaxHeight() const = 0;
+        virtual float getMaxWidth() const = 0;
+        virtual float getMaxHeight() const = 0;
 
         virtual bool getTextMetrics(TextMetrics* tm) = 0;
         virtual bool getLineMetrics(std::vector<LineMetrics>* lms) = 0;

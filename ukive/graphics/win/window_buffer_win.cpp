@@ -7,6 +7,7 @@
 #include "ukive/graphics/win/window_buffer_win.h"
 
 #include "utils/log.h"
+#include "utils/number.hpp"
 
 #include "ukive/app/application.h"
 #include "ukive/system/win/win10_version.h"
@@ -23,17 +24,22 @@ namespace ukive {
           rt_(std::make_unique<CyroRenderTargetD2D>()) {}
 
     bool WindowBufferWin::onCreate(
-        size_t width, size_t height, const ImageOptions& options)
+        int width, int height, const ImageOptions& options)
     {
         img_options_ = options;
         return createSwapchainBRT();
     }
 
-    GRet WindowBufferWin::onResize(size_t width, size_t height) {
+    GRet WindowBufferWin::onResize(int width, int height) {
         return resizeSwapchainBRT();
     }
 
     void WindowBufferWin::onDPIChange(float dpi_x, float dpi_y) {
+        if (dpi_x <= 0 || dpi_y <= 0) {
+            DLOG(Log::ERR) << "Invalid dpi values.";
+            return;
+        }
+
         switch (img_options_.dpi_type) {
         case ImageDPIType::SPECIFIED:
             img_options_.dpi_x = dpi_x;
@@ -298,7 +304,8 @@ namespace ukive {
 
         rt_->destroy();
 
-        HRESULT hr = swapchain_->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0);
+        HRESULT hr = swapchain_->ResizeBuffers(
+            0, utl::num_cast<UINT>(width), utl::num_cast<UINT>(height), DXGI_FORMAT_UNKNOWN, 0);
         if (FAILED(hr)) {
             if (hr == DXGI_ERROR_DEVICE_REMOVED ||
                 hr == DXGI_ERROR_DEVICE_RESET)

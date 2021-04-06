@@ -63,7 +63,7 @@ namespace ukive {
     {
         // 子 View 数量超过一个时，将最后一个认定为 Bar
         View* bar;
-        int count = getChildCount();
+        auto count = getChildCount();
         if (count > 1) {
             bar = getChildAt(count - 1);
             if (bar->getVisibility() == VANISHED) {
@@ -93,7 +93,7 @@ namespace ukive {
         }
 
         // 剩余 View
-        for (int i = 0; i < count; ++i) {
+        for (size_t i = 0; i < count; ++i) {
             auto child = getChildAt(i);
             if (child->getVisibility() != VANISHED) {
                 auto& margin = child->getLayoutMargin();
@@ -115,7 +115,7 @@ namespace ukive {
     {
         // 子 View 数量超过一个时，将最后一个认定为 Bar
         View* bar;
-        int count = getChildCount();
+        auto count = getChildCount();
         if (count > 1) {
             bar = getChildAt(count - 1);
             if (bar->getVisibility() != VANISHED) {
@@ -141,7 +141,7 @@ namespace ukive {
         }
 
         // 测量剩余子 View
-        for (int i = 0; i < count; ++i) {
+        for (size_t i = 0; i < count; ++i) {
             auto child = getChildAt(i);
             if (child->getVisibility() != VANISHED) {
                 auto new_info = parent_info;

@@ -280,8 +280,8 @@ namespace ukive {
 
     void ColumnCollection::setHorizontal(int left, int right) {
         int cur_left = left;
-        int child_width = (right - left) / static_cast<float>(col_count_);
-        int remained_width = (right - left) - col_count_ * child_width;
+        int child_width = int((right - left) / float(col_count_));
+        int remained_width = int((right - left) - col_count_ * child_width);
         for (size_t i = 0; i < col_count_; ++i) {
             if (remained_width > 0) {
                 columns_[i].setHorizontal(cur_left, cur_left + child_width + 1);

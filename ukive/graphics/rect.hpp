@@ -176,6 +176,7 @@ namespace ukive {
 
     using Rect = RectT<int>;
     using RectF = RectT<float>;
+    using RectD = RectT<double>;
 
 }
 

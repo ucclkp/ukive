@@ -27,14 +27,14 @@ namespace ukive {
     {
         auto c = w->getContext();
         menu_width_ = c.dp2pxi(92);
-        menu_item_height_ = c.dp2px(36);
+        menu_item_height_ = c.dp2pxi(36);
 
         menu_ = new MenuImpl(c);
         menu_->setCallback(this);
         menu_->setMenuItemHeight(menu_item_height_);
 
         inner_window_ = std::make_shared<InnerWindow>();
-        inner_window_->setShadowRadius(c.dp2px(1.5f));
+        inner_window_->setShadowRadius(c.dp2pxi(1.5f));
         inner_window_->setContentView(menu_);
         inner_window_->setOutsideTouchable(false);
         inner_window_->setDismissByTouchOutside(true);

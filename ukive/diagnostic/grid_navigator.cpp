@@ -43,7 +43,7 @@ namespace ukive {
         inner_window_ = std::make_shared<InnerWindow>();
         //inner_window_->setWidth(View::LS_FREE);
         //inner_window_->setHeight(View::LS_FREE);
-        inner_window_->setShadowRadius(c.dp2px(4.f));
+        inner_window_->setShadowRadius(c.dp2pxi(4.f));
         inner_window_->setContentView(view);
         inner_window_->setOutsideTouchable(true);
         inner_window_->setDismissByTouchOutside(false);

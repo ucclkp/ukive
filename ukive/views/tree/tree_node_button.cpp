@@ -29,8 +29,8 @@ namespace ukive {
         tri_path_.reset(Path::create());
         if (tri_path_->open()) {
             tri_path_->begin(PointF(0, 0), true);
-            tri_path_->addLine(PointF(tri_height_, tri_height_));
-            tri_path_->addLine(PointF(0, tri_length_));
+            tri_path_->addLine(PointF(Point(tri_height_, tri_height_)));
+            tri_path_->addLine(PointF(0, float(tri_length_)));
             tri_path_->addLine(PointF(0, 0));
             tri_path_->end(true);
             tri_path_->close();
@@ -61,9 +61,9 @@ namespace ukive {
         int y = (bounds.height() - tri_length_) / 2;
 
         canvas->save();
-        canvas->translate(x, y);
+        canvas->translate(float(x), float(y));
         if (status_ == EXPANDED) {
-            canvas->rotate(90, 0, tri_height_);
+            canvas->rotate(90.f, 0, float(tri_height_));
             canvas->fillPath(tri_path_.get(), Color::Grey600);
         } else {
             canvas->fillPath(tri_path_.get(), Color::Grey400);

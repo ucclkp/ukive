@@ -9,6 +9,7 @@
 #include <algorithm>
 
 #include "utils/files/file_utils.h"
+#include "utils/number.hpp"
 #include "utils/string_utils.h"
 
 #include "ukive/app/application.h"
@@ -110,7 +111,7 @@ namespace shell {
 
         auto& d = data_[item->data_pos];
         if (d.ts == ThumbStatus::None) {
-            thumb_fetcher_->add(d.path, !d.is_dir, item->data_pos, d.token);
+            thumb_fetcher_->add(d.path, !d.is_dir, utl::num_cast<int>(item->data_pos), d.token);
             d.ts = ThumbStatus::Fetching;
         }
 
@@ -259,7 +260,6 @@ namespace shell {
             d.is_dir = false;
             data_.push_back(std::move(d));
         }
-        notifyDataChanged();
 
         if (back && !back_info_.empty()) {
             auto& info = back_info_.top();

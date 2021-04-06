@@ -132,10 +132,10 @@ namespace ukive {
             auto width = bounds.width() / sx;
             auto height = bounds.height() / sy;
 
-            bounds.left = std::floor(x);
-            bounds.top = std::floor(y);
-            bounds.right = std::ceil(x + width);
-            bounds.bottom = std::ceil(y + height);
+            bounds.left = int(std::floor(x));
+            bounds.top = int(std::floor(y));
+            bounds.right = int(std::ceil(x + width));
+            bounds.bottom = int(std::ceil(y + height));
         }
         return bounds;
     }
@@ -150,10 +150,10 @@ namespace ukive {
             auto width = bounds.width() / sx;
             auto height = bounds.height() / sy;
 
-            bounds.left = std::floor(x);
-            bounds.top = std::floor(y);
-            bounds.right = std::ceil(x + width);
-            bounds.bottom = std::ceil(y + height);
+            bounds.left = int(std::floor(x));
+            bounds.top = int(std::floor(y));
+            bounds.right = int(std::ceil(x + width));
+            bounds.bottom = int(std::ceil(y + height));
         }
         return bounds;
     }

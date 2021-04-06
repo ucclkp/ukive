@@ -65,7 +65,7 @@ namespace ukive {
         title_tv_->setTextColor(Color::White);
         title_tv_->setTextWeight(TextLayout::FontWeight::BOLD);
         title_tv_->setLayoutMargin(
-            getContext().dp2px(12), getContext().dp2pxi(12), 0, getContext().dp2pxi(12));
+            getContext().dp2pxi(12), getContext().dp2pxi(12), 0, getContext().dp2pxi(12));
         auto title_tv_lp = Rlp::Builder()
             .start(root_layout->getId())
             .top(root_layout->getId())
@@ -77,7 +77,7 @@ namespace ukive {
         close_btn_ = new CircleColorButton(getContext());
         close_btn_->setOnClickListener(this);
         close_btn_->setColor(Color::Red500);
-        close_btn_->setLayoutMargin(0, 0, getContext().dp2px(8), 0);
+        close_btn_->setLayoutMargin(0, 0, getContext().dp2pxi(8), 0);
         auto close_btn_lp = Rlp::Builder()
             .end(root_layout->getId())
             .top(root_layout->getId())
@@ -88,7 +88,7 @@ namespace ukive {
         max_btn_ = new CircleColorButton(getContext());
         max_btn_->setOnClickListener(this);
         max_btn_->setColor(Color::Yellow500);
-        max_btn_->setLayoutMargin(0, 0, getContext().dp2px(8), 0);
+        max_btn_->setLayoutMargin(0, 0, getContext().dp2pxi(8), 0);
         auto max_btn_lp = Rlp::Builder()
             .end(close_btn_->getId(), Rlp::START)
             .top(root_layout->getId())
@@ -99,7 +99,7 @@ namespace ukive {
         min_btn_ = new CircleColorButton(getContext());
         min_btn_->setOnClickListener(this);
         min_btn_->setColor(Color::Green500);
-        min_btn_->setLayoutMargin(0, 0, getContext().dp2px(8), 0);
+        min_btn_->setLayoutMargin(0, 0, getContext().dp2pxi(8), 0);
         auto min_btn_lp = Rlp::Builder()
             .end(max_btn_->getId(), Rlp::START)
             .top(root_layout->getId())

@@ -159,7 +159,10 @@ namespace ukive {
 
     void TsfInputConnection::notifyTextChanged(bool correction, const TextChangeInfo& info) {
         tsf_editor_->notifyTextChanged(
-            correction, info.start, info.old_end, info.new_end);
+            correction,
+            utl::num_cast<LONG>(info.start),
+            utl::num_cast<LONG>(info.old_end),
+            utl::num_cast<LONG>(info.new_end));
     }
 
     void TsfInputConnection::notifyTextLayoutChanged(TextLayoutChangeReason r) {
@@ -206,11 +209,11 @@ namespace ukive {
             return false;
         }
 
-        int sel_start = client_->getTICEditable()->getSelectionStart();
-        int sel_end = client_->getTICEditable()->getSelectionEnd();
+        auto sel_start = client_->getTICEditable()->getSelectionStart();
+        auto sel_end = client_->getTICEditable()->getSelectionEnd();
 
-        selections[0].acpStart = sel_start;
-        selections[0].acpEnd = sel_end;
+        selections[0].acpStart = utl::num_cast<LONG>(sel_start);
+        selections[0].acpEnd = utl::num_cast<LONG>(sel_end);
         selections[0].style.fInterimChar = FALSE;
         selections[0].style.ase = TS_AE_END;
 
@@ -224,8 +227,8 @@ namespace ukive {
             return false;
         }
 
-        int sel_start = selections[0].acpStart;
-        int sel_end = selections[0].acpEnd;
+        size_t sel_start = utl::num_cast<size_t>(selections[0].acpStart);
+        size_t sel_end = utl::num_cast<size_t>(selections[0].acpEnd);
         if (sel_start == client_->getTICEditable()->getSelectionStart() &&
             sel_end == client_->getTICEditable()->getSelectionEnd())
         {
@@ -293,8 +296,8 @@ namespace ukive {
         }
     }
 
-    long TsfInputConnection::getTextLength() const {
-        return client_->getTICEditable()->length();
+    LONG TsfInputConnection::getTextLength() const {
+        return utl::num_cast<LONG>(client_->getTICEditable()->length());
     }
 
     bool TsfInputConnection::getTextPositionAtPoint(const POINT* pt, DWORD dwFlags, LONG* pacp) const {
@@ -330,8 +333,8 @@ namespace ukive {
     {
         switch (dwFlags) {
         case 0: {
-            int sel_start = client_->getTICEditable()->getSelectionStart();
-            int sel_end = client_->getTICEditable()->getSelectionEnd();
+            auto sel_start = utl::num_cast<LONG>(client_->getTICEditable()->getSelectionStart());
+            auto sel_end = utl::num_cast<LONG>(client_->getTICEditable()->getSelectionEnd());
 
             *pacpStart = sel_start;
             *pacpEnd = sel_end;
@@ -343,8 +346,8 @@ namespace ukive {
         }
 
         case TF_IAS_NOQUERY: {
-            int sel_start = client_->getTICEditable()->getSelectionStart();
-            int sel_end = client_->getTICEditable()->getSelectionEnd();
+            auto sel_start = utl::num_cast<LONG>(client_->getTICEditable()->getSelectionStart());
+            auto sel_end = utl::num_cast<LONG>(client_->getTICEditable()->getSelectionEnd());
 
             pChange->acpStart = sel_start;
             pChange->acpOldEnd = sel_end;
@@ -353,8 +356,8 @@ namespace ukive {
         }
 
         case TF_IAS_QUERYONLY:
-            *pacpStart = client_->getTICEditable()->getSelectionStart();
-            *pacpEnd = client_->getTICEditable()->getSelectionEnd();
+            *pacpStart = utl::num_cast<LONG>(client_->getTICEditable()->getSelectionStart());
+            *pacpEnd = utl::num_cast<LONG>(client_->getTICEditable()->getSelectionEnd());
             break;
 
         default:

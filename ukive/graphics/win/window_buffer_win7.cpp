@@ -22,7 +22,7 @@ namespace ukive {
           rt_(std::make_unique<CyroRenderTargetD2D>()) {}
 
     bool WindowBufferWin7::onCreate(
-        size_t width, size_t height, const ImageOptions& options)
+        int width, int height, const ImageOptions& options)
     {
         is_layered_ = window_->isLayered();
         img_options_ = options;
@@ -36,7 +36,7 @@ namespace ukive {
         return ret;
     }
 
-    GRet WindowBufferWin7::onResize(size_t width, size_t height) {
+    GRet WindowBufferWin7::onResize(int width, int height) {
         GRet ret;
         if (is_layered_) {
             ret = resizeHardwareBRT() ? GRet::Succeeded : GRet::Failed;
@@ -47,6 +47,11 @@ namespace ukive {
     }
 
     void WindowBufferWin7::onDPIChange(float dpi_x, float dpi_y) {
+        if (dpi_x <= 0 || dpi_y <= 0) {
+            DLOG(Log::ERR) << "Invalid dpi values.";
+            return;
+        }
+
         switch (img_options_.dpi_type) {
         case ImageDPIType::SPECIFIED:
             img_options_.dpi_x = dpi_x;

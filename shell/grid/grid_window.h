@@ -20,7 +20,7 @@ namespace shell {
     class GridWindow : public ukive::Window {
     public:
         void onCreated() override;
-        bool onDataCopy(unsigned id, unsigned size, void* data) override;
+        bool onDataCopy(unsigned id, unsigned size, void* data);
 
     private:
         using super = Window;

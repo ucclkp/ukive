@@ -18,13 +18,13 @@ namespace ukive {
         : win_(w) {}
 
     bool WindowBufferMac::onCreate(
-        size_t width, size_t height, const ImageOptions& options)
+        int width, int height, const ImageOptions& options)
     {
         img_options_ = options;
         return true;
     }
 
-    GRet WindowBufferMac::onResize(size_t width, size_t height) {
+    GRet WindowBufferMac::onResize(int width, int height) {
         return GRet::Succeeded;
     }
 

@@ -17,23 +17,23 @@ namespace ukive {
 
     StatisticDrawer::StatisticDrawer(Context c)
         : mode_(RENDER),
-          strip_width_(c.dp2px(4)),
+          strip_width_(c.dp2pxi(4)),
           context_(c) {}
 
     void StatisticDrawer::draw(int x, int y, int width, int height, Canvas* canvas) {
         int cur_x = x + width;
-        int base_height = context_.dp2px(64);
+        int base_height = context_.dp2pxi(64);
         float base_time = 0.f;
         if (mode_ == LAYOUT) {
-            base_time = 4;
+            base_time = 4.f;
         } else {
             base_time = 100.f / 6.f;
         }
 
         for (auto it = durations_.rbegin(); it != durations_.rend(); ++it) {
-            int top = y + height - it->duration / base_time * base_height;
+            int top = int(y + height - it->duration / base_time * base_height);
             canvas->fillRect(
-                RectF(cur_x - strip_width_, top, strip_width_, y + height - top),
+                RectF(Rect(cur_x - strip_width_, top, strip_width_, y + height - top)),
                 mode_ == RENDER ? Color::Orange400 : Color::Pink200);
 
             cur_x -= strip_width_;
@@ -43,9 +43,8 @@ namespace ukive {
             }
         }
 
-        canvas->fillRect(
-            RectF(x, std::round(y + height - base_height), width, std::round(context_.dp2px(2))),
-            Color::Red400);
+        Rect base_line(x, y + height - base_height, width, int(std::round(context_.dp2px(2))));
+        canvas->fillRect(RectF(base_line), Color::Red400);
     }
 
     void StatisticDrawer::toggleMode() {

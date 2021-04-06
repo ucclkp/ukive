@@ -43,7 +43,7 @@ namespace vsul {
 
     void VisualLayoutScene::onSceneResize(int width, int height) {
         camera_->resize(width, height);
-        setViewports(0, 0, width, height);
+        setViewports(0, 0, float(width), float(height));
 
         releaseResources();
         createResources(width, height);

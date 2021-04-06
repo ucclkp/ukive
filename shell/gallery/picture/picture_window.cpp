@@ -51,7 +51,7 @@ namespace shell {
         asso_btn_->setText(u"Associate");
         asso_btn_->setOnClickListener(this);
         asso_btn_->setLayoutSize(ukive::View::LS_AUTO, ukive::View::LS_AUTO);
-        asso_btn_->setLayoutMargin(getContext().dp2px(8), getContext().dp2px(8), 0, 0);
+        asso_btn_->setLayoutMargin(getContext().dp2pxi(8), getContext().dp2pxi(8), 0, 0);
         asso_btn_->setExtraLayoutInfo(
             Rlp::Builder()
             .start(layout->getId(), Rlp::START)
@@ -61,7 +61,7 @@ namespace shell {
         unasso_btn_->setText(u"Unassociate");
         unasso_btn_->setOnClickListener(this);
         unasso_btn_->setLayoutSize(ukive::View::LS_AUTO, ukive::View::LS_AUTO);
-        unasso_btn_->setLayoutMargin(getContext().dp2px(8), getContext().dp2px(8), 0, 0);
+        unasso_btn_->setLayoutMargin(getContext().dp2pxi(8), getContext().dp2pxi(8), 0, 0);
         unasso_btn_->setExtraLayoutInfo(
             Rlp::Builder()
             .start(asso_btn_->getId(), Rlp::END)
@@ -71,7 +71,7 @@ namespace shell {
         gallery_view_->setImageFileExts(allowed_exts_);
         gallery_view_->setLayoutSize(ukive::View::LS_FILL, ukive::View::LS_FILL);
         gallery_view_->setLayoutMargin(
-            getContext().dp2px(8), getContext().dp2px(8), getContext().dp2px(8), getContext().dp2px(8));
+            getContext().dp2pxi(8), getContext().dp2pxi(8), getContext().dp2pxi(8), getContext().dp2pxi(8));
         gallery_view_->setExtraLayoutInfo(
             Rlp::Builder()
             .start(layout->getId(), Rlp::START)

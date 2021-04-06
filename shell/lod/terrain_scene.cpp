@@ -220,7 +220,7 @@ namespace shell {
         rayDir = (rayDir * inverseWorld).nor();
         rayOrigin = rayOrigin * inverseWorld;
 
-        line_org->set(rayOrigin.x, rayOrigin.y, rayOrigin.z);
+        line_org->set(float(rayOrigin.x), float(rayOrigin.y), float(rayOrigin.z));
         *line_dir = ukv3d::Vector3F(rayDir.v3());
     }
 
@@ -273,7 +273,7 @@ namespace shell {
         width_ = width;
         height_ = height;
 
-        setViewports(0, 0, width, height);
+        setViewports(0, 0, float(width), float(height));
         camera_->resize(width, height);
 
         updateLodTerrain();

@@ -9,6 +9,7 @@
 #include <fstream>
 
 #include "utils/files/file_utils.h"
+#include "utils/number.hpp"
 #include "utils/platform_utils.h"
 
 
@@ -52,7 +53,7 @@ namespace ukive {
 
         auto cpos = reader.tellg();
         reader.seekg(0, std::ios_base::end);
-        auto byte_size = reader.tellg();
+        auto byte_size = utl::num_cast<size_t>(std::streamoff(reader.tellg()));
         reader.seekg(cpos);
 
         out->resize(byte_size);

@@ -155,7 +155,7 @@ namespace ukive {
         }
 
         if (is_fullscreen_) {
-            DWORD style = ::GetWindowLongPtr(hWnd, GWL_STYLE);
+            DWORD style = DWORD(::GetWindowLongPtr(hWnd, GWL_STYLE));
             enableFullscreen(style);
         }
 
@@ -309,8 +309,8 @@ namespace ukive {
 
     void WindowImplWin::center() {
         auto display_bounds = Display::primary()->getPixelWorkArea();
-        x_ = std::round((display_bounds.width() - width_) / 2.f);
-        y_ = std::round((display_bounds.height() - height_) / 2.f);
+        x_ = int(std::round((display_bounds.width() - width_) / 2.f));
+        y_ = int(std::round((display_bounds.height() - height_) / 2.f));
 
         if (::IsWindow(hWnd_)) {
             ::MoveWindow(hWnd_, x_, y_, width_, height_, FALSE);
@@ -424,7 +424,7 @@ namespace ukive {
             return;
         }
 
-        DWORD style = ::GetWindowLongPtr(hWnd_, GWL_STYLE);
+        DWORD style = DWORD(::GetWindowLongPtr(hWnd_, GWL_STYLE));
         if (enabled) {
             enableFullscreen(style);
         } else {
@@ -455,7 +455,7 @@ namespace ukive {
             return;
         }
 
-        int style = ::GetWindowLongPtr(hWnd_, GWL_STYLE);
+        auto style = ::GetWindowLongPtr(hWnd_, GWL_STYLE);
         if (enabled && !isFullscreen()) {
             ::SetWindowLongPtr(hWnd_, GWL_STYLE, style | WS_THICKFRAME);
         } else {
@@ -479,7 +479,7 @@ namespace ukive {
 
         delegate_->onWindowButtonChanged(WindowButton::Max);
 
-        int style = ::GetWindowLongPtr(hWnd_, GWL_STYLE);
+        auto style = ::GetWindowLongPtr(hWnd_, GWL_STYLE);
         if (enabled && !isFullscreen()) {
             ::SetWindowLongPtr(hWnd_, GWL_STYLE, style | WS_MAXIMIZEBOX);
         } else {
@@ -502,7 +502,7 @@ namespace ukive {
         }
         delegate_->onWindowButtonChanged(WindowButton::Min);
 
-        int style = ::GetWindowLongPtr(hWnd_, GWL_STYLE);
+        auto style = ::GetWindowLongPtr(hWnd_, GWL_STYLE);
         if (enabled && !isFullscreen()) {
             ::SetWindowLongPtr(hWnd_, GWL_STYLE, style | WS_MINIMIZEBOX);
         } else {
@@ -1000,7 +1000,7 @@ namespace ukive {
          * 参见
          * https://docs.microsoft.com/en-us/windows/win32/tablet/wm-tablet-querysystemgesturestatus-message
          */
-        const DWORD tablet_property =
+        DWORD_PTR tablet_property =
             // disables press and hold (right-click) gesture
             TABLET_DISABLE_PRESSANDHOLD |
             // disables UI feedback on pen up (waves)
@@ -1285,7 +1285,7 @@ namespace ukive {
         }
         delegate_->onUpdateContext();
 
-        Application::getGraphicDeviceManager()->notifyDPIChanged(dpi_x, dpi_y);
+        Application::getGraphicDeviceManager()->notifyDPIChanged(float(dpi_x), float(dpi_y));
     }
 
     void WindowImplWin::onStyleChanged(bool normal, bool ext, const STYLESTRUCT* ss) {
@@ -1304,8 +1304,8 @@ namespace ukive {
         }
     }
 
-    bool WindowImplWin::onDataCopy(unsigned int id, unsigned int size, void* data) {
-        return delegate_->onDataCopy(id, size, data);
+    bool WindowImplWin::onDataCopy(ULONG_PTR id, DWORD size, void* data) {
+        return false;
     }
 
     LRESULT WindowImplWin::onNCCreate(WPARAM wParam, LPARAM lParam, bool* handled) {
@@ -1892,9 +1892,8 @@ namespace ukive {
             return 0;
         }
 
-        *handled = true;
-
         if (onDataCopy(cds->dwData, cds->cbData, cds->lpData)) {
+            *handled = true;
             return TRUE;
         }
 
@@ -1961,7 +1960,7 @@ namespace ukive {
         int width_px = w_rect.right - w_rect.left;
         int height_px = w_rect.bottom - w_rect.top;
 
-        onResize(wParam, width_px, height_px);
+        onResize(int(wParam), width_px, height_px);
         createFrameIfNecessary();
         auto nc_result = non_client_frame_->onSize(wParam, lParam, handled);
         if (*handled) {
@@ -2015,7 +2014,7 @@ namespace ukive {
 
     LRESULT WindowImplWin::onKeyDown(WPARAM wParam, LPARAM lParam, bool* handled) {
         int key;
-        if (!Keyboard::mapKey(wParam, &key)) {
+        if (!Keyboard::mapKey(int(wParam), &key)) {
             return 0;
         }
 
@@ -2033,7 +2032,7 @@ namespace ukive {
 
     LRESULT WindowImplWin::onKeyUp(WPARAM wParam, LPARAM lParam, bool* handled) {
         int key;
-        if (!Keyboard::mapKey(wParam, &key)) {
+        if (!Keyboard::mapKey(int(wParam), &key)) {
             return 0;
         }
 
@@ -2140,7 +2139,7 @@ namespace ukive {
 
     LRESULT WindowImplWin::onChar(WPARAM wParam, LPARAM lParam, bool* handled) {
         std::u16string str;
-        str.push_back(wParam);
+        str.push_back(char16_t(wParam));
 
         if (Keyboard::filterChars(str)) {
             return 0;

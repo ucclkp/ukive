@@ -8,6 +8,7 @@
 
 #include <algorithm>
 
+#include "utils/number.hpp"
 #include "utils/log.h"
 
 #include "ukive/event/input_consts.h"
@@ -73,7 +74,7 @@ namespace ukive {
             Record record;
             record.dx = cur_x_ - prev_x_;
             record.dy = cur_y_ - prev_y_;
-            record.duration = cur_time - prev_time_;
+            record.duration = utl::num_cast<int>(cur_time - prev_time_);
             history_.push_front(record);
 
             total_duration_ += record.duration;

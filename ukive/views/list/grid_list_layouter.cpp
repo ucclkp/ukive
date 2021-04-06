@@ -464,7 +464,7 @@ namespace ukive {
         if (count == 0) {
             child_height = 0;
         } else {
-            child_height = avg_height / count;
+            child_height = int(avg_height / count);
         }
 
         // 计算之前的高度
@@ -487,7 +487,7 @@ namespace ukive {
         }
 
         size_t i;
-        int prev_total_height = cur_offset_ + cur_row_ * child_height;
+        int prev_total_height = int(cur_offset_ + cur_row_ * child_height);
         for (i = 0; i < fv_item_idx - 0; ++i) {
             prev_total_height += row_heights[i];
         }
@@ -500,8 +500,8 @@ namespace ukive {
         // 计算之后的高度
         auto l_item_end = count;
 
-        int next_total_height = -cur_offset_
-            + (row_count - cur_row_ - (l_item_end - fv_item_idx)) * child_height;
+        int next_total_height = int(-cur_offset_
+            + (row_count - cur_row_ - (l_item_end - fv_item_idx)) * child_height);
         for (; i < l_item_end - fv_item_idx; ++i) {
             next_total_height += row_heights[i];
         }

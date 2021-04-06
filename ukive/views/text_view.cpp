@@ -72,7 +72,7 @@ namespace ukive {
         base_text_ = new Editable(utl::UTF8ToUTF16(text));
         base_text_->addEditWatcher(this);
 
-        auto def_text_size = int(std::round(c.dp2px(15.f)));
+        auto def_text_size = std::round(c.dp2px(15.f));
         font_size_ = int(resolveAttrDimension(
             getContext(), attrs, necro::kAttrTextViewTextSize, def_text_size));
 
@@ -135,13 +135,13 @@ namespace ukive {
 
         switch (width.mode) {
         case SizeInfo::CONTENT: {
-            text_layout_->setMaxWidth(std::max(width.val - hori_padding, 0));
+            text_layout_->setMaxWidth(float(std::max(width.val - hori_padding, 0)));
 
             final_width = std::min(getTextWidth() + blink_thickness + hori_padding, width.val);
             final_width = std::max(final_width, getMinimumSize().width);
 
             if (width.val != final_width) {
-                text_layout_->setMaxWidth(std::max(final_width - hori_padding, 0));
+                text_layout_->setMaxWidth(float(std::max(final_width - hori_padding, 0)));
             }
             break;
         }
@@ -153,7 +153,7 @@ namespace ukive {
             final_width = getTextWidth() + blink_thickness + hori_padding;
             final_width = std::max(final_width, getMinimumSize().width);
 
-            text_layout_->setMaxWidth(std::max(final_width - hori_padding, 0));
+            text_layout_->setMaxWidth(float(std::max(final_width - hori_padding, 0)));
 
             text_layout_->setTextWrapping(
                 is_auto_wrap_ ? TextLayout::TextWrapping::WRAP : TextLayout::TextWrapping::NONE);
@@ -161,7 +161,7 @@ namespace ukive {
 
         case SizeInfo::DEFINED:
         default:
-            text_layout_->setMaxWidth(std::max(width.val - hori_padding, 0));
+            text_layout_->setMaxWidth(float(std::max(width.val - hori_padding, 0)));
             final_width = width.val;
             break;
         }
@@ -190,18 +190,18 @@ namespace ukive {
         TextLayout::HitTestInfo metrics;
 
         if (text_layout_->hitTestPoint(
-            getScrollX(), getScrollY(), &is_trailing_hit, &is_inside, &metrics))
+            float(getScrollX()), float(getScrollY()), &is_trailing_hit, &is_inside, &metrics))
         {
             text_pos_at_view_top_ = metrics.pos + (is_trailing_hit ? metrics.length : 0);
-            hori_offset_ = getScrollX() - metrics.rect.left;
-            vert_offset_ = getScrollY() - metrics.rect.top;
+            hori_offset_ = getScrollX() - int(metrics.rect.left);
+            vert_offset_ = getScrollY() - int(metrics.rect.top);
         }
     }
 
     int TextView::computeVerticalScrollOffsetFromTextPos(size_t off) {
         std::vector<TextLayout::HitTestInfo> hit_metrics;
         if (text_layout_->hitTestTextRange(off, 0, 0.f, 0.f, &hit_metrics)) {
-            return hit_metrics[0].rect.top - getScrollY();
+            return int(hit_metrics[0].rect.top) - getScrollY();
         }
 
         return 0 - getScrollY();
@@ -210,7 +210,7 @@ namespace ukive {
     int TextView::computeHorizontalScrollOffsetFromTextPos(size_t off) {
         std::vector<TextLayout::HitTestInfo> hit_metrics;
         if (text_layout_->hitTestTextRange(off, 0, 0.f, 0.f, &hit_metrics)) {
-            return hit_metrics[0].rect.left - getScrollX();
+            return int(hit_metrics[0].rect.left) - getScrollX();
         }
 
         return 0 - getScrollX();
@@ -265,8 +265,8 @@ namespace ukive {
 
                 std::vector<TextLayout::HitTestInfo> metrics;
                 if (text_layout_->hitTestTextRange(selection, 0, 0.f, 0.f, &metrics)) {
-                    int line_top = metrics[0].rect.top;
-                    int line_bottom = metrics[0].rect.bottom;
+                    int line_top = int(metrics[0].rect.top);
+                    int line_bottom = int(metrics[0].rect.bottom);
                     int content_height = getHeight()
                         - getPadding().vert() - space_.top - space_.bottom;
 
@@ -289,7 +289,7 @@ namespace ukive {
                 TextLayout::HitTestInfo metrics;
 
                 if (text_layout_->hitTestPoint(
-                    getScrollX(), getScrollY(), &is_trailing_hit, &is_inside, &metrics))
+                    float(getScrollX()), float(getScrollY()), &is_trailing_hit, &is_inside, &metrics))
                 {
                     auto cur_text_offset = metrics.pos + (is_trailing_hit ? metrics.length : 0);
                     if (cur_text_offset != prev_text_offset) {
@@ -346,7 +346,7 @@ namespace ukive {
                 TextLayout::HitTestInfo metrics;
 
                 if (text_layout_->hitTestPoint(
-                    getScrollX(), getScrollY(), &is_trailing_hit, &is_inside, &metrics))
+                    float(getScrollX()), float(getScrollY()), &is_trailing_hit, &is_inside, &metrics))
                 {
                     auto cur_text_offset = metrics.pos + (is_trailing_hit ? metrics.length : 0);
                     if (cur_text_offset != prev_text_offset) {
@@ -537,7 +537,7 @@ namespace ukive {
         text_layout_->make(
             base_text_->getString(),
             font_family_name_,
-            font_size_,
+            float(font_size_),
             font_style_,
             font_weight_,
             u"zh-CN");
@@ -641,7 +641,7 @@ namespace ukive {
         }
     }
 
-    void TextView::locateTextBlink(float text_x, float text_y) {
+    void TextView::locateTextBlink(int text_x, int text_y) {
         auto hitPosition = getTextPositionAtPoint(text_x, text_y);
         locateTextBlink(hitPosition);
     }
@@ -728,7 +728,7 @@ namespace ukive {
 
     void TextView::onDraw(Canvas* canvas) {
         canvas->save();
-        canvas->translate(space_.left, space_.top);
+        canvas->translate(float(space_.left), float(space_.top));
 
         if (is_selectable_) {
             for (const auto& sel : sel_list_) {
@@ -755,7 +755,7 @@ namespace ukive {
         {
             final_height = std::min(getTextHeight() + vert_padding, info.height.val);
             final_height = std::max(final_height, getMinimumSize().height);
-            text_layout_->setMaxHeight(std::max(final_height - vert_padding, 0));
+            text_layout_->setMaxHeight(float(std::max(final_height - vert_padding, 0)));
             break;
         }
 
@@ -765,12 +765,12 @@ namespace ukive {
             final_height = getTextHeight() + vert_padding;
             final_height = std::max(final_height, getMinimumSize().height);
 
-            text_layout_->setMaxHeight(std::max(final_height - vert_padding, 0));
+            text_layout_->setMaxHeight(float(std::max(final_height - vert_padding, 0)));
             break;
 
         case SizeInfo::DEFINED:
         default:
-            text_layout_->setMaxHeight(std::max(info.height.val - vert_padding, 0));
+            text_layout_->setMaxHeight(float(std::max(info.height.val - vert_padding, 0)));
             final_height = info.height.val;
             break;
         }
@@ -985,7 +985,7 @@ namespace ukive {
             if (line_spacing_method_ == TextLayout::LineSpacing::DEFAULT) {
                 dy = -font_size_ * direction;
             } else if (line_spacing_method_ == TextLayout::LineSpacing::UNIFORM) {
-                dy = -font_size_ * line_spacing_ * direction;
+                dy = -int(font_size_ * line_spacing_ * direction);
             } else {
                 dy = -font_size_ * direction;
             }
@@ -1079,13 +1079,13 @@ namespace ukive {
         size_t sel_start, size_t sel_end, Rect* bounds, bool* clipped) const
     {
         Rect _bounds = getBoundsInScreen();
-        RectF text_bounds = getSelectionBounds(sel_start, sel_end);
+        Rect text_bounds = Rect(getSelectionBounds(sel_start, sel_end));
 
         text_bounds.offset(
             _bounds.left + getPadding().start + space_.left - getScrollX(),
             _bounds.top + getPadding().top + space_.top - getScrollY());
 
-        *bounds = Rect(text_bounds);
+        *bounds = text_bounds;
     }
 
     void TextView::autoWrap(bool enable) {
@@ -1291,7 +1291,7 @@ namespace ukive {
         for (const auto& ht : hit_metrics) {
             SelectionBlock block;
 
-            float extraWidth = 0.f;
+            int extraWidth = 0;
             auto t_pos = ht.pos;
             auto t_length = ht.length;
 
@@ -1338,13 +1338,13 @@ namespace ukive {
         return base_text_->hasSelection();
     }
 
-    size_t TextView::getTextPositionAtPoint(float text_x, float text_y) const {
+    size_t TextView::getTextPositionAtPoint(int text_x, int text_y) const {
         bool is_inside;
         bool is_trailing_hit;
         TextLayout::HitTestInfo metrics;
 
         if (!text_layout_->hitTestPoint(
-            text_x, text_y, &is_trailing_hit, &is_inside, &metrics))
+            float(text_x), float(text_y), &is_trailing_hit, &is_inside, &metrics))
         {
             return 0;
         }
@@ -1352,13 +1352,13 @@ namespace ukive {
         return metrics.pos + (is_trailing_hit ? metrics.length : 0);
     }
 
-    bool TextView::isTextAtPoint(float text_x, float text_y, size_t* hit_pos) const {
+    bool TextView::isTextAtPoint(int text_x, int text_y, size_t* hit_pos) const {
         bool is_inside;
         bool is_trailing_hit;
         TextLayout::HitTestInfo metrics;
 
         if (!text_layout_->hitTestPoint(
-            text_x, text_y, &is_trailing_hit, &is_inside, &metrics))
+            float(text_x), float(text_y), &is_trailing_hit, &is_inside, &metrics))
         {
             return false;
         }
@@ -1371,7 +1371,7 @@ namespace ukive {
     }
 
     bool TextView::isTextAtPoint(
-        float text_x, float text_y,
+        int text_x, int text_y,
         size_t position, size_t length, size_t* hit_pos) const
     {
         bool is_inside;
@@ -1379,7 +1379,7 @@ namespace ukive {
         TextLayout::HitTestInfo metrics;
 
         if (!text_layout_->hitTestPoint(
-            text_x, text_y, &is_trailing_hit, &is_inside, &metrics))
+            float(text_x), float(text_y), &is_trailing_hit, &is_inside, &metrics))
         {
             return false;
         }

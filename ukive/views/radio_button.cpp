@@ -114,12 +114,12 @@ namespace ukive {
         float radius = (length - stroke_width * 2) / 2.f;
         float cx = stroke_width + radius;
         float cy = (bounds.height() - length) / 2.f + stroke_width + radius;
-        canvas->drawCircle(cx, cy, radius, float(stroke_width), Color::Blue400);
+        canvas->drawCircle(PointF(cx, cy), radius, float(stroke_width), Color::Blue400);
 
         if (selected_) {
             auto value = static_cast<float>(anim_.getCurValue());
             auto cur_radius = value * radius * 0.6f;
-            canvas->fillCircle(cx, cy, cur_radius, Color::Blue600);
+            canvas->fillCircle(PointF(cx, cy), cur_radius, Color::Blue600);
         }
 
         if (anim_.isRunning()) {

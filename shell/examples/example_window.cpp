@@ -65,7 +65,7 @@ namespace shell {
 
         auto strip_view = findView<ukive::TabStripView>(Res::Id::tsv_example_strip);
         strip_view->setBackground(new ukive::ColorElement(ukive::Color::White));
-        strip_view->setShadowRadius(getContext().dp2px(2));
+        strip_view->setShadowRadius(getContext().dp2pxi(2));
 
         auto tab_view = findView<ukive::TabView>(Res::Id::tv_example_table);
         tab_view->setStripView(strip_view);

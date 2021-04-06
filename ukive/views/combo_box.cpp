@@ -66,7 +66,7 @@ namespace ukive {
         shape_element->setSolidColor(Color::White);
 
         inner_window_ = std::make_shared<InnerWindow>();
-        inner_window_->setShadowRadius(getContext().dp2px(2.f));
+        inner_window_->setShadowRadius(getContext().dp2pxi(2.f));
         inner_window_->setContentView(list_view_);
         inner_window_->setOutsideTouchable(false);
         inner_window_->setDismissByTouchOutside(true);

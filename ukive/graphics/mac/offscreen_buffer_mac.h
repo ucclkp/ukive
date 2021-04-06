@@ -24,8 +24,8 @@ namespace ukive {
         OffscreenBufferMac();
 
         bool onCreate(
-            size_t width, size_t height, const ImageOptions& options) override;
-        GRet onResize(size_t width, size_t height) override;
+            int width, int height, const ImageOptions& options) override;
+        GRet onResize(int width, int height) override;
         void onDPIChange(float dpi_x, float dpi_y) override;
         void onDestroy() override;
 
@@ -43,7 +43,7 @@ namespace ukive {
     private:
         bool createBuffer();
 
-        size_t width_, height_;
+        int width_, height_;
         NSGraphicsContext* prev_context_ = nullptr;
         CGContextRef cg_context_ = nullptr;
         ImageOptions img_options_;

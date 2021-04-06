@@ -16,7 +16,7 @@
 
 namespace ukive {
 
-    Canvas::Canvas(size_t width, size_t height, const ImageOptions& options) {
+    Canvas::Canvas(int width, int height, const ImageOptions& options) {
         auto buffer = OffscreenBuffer::create();
         if (buffer->onCreate(width, height, options)) {
             renderer_.reset(CyroRenderer::create());
@@ -356,19 +356,19 @@ namespace ukive {
         renderer_->drawRoundRect(rect, radius, paint);
     }
 
-    void Canvas::drawCircle(float cx, float cy, float radius, const Color& color) {
-        drawOval(cx, cy, radius, radius, color);
+    void Canvas::drawCircle(const PointF& cp, float radius, const Color& color) {
+        drawOval(cp, radius, radius, color);
     }
 
-    void Canvas::drawCircle(float cx, float cy, float radius, float stroke_width, const Color& color) {
-        drawOval(cx, cy, radius, radius, stroke_width, color);
+    void Canvas::drawCircle(const PointF& cp, float radius, float stroke_width, const Color& color) {
+        drawOval(cp, radius, radius, stroke_width, color);
     }
 
-    void Canvas::fillCircle(float cx, float cy, float radius, const Color& color) {
-        fillOval(cx, cy, radius, radius, color);
+    void Canvas::fillCircle(const PointF& cp, float radius, const Color& color) {
+        fillOval(cp, radius, radius, color);
     }
 
-    void Canvas::fillCircle(float cx, float cy, float radius, const ImageFrame* img) {
+    void Canvas::fillCircle(const PointF& cp, float radius, const ImageFrame* img) {
         if (!renderer_ || !img) {
             return;
         }
@@ -376,10 +376,10 @@ namespace ukive {
         Paint paint;
         paint.setStyle(Paint::Style::IMAGE);
         paint.setImage(img);
-        renderer_->drawCircle(PointF(cx, cy), radius, paint);
+        renderer_->drawCircle(cp, radius, paint);
     }
 
-    void Canvas::drawOval(float cx, float cy, float rx, float ry, const Color& color) {
+    void Canvas::drawOval(const PointF& cp, float rx, float ry, const Color& color) {
         if (!renderer_) {
             return;
         }
@@ -387,10 +387,10 @@ namespace ukive {
         Paint paint;
         paint.setStyle(Paint::Style::STROKE);
         paint.setColor(color);
-        renderer_->drawEllipse(PointF(cx, cy), rx, ry, paint);
+        renderer_->drawEllipse(cp, rx, ry, paint);
     }
 
-    void Canvas::drawOval(float cx, float cy, float rx, float ry, float stroke_width, const Color& color) {
+    void Canvas::drawOval(const PointF& cp, float rx, float ry, float stroke_width, const Color& color) {
         if (!renderer_) {
             return;
         }
@@ -399,10 +399,10 @@ namespace ukive {
         paint.setStyle(Paint::Style::STROKE);
         paint.setStrokeWidth(stroke_width);
         paint.setColor(color);
-        renderer_->drawEllipse(PointF(cx, cy), rx, ry, paint);
+        renderer_->drawEllipse(cp, rx, ry, paint);
     }
 
-    void Canvas::fillOval(float cx, float cy, float rx, float ry, const Color& color) {
+    void Canvas::fillOval(const PointF& cp, float rx, float ry, const Color& color) {
         if (!renderer_) {
             return;
         }
@@ -410,7 +410,7 @@ namespace ukive {
         Paint paint;
         paint.setStyle(Paint::Style::FILL);
         paint.setColor(color);
-        renderer_->drawEllipse(PointF(cx, cy), rx, ry, paint);
+        renderer_->drawEllipse(cp, rx, ry, paint);
     }
 
     void Canvas::drawPath(const Path* path, float stroke_width, const Color& color) {

@@ -223,7 +223,7 @@ namespace ukive {
             return E_INVALIDARG;
         }
 
-        long length = input_conn_->getTextLength();
+        auto length = input_conn_->getTextLength();
         if (acpTestStart < 0 || acpTestStart > length || acpTestEnd < 0 || acpTestEnd > length) {
             DCHECK(false);
             return E_INVALIDARG;

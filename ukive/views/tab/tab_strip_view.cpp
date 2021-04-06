@@ -130,11 +130,11 @@ namespace ukive {
             index = getChildCount();
         }
 
-        int padding = getContext().dp2px(8);
+        int padding = getContext().dp2pxi(8);
 
         auto view = new TextView(getContext());
         view->setText(title);
-        view->setTextSize(getContext().dp2px(14));
+        view->setTextSize(getContext().dp2pxi(14));
         view->setPadding(padding, padding, padding, padding);
         view->setBackground(new RippleElement());
         view->setClickable(true);

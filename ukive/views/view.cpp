@@ -75,7 +75,7 @@ namespace ukive {
         resolveAttrMargin(c, attrs, necro::kAttrLayoutMargin, &layout_margin_);
         resolveAttrPadding(c, attrs, necro::kAttrViewPadding, &padding_);
 
-        int shadow_radius = resolveAttrDimension(c, attrs, necro::kAttrViewShadowRadius, 0);
+        int shadow_radius = int(resolveAttrDimension(c, attrs, necro::kAttrViewShadowRadius, 0));
         setShadowRadius(shadow_radius);
 
         setClickable(resolveAttrBool(attrs, necro::kAttrViewClickable, false));
@@ -830,7 +830,7 @@ namespace ukive {
         // 应用动画变量
         canvas->save();
         canvas->setOpacity(
-            anime_params_.getAlpha()*canvas->getOpacity());
+            float(anime_params_.getAlpha()*canvas->getOpacity()));
 
         Matrix2x3F anim_m;
         anime_params_.generateMatrix(0, 0, &anim_m);
@@ -900,17 +900,18 @@ namespace ukive {
                 offscreen.clear();
                 if (anime_params_.getRevealType() == ViewAnimator::REVEAL_CIRCULE) {
                     offscreen.fillCircle(
-                        anime_params_.getRevealCenterX(),
-                        anime_params_.getRevealCenterY(),
-                        anime_params_.getRevealRadius(),
+                        PointF(PointD(
+                            anime_params_.getRevealCenterX(),
+                            anime_params_.getRevealCenterY())),
+                        float(anime_params_.getRevealRadius()),
                         bg_img.get());
                 } else {
                     offscreen.fillRect(
-                        RectF(
+                        RectF(RectD(
                             anime_params_.getRevealCenterX(),
                             anime_params_.getRevealCenterY(),
                             anime_params_.getRevealWidthRadius(),
-                            anime_params_.getRevealHeightRadius()),
+                            anime_params_.getRevealHeightRadius())),
                         bg_img.get());
                 }
                 offscreen.endDraw();
@@ -940,17 +941,18 @@ namespace ukive {
             if (anime_params_.getRevealType() == ViewAnimator::REVEAL_CIRCULE) {
                 c->pushClip(RectF(0, 0, float(getWidth()), float(getHeight())));
                 c->fillCircle(
-                    anime_params_.getRevealCenterX(),
-                    anime_params_.getRevealCenterY(),
-                    anime_params_.getRevealRadius(), c_img.get());
+                    PointF(PointD(
+                        anime_params_.getRevealCenterX(),
+                        anime_params_.getRevealCenterY())),
+                    float(anime_params_.getRevealRadius()), c_img.get());
                 c->popClip();
             } else {
                 c->fillRect(
-                    RectF(
+                    RectF(RectD(
                         anime_params_.getRevealCenterX(),
                         anime_params_.getRevealCenterY(),
                         anime_params_.getRevealWidthRadius(),
-                        anime_params_.getRevealHeightRadius()),
+                        anime_params_.getRevealHeightRadius())),
                     c_img.get());
             }
         }
@@ -964,8 +966,8 @@ namespace ukive {
             float(getHeight() - padding_.vert())));
         {
             c->save();
-            c->translate(padding_.start, padding_.top);
-            c->translate(-scroll_x_, -scroll_y_);
+            c->translate(float(padding_.start), float(padding_.top));
+            c->translate(-float(scroll_x_), -float(scroll_y_));
 
             // 绘制自身
             onDraw(c);
@@ -974,7 +976,7 @@ namespace ukive {
         }
         {
             c->save();
-            c->translate(-scroll_x_, -scroll_y_);
+            c->translate(-float(scroll_x_), -float(scroll_y_));
 
             // 绘制孩子，这里不要偏移 padding，因为 padding 信息
             // 已经包含在 bounds 里了，画布会根据 bounds 进行偏移的。
@@ -984,7 +986,7 @@ namespace ukive {
         }
         {
             c->save();
-            c->translate(padding_.start, padding_.top);
+            c->translate(float(padding_.start), float(padding_.top));
 
             // 绘制盖在孩子之上的内容
             onDrawOverChildren(c);

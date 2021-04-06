@@ -29,7 +29,7 @@ namespace ukive {
 
     class Canvas {
     public:
-        Canvas(size_t width, size_t height, const ImageOptions& options);
+        Canvas(int width, int height, const ImageOptions& options);
         explicit Canvas(const std::shared_ptr<CyroRenderer>& renderer);
         ~Canvas();
 
@@ -99,14 +99,14 @@ namespace ukive {
         void fillRoundRect(
             const RectF& rect, float radius, const Color& color);
 
-        void drawCircle(float cx, float cy, float radius, const Color& color);
-        void drawCircle(float cx, float cy, float radius, float stroke_width, const Color& color);
-        void fillCircle(float cx, float cy, float radius, const Color& color);
-        void fillCircle(float cx, float cy, float radius, const ImageFrame* img);
+        void drawCircle(const PointF& cp, float radius, const Color& color);
+        void drawCircle(const PointF& cp, float radius, float stroke_width, const Color& color);
+        void fillCircle(const PointF& cp, float radius, const Color& color);
+        void fillCircle(const PointF& cp, float radius, const ImageFrame* img);
 
-        void drawOval(float cx, float cy, float rx, float ry, const Color& color);
-        void drawOval(float cx, float cy, float rx, float ry, float stroke_width, const Color& color);
-        void fillOval(float cx, float cy, float rx, float ry, const Color& color);
+        void drawOval(const PointF& cp, float rx, float ry, const Color& color);
+        void drawOval(const PointF& cp, float rx, float ry, float stroke_width, const Color& color);
+        void fillOval(const PointF& cp, float rx, float ry, const Color& color);
 
         void drawPath(const Path* path, float stroke_width, const Color& color);
         void fillPath(const Path* path, const Color& color);

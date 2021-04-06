@@ -99,10 +99,10 @@ namespace ukive {
                 auto h = bound.height();
                 auto r = std::sqrt(w * w + h * h);
 
-                Color ripple_color = Color::ofRGB(0, (1 - ripple_animator_.getCurValue()) * 0.1f);
+                Color ripple_color = Color::ofRGB(0, float(1 - ripple_animator_.getCurValue()) * 0.1f);
                 content_off_->fillCircle(
-                    start_x_, start_y_,
-                    ripple_animator_.getCurValue() * r, ripple_color);
+                    PointF(Point(start_x_, start_y_)),
+                    float(ripple_animator_.getCurValue() * r), ripple_color);
             }
             content_off_->endDraw();
             std::shared_ptr<ImageFrame> content_img(content_off_->extractImage());
@@ -131,7 +131,7 @@ namespace ukive {
                     canvas->drawImage(mask_img.get());
                 }
                 canvas->fillOpacityMask(
-                    bound.width(), bound.height(),
+                    float(bound.width()), float(bound.height()),
                     mask_img.get(), content_img.get());
             }
         } else {

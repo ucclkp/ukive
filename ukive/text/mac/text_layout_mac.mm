@@ -84,13 +84,13 @@ namespace ukive {
         [text_storage_ release];
     }
 
-    void TextLayoutMac::setMaxWidth(int max_width) {
+    void TextLayoutMac::setMaxWidth(float max_width) {
         auto max_height = text_container_.size.height;
         [text_container_ setSize:NSMakeSize(max_width, max_height)];
         glyph_range_cached_ = false;
     }
 
-    void TextLayoutMac::setMaxHeight(int max_height) {
+    void TextLayoutMac::setMaxHeight(float max_height) {
         auto max_width = text_container_.size.width;
         [text_container_ setSize:NSMakeSize(max_width, max_height)];
         glyph_range_cached_ = false;
@@ -285,11 +285,11 @@ namespace ukive {
         }
     }
 
-    int TextLayoutMac::getMaxWidth() const {
+    float TextLayoutMac::getMaxWidth() const {
         return text_container_.size.width;
     }
 
-    int TextLayoutMac::getMaxHeight() const {
+    float TextLayoutMac::getMaxHeight() const {
         return text_container_.size.height;
     }
 

@@ -69,7 +69,7 @@ namespace shell {
         using Rlp = ukive::RestraintLayoutInfo;
 
         auto expand_btn = new ukive::TreeNodeButton(c);
-        expand_btn->setPadding(c.dp2px(2), c.dp2px(2), c.dp2px(2), c.dp2px(2));
+        expand_btn->setPadding(c.dp2pxi(2), c.dp2pxi(2), c.dp2pxi(2), c.dp2pxi(2));
         expand_btn->setLayoutSize(ukive::View::LS_AUTO, ukive::View::LS_AUTO);
         auto eb_lp = Rlp::Builder()
             .start(layout->getId())
@@ -81,8 +81,8 @@ namespace shell {
 
         auto avatar_view = new ukive::ImageView(c);
         avatar_view->setImage({});
-        avatar_view->setLayoutSize(c.dp2px(12), c.dp2px(12));
-        avatar_view->setLayoutMargin(c.dp2px(2), c.dp2px(2), 0, c.dp2px(2));
+        avatar_view->setLayoutSize(c.dp2pxi(12), c.dp2pxi(12));
+        avatar_view->setLayoutMargin(c.dp2pxi(2), c.dp2pxi(2), 0, c.dp2pxi(2));
         Rlp* av_lp = new Rlp();
         av_lp->startHandle(expand_btn->getId(), Rlp::END);
         av_lp->topHandle(layout->getId(), Rlp::TOP);
@@ -92,10 +92,10 @@ namespace shell {
 
         auto title_label = new ukive::TextView(c);
         title_label->setFontFamilyName(u"Consolas");
-        title_label->setTextSize(c.dp2px(13));
+        title_label->setTextSize(c.dp2pxi(13));
         title_label->setClickable(true);
         title_label->setDoubleClickable(true);
-        title_label->setPadding(c.dp2px(2), c.dp2px(2), c.dp2px(2), c.dp2px(2));
+        title_label->setPadding(c.dp2pxi(2), c.dp2pxi(2), c.dp2pxi(2), c.dp2pxi(2));
         title_label->setLayoutSize(ukive::View::LS_FILL, ukive::View::LS_AUTO);
         Rlp* tl_lp = new Rlp();
         tl_lp->startHandle(avatar_view->getId(), Rlp::END);
@@ -124,7 +124,7 @@ namespace shell {
         tree_item->expand_button_->setOnClickListener(this);
         tree_item->text_label->setOnClickListener(this);
 
-        tree_item->ex_margins.start = node->getLevel() * 16;
+        tree_item->ex_margins.start = int(node->getLevel() * 16);
         tree_item->text_label->setText(node->text);
 
         if (node->getChildCount() == 0) {

@@ -24,7 +24,7 @@ namespace ukive {
         ~TabView();
 
         // TabStripSelectionListener
-        void onTabStripSelectionChanged(int index) override;
+        void onTabStripSelectionChanged(size_t index) override;
 
         void setStripView(TabStripView* tsv);
         void setSelectedPage(size_t index);
@@ -36,7 +36,7 @@ namespace ukive {
         size_t getPageCount() const;
 
     private:
-        void addViewByPageId(View* v, int page_id);
+        void addViewByPageId(View* v, size_t page_id);
 
         size_t sel_index_ = 0;
         std::vector<Page*> pages_;

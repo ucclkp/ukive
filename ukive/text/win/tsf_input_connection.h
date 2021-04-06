@@ -62,7 +62,7 @@ namespace ukive {
             DWORD dwFlags, const WCHAR* text, ULONG length,
             LONG* pacpStart, LONG* pacpEnd, TS_TEXTCHANGE* pChange);
 
-        long getTextLength() const;
+        LONG getTextLength() const;
         bool getTextPositionAtPoint(const POINT* pt, DWORD dwFlags, LONG* pacp) const;
         bool getTextBound(LONG start, LONG end, RECT* prc, BOOL* pfClipped) const;
 
