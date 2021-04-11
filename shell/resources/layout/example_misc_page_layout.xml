@@ -20,6 +20,13 @@
             is_editable="false"
             padding="6" />
 
+        <MediaView
+            id="@+id/mv_media_view"
+            width="fill"
+            height="200"
+            margin="12"
+            padding="8" />
+
         <ChartView
             id="@+id/cv_data_chart"
             width="fill"

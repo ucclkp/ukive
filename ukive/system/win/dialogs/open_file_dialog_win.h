@@ -4,10 +4,10 @@
 // This program is licensed under GPLv3 license that can be
 // found in the LICENSE file.
 
-#ifndef UKIVE_SYSTEM_DIALOG_WIN_OPEN_FILE_DIALOG_WIN_H_
-#define UKIVE_SYSTEM_DIALOG_WIN_OPEN_FILE_DIALOG_WIN_H_
+#ifndef UKIVE_SYSTEM_WIN_DIALOGS_OPEN_FILE_DIALOG_WIN_H_
+#define UKIVE_SYSTEM_WIN_DIALOGS_OPEN_FILE_DIALOG_WIN_H_
 
-#include "ukive/system/dialog/open_file_dialog.h"
+#include "ukive/system/dialogs/open_file_dialog.h"
 
 
 namespace ukive {
@@ -30,4 +30,4 @@ namespace ukive {
 
 }
 
-#endif  // UKIVE_SYSTEM_DIALOG_WIN_OPEN_FILE_DIALOG_WIN_H_
+#endif  // UKIVE_SYSTEM_WIN_DIALOGS_OPEN_FILE_DIALOG_WIN_H_

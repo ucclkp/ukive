@@ -13,99 +13,148 @@
 
 namespace ukv3d {
 
-    template<typename T>
+    template<typename Ty>
     class Vector2T {
     public:
-        using F = std::enable_if<std::is_floating_point<T>::value>;
+        template <typename Y>
+        class CheckingStub : public std::false_type {};
 
         Vector2T() : x(0), y(0) {}
-        Vector2T(T x, T y) : x(x), y(y) {}
+        Vector2T(Ty x, Ty y) : x(x), y(y) {}
 
-        Vector2T operator+(const Vector2T& rhs) const { return Vector2T(*this).add(rhs); }
-        Vector2T operator-(const Vector2T& rhs) const { return Vector2T(*this).sub(rhs); }
-        Vector2T operator-() const { return Vector2T(*this).inv(); }
-        Vector2T operator*(T factor) const { return Vector2T(*this).mul(factor); }
-        T operator*(const Vector2T& rhs) const { return Vector2T(*this).mul(rhs); }
-        bool operator==(const Vector2T& rhs) const { return isEqual(rhs); }
-        bool operator!=(const Vector2T& rhs) const { return !isEqual(rhs); }
+        Vector2T operator+(const Vector2T& rhs) const {
+            return Vector2T(*this).add(rhs);
+        }
+        Vector2T operator-(const Vector2T& rhs) const {
+            return Vector2T(*this).sub(rhs);
+        }
+        Vector2T operator-() const {
+            return Vector2T(*this).inv();
+        }
+        Vector2T operator*(Ty factor) const {
+            return Vector2T(*this).mul(factor);
+        }
+        Ty operator*(const Vector2T& rhs) const {
+            return Vector2T(*this).mul(rhs);
+        }
+        bool operator==(const Vector2T& rhs) const {
+            return equal(rhs);
+        }
+        bool operator!=(const Vector2T& rhs) const {
+            return !equal(rhs);
+        }
 
         template<typename C>
         explicit operator Vector2T<C>() const {
             return Vector2T<C>(x, y);
         }
 
-        template<typename = typename F::type>
-        Vector2T operator/(T factor) const { return Vector2T(*this).div(factor); }
-        template<typename = typename F::type>
-        Vector2T normalize() const { return Vector2T(*this).nor(); }
+        Vector2T operator/(Ty factor) const {
+            return Vector2T(*this).div(factor);
+        }
+
+        Vector2T normalize() const {
+            if constexpr (!std::is_floating_point<Ty>::value) {
+                static_assert(CheckingStub<Ty>::value, "Ty must be a floating type!");
+            }
+            return Vector2T(*this).nor();
+        }
 
         Vector2T& add(const Vector2T& rhs) {
             x += rhs.x; y += rhs.y;
             return *this;
         }
+
         Vector2T& sub(const Vector2T& rhs) {
             x -= rhs.x; y -= rhs.y;
             return *this;
         }
-        Vector2T& mul(T factor) {
+
+        Vector2T& mul(Ty factor) {
             x *= factor; y *= factor;
             return *this;
         }
+
         Vector2T& inv() {
             x = -x; y = -y;
             return *this;
         }
-        T mul(const Vector2T& rhs) {
+
+        Ty mul(const Vector2T& rhs) {
             return x * rhs.x + y * rhs.y;
         }
-        T lengthSq() const {
+
+        Ty lengthSq() const {
             return x*x + y*y;
         }
-        bool isEqual(const Vector2T& rhs) const {
+
+        bool equal(const Vector2T& rhs) const {
             return x == rhs.x && y == rhs.y;
         }
 
-        template<typename = typename F::type>
-        Vector2T& div(T factor) {
+        Vector2T& div(Ty factor) {
             x /= factor; y /= factor;
             return *this;
         }
-        template<typename = typename F::type>
+
         Vector2T& nor() {
+            if constexpr (!std::is_floating_point<Ty>::value) {
+                static_assert(CheckingStub<Ty>::value, "Ty must be a floating type!");
+            }
             auto l = length();
             x /= l; y /= l;
             return *this;
         }
-        template<typename = typename F::type>
-        T length() const {
+
+        Ty length() const {
+            if constexpr (!std::is_floating_point<Ty>::value) {
+                static_assert(CheckingStub<Ty>::value, "Ty must be a floating type!");
+            }
             return sqrt(x*x + y*y);
         }
 
-        void set(T _x, T _y) {
+        void set(Ty _x, Ty _y) {
             x = _x;
             y = _y;
         }
 
-        T x, y;
+        Ty x, y;
     };
 
 
-    template<typename T>
+    template<typename Ty>
     class Vector3T {
     public:
-        using F = std::enable_if<std::is_floating_point<T>::value>;
+        template <typename Y>
+        class CheckingStub : public std::false_type {};
 
         Vector3T() : x(0), y(0), z(0) {}
-        Vector3T(T x, T y, T z) : x(x), y(y), z(z) {}
+        Vector3T(Ty x, Ty y, Ty z) : x(x), y(y), z(z) {}
 
-        Vector3T operator+(const Vector3T& rhs) const { return Vector3T(*this).add(rhs); }
-        Vector3T operator-(const Vector3T& rhs) const { return Vector3T(*this).sub(rhs); }
-        Vector3T operator-() const { return Vector3T(*this).inv(); }
-        Vector3T operator*(T factor) const { return Vector3T(*this).mul(factor); }
-        T operator*(const Vector3T& rhs) const { return Vector3T(*this).mul(rhs); }
-        Vector3T operator^(const Vector3T& rhs) const { return Vector3T(*this).cross(rhs); }
-        bool operator==(const Vector3T& rhs) const { return isEqual(rhs); }
-        bool operator!=(const Vector3T& rhs) const { return !isEqual(rhs); }
+        Vector3T operator+(const Vector3T& rhs) const {
+            return Vector3T(*this).add(rhs);
+        }
+        Vector3T operator-(const Vector3T& rhs) const {
+            return Vector3T(*this).sub(rhs);
+        }
+        Vector3T operator-() const {
+            return Vector3T(*this).inv();
+        }
+        Vector3T operator*(Ty factor) const {
+            return Vector3T(*this).mul(factor);
+        }
+        Ty operator*(const Vector3T& rhs) const {
+            return Vector3T(*this).mul(rhs);
+        }
+        Vector3T operator^(const Vector3T& rhs) const {
+            return Vector3T(*this).cross(rhs);
+        }
+        bool operator==(const Vector3T& rhs) const {
+            return equal(rhs);
+        }
+        bool operator!=(const Vector3T& rhs) const {
+            return !equal(rhs);
+        }
 
         template<typename C>
         explicit operator Vector3T<C>() const {
@@ -115,27 +164,37 @@ namespace ukv3d {
                 static_cast<C>(z));
         }
 
-        template<typename = typename F::type>
-        Vector3T operator/(T factor) const { return Vector3T(*this).div(factor); }
-        template<typename = typename F::type>
-        Vector3T normalize() const { return Vector3T(*this).nor(); }
+        Vector3T operator/(Ty factor) const {
+            return Vector3T(*this).div(factor);
+        }
+
+        Vector3T normalize() const {
+            if constexpr (!std::is_floating_point<Ty>::value) {
+                static_assert(CheckingStub<Ty>::value, "Ty must be a floating type!");
+            }
+            return Vector3T(*this).nor();
+        }
 
         Vector3T& add(const Vector3T& rhs) {
             x += rhs.x; y += rhs.y; z += rhs.z;
             return *this;
         }
+
         Vector3T& sub(const Vector3T& rhs) {
             x -= rhs.x; y -= rhs.y; z -= rhs.z;
             return *this;
         }
-        Vector3T& mul(T factor) {
+
+        Vector3T& mul(Ty factor) {
             x *= factor; y *= factor; z *= factor;
             return *this;
         }
+
         Vector3T& inv() {
             x = -x; y = -y; z = -z;
             return *this;
         }
+
         Vector3T& cross(const Vector3T& rhs) {
             auto _x = y * rhs.z - z * rhs.y;
             auto _y = z * rhs.x - x * rhs.z;
@@ -143,92 +202,128 @@ namespace ukv3d {
             x = _x; y = _y; z = _z;
             return *this;
         }
-        T mul(const Vector3T& rhs) {
+
+        Ty mul(const Vector3T& rhs) {
             return x * rhs.x + y * rhs.y + z * rhs.z;
         }
-        T lengthSq() const {
+
+        Ty lengthSq() const {
             return x*x + y*y + z*z;
         }
-        bool isEqual(const Vector3T& rhs) const {
+
+        bool equal(const Vector3T& rhs) const {
             return x == rhs.x && y == rhs.y && z == rhs.z;
         }
 
-        template<typename = typename F::type>
-        Vector3T& div(T factor) {
+        Vector3T& div(Ty factor) {
             x /= factor; y /= factor; z /= factor;
             return *this;
         }
-        template<typename = typename F::type>
+
         Vector3T& nor() {
+            if constexpr (!std::is_floating_point<Ty>::value) {
+                static_assert(CheckingStub<Ty>::value, "Ty must be a floating type!");
+            }
             auto l = length();
             x /= l; y /= l; z /= l;
             return *this;
         }
-        template<typename = typename F::type>
-        T length() const {
+
+        Ty length() const {
+            if constexpr (!std::is_floating_point<Ty>::value) {
+                static_assert(CheckingStub<Ty>::value, "Ty must be a floating type!");
+            }
             return sqrt(x*x + y*y + z*z);
         }
 
-        void set(T _x, T _y, T _z) {
+        void set(Ty _x, Ty _y, Ty _z) {
             x = _x;
             y = _y;
             z = _z;
         }
 
-        T x, y, z;
+        Ty x, y, z;
     };
 
 
-    template<typename T>
+    template<typename Ty>
     class Matrix4x4T;
 
-    template<typename T>
+    template<typename Ty>
     class Vector4T {
     public:
-        using F = std::enable_if<std::is_floating_point<T>::value>;
+        template <typename Y>
+        class CheckingStub : public std::false_type {};
 
         Vector4T() : x(0), y(0), z(0), w(0) {}
-        Vector4T(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
+        Vector4T(Ty x, Ty y, Ty z, Ty w) : x(x), y(y), z(z), w(w) {}
 
-        Vector4T operator+(const Vector4T& rhs) const { return Vector4T(*this).add(rhs); }
-        Vector4T operator-(const Vector4T& rhs) const { return Vector4T(*this).sub(rhs); }
-        Vector4T operator-() const { return Vector4T(*this).inv(); }
-        Vector4T operator*(T factor) const { return Vector4T(*this).mul(factor); }
-        Vector4T operator*(const Matrix4x4T<T>& m) const { return Vector4T(*this).mul(m); }
-        T operator*(const Vector4T& rhs) const { return Vector4T(*this).mul(rhs); }
-        bool operator==(const Vector4T& rhs) const { return isEqual(rhs); }
-        bool operator!=(const Vector4T& rhs) const { return !isEqual(rhs); }
+        Vector4T operator+(const Vector4T& rhs) const {
+            return Vector4T(*this).add(rhs);
+        }
+        Vector4T operator-(const Vector4T& rhs) const {
+            return Vector4T(*this).sub(rhs);
+        }
+        Vector4T operator-() const {
+            return Vector4T(*this).inv();
+        }
+        Vector4T operator*(Ty factor) const {
+            return Vector4T(*this).mul(factor);
+        }
+        Vector4T operator*(const Matrix4x4T<Ty>& m) const {
+            return Vector4T(*this).mul(m);
+        }
+        Ty operator*(const Vector4T& rhs) const {
+            return Vector4T(*this).mul(rhs);
+        }
+        bool operator==(const Vector4T& rhs) const {
+            return equal(rhs);
+        }
+        bool operator!=(const Vector4T& rhs) const {
+            return !equal(rhs);
+        }
 
         template<typename C>
         explicit operator Vector4T<C>() const {
             return Vector4T<C>(x, y, z, w);
         }
 
-        template<typename = typename F::type>
-        Vector4T operator/(T factor) const { return Vector4T(*this).div(factor); }
-        template<typename = typename F::type>
-        Vector4T normalize() const { return Vector4T(*this).nor(); }
+        Vector4T operator/(Ty factor) const {
+            return Vector4T(*this).div(factor);
+        }
+
+        Vector4T normalize() const {
+            if constexpr (!std::is_floating_point<Ty>::value) {
+                static_assert(CheckingStub<Ty>::value, "Ty must be a floating type!");
+            }
+            return Vector4T(*this).nor();
+        }
 
         Vector4T& add(const Vector4T& rhs) {
             x += rhs.x; y += rhs.y; z += rhs.z; w += rhs.w;
             return *this;
         }
+
         Vector4T& sub(const Vector4T& rhs) {
             x -= rhs.x; y -= rhs.y; z -= rhs.z; w -= rhs.w;
             return *this;
         }
-        Vector4T& mul(T factor) {
+
+        Vector4T& mul(Ty factor) {
             x *= factor; y *= factor; z *= factor; w *= factor;
             return *this;
         }
+
         Vector4T& inv() {
             x = -x; y = -y; z = -z; w = -w;
             return *this;
         }
-        T mul(const Vector4T& rhs) {
+
+        Ty mul(const Vector4T& rhs) {
             return x * rhs.x + y * rhs.y + z * rhs.z + w * rhs.w;
         }
-        Vector4T& mul(const Matrix4x4T<T>& m) {
+
+        Vector4T& mul(const Matrix4x4T<Ty>& m) {
             auto left = *this;
             x = left.x * m.m11 + left.y * m.m21 + left.z * m.m31 + left.w * m.m41;
             y = left.x * m.m12 + left.y * m.m22 + left.z * m.m32 + left.w * m.m42;
@@ -236,41 +331,48 @@ namespace ukv3d {
             w = left.x * m.m14 + left.y * m.m24 + left.z * m.m34 + left.w * m.m44;
             return *this;
         }
-        T lengthSq() const {
+
+        Ty lengthSq() const {
             return x * x + y * y + z * z + w * w;
         }
-        bool isEqual(const Vector4T& rhs) const {
+
+        bool equal(const Vector4T& rhs) const {
             return x == rhs.x && y == rhs.y && z == rhs.z && w == rhs.w;
         }
 
-        template<typename = typename F::type>
-        Vector4T& div(T factor) {
+        Vector4T& div(Ty factor) {
             x /= factor; y /= factor; z /= factor; w /= factor;
             return *this;
         }
-        template<typename = typename F::type>
+
         Vector4T& nor() {
+            if constexpr (!std::is_floating_point<Ty>::value) {
+                static_assert(CheckingStub<Ty>::value, "Ty must be a floating type!");
+            }
             auto l = length();
             x /= l; y /= l; z /= l; w /= l;
             return *this;
         }
-        template<typename = typename F::type>
-        T length() const {
+
+        Ty length() const {
+            if constexpr (!std::is_floating_point<Ty>::value) {
+                static_assert(CheckingStub<Ty>::value, "Ty must be a floating type!");
+            }
             return sqrt(x*x + y * y + z * z + w * w);
         }
 
-        Vector3T<T> v3() const {
-            return Vector3T<T>(x, y, z);
+        Vector3T<Ty> v3() const {
+            return Vector3T<Ty>(x, y, z);
         }
 
-        void set(T _x, T _y, T _z, T _w) {
+        void set(Ty _x, Ty _y, Ty _z, Ty _w) {
             x = _x;
             y = _y;
             z = _z;
             w = _w;
         }
 
-        T x, y, z, w;
+        Ty x, y, z, w;
     };
 
 

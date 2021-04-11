@@ -6,25 +6,14 @@
 
 #include "example_window.h"
 
-#include <functional>
-
 #include "utils/convert.h"
 
 #include "ukive/views/button.h"
-#include "ukive/views/text_view.h"
-#include "ukive/views/layout/sequence_layout.h"
-#include "ukive/views/layout_info/sequence_layout_info.h"
-#include "ukive/views/layout/restraint_layout.h"
-#include "ukive/views/layout_info/restraint_layout_info.h"
-#include "ukive/views/scroll_view.h"
 #include "ukive/views/image_view.h"
 #include "ukive/elements/color_element.h"
 #include "ukive/graphics/color.h"
 #include "ukive/views/tab/tab_strip_view.h"
 #include "ukive/views/tab/tab_view.h"
-#include "ukive/system/time_utils.h"
-#include "ukive/graphics/matrix_2x3_f.h"
-#include "ukive/views/title_bar/title_bar.h"
 
 #include "shell/resources/necro_resources_id.h"
 #include "shell/examples/pages/example_tree_page.h"

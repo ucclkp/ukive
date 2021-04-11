@@ -32,8 +32,7 @@ namespace ukive {
             reset();
         }
 
-
-        ComPtr& operator =(const ComPtr& rhs) {
+        ComPtr& operator=(const ComPtr& rhs) {
             // 防止自身给自身赋值。
             if (this == &rhs) {
                 return *this;
@@ -51,7 +50,7 @@ namespace ukive {
             return *this;
         }
 
-        ComPtr& operator =(T* real) {
+        ComPtr& operator=(T* real) {
             if (real == ptr_) {
                 return *this;
             }
@@ -64,27 +63,27 @@ namespace ukive {
             return *this;
         }
 
-        T* operator ->() const {
+        T* operator->() const {
             return ptr_;
         }
 
-        T** operator &() {
+        T** operator&() {
             return &ptr_;
         }
 
-        bool operator ==(std::nullptr_t) const {
+        bool operator==(std::nullptr_t) const {
             return ptr_ == nullptr;
         }
 
-        bool operator ==(const ComPtr<T>& rhs) const {
+        bool operator==(const ComPtr<T>& rhs) const {
             return ptr_ == rhs.ptr_;
         }
 
-        bool operator !=(std::nullptr_t) const {
+        bool operator!=(std::nullptr_t) const {
             return ptr_ != nullptr;
         }
 
-        bool operator !=(const ComPtr<T>& rhs) const {
+        bool operator!=(const ComPtr<T>& rhs) const {
             return ptr_ != rhs.ptr_;
         }
 
@@ -101,6 +100,12 @@ namespace ukive {
             Ct* casted = nullptr;
             ptr_->template QueryInterface<Ct>(&casted);
             return ComPtr<Ct>(casted);
+        }
+
+        T* detach() {
+            auto tmp = ptr_;
+            ptr_ = nullptr;
+            return tmp;
         }
 
         void reset() {

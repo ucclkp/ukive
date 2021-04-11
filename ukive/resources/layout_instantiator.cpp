@@ -24,6 +24,7 @@
 #include "ukive/views/check_box.h"
 #include "ukive/views/combo_box.h"
 #include "ukive/views/image_view.h"
+#include "ukive/views/media_view.h"
 #include "ukive/views/progress_bar.h"
 #include "ukive/views/radio_button.h"
 #include "ukive/views/scroll_view.h"
@@ -70,6 +71,7 @@ namespace ukive {
         VIEW_CONSTRUCTOR(SwitchView);
         VIEW_CONSTRUCTOR(TextView);
         VIEW_CONSTRUCTOR(GridView);
+        VIEW_CONSTRUCTOR(MediaView);
 
         VIEW_CONSTRUCTOR(LayoutView);
         VIEW_CONSTRUCTOR(TitleBarLayout);

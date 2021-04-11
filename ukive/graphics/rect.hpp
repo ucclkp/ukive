@@ -118,6 +118,9 @@ namespace ukive {
             }
         }
 
+        void setPos(const PointT<Ty>& pos) {
+            setPos(pos.x, pos.y);
+        }
         void setPos(Ty x, Ty y) {
             auto w = width();
             auto h = height();
@@ -127,9 +130,18 @@ namespace ukive {
             right = x + w;
             bottom = y + h;
         }
+        void setSize(const SizeT<Ty>& size) {
+            setSize(size.width, size.height);
+        }
         void setSize(Ty width, Ty height) {
             right = left + width;
             bottom = top + height;
+        }
+        void set(const PointT<Ty>& pos, const SizeT<Ty>& size) {
+            this->left = pos.x;
+            this->top = pos.y;
+            this->right = left + size.width;
+            this->bottom = top + size.height;
         }
         void set(Ty left, Ty top, Ty width, Ty height) {
             this->left = left;

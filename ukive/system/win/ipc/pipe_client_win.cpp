@@ -6,7 +6,6 @@
 
 #include "pipe_client_win.h"
 
-
 #include "utils/log.h"
 
 

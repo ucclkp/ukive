@@ -100,14 +100,13 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;mfuuid.lib;strmiids.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <FxCompile>
       <ObjectFileOutput>$(SolutionDir)build\x86\$(Configuration)\shaders\%(Filename).cso</ObjectFileOutput>
@@ -123,7 +122,6 @@
       <AdditionalIncludeDirectories>$(ProjectDir)..;$(SolutionDir)utils\</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -134,7 +132,7 @@
       <ShaderModel>4.0</ShaderModel>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;mfuuid.lib;strmiids.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -149,7 +147,6 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -162,7 +159,7 @@
       <ShaderModel>4.0</ShaderModel>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;mfuuid.lib;strmiids.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -176,7 +173,6 @@
       <AdditionalIncludeDirectories>$(ProjectDir)..;$(SolutionDir)utils\</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -189,7 +185,7 @@
       <ShaderModel>4.0</ShaderModel>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;mfuuid.lib;strmiids.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -314,6 +310,15 @@
     <ClInclude Include="graphics\win\vsync_provider.h" />
     <ClInclude Include="graphics\win\window_buffer_win7.h" />
     <ClInclude Include="graphics\win\window_buffer_win.h" />
+    <ClInclude Include="media\media_player.h" />
+    <ClInclude Include="media\win\media_player_win.h" />
+    <ClInclude Include="media\win\mf_async_callback.h" />
+    <ClInclude Include="media\win\mf_common.h" />
+    <ClInclude Include="media\win\mf_d3d9_render_engine.h" />
+    <ClInclude Include="media\win\mf_sample_recycler.h" />
+    <ClInclude Include="media\win\mf_sample_scheduler.h" />
+    <ClInclude Include="media\win\mf_video_presenter.h" />
+    <ClInclude Include="media\win\mf_video_presenter_activate.h" />
     <ClInclude Include="menu\context_menu.h" />
     <ClInclude Include="menu\context_menu_callback.h" />
     <ClInclude Include="menu\inner_window.h" />
@@ -329,15 +334,18 @@
     <ClInclude Include="resources\layout_instantiator.h" />
     <ClInclude Include="resources\resource_manager.h" />
     <ClInclude Include="system\clipboard_manager.h" />
-    <ClInclude Include="system\dialog\open_file_dialog.h" />
-    <ClInclude Include="system\dialog\win\open_file_dialog_win.h" />
-    <ClInclude Include="system\ipc\pipe_client_win.h" />
-    <ClInclude Include="system\ipc\pipe_server_win.h" />
+    <ClInclude Include="system\dialogs\open_file_dialog.h" />
+    <ClInclude Include="system\ipc\pipe_client.h" />
+    <ClInclude Include="system\ipc\pipe_server.h" />
     <ClInclude Include="system\theme_info.h" />
     <ClInclude Include="system\time_utils.h" />
     <ClInclude Include="system\ui_utils.h" />
     <ClInclude Include="system\win\com_ptr.hpp" />
+    <ClInclude Include="system\win\dialogs\open_file_dialog_win.h" />
     <ClInclude Include="system\win\dynamic_windows_api.h" />
+    <ClInclude Include="system\win\critical_section.h" />
+    <ClInclude Include="system\win\ipc\pipe_client_win.h" />
+    <ClInclude Include="system\win\ipc\pipe_server_win.h" />
     <ClInclude Include="system\win\qpc_service.h" />
     <ClInclude Include="system\win\reg_manager.h" />
     <ClInclude Include="system\win\ui_utils_win.h" />
@@ -383,6 +391,7 @@
     <ClInclude Include="views\layout_info\restraint_layout_info.h" />
     <ClInclude Include="views\list\list_item.h" />
     <ClInclude Include="views\list\list_item_event_router.h" />
+    <ClInclude Include="views\media_view.h" />
     <ClInclude Include="views\size_info.h" />
     <ClInclude Include="views\space3d_view.h" />
     <ClInclude Include="views\image_view.h" />
@@ -535,6 +544,14 @@
     <ClCompile Include="graphics\win\vsync_provider.cpp" />
     <ClCompile Include="graphics\win\window_buffer_win7.cpp" />
     <ClCompile Include="graphics\win\window_buffer_win.cpp" />
+    <ClCompile Include="media\media_player.cpp" />
+    <ClCompile Include="media\win\media_player_win.cpp" />
+    <ClCompile Include="media\win\mf_async_callback.cpp" />
+    <ClCompile Include="media\win\mf_d3d9_render_engine.cpp" />
+    <ClCompile Include="media\win\mf_sample_recycler.cpp" />
+    <ClCompile Include="media\win\mf_sample_scheduler.cpp" />
+    <ClCompile Include="media\win\mf_video_presenter.cpp" />
+    <ClCompile Include="media\win\mf_video_presenter_activate.cpp" />
     <ClCompile Include="menu\context_menu.cpp" />
     <ClCompile Include="menu\inner_window.cpp" />
     <ClCompile Include="menu\menu_impl.cpp" />
@@ -545,12 +562,15 @@
     <ClCompile Include="resources\layout_instantiator.cpp" />
     <ClCompile Include="resources\resource_manager.cpp" />
     <ClCompile Include="system\clipboard_manager.cpp" />
-    <ClCompile Include="system\dialog\open_file_dialog.cpp" />
-    <ClCompile Include="system\dialog\win\open_file_dialog_win.cpp" />
-    <ClCompile Include="system\ipc\pipe_client_win.cpp" />
-    <ClCompile Include="system\ipc\pipe_server_win.cpp" />
+    <ClCompile Include="system\dialogs\open_file_dialog.cpp" />
+    <ClCompile Include="system\ipc\pipe_client.cpp" />
+    <ClCompile Include="system\ipc\pipe_server.cpp" />
     <ClCompile Include="system\time_utils.cpp" />
+    <ClCompile Include="system\win\dialogs\open_file_dialog_win.cpp" />
     <ClCompile Include="system\win\dynamic_windows_api.cpp" />
+    <ClCompile Include="system\win\critical_section.cpp" />
+    <ClCompile Include="system\win\ipc\pipe_client_win.cpp" />
+    <ClCompile Include="system\win\ipc\pipe_server_win.cpp" />
     <ClCompile Include="system\win\qpc_service.cpp" />
     <ClCompile Include="system\win\reg_manager.cpp" />
     <ClCompile Include="system\win\ui_utils_win.cpp" />
@@ -588,6 +608,7 @@
     <ClCompile Include="views\layout_info\restraint_layout_info.cpp" />
     <ClCompile Include="views\list\list_item.cpp" />
     <ClCompile Include="views\list\list_item_event_router.cpp" />
+    <ClCompile Include="views\media_view.cpp" />
     <ClCompile Include="views\size_info.cpp" />
     <ClCompile Include="views\space3d_view.cpp" />
     <ClCompile Include="views\image_view.cpp" />

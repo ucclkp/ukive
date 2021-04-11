@@ -16,7 +16,9 @@ namespace ukive {
     }
 
     PipeServerWin::~PipeServerWin() {
-        destroy();
+        if (pipe_ != INVALID_HANDLE_VALUE) {
+            ::CloseHandle(pipe_);
+        }
     }
 
     bool PipeServerWin::create(const std::u16string& name) {

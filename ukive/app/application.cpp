@@ -50,7 +50,7 @@ namespace ukive {
     void Application::initApplication() {
         initPlatform();
 
-        utl::MessagePump::createMain();
+        utl::MessagePump::createForUI();
 
         LayoutInstantiator::init();
 

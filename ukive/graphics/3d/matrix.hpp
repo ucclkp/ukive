@@ -41,32 +41,32 @@ namespace ukv3d {
             return *this;
         }
 
-        Matrix3x3T operator+(const Matrix3x3T& rhs) {
+        Matrix3x3T operator+(const Matrix3x3T& rhs) const {
             Matrix3x3T m(*this);
             m.add(rhs);
             return m;
         }
 
-        Matrix3x3T operator-(const Matrix3x3T& rhs) {
+        Matrix3x3T operator-(const Matrix3x3T& rhs) const {
             Matrix3x3T m(*this);
             m.sub(rhs);
             return m;
         }
 
-        Matrix3x3T operator*(const Matrix3x3T& rhs) {
+        Matrix3x3T operator*(const Matrix3x3T& rhs) const {
             Matrix3x3T m(*this);
             m.mul(rhs);
             return m;
         }
 
-        Point2T<Ty> operator*(const Point2T<Ty>& p) {
+        Point2T<Ty> operator*(const Point2T<Ty>& p) const {
             return {
                 m11 * p.x + m12 * p.y + m13,
                 m21 * p.x + m22 * p.y + m23
             };
         }
 
-        Point3T<Ty> operator*(const Point3T<Ty>& p) {
+        Point3T<Ty> operator*(const Point3T<Ty>& p) const {
             return {
                 m11 * p.x + m12 * p.y + m13 * p.z,
                 m21 * p.x + m22 * p.y + m23 * p.z,
@@ -74,7 +74,7 @@ namespace ukv3d {
             };
         }
 
-        Vector3T<Ty> operator*(const Vector3T<Ty>& v) {
+        Vector3T<Ty> operator*(const Vector3T<Ty>& v) const {
             return {
                 m11 * v.x + m12 * v.y + m13 * v.z,
                 m21 * v.x + m22 * v.y + m23 * v.z,
@@ -82,13 +82,13 @@ namespace ukv3d {
             };
         }
 
-        Matrix3x3T operator*(Ty factor) {
+        Matrix3x3T operator*(Ty factor) const {
             Matrix3x3T m(*this);
             m.mul(factor);
             return m;
         }
 
-        Matrix3x3T operator/(Ty factor) {
+        Matrix3x3T operator/(Ty factor) const {
             Matrix3x3T m(*this);
             m.div(factor);
             return m;
@@ -208,10 +208,34 @@ namespace ukv3d {
         }
 
         /**
-         * 构造旋转矩阵。
+         * 构造以 X 轴为中心的旋转矩阵。
+         * 注意：构造的矩阵为右手列优先矩阵。
+         */
+        static Matrix3x3T rotateX(Ty angle) {
+            return {
+                1, 0,          0,
+                0, cos(angle), -sin(angle),
+                0, sin(angle),  cos(angle),
+            };
+        }
+
+        /**
+         * 构造以 Y 轴为中心的旋转矩阵。
+         * 注意：构造的矩阵为右手列优先矩阵。
+         */
+        static Matrix3x3T rotateY(Ty angle) {
+            return {
+                cos(angle),  0, sin(angle),
+                0,           1, 0,
+                -sin(angle), 0, cos(angle),
+            };
+        }
+
+        /**
+         * 构造以 Z 轴为中心的旋转矩阵。
          * 注意：构造的矩阵为列优先矩阵。
          */
-        static Matrix3x3T rotate(Ty angle) {
+        static Matrix3x3T rotateZ(Ty angle) {
             return {
                 cos(angle), -sin(angle),  0,
                 sin(angle),  cos(angle),  0,
@@ -268,25 +292,25 @@ namespace ukv3d {
             return *this;
         }
 
-        Matrix4x4T operator+(const Matrix4x4T& rhs) {
+        Matrix4x4T operator+(const Matrix4x4T& rhs) const {
             Matrix4x4T m(*this);
             m.add(rhs);
             return m;
         }
 
-        Matrix4x4T operator-(const Matrix4x4T& rhs) {
+        Matrix4x4T operator-(const Matrix4x4T& rhs) const {
             Matrix4x4T m(*this);
             m.sub(rhs);
             return m;
         }
 
-        Matrix4x4T operator*(const Matrix4x4T& rhs) {
+        Matrix4x4T operator*(const Matrix4x4T& rhs) const {
             Matrix4x4T m(*this);
             m.mul(rhs);
             return m;
         }
 
-        Point4T<Ty> operator*(const Point4T<Ty>& p) {
+        Point4T<Ty> operator*(const Point4T<Ty>& p) const {
             return {
                 m11 * p.x + m12 * p.y + m13 * p.z + m14 * p.w,
                 m21 * p.x + m22 * p.y + m23 * p.z + m24 * p.w,
@@ -295,7 +319,7 @@ namespace ukv3d {
             };
         }
 
-        Vector4T<Ty> operator*(const Vector4T<Ty>& v) {
+        Vector4T<Ty> operator*(const Vector4T<Ty>& v) const {
             return {
                 m11 * v.x + m12 * v.y + m13 * v.z + m14 * v.w,
                 m21 * v.x + m22 * v.y + m23 * v.z + m24 * v.w,
@@ -304,13 +328,13 @@ namespace ukv3d {
             };
         }
 
-        Matrix4x4T operator*(Ty factor) {
+        Matrix4x4T operator*(Ty factor) const {
             Matrix4x4T m(*this);
             m.mul(factor);
             return m;
         }
 
-        Matrix4x4T operator/(Ty factor) {
+        Matrix4x4T operator/(Ty factor) const {
             Matrix4x4T m(*this);
             m.div(factor);
             return m;

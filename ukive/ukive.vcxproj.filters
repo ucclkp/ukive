@@ -244,12 +244,6 @@
     <ClCompile Include="page\page.cpp">
       <Filter>page</Filter>
     </ClCompile>
-    <ClCompile Include="system\dialog\win\open_file_dialog_win.cpp">
-      <Filter>system\dialog\win</Filter>
-    </ClCompile>
-    <ClCompile Include="system\dialog\open_file_dialog.cpp">
-      <Filter>system\dialog</Filter>
-    </ClCompile>
     <ClCompile Include="views\title_bar\circle_color_button.cpp">
       <Filter>views\title_bar</Filter>
     </ClCompile>
@@ -327,12 +321,6 @@
     </ClCompile>
     <ClCompile Include="diagnostic\grid_view.cpp">
       <Filter>diagnostic</Filter>
-    </ClCompile>
-    <ClCompile Include="system\ipc\pipe_client_win.cpp">
-      <Filter>system\ipc</Filter>
-    </ClCompile>
-    <ClCompile Include="system\ipc\pipe_server_win.cpp">
-      <Filter>system\ipc</Filter>
     </ClCompile>
     <ClCompile Include="views\radio_button.cpp">
       <Filter>views</Filter>
@@ -576,6 +564,54 @@
     </ClCompile>
     <ClCompile Include="views\list\list_item_event_router.cpp">
       <Filter>views\list</Filter>
+    </ClCompile>
+    <ClCompile Include="system\win\critical_section.cpp">
+      <Filter>system\win</Filter>
+    </ClCompile>
+    <ClCompile Include="views\media_view.cpp">
+      <Filter>views</Filter>
+    </ClCompile>
+    <ClCompile Include="system\dialogs\open_file_dialog.cpp">
+      <Filter>system\dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="system\win\dialogs\open_file_dialog_win.cpp">
+      <Filter>system\win\dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="system\win\ipc\pipe_client_win.cpp">
+      <Filter>system\win\ipc</Filter>
+    </ClCompile>
+    <ClCompile Include="system\win\ipc\pipe_server_win.cpp">
+      <Filter>system\win\ipc</Filter>
+    </ClCompile>
+    <ClCompile Include="system\ipc\pipe_client.cpp">
+      <Filter>system\ipc</Filter>
+    </ClCompile>
+    <ClCompile Include="system\ipc\pipe_server.cpp">
+      <Filter>system\ipc</Filter>
+    </ClCompile>
+    <ClCompile Include="media\win\mf_async_callback.cpp">
+      <Filter>media\win</Filter>
+    </ClCompile>
+    <ClCompile Include="media\win\mf_d3d9_render_engine.cpp">
+      <Filter>media\win</Filter>
+    </ClCompile>
+    <ClCompile Include="media\win\mf_sample_recycler.cpp">
+      <Filter>media\win</Filter>
+    </ClCompile>
+    <ClCompile Include="media\win\mf_sample_scheduler.cpp">
+      <Filter>media\win</Filter>
+    </ClCompile>
+    <ClCompile Include="media\win\mf_video_presenter.cpp">
+      <Filter>media\win</Filter>
+    </ClCompile>
+    <ClCompile Include="media\win\mf_video_presenter_activate.cpp">
+      <Filter>media\win</Filter>
+    </ClCompile>
+    <ClCompile Include="media\win\media_player_win.cpp">
+      <Filter>media\win</Filter>
+    </ClCompile>
+    <ClCompile Include="media\media_player.cpp">
+      <Filter>media</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -861,12 +897,6 @@
     <ClInclude Include="page\page.h">
       <Filter>page</Filter>
     </ClInclude>
-    <ClInclude Include="system\dialog\win\open_file_dialog_win.h">
-      <Filter>system\dialog\win</Filter>
-    </ClInclude>
-    <ClInclude Include="system\dialog\open_file_dialog.h">
-      <Filter>system\dialog</Filter>
-    </ClInclude>
     <ClInclude Include="views\title_bar\circle_color_button.h">
       <Filter>views\title_bar</Filter>
     </ClInclude>
@@ -974,12 +1004,6 @@
     </ClInclude>
     <ClInclude Include="diagnostic\grid_view.h">
       <Filter>diagnostic</Filter>
-    </ClInclude>
-    <ClInclude Include="system\ipc\pipe_client_win.h">
-      <Filter>system\ipc</Filter>
-    </ClInclude>
-    <ClInclude Include="system\ipc\pipe_server_win.h">
-      <Filter>system\ipc</Filter>
     </ClInclude>
     <ClInclude Include="views\check_listener.h">
       <Filter>views</Filter>
@@ -1314,6 +1338,57 @@
     <ClInclude Include="views\list\list_item_event_router.h">
       <Filter>views\list</Filter>
     </ClInclude>
+    <ClInclude Include="system\win\critical_section.h">
+      <Filter>system\win</Filter>
+    </ClInclude>
+    <ClInclude Include="views\media_view.h">
+      <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="system\dialogs\open_file_dialog.h">
+      <Filter>system\dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="system\win\dialogs\open_file_dialog_win.h">
+      <Filter>system\win\dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="system\win\ipc\pipe_client_win.h">
+      <Filter>system\win\ipc</Filter>
+    </ClInclude>
+    <ClInclude Include="system\win\ipc\pipe_server_win.h">
+      <Filter>system\win\ipc</Filter>
+    </ClInclude>
+    <ClInclude Include="system\ipc\pipe_client.h">
+      <Filter>system\ipc</Filter>
+    </ClInclude>
+    <ClInclude Include="system\ipc\pipe_server.h">
+      <Filter>system\ipc</Filter>
+    </ClInclude>
+    <ClInclude Include="media\win\mf_async_callback.h">
+      <Filter>media\win</Filter>
+    </ClInclude>
+    <ClInclude Include="media\win\mf_common.h">
+      <Filter>media\win</Filter>
+    </ClInclude>
+    <ClInclude Include="media\win\mf_d3d9_render_engine.h">
+      <Filter>media\win</Filter>
+    </ClInclude>
+    <ClInclude Include="media\win\mf_sample_recycler.h">
+      <Filter>media\win</Filter>
+    </ClInclude>
+    <ClInclude Include="media\win\mf_sample_scheduler.h">
+      <Filter>media\win</Filter>
+    </ClInclude>
+    <ClInclude Include="media\win\mf_video_presenter.h">
+      <Filter>media\win</Filter>
+    </ClInclude>
+    <ClInclude Include="media\win\mf_video_presenter_activate.h">
+      <Filter>media\win</Filter>
+    </ClInclude>
+    <ClInclude Include="media\win\media_player_win.h">
+      <Filter>media\win</Filter>
+    </ClInclude>
+    <ClInclude Include="media\media_player.h">
+      <Filter>media</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="window">
@@ -1397,12 +1472,6 @@
     <Filter Include="page">
       <UniqueIdentifier>{9d965bda-e6f4-4012-a4aa-4ef1dd100719}</UniqueIdentifier>
     </Filter>
-    <Filter Include="system\dialog">
-      <UniqueIdentifier>{e2ba084e-44dd-4fc4-9174-3e8715ca4621}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="system\dialog\win">
-      <UniqueIdentifier>{70ac8b21-b272-48a3-b3ad-716f4e5472bd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="app">
       <UniqueIdentifier>{8deb09bf-4736-4750-8471-b3d5fc2001d3}</UniqueIdentifier>
     </Filter>
@@ -1444,6 +1513,21 @@
     </Filter>
     <Filter Include="graphics\mac\gpu">
       <UniqueIdentifier>{5339d094-6388-4389-8536-f588a1ea7cfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="media">
+      <UniqueIdentifier>{c73025de-c7bf-4527-80cf-aff869e808e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system\dialogs">
+      <UniqueIdentifier>{e2ba084e-44dd-4fc4-9174-3e8715ca4621}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system\win\dialogs">
+      <UniqueIdentifier>{2751b655-1ccf-46cb-912b-f62a9ad1b6be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system\win\ipc">
+      <UniqueIdentifier>{ea7df40f-192f-4143-a9a2-d868d6baa522}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="media\win">
+      <UniqueIdentifier>{4c9bcb29-cd6e-4b65-bfb4-a0617494b0e4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

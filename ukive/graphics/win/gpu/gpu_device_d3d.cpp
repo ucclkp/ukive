@@ -438,4 +438,8 @@ namespace ukive {
         return d3d_res;
     }
 
+    ID3D11Device* GPUDeviceD3D::getNative() const {
+        return d3d_device_.get();
+    }
+
 }
