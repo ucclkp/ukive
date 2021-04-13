@@ -27,6 +27,7 @@
 namespace ukive {
 
     class Canvas;
+    class GLCanvas;
     class InputEvent;
     class WindowNative;
     class StatisticDrawer;
@@ -224,6 +225,7 @@ namespace ukive {
         Context context_;
         std::unique_ptr<WindowNative> impl_;
 
+        GLCanvas* gl_canvas_;
         utl::Cycler* labour_cycler_;
         RootLayout* root_layout_;
 

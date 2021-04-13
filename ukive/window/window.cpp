@@ -32,12 +32,14 @@
 #include "ukive/system/time_utils.h"
 #include "ukive/views/size_info.h"
 #include "ukive/window/window_listener.h"
+#include "ukive/graphics/gl_canvas.h"
 
 
 namespace ukive {
 
     Window::Window()
         : impl_(WindowNative::create(this)),
+          gl_canvas_(nullptr),
           labour_cycler_(nullptr),
           root_layout_(nullptr),
           canvas_(nullptr),
@@ -671,6 +673,8 @@ namespace ukive {
 
         canvas_ = new Canvas(renderer_);
 
+        gl_canvas_ = new GLCanvas(this, true);
+
         root_layout_->dispatchAttachedToWindow(this);
     }
 
@@ -814,15 +818,23 @@ namespace ukive {
     }
 
     void Window::draw(const DirtyRegion& region) {
-        canvas_->beginDraw();
+        bool gl_test = true;
 
-        drawRootView(canvas_, region.rect0);
-        drawRootView(canvas_, region.rect1);
+        if (!gl_test) {
+            canvas_->beginDraw();
 
-        // 处理设备丢失
-        if (canvas_->endDraw() == GRet::Retry) {
-            renderer_->release();
-            processDeviceLost();
+            drawRootView(canvas_, region.rect0);
+            drawRootView(canvas_, region.rect1);
+
+            // 处理设备丢失
+            if (canvas_->endDraw() == GRet::Retry) {
+                renderer_->release();
+                processDeviceLost();
+            }
+        } else {
+            if (gl_canvas_) {
+                gl_canvas_->render();
+            }
         }
     }
 
@@ -947,6 +959,10 @@ namespace ukive {
             return;
         }
 
+        if (gl_canvas_) {
+            gl_canvas_->resize();
+        }
+
         renderer_->release();
 
         GRet ret = buffer_->onResize(0, 0);
@@ -1010,6 +1026,9 @@ namespace ukive {
         root_layout_->dispatchDetachFromWindow();
         delete root_layout_;
         root_layout_ = nullptr;
+
+        delete gl_canvas_;
+        gl_canvas_ = nullptr;
 
         delete canvas_;
         canvas_ = nullptr;

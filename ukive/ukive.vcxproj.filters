@@ -211,6 +211,9 @@
     <ClCompile Include="graphics\path.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\gl_canvas.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
     <ClCompile Include="graphics\win\path_win.cpp">
       <Filter>graphics\win</Filter>
     </ClCompile>
@@ -1313,6 +1316,9 @@
     </ClInclude>
     <ClInclude Include="views\list\list_item_event_router.h">
       <Filter>views\list</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gl_canvas.h">
+      <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

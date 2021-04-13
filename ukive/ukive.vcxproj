@@ -96,7 +96,7 @@
       </PrecompiledHeader>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)..;$(SolutionDir)utils\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..;$(SolutionDir)utils\;$(SolutionDir)third_party\khronos;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
@@ -120,7 +120,7 @@
       </PrecompiledHeader>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_LIB;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)..;$(SolutionDir)utils\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..;$(SolutionDir)utils\;$(SolutionDir)third_party\khronos;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
       <WarningLevel>Level3</WarningLevel>
@@ -145,7 +145,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)..;$(SolutionDir)utils\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..;$(SolutionDir)utils\;$(SolutionDir)third_party\khronos;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
@@ -173,7 +173,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_LIB;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)..;$(SolutionDir)utils\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..;$(SolutionDir)utils\;$(SolutionDir)third_party\khronos;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
       <WarningLevel>Level3</WarningLevel>
@@ -237,6 +237,7 @@
     <ClInclude Include="graphics\display.h" />
     <ClInclude Include="graphics\effects\cyro_effect.h" />
     <ClInclude Include="graphics\effects\shadow_effect.h" />
+    <ClInclude Include="graphics\gl_canvas.h" />
     <ClInclude Include="graphics\graphics_utils.h" />
     <ClInclude Include="graphics\gpu\gpu_buffer.h" />
     <ClInclude Include="graphics\gpu\gpu_context.h" />
@@ -480,6 +481,7 @@
     <ClCompile Include="graphics\dirty_region.cpp" />
     <ClCompile Include="graphics\display.cpp" />
     <ClCompile Include="graphics\effects\shadow_effect.cpp" />
+    <ClCompile Include="graphics\gl_canvas.cpp" />
     <ClCompile Include="graphics\graphic_device_manager.cpp" />
     <ClCompile Include="graphics\images\image.cpp" />
     <ClCompile Include="graphics\images\image_frame.cpp" />
