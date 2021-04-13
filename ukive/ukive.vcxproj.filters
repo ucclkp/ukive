@@ -187,6 +187,9 @@
     <ClCompile Include="graphics\path.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\gl_canvas.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
     <ClCompile Include="graphics\win\path_win.cpp">
       <Filter>graphics\win</Filter>
     </ClCompile>
@@ -1640,6 +1643,9 @@
     </ClInclude>
     <ClInclude Include="graphics\gpu\gpu_texture_reader.h">
       <Filter>graphics\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gl_canvas.h">
+      <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

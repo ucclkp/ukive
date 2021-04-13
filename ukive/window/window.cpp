@@ -35,12 +35,14 @@
 #include "ukive/views/size_info.h"
 #include "ukive/window/haul_source.h"
 #include "ukive/window/window_listener.h"
+#include "ukive/graphics/gl_canvas.h"
 
 
 namespace ukive {
 
     Window::Window()
         : impl_(WindowNative::create(this)),
+          gl_canvas_(nullptr),
           labour_cycler_(nullptr),
           root_layout_(nullptr),
           canvas_(nullptr),
@@ -736,6 +738,7 @@ namespace ukive {
 
         canvas_ = new Canvas(rt_);
 
+        gl_canvas_ = new GLCanvas(this, true);
         root_layout_->dispatchAttachedToWindow(this);
     }
 
@@ -941,12 +944,20 @@ namespace ukive {
     }
 
     void Window::draw(const DirtyRegion& region) {
-        canvas_->beginDraw();
+        bool gl_test = true;
 
-        drawRootView(canvas_, region.rect0);
-        drawRootView(canvas_, region.rect1);
+        if (!gl_test) {
+            canvas_->beginDraw();
 
-        canvas_->endDraw();
+            drawRootView(canvas_, region.rect0);
+            drawRootView(canvas_, region.rect1);
+
+            canvas_->endDraw();
+        } else {
+            if (gl_canvas_) {
+                gl_canvas_->render();
+            }
+        }
     }
 
     void Window::drawWithDebug(const DirtyRegion& region) {
@@ -1043,6 +1054,10 @@ namespace ukive {
         if (!impl_->isCreated()) {
             return;
         }
+		
+		if (gl_canvas_) {
+            gl_canvas_->resize();
+        }
 
         if (rt_) {
             GRet ret = rt_->onResize(0, 0);
@@ -1102,6 +1117,9 @@ namespace ukive {
         root_layout_->dispatchDetachFromWindow();
         delete root_layout_;
         root_layout_ = nullptr;
+
+        delete gl_canvas_;
+        gl_canvas_ = nullptr;
 
         delete canvas_;
         canvas_ = nullptr;
