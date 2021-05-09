@@ -14,11 +14,8 @@ namespace ukive {
 
     class TimeUtils {
     public:
-        TimeUtils();
-        ~TimeUtils();
-
+        static uint64_t upTimeMillisLow();
         static uint64_t upTimeMillis();
-        static uint64_t upTimeMillisPrecise();
         static uint64_t upTimeMicros();
     };
 

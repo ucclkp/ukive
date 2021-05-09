@@ -6,11 +6,13 @@
 
 #include "ukive/system/win/win10_version.h"
 
+#define WIN10_1511_BUILD  10586
 #define WIN10_1607_BUILD  14393
 #define WIN10_1703_BUILD  15063
 #define WIN10_1709_BUILD  16299
 #define WIN10_1803_BUILD  17134
 #define WIN10_1809_BUILD  17763
+#define WIN10_1903_BUILD  18362
 
 
 namespace ukive {
@@ -47,6 +49,10 @@ namespace win {
         return (result != FALSE);
     }
 
+    bool isWin10Ver1511OrGreater() {
+        return isWin10Ver(WIN10_1511_BUILD, VER_GREATER_EQUAL);
+    }
+
     bool isWin10Ver1607OrGreater() {
         return isWin10Ver(WIN10_1607_BUILD, VER_GREATER_EQUAL);
     }
@@ -65,6 +71,10 @@ namespace win {
 
     bool isWin10Ver1809OrGreater() {
         return isWin10Ver(WIN10_1809_BUILD, VER_GREATER_EQUAL);
+    }
+
+    bool isWin10Ver1903OrGreater() {
+        return isWin10Ver(WIN10_1903_BUILD, VER_GREATER_EQUAL);
     }
 
 }

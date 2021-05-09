@@ -32,7 +32,7 @@ namespace ukive {
             start_y_ = prev_y_ = cur_y_;
             velocity_x_ = 0;
             velocity_y_ = 0;
-            prev_time_ = TimeUtils::upTimeMillisPrecise();
+            prev_time_ = TimeUtils::upTimeMillis();
             history_.clear();
             break;
 
@@ -44,7 +44,7 @@ namespace ukive {
             if (!is_touch_move_) {
                 prev_x_ = cur_x_;
                 prev_y_ = cur_y_;
-                prev_time_ = TimeUtils::upTimeMillisPrecise();
+                prev_time_ = TimeUtils::upTimeMillis();
                 is_touch_move_ = true;
                 total_duration_ = 0;
                 history_.clear();
@@ -69,7 +69,7 @@ namespace ukive {
     }
 
     void VelocityCalculator::onRun() {
-        uint64_t cur_time = TimeUtils::upTimeMillisPrecise();
+        uint64_t cur_time = TimeUtils::upTimeMillis();
         if (cur_time > prev_time_) {
             Record record;
             record.dx = cur_x_ - prev_x_;

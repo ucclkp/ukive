@@ -6,9 +6,10 @@
 
 #include "graphic_device_manager.h"
 
-
-#include "graphic_context_change_listener.h"
+#include "utils/multi_callbacks.hpp"
 #include "utils/platform_utils.h"
+
+#include "ukive/graphics/graphic_context_change_listener.h"
 
 #ifdef OS_WINDOWS
 #include "ukive/graphics/win/directx_manager.h"
@@ -28,30 +29,11 @@ namespace ukive {
     }
 
     void GraphicDeviceManager::addListener(GraphicContextChangeListener* l) {
-        if (!l) {
-            return;
-        }
-
-        for (auto listener : listeners_) {
-            if (listener == l) {
-                return;
-            }
-        }
-
-        listeners_.push_back(l);
+        utl::addCallbackTo(listeners_, l);
     }
 
     void GraphicDeviceManager::removeListener(GraphicContextChangeListener* l) {
-        if (!l) {
-            return;
-        }
-
-        for (auto it = listeners_.begin(); it != listeners_.end(); ++it) {
-            if (*it == l) {
-                listeners_.erase(it);
-                return;
-            }
-        }
+        utl::removeCallbackFrom(listeners_, l);
     }
 
     void GraphicDeviceManager::notifyDeviceLost() {

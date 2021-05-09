@@ -6,6 +6,8 @@
 
 #include "ukive/window/context_impl.h"
 
+#include "utils/multi_callbacks.hpp"
+
 
 namespace ukive {
 
@@ -21,25 +23,11 @@ namespace ukive {
     }
 
     void ContextImpl::addListener(ContextChangedListener* l) {
-        if (l) {
-            ccl.push_back(l);
-        }
+        utl::addCallbackTo(ccl, l);
     }
 
     void ContextImpl::removeListener(ContextChangedListener* l) {
-        if (!l) {
-            return;
-        }
-
-        for (auto it = ccl.begin();
-            it != ccl.end();)
-        {
-            if (*it == l) {
-                it = ccl.erase(it);
-            } else {
-                ++it;
-            }
-        }
+        utl::removeCallbackFrom(ccl, l);
     }
 
     float ContextImpl::dp2px(int dp) const {

@@ -16,6 +16,9 @@ namespace win {
 
     bool isWin10Ver(DWORD build, BYTE condition);
 
+    // Windows 10 10586 or greater
+    bool isWin10Ver1511OrGreater();
+
     // Windows 10 14393 or greater
     bool isWin10Ver1607OrGreater();
 
@@ -30,6 +33,9 @@ namespace win {
 
     // Windows 10 17763 or greater
     bool isWin10Ver1809OrGreater();
+
+    // Windows 10 18362 or greater
+    bool isWin10Ver1903OrGreater();
 
 }
 }

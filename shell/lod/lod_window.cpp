@@ -420,7 +420,7 @@ namespace shell {
     }
 
     void LodWindow::onRender() {
-        auto current_time = ukive::TimeUtils::upTimeMillis();
+        auto current_time = ukive::TimeUtils::upTimeMillisLow();
         if (prev_time_ > 0) {
             ++frame_counter_;
             if (current_time - prev_time_ > 500) {

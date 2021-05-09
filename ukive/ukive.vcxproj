@@ -280,12 +280,12 @@
     <ClInclude Include="graphics\render_node\render_tree.h" />
     <ClInclude Include="graphics\size.hpp" />
     <ClInclude Include="graphics\vector2.hpp" />
+    <ClInclude Include="graphics\vsync_provider.h" />
     <ClInclude Include="graphics\win\cyro_renderer_d2d.h" />
     <ClInclude Include="graphics\win\cyro_render_target_d2d.h" />
     <ClInclude Include="graphics\win\direct3d\assist_configure.h" />
     <ClInclude Include="graphics\win\direct3d\effects\shadow_effect_dx.h" />
     <ClInclude Include="graphics\win\direct3d\model_configure.h" />
-    <ClInclude Include="graphics\win\direct3d\space.h" />
     <ClInclude Include="graphics\win\directx_manager.h" />
     <ClInclude Include="graphics\win\display_win.h" />
     <ClInclude Include="graphics\win\images\image_frame_win.h" />
@@ -307,7 +307,7 @@
     <ClInclude Include="graphics\win\gpu\gpu_texture_d3d.h" />
     <ClInclude Include="graphics\win\offscreen_buffer_win.h" />
     <ClInclude Include="graphics\win\path_win.h" />
-    <ClInclude Include="graphics\win\vsync_provider.h" />
+    <ClInclude Include="graphics\win\vsync_provider_win.h" />
     <ClInclude Include="graphics\win\window_buffer_win7.h" />
     <ClInclude Include="graphics\win\window_buffer_win.h" />
     <ClInclude Include="media\media_player.h" />
@@ -514,12 +514,12 @@
     <ClCompile Include="graphics\path.cpp" />
     <ClCompile Include="graphics\render_node\render_node.cpp" />
     <ClCompile Include="graphics\render_node\render_tree.cpp" />
+    <ClCompile Include="graphics\vsync_provider.cpp" />
     <ClCompile Include="graphics\win\cyro_renderer_d2d.cpp" />
     <ClCompile Include="graphics\win\cyro_render_target_d2d.cpp" />
     <ClCompile Include="graphics\win\direct3d\assist_configure.cpp" />
     <ClCompile Include="graphics\win\direct3d\effects\shadow_effect_dx.cpp" />
     <ClCompile Include="graphics\win\direct3d\model_configure.cpp" />
-    <ClCompile Include="graphics\win\direct3d\space.cpp" />
     <ClCompile Include="graphics\win\directx_manager.cpp" />
     <ClCompile Include="graphics\win\display_win.cpp" />
     <ClCompile Include="graphics\win\images\image_frame_win.cpp" />
@@ -541,7 +541,7 @@
     <ClCompile Include="graphics\win\gpu\gpu_texture_d3d.cpp" />
     <ClCompile Include="graphics\win\offscreen_buffer_win.cpp" />
     <ClCompile Include="graphics\win\path_win.cpp" />
-    <ClCompile Include="graphics\win\vsync_provider.cpp" />
+    <ClCompile Include="graphics\win\vsync_provider_win.cpp" />
     <ClCompile Include="graphics\win\window_buffer_win7.cpp" />
     <ClCompile Include="graphics\win\window_buffer_win.cpp" />
     <ClCompile Include="media\media_player.cpp" />

@@ -4,32 +4,35 @@
 // This program is licensed under GPLv3 license that can be
 // found in the LICENSE file.
 
-#ifndef UKIVE_GRAPHICS_VSYNC_PROVIDER_H_
-#define UKIVE_GRAPHICS_VSYNC_PROVIDER_H_
+#ifndef UKIVE_GRAPHICS_WIN_VSYNC_PROVIDER_WIN_H_
+#define UKIVE_GRAPHICS_WIN_VSYNC_PROVIDER_WIN_H_
 
+#include <atomic>
 #include <condition_variable>
 #include <thread>
 
 #include "utils/message/cycler.h"
 
+#include "ukive/graphics/vsync_provider.h"
+
 
 namespace ukive {
 
-    class VSyncListener {
+    /**
+     * Windows 上的垂直同步信号提供器。
+     * 在 Windows 上 DWM 将垂直同步信号限定为主显示器的垂直同步信号。
+     */
+    class VSyncProviderWin :
+        public VSyncProvider,
+        public utl::CyclerListener
+    {
     public:
-        virtual ~VSyncListener() = default;
+        VSyncProviderWin();
+        ~VSyncProviderWin();
 
-        virtual void onVSync() = 0;
-    };
+        void requestVSync() override;
 
-
-    class VSyncProvider : public utl::CyclerListener {
-    public:
-        VSyncProvider();
-        ~VSyncProvider();
-
-        void requestVSync();
-        void setVSyncListener(VSyncListener* l);
+        void setPrimaryMonitorStatus(bool opened);
 
     protected:
         enum MsgType {
@@ -40,6 +43,7 @@ namespace ukive {
         void onHandleMessage(const utl::Message& msg) override;
 
     private:
+        void run();
         void onWork();
 
         utl::Cycler cycler_;
@@ -48,9 +52,9 @@ namespace ukive {
         std::condition_variable cv_;
         bool cv_pred_ = false;
         bool need_working_ = true;
-        VSyncListener* listener_ = nullptr;
+        std::atomic_bool pm_opened_ = true;
     };
 
 }
 
-#endif  // UKIVE_GRAPHICS_VSYNC_PROVIDER_H_
+#endif  // UKIVE_GRAPHICS_WIN_VSYNC_PROVIDER_WIN_H_

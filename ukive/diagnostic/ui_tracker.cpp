@@ -24,7 +24,7 @@ namespace ukive {
     void UITracker::trackStart(bool is_layout_view, const char* name) {
         std::string ind(indent_, ' ');
 
-        auto start_time = TimeUtils::upTimeMillisPrecise();
+        auto start_time = TimeUtils::upTimeMillis();
         start_times_.push(start_time);
 
         if (is_layout_view) {
@@ -39,7 +39,7 @@ namespace ukive {
     }
 
     void UITracker::trackEnd(bool is_layout_view, const char* name) {
-        auto end_time = TimeUtils::upTimeMillisPrecise();
+        auto end_time = TimeUtils::upTimeMillis();
         DCHECK(!start_times_.empty());
         auto start_time = start_times_.top();
         start_times_.pop();
@@ -64,7 +64,7 @@ namespace ukive {
     void UITracker::trackCur(const char* name) {
         DCHECK(!start_times_.empty());
         auto prev_time = start_times_.top();
-        auto cur_time = TimeUtils::upTimeMillisPrecise();
+        auto cur_time = TimeUtils::upTimeMillis();
 
         std::string ind(indent_, ' ');
         LOG(Log::INFO) << ind << "<Cur (" << name

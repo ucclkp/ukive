@@ -13,7 +13,6 @@
 
 #include <map>
 #include <memory>
-#include <vector>
 
 #include "ukive/graphics/cursor.h"
 #include "ukive/window/window_native.h"
@@ -41,11 +40,14 @@ namespace ukive {
     class NonClientFrame;
     class WindowNativeDelegate;
 
-    class WindowImplWin : public WindowNative {
+    class WindowImplWin :
+        public WindowNative
+    {
     public:
         explicit WindowImplWin(WindowNativeDelegate* d);
         ~WindowImplWin();
 
+        // WindowNative
         bool init(const InitParams& params) override;
         void show() override;
         void hide() override;
@@ -141,6 +143,7 @@ namespace ukive {
             UINT size = 0;
         };
 
+        void postMouseMove();
         void setWindowRectShape(bool enabled);
         void createFrameIfNecessary();
         void updateAppBarAwareRect();
@@ -200,6 +203,7 @@ namespace ukive {
         LRESULT onThemeChanged(WPARAM wParam, LPARAM lParam, bool* handled);
         LRESULT onWindowPosChanging(WPARAM wParam, LPARAM lParam, bool* handled);
         LRESULT onWindowPosChanged(WPARAM wParam, LPARAM lParam, bool* handled);
+        LRESULT onPowerBroadcast(WPARAM wParam, LPARAM lParam, bool* handled);
 
         void onActivate(int param);
         void onMove(int x, int y);
@@ -254,6 +258,7 @@ namespace ukive {
         bool is_show_in_task_bar_ = true;
         bool is_ignore_mouse_events_ = false;
 
+        // touch
         TouchInputCache ti_cache_;
         std::map<DWORD, TOUCHINPUT> prev_ti_;
 
@@ -261,6 +266,13 @@ namespace ukive {
         int prev_touch_y_ = 0;
         bool is_prev_touched_ = false;
         uint64_t prev_touch_time_ = 0;
+
+        // size and move
+        bool is_sizing_ = false;
+        bool is_moving_ = false;
+
+        // Power Manager
+        HPOWERNOTIFY display_power_notify_ = nullptr;
     };
 
 }

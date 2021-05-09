@@ -16,6 +16,7 @@
 
 #include "utils/log.h"
 #include "utils/convert.h"
+#include "utils/message/win/message_pump_ui_win.h"
 #include "utils/number.hpp"
 
 #include "ukive/app/application.h"
@@ -38,6 +39,7 @@
 #include "ukive/graphics/dirty_region.h"
 #include "ukive/graphics/win/display_win.h"
 #include "ukive/graphics/win/directx_manager.h"
+#include "ukive/graphics/win/vsync_provider_win.h"
 #include "ukive/window/window_listener.h"
 #include "ukive/window/window_native_delegate.h"
 
@@ -939,6 +941,41 @@ namespace ukive {
         return val;
     }
 
+    void WindowImplWin::postMouseMove() {
+        POINT pt;
+        WPARAM wParam = 0;
+        LPARAM lParam = 0;
+
+        if (::GetKeyState(VK_LBUTTON) < 0) {
+            wParam |= MK_LBUTTON;
+        }
+        if (::GetKeyState(VK_MBUTTON) < 0) {
+            wParam |= MK_MBUTTON;
+        }
+        if (::GetKeyState(VK_RBUTTON) < 0) {
+            wParam |= MK_RBUTTON;
+        }
+        if (::GetKeyState(VK_XBUTTON1) < 0) {
+            wParam |= MK_XBUTTON1;
+        }
+        if (::GetKeyState(VK_XBUTTON2) < 0) {
+            wParam |= MK_XBUTTON2;
+        }
+        if (::GetKeyState(VK_CONTROL) < 0) {
+            wParam |= MK_CONTROL;
+        }
+        if (::GetKeyState(VK_SHIFT) < 0) {
+            wParam |= MK_SHIFT;
+        }
+
+        if (::GetCursorPos(&pt) != 0) {
+            ::ScreenToClient(hWnd_, &pt);
+            lParam = MAKEWORD(pt.x, pt.y);
+        }
+
+        ::PostMessageW(hWnd_, WM_MOUSEMOVE, wParam, lParam);
+    }
+
     void WindowImplWin::setWindowRectShape(bool enabled) {
         if (enabled) {
             HRGN prev_rgn = ::CreateRectRgn(0, 0, 0, 0);
@@ -1057,13 +1094,18 @@ namespace ukive {
             return false;
         }
 
+        auto pump = static_cast<utl::MessagePumpUIWin*>(
+            utl::MessagePump::getCurrent());
+
         POINT pos;
         ::GetCursorPos(&pos);
+        pump->setInDialogModalLoop(true);
         int cmd = ::TrackPopupMenuEx(
             sys_menu,
             ::GetSystemMetrics(SM_MENUDROPALIGNMENT) |
             TPM_TOPALIGN | TPM_RETURNCMD | TPM_LEFTBUTTON | TPM_RIGHTBUTTON | TPM_HORIZONTAL,
             pos.x, pos.y, hWnd_, nullptr);
+        pump->setInDialogModalLoop(false);
         if (cmd) {
             ::SendMessageW(hWnd_, WM_SYSCOMMAND, cmd, 0);
         }
@@ -1227,7 +1269,7 @@ namespace ukive {
 
                 if (/*(input.dwFlags & TOUCHEVENTF_PRIMARY) &&*/ (input.dwFlags & TOUCHEVENTF_UP)) {
                     is_prev_touched_ = true;
-                    prev_touch_time_ = TimeUtils::upTimeMillis();
+                    prev_touch_time_ = TimeUtils::upTimeMillisLow();
                 }
 
                 ev.setRawX(pt.x);
@@ -1309,6 +1351,18 @@ namespace ukive {
     }
 
     LRESULT WindowImplWin::onNCCreate(WPARAM wParam, LPARAM lParam, bool* handled) {
+        static bool is_win8 = ::IsWindows8OrGreater();
+        if (is_win8) {
+            display_power_notify_ = ::RegisterPowerSettingNotification(
+                hWnd_, &GUID_CONSOLE_DISPLAY_STATE, DEVICE_NOTIFY_WINDOW_HANDLE);
+        } else {
+            display_power_notify_ = ::RegisterPowerSettingNotification(
+                hWnd_, &GUID_MONITOR_POWER_ON, DEVICE_NOTIFY_WINDOW_HANDLE);
+        }
+        if (!display_power_notify_) {
+            LOG(Log::WARNING) << "Failed to register power notification: " << GetLastError();
+        }
+
         createFrameIfNecessary();
         auto nc_result = non_client_frame_->onNcCreate(this, handled);
 
@@ -1720,7 +1774,7 @@ namespace ukive {
             // 以下网址中包含有相关讨论和解决方法：
             // https://social.msdn.microsoft.com/Forums/en-US/1b7217bb-1e60-4e00-83c9-193c7f88c249
             if (is_prev_touched_) {
-                if (TimeUtils::upTimeMillis() - prev_touch_time_ <= 1000) {
+                if (TimeUtils::upTimeMillisLow() - prev_touch_time_ <= 1000) {
                     if (GET_X_LPARAM(lParam) == prev_touch_x_ && GET_Y_LPARAM(lParam) == prev_touch_y_) {
                         is_prev_touched_ = false;
                         return 0;
@@ -1850,6 +1904,11 @@ namespace ukive {
         }
 
         delegate_->onDestroyed();
+
+        if (display_power_notify_) {
+            ::UnregisterPowerSettingNotification(display_power_notify_);
+            display_power_notify_ = nullptr;
+        }
         return 0;
     }
 
@@ -2088,11 +2147,27 @@ namespace ukive {
             break;
 
         case SC_SIZE:
+        {
             if (!isResizable()) {
                 *handled = true;
                 return TRUE;
             }
-            break;
+
+            /**
+             * 调整窗口大小或位置时，DefWindowProc 内部会开一个消息循环陷入其中，我们自己的消息队列的
+             * 消息在此期间将无法得到处理。为了能处理我们自己的消息，我们在 MessagePumpUIWin 里安装
+             * 了消息钩子，在钩子的处理函数中处理我们自己的消息。这就相当于将我们自己的消息处理逻辑
+             * “注入”到内部的消息循环中。
+             */
+            *handled = true;
+            auto pump = static_cast<utl::MessagePumpUIWin*>(
+                utl::MessagePump::getCurrent());
+
+            pump->setInSizeModalLoop(true);
+            auto ret = ::DefWindowProcW(hWnd_, WM_SYSCOMMAND, wParam, lParam);
+            pump->setInSizeModalLoop(false);
+            return ret;
+        }
 
         case SC_RESTORE:
             if ((!isMaximized() && !isMinimized()) || isFullscreen()) {
@@ -2102,11 +2177,27 @@ namespace ukive {
             break;
 
         case SC_MOVE:
+        {
             if (isMinimized() || isFullscreen()) {
                 *handled = true;
                 return TRUE;
             }
-            break;
+
+            // 参见上方 SC_SIZE 里的注释
+            *handled = true;
+            auto pump = static_cast<utl::MessagePumpUIWin*>(
+                utl::MessagePump::getCurrent());
+
+            pump->setInMoveModalLoop(true);
+            /**
+             * 鼠标左键在标题栏上按下时，在 DefWindowProc 中进入嵌套消息循环前会先阻塞一段时间。
+             * 为消除这段时间，给窗口发个 WM_MOUSEMOVE 消息，可以立刻进入嵌套消息循环。
+             */
+            postMouseMove();
+            auto ret = ::DefWindowProcW(hWnd_, WM_SYSCOMMAND, wParam, lParam);
+            pump->setInMoveModalLoop(false);
+            return ret;
+        }
 
         default:
             break;
@@ -2305,6 +2396,52 @@ namespace ukive {
         return 0;
     }
 
+    LRESULT WindowImplWin::onPowerBroadcast(WPARAM wParam, LPARAM lParam, bool* handled) {
+        switch (wParam) {
+        case PBT_APMPOWERSTATUSCHANGE:
+        {
+            SYSTEM_POWER_STATUS status;
+            if (::GetSystemPowerStatus(&status) == 0) {
+                LOG(Log::WARNING) << "Failed to get system power status: " << ::GetLastError();
+                break;
+            }
+            LOG(Log::INFO) << "Power status: [AC-" << status.ACLineStatus
+                << ", Battery-" << status.BatteryFlag
+                << ", Battery Life<" << status.BatteryLifePercent << "%, "
+                << status.SystemStatusFlag << ", " << status.BatteryLifeTime << ", " << status.BatteryFullLifeTime
+                << ">]";
+            break;
+        }
+        case PBT_APMRESUMEAUTOMATIC:
+            LOG(Log::INFO) << "Power event: resume automatic";
+            break;
+        case PBT_APMRESUMESUSPEND:
+            LOG(Log::INFO) << "Power event: resume suspend";
+            break;
+        case PBT_APMSUSPEND:
+            LOG(Log::INFO) << "Power event: suspend";
+            break;
+        case PBT_POWERSETTINGCHANGE:
+        {
+            auto settings = reinterpret_cast<POWERBROADCAST_SETTING*>(lParam);
+            if (settings->PowerSetting == GUID_CONSOLE_DISPLAY_STATE ||
+                settings->PowerSetting == GUID_MONITOR_POWER_ON)
+            {
+                DCHECK(settings->DataLength == 4);
+                auto value = *reinterpret_cast<DWORD*>(settings->Data);
+                LOG(Log::INFO) << "Power settings: Monitor[" << value << "]";
+
+                auto vsync_provider = static_cast<VSyncProviderWin*>(Application::getVSyncProvider());
+                vsync_provider->setPrimaryMonitorStatus(value != 0);
+            }
+            break;
+        }
+        default:
+            break;
+        }
+        return 0;
+    }
+
     LRESULT WindowImplWin::processDWMProc(
         HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, bool* pfCallDWP)
     {
@@ -2405,6 +2542,7 @@ namespace ukive {
         WINDOW_MSG_HANDLER(WM_THEMECHANGED, onThemeChanged);
         WINDOW_MSG_HANDLER(WM_WINDOWPOSCHANGING, onWindowPosChanging);
         WINDOW_MSG_HANDLER(WM_WINDOWPOSCHANGED, onWindowPosChanged);
+        WINDOW_MSG_HANDLER(WM_POWERBROADCAST, onPowerBroadcast);
 
         return 0;
     }
@@ -2427,7 +2565,7 @@ namespace ukive {
             auto cs = reinterpret_cast<CREATESTRUCTW*>(lParam);
             window = static_cast<WindowImplWin*>(cs->lpCreateParams);
             if (!window) {
-                DCHECK(Log::FATAL) << "null window creating param.";
+                LOG(Log::FATAL) << "null window creating param.";
                 return FALSE;
             }
 

@@ -328,6 +328,13 @@ namespace ukive {
                 callback_->onMediaClosed();
             }
             break;
+        case MSG_RENDER_SURFACE:
+            if (callback_) {
+                callback_->onRenderVideoFrame(static_cast<ImageFrame*>(msg.data));
+            } else {
+                delete static_cast<ImageFrame*>(msg.data);
+            }
+            break;
         default:
             break;
         }
@@ -371,10 +378,11 @@ namespace ukive {
         //sample->AddRef();
         //video_sample_ = sample;
 
-        if (callback_) {
-            ImageFrameWin* frame = new ImageFrameWin(video_bitmap_);
-            callback_->onRenderVideoFrame(frame);
-        }
+        ImageFrameWin* frame = new ImageFrameWin(video_bitmap_);
+        utl::Message msg;
+        msg.id = MSG_RENDER_SURFACE;
+        msg.data = frame;
+        cycler_.post(&msg);
     }
 
     HRESULT MediaPlayerWin::onReadFileComplete(IMFAsyncResult* result) {

@@ -16,6 +16,7 @@ namespace ukive {
     class InputMethodManager;
     class GraphicDeviceManager;
     class ResourceManager;
+    class VSyncProvider;
 
     class Application {
     public:
@@ -36,6 +37,7 @@ namespace ukive {
         static InputMethodManager* getInputMethodManager();
         static ResourceManager* getResourceManager();
         static GraphicDeviceManager* getGraphicDeviceManager();
+        static VSyncProvider* getVSyncProvider();
 
         static int getViewID();
         static const Options& getOptions();
@@ -61,6 +63,7 @@ namespace ukive {
         std::unique_ptr<InputMethodManager> imm_;
         std::unique_ptr<ResourceManager> res_mgr_;
         std::unique_ptr<GraphicDeviceManager> gdm_;
+        std::unique_ptr<VSyncProvider> vsp_;
     };
 
 }

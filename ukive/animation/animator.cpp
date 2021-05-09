@@ -14,7 +14,7 @@ namespace ukive {
 
     Animator::Animator(bool timer_driven)
         : id_(0),
-          fps_(60),
+          fps_(120),
           cur_val_(0),
           init_val_(0),
           duration_(250),
@@ -223,7 +223,7 @@ namespace ukive {
 
     // static
     uint64_t Animator::upTimeMillis() {
-        return TimeUtils::upTimeMillisPrecise();
+        return TimeUtils::upTimeMillis();
     }
 
 }

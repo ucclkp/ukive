@@ -154,7 +154,7 @@ namespace shell {
         animator_.setInitValue(0);
         animator_.setInterpolator(new ukive::LinearInterpolator(400));
         animator_.setRepeat(true);
-        //animator_.start();
+        animator_.start();
 
         auto v = ukive::LayoutInstantiator::from(
             parent->getContext(), parent, Res::Layout::example_misc_page_layout_xml);

@@ -10,7 +10,6 @@
 #include "utils/files/file_utils.h"
 
 #include "ukive/app/application.h"
-#include "ukive/graphics/win/direct3d/space.h"
 #include "ukive/graphics/win/offscreen_buffer_win.h"
 #include "ukive/graphics/win/cyro_render_target_d2d.h"
 #include "ukive/graphics/win/images/image_frame_win.h"
@@ -47,8 +46,11 @@ namespace ukive {
     ShadowEffectDX::~ShadowEffectDX() {}
 
     bool ShadowEffectDX::initialize() {
-        D3D11_INPUT_ELEMENT_DESC layout[1];
+        // 顶点着色器
+        auto device = static_cast<DirectXManager*>(
+            Application::getGraphicDeviceManager())->getD3DDevice();
 
+        D3D11_INPUT_ELEMENT_DESC layout[1];
         layout[0].SemanticName = "POSITION";
         layout[0].SemanticIndex = 0;
         layout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -60,27 +62,51 @@ namespace ukive {
         auto res_mgr = Application::getResourceManager();
         auto shader_dir = res_mgr->getResRootPath() / u"shaders";
 
-        if (!Space::createVertexShader(
-            shader_dir / u"shadow_effect_vs.cso",
-            layout, ARRAYSIZE(layout), &vs_, &input_layout_))
-        {
+        std::string vs_bc;
+        res_mgr->getFileData(shader_dir / u"shadow_effect_vs.cso", &vs_bc);
+        HRESULT hr = device->CreateVertexShader(vs_bc.data(), vs_bc.size(), nullptr, &vs_);
+        if (FAILED(hr)) {
+            LOG(Log::WARNING) << "Failed to create vertex shader: " << hr;
             return false;
         }
 
-        if (!Space::createPixelShader(
-            shader_dir / u"shadow_effect_vert_ps.cso", &vert_ps_))
-        {
+        hr = device->CreateInputLayout(
+            layout, ARRAYSIZE(layout),
+            vs_bc.data(), vs_bc.size(), &input_layout_);
+        if (FAILED(hr)) {
+            LOG(Log::WARNING) << "Failed to create input layout: " << hr;
             return false;
         }
 
-        if (!Space::createPixelShader(
-            shader_dir / u"shadow_effect_hori_ps.cso", &hori_ps_))
-        {
+        // 像素着色器
+        std::string ps_bc;
+        res_mgr->getFileData(shader_dir / u"shadow_effect_vert_ps.cso", &ps_bc);
+        hr = device->CreatePixelShader(ps_bc.data(), ps_bc.size(), nullptr, &vert_ps_);
+        if (FAILED(hr)) {
+            LOG(Log::WARNING) << "Failed to create pixel shader: " << hr;
             return false;
         }
 
-        const_buffer_ = Space::createConstantBuffer(sizeof(ConstBuffer));
-        if (!const_buffer_) {
+        ps_bc.clear();
+        res_mgr->getFileData(shader_dir / u"shadow_effect_hori_ps.cso", &ps_bc);
+        hr = device->CreatePixelShader(ps_bc.data(), ps_bc.size(), nullptr, &hori_ps_);
+        if (FAILED(hr)) {
+            LOG(Log::WARNING) << "Failed to create pixel shader: " << hr;
+            return false;
+        }
+
+        // 常量缓存
+        D3D11_BUFFER_DESC cb_desc;
+        cb_desc.Usage = D3D11_USAGE_DYNAMIC;
+        cb_desc.ByteWidth = sizeof(ConstBuffer);
+        cb_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+        cb_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+        cb_desc.MiscFlags = 0;
+        cb_desc.StructureByteStride = 0;
+
+        hr = device->CreateBuffer(&cb_desc, nullptr, &const_buffer_);
+        if (FAILED(hr)) {
+            LOG(Log::WARNING) << "Failed to create const buffer: " << hr;
             return false;
         }
 
@@ -99,10 +125,8 @@ namespace ukive {
         rasterDesc.ScissorEnable = FALSE;
         rasterDesc.SlopeScaledDepthBias = 0.0f;
 
-        auto device = static_cast<DirectXManager*>(Application::getGraphicDeviceManager())->getD3DDevice();
-
         // 创建光栅化状态.
-        HRESULT hr = device->CreateRasterizerState(&rasterDesc, &rasterizer_state_);
+        hr = device->CreateRasterizerState(&rasterDesc, &rasterizer_state_);
         if (FAILED(hr)) {
             LOG(Log::WARNING) << "Failed to create rasterizer state: " << hr;
             return false;
@@ -211,6 +235,7 @@ namespace ukive {
         viewport_.TopLeftX = 0;
         viewport_.TopLeftY = 0;
 
+        // 顶点缓存
         VertexData vertices[] {
             { ukv3d::Point3F(0,            float(height), 0) },
             { ukv3d::Point3F(float(width), float(height), 0) },
@@ -218,15 +243,46 @@ namespace ukive {
             { ukv3d::Point3F(0,            0,             0) },
         };
 
-        vert_buffer_ = Space::createVertexBuffer(vertices, sizeof(VertexData), ARRAYSIZE(vertices));
-        if (!vert_buffer_) {
+        D3D11_BUFFER_DESC vb_desc;
+        vb_desc.Usage = D3D11_USAGE_DYNAMIC;
+        vb_desc.ByteWidth = sizeof(VertexData) * ARRAYSIZE(vertices);
+        vb_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+        vb_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+        vb_desc.MiscFlags = 0;
+        vb_desc.StructureByteStride = 0;
+
+        D3D11_SUBRESOURCE_DATA vertex_data;
+        vertex_data.pSysMem = vertices;
+        vertex_data.SysMemPitch = 0;
+        vertex_data.SysMemSlicePitch = 0;
+
+        HRESULT hr = static_cast<DirectXManager*>(Application::getGraphicDeviceManager())->
+            getD3DDevice()->CreateBuffer(&vb_desc, &vertex_data, &vert_buffer_);
+        if (FAILED(hr)) {
+            LOG(Log::WARNING) << "Failed to create vertex buffer: " << hr;
             return false;
         }
 
+        // 索引缓存
         int indices[] = {0, 1, 2, 0, 2, 3};
 
-        index_buffer_ = Space::createIndexBuffer(indices, ARRAYSIZE(indices));
-        if (!index_buffer_) {
+        D3D11_BUFFER_DESC ib_desc;
+        ib_desc.Usage = D3D11_USAGE_DYNAMIC;
+        ib_desc.ByteWidth = sizeof(int)* ARRAYSIZE(indices);
+        ib_desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+        ib_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+        ib_desc.MiscFlags = 0;
+        ib_desc.StructureByteStride = 0;
+
+        D3D11_SUBRESOURCE_DATA index_data;
+        index_data.pSysMem = indices;
+        index_data.SysMemPitch = 0;
+        index_data.SysMemSlicePitch = 0;
+
+        hr = static_cast<DirectXManager*>(Application::getGraphicDeviceManager())->
+            getD3DDevice()->CreateBuffer(&ib_desc, &index_data, &index_buffer_);
+        if (FAILED(hr)) {
+            LOG(Log::WARNING) << "Failed to create index buffer: " << hr;
             return false;
         }
 
@@ -266,12 +322,13 @@ namespace ukive {
             return;
         }
 
-        Space::setVertexShader(vs_.get());
-        Space::setPixelShader(hori_ps_.get());
-        Space::setInputLayout(input_layout_.get());
-        Space::setPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        auto d3d_dc = static_cast<DirectXManager*>(
+            Application::getGraphicDeviceManager())->getD3DDeviceContext();
 
-        auto d3d_dc = static_cast<DirectXManager*>(Application::getGraphicDeviceManager())->getD3DDeviceContext();
+        d3d_dc->VSSetShader(vs_.get(), nullptr, 0);
+        d3d_dc->PSSetShader(hori_ps_.get(), nullptr, 0);
+        d3d_dc->IASetInputLayout(input_layout_.get());
+        d3d_dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
         d3d_dc->RSSetState(rasterizer_state_.get());
         d3d_dc->RSSetViewports(1, &viewport_);
@@ -283,11 +340,16 @@ namespace ukive {
         }
 
         // VS ConstBuffer
-        auto resource = Space::lockResource(const_buffer_.get());
-        static_cast<ConstBuffer*>(resource.pData)->wvo = wvo_matrix_;
-        Space::unlockResource(const_buffer_.get());
+        {
+            D3D11_MAPPED_SUBRESOURCE mappedResource;
+            HRESULT hr = d3d_dc->Map(const_buffer_.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+            if (SUCCEEDED(hr)) {
+                static_cast<ConstBuffer*>(mappedResource.pData)->wvo = wvo_matrix_;
+                d3d_dc->Unmap(const_buffer_.get(), 0);
+            }
+        }
 
-        Space::setConstantBuffers(0, 1, &const_buffer_);
+        d3d_dc->VSSetConstantBuffers(0, 1, &const_buffer_);
 
         // Render
         FLOAT transparent[4] = { 0, 0, 0, 0 };
@@ -299,7 +361,7 @@ namespace ukive {
         d3d_dc->IASetIndexBuffer(index_buffer_.get(), DXGI_FORMAT_R32_UINT, 0);
         d3d_dc->DrawIndexed(6, 0, 0);
 
-        Space::setPixelShader(vert_ps_.get());
+        d3d_dc->PSSetShader(vert_ps_.get(), nullptr, 0);
         {
             d3d_dc->OMSetRenderTargets(1, &shadow2_rtv_, nullptr);
             ID3D11ShaderResourceView* srvs[] = { shadow1_srv_.get(), bg_srv_.get(), kernel_srv_.get() };

@@ -21,21 +21,15 @@
 
 namespace ukive {
 
-    TimeUtils::TimeUtils() {
-    }
-
-    TimeUtils::~TimeUtils() {
-    }
-
-    uint64_t TimeUtils::upTimeMillis() {
+    uint64_t TimeUtils::upTimeMillisLow() {
 #ifdef OS_WINDOWS
         return ::GetTickCount64();
 #elif defined OS_MAC
-        return upTimeMillisPrecise();
+        return upTimeMillis();
 #endif
     }
 
-    uint64_t TimeUtils::upTimeMillisPrecise() {
+    uint64_t TimeUtils::upTimeMillis() {
 #ifdef OS_WINDOWS
         return QPCService::getTimeStampUs() / 1000;
 #elif defined OS_MAC

@@ -9,8 +9,8 @@
 
 namespace ukive {
 
-    const double kMaxVelocityInCal = 10000;
-    const double kMaxVelocityInScroller = 6000;
+    const double kMaxVelocityInCal = 20000;
+    const double kMaxVelocityInScroller = 10000;
     const float kTouchScrollingThreshold = 8;
     const float kMouseScrollingThreshold = 2;
 

@@ -1241,14 +1241,14 @@ namespace ukive {
         if (is_dbclkable_) {
             if (!wait_for_dbclk_) {
                 wait_for_dbclk_ = true;
-                first_clk_ts = TimeUtils::upTimeMillis();
+                first_clk_ts = TimeUtils::upTimeMillisLow();
             } else {
-                if (TimeUtils::upTimeMillis() - first_clk_ts <= getDoubleClickTime()) {
+                if (TimeUtils::upTimeMillisLow() - first_clk_ts <= getDoubleClickTime()) {
                     wait_for_dbclk_ = false;
                     need_perform_click = false;
                     performDoubleClick();
                 } else {
-                    first_clk_ts = TimeUtils::upTimeMillis();
+                    first_clk_ts = TimeUtils::upTimeMillisLow();
                 }
             }
         }

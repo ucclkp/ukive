@@ -8,6 +8,8 @@
 
 #include <ShlObj.h>
 
+#include "utils/message/win/message_pump_ui_win.h"
+
 #include "ukive/system/win/com_ptr.hpp"
 #include "ukive/window/win/window_impl_win.h"
 #include "ukive/window/window.h"
@@ -48,8 +50,12 @@ namespace ukive {
             pfd->SetFileTypes(UINT(exts_raw.size()), exts_raw.data());
         }
 
+        auto pump = static_cast<utl::MessagePumpUIWin*>(utl::MessagePump::getCurrent());
+
         auto hwnd = static_cast<WindowImplWin*>(parent->getImpl())->getHandle();
+        pump->setInDialogModalLoop(true);
         hr = pfd->Show(hwnd);
+        pump->setInDialogModalLoop(false);
         if (FAILED(hr)) {
             if (hr == ERROR_CANCELLED) {
                 return 0;

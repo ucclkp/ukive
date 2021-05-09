@@ -190,9 +190,6 @@
     <ClCompile Include="graphics\win\direct3d\effects\shadow_effect_dx.cpp">
       <Filter>graphics\win\direct3d\effects</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\win\direct3d\space.cpp">
-      <Filter>graphics\win\direct3d</Filter>
-    </ClCompile>
     <ClCompile Include="text\win\dwrite\text_analysis_sink.cpp">
       <Filter>text\win\dwrite</Filter>
     </ClCompile>
@@ -296,9 +293,6 @@
       <Filter>graphics</Filter>
     </ClCompile>
     <ClCompile Include="graphics\win\display_win.cpp">
-      <Filter>graphics\win</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\win\vsync_provider.cpp">
       <Filter>graphics\win</Filter>
     </ClCompile>
     <ClCompile Include="resources\dimension.cpp">
@@ -613,6 +607,12 @@
     <ClCompile Include="media\media_player.cpp">
       <Filter>media</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\win\vsync_provider_win.cpp">
+      <Filter>graphics\win</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\vsync_provider.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">
@@ -837,9 +837,6 @@
     <ClInclude Include="graphics\win\direct3d\effects\shadow_effect_dx.h">
       <Filter>graphics\win\direct3d\effects</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\win\direct3d\space.h">
-      <Filter>graphics\win\direct3d</Filter>
-    </ClInclude>
     <ClInclude Include="text\win\dwrite\text_analysis_sink.h">
       <Filter>text\win\dwrite</Filter>
     </ClInclude>
@@ -973,9 +970,6 @@
       <Filter>graphics</Filter>
     </ClInclude>
     <ClInclude Include="graphics\win\display_win.h">
-      <Filter>graphics\win</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\win\vsync_provider.h">
       <Filter>graphics\win</Filter>
     </ClInclude>
     <ClInclude Include="resources\attributes.h">
@@ -1388,6 +1382,12 @@
     </ClInclude>
     <ClInclude Include="media\media_player.h">
       <Filter>media</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\vsync_provider_win.h">
+      <Filter>graphics\win</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\vsync_provider.h">
+      <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

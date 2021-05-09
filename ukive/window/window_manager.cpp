@@ -7,6 +7,7 @@
 #include "window_manager.h"
 
 #include "utils/log.h"
+#include "utils/multi_callbacks.hpp"
 
 #include "ukive/window/window.h"
 
@@ -73,21 +74,11 @@ namespace ukive {
     }
 
     void WindowManager::addListener(WindowManageListener* l) {
-        for (auto listener : listeners_) {
-            if (listener == l) {
-                return;
-            }
-        }
-        listeners_.push_back(l);
+        utl::addCallbackTo(listeners_, l);
     }
 
     void WindowManager::removeListener(WindowManageListener* l) {
-        for (auto it = listeners_.begin(); it != listeners_.end(); ++it) {
-            if (*it == l) {
-                listeners_.erase(it);
-                return;
-            }
-        }
+        utl::removeCallbackFrom(listeners_, l);
     }
 
 }

@@ -7,7 +7,6 @@
 #ifndef UKIVE_VIEWS_VIEW_H_
 #define UKIVE_VIEWS_VIEW_H_
 
-#include <map>
 #include <memory>
 #include <string>
 

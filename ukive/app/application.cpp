@@ -14,6 +14,7 @@
 #include "ukive/graphics/display.h"
 #include "ukive/graphics/graphic_device_manager.h"
 #include "ukive/graphics/images/lc_image_factory.h"
+#include "ukive/graphics/vsync_provider.h"
 #include "ukive/text/input_method_manager.h"
 #include "ukive/resources/layout_instantiator.h"
 #include "ukive/resources/resource_manager.h"
@@ -77,9 +78,13 @@ namespace ukive {
         if (!ret) {
             LOG(Log::ERR) << "Failed to initialize ResourceManager";
         }
+
+        vsp_.reset(VSyncProvider::create());
     }
 
     void Application::cleanApplication() {
+        vsp_.reset();
+
         utl::MessagePump::destroy();
 
         res_mgr_->destroy();
@@ -128,6 +133,11 @@ namespace ukive {
     // static
     GraphicDeviceManager* Application::getGraphicDeviceManager() {
         return instance_->gdm_.get();
+    }
+
+    // static
+    VSyncProvider* Application::getVSyncProvider() {
+        return instance_->vsp_.get();
     }
 
     // static

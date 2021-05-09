@@ -130,6 +130,7 @@ namespace ukive {
     }
 
     void MediaView::onRenderVideoFrame(ImageFrame* frame) {
+        // TODO:
         if (video_frame_) {
             delete video_frame_;
         }

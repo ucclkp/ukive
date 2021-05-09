@@ -55,9 +55,11 @@ namespace ukive {
     {
         WindowManager::getInstance()->addWindow(this);
         WindowManager::getInstance()->addListener(this);
+        Application::getVSyncProvider()->addCallback(this);
     }
 
     Window::~Window() {
+        Application::getVSyncProvider()->removeCallback(this);
         WindowManager::getInstance()->removeListener(this);
         WindowManager::getInstance()->removeWindow(this);
     }
@@ -404,19 +406,11 @@ namespace ukive {
     }
 
     void Window::addStatusChangedListener(OnWindowStatusChangedListener* l) {
-        status_changed_listeners_.push_back(l);
+        utl::addCallbackTo(status_changed_listeners_, l);
     }
 
     void Window::removeStatusChangedListener(OnWindowStatusChangedListener* l) {
-        for (auto it = status_changed_listeners_.begin();
-            it != status_changed_listeners_.end();)
-        {
-            if (*it == l) {
-                it = status_changed_listeners_.erase(it);
-            } else {
-                ++it;
-            }
-        }
+        utl::removeCallbackFrom(status_changed_listeners_, l);
     }
 
     const std::vector<OnWindowStatusChangedListener*>& Window::getStatusChangedListeners() const {
@@ -1223,6 +1217,11 @@ namespace ukive {
         if (w == parent_) {
             parent_ = nullptr;
         }
+    }
+
+    void Window::onVSync(
+        uint64_t start_time, uint32_t display_freq, uint32_t real_interval) {
+
     }
 
 }
