@@ -77,13 +77,13 @@ namespace ukive {
         }
     }
 
-    void AnimationDirector::update() {
+    void AnimationDirector::update(uint64_t cur_time, uint32_t display_freq) {
         for (auto& pair : animators_) {
-            pair.second->update();
+            pair.second->update(cur_time, display_freq);
         }
     }
 
-    void AnimationDirector::setDuration(int id, uint64_t duration) {
+    void AnimationDirector::setDuration(int id, Animator::nsp duration) {
         auto it = animators_.find(id);
         if (it != animators_.end()) {
             it->second->setDuration(duration);
@@ -127,12 +127,12 @@ namespace ukive {
         return all_finished;
     }
 
-    uint64_t AnimationDirector::getDuration(int id) const {
+    Animator::ns AnimationDirector::getDuration(int id) const {
         auto it = animators_.find(id);
         if (it != animators_.end()) {
             return it->second->getDuration();
         }
-        return 0;
+        return Animator::ns(0);
     }
 
     double AnimationDirector::getCurValue(int id) const {

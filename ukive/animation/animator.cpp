@@ -7,14 +7,14 @@
 #include "ukive/animation/animator.h"
 
 #include "ukive/animation/interpolator.h"
-#include "ukive/system/time_utils.h"
+
+#define NANO_RATIO   1000000000
 
 
 namespace ukive {
 
-    Animator::Animator(bool timer_driven)
+    Animator::Animator()
         : id_(0),
-          fps_(120),
           cur_val_(0),
           init_val_(0),
           duration_(250),
@@ -24,16 +24,9 @@ namespace ukive {
           is_started_(false),
           is_running_(false),
           is_finished_(false),
-          is_timer_driven_(timer_driven),
           listener_(nullptr),
           interpolator_(std::make_unique<LinearInterpolator>(1))
-    {
-        if (is_timer_driven_) {
-            timer_.setRepeat(true);
-            timer_.setRunner(std::bind(&Animator::AnimationProgress, this));
-            timer_.setDuration(1000 / fps_);
-        }
-    }
+    {}
 
     Animator::~Animator() {}
 
@@ -44,16 +37,14 @@ namespace ukive {
 
         if (!is_started_) {
             is_started_ = true;
+            is_preparing_ = true;
             cur_val_ = init_val_;
             interpolator_->setInitVal(init_val_);
         }
 
         is_finished_ = false;
-        start_time_ = upTimeMillis() - elapsed_duration_;
+        start_time_ = 0;
 
-        if (is_timer_driven_) {
-            timer_.start();
-        }
         is_running_ = true;
 
         if (listener_) {
@@ -63,12 +54,13 @@ namespace ukive {
 
     void Animator::stop() {
         if (is_running_) {
-            if (is_timer_driven_) {
-                timer_.stop();
-            }
             is_running_ = false;
 
-            elapsed_duration_ = upTimeMillis() - start_time_;
+            if (is_preparing_) {
+                is_preparing_ = false;
+            } else {
+                elapsed_duration_ = now() - start_time_;
+            }
 
             if (listener_) {
                 listener_->onAnimationStopped(this);
@@ -78,9 +70,7 @@ namespace ukive {
 
     void Animator::finish() {
         if (is_started_) {
-            if (is_timer_driven_) {
-                timer_.stop();
-            }
+            is_preparing_ = false;
             is_running_ = false;
             is_finished_ = true;
 
@@ -94,9 +84,7 @@ namespace ukive {
 
     void Animator::reset() {
         if (is_started_) {
-            if (is_timer_driven_) {
-                timer_.stop();
-            }
+            is_preparing_ = false;
             is_started_ = false;
             is_running_ = false;
             is_finished_ = false;
@@ -110,14 +98,18 @@ namespace ukive {
         }
     }
 
-    void Animator::update() {
+    void Animator::update(uint64_t cur_time, uint32_t display_freq) {
         if (!is_running_) {
             return;
         }
 
-        auto cur_time = upTimeMillis();
-        bool finished = (cur_time >= start_time_ + duration_);
-        double progress = finished ? 1 : static_cast<double>(cur_time - start_time_) / duration_;
+        if (is_preparing_) {
+            is_preparing_ = false;
+            start_time_ = cur_time - (NANO_RATIO / display_freq);
+        }
+
+        bool finished = cur_time >= start_time_ + duration_;
+        double progress = finished ? 1 : double(cur_time - start_time_) / duration_;
         cur_val_ = interpolator_->interpolate(progress);
 
         if (listener_) {
@@ -136,30 +128,19 @@ namespace ukive {
     void Animator::restart() {
         cur_val_ = init_val_;
         elapsed_duration_ = 0;
-        start_time_ = upTimeMillis();
+        start_time_ = now();
     }
 
     void Animator::setId(int id) {
         id_ = id;
     }
 
-    void Animator::setFps(int fps) {
-        if (fps <= 0) {
-            return;
-        }
-
-        fps_ = fps;
-        if (is_timer_driven_) {
-            timer_.setDuration(1000 / fps_);
-        }
-    }
-
     void Animator::setRepeat(bool repeat) {
         is_repeat_ = repeat;
     }
 
-    void Animator::setDuration(uint64_t duration) {
-        duration_ = duration;
+    void Animator::setDuration(nsp duration) {
+        duration_ = duration.count();
     }
 
     void Animator::setInterpolator(Interpolator* ipr) {
@@ -197,12 +178,8 @@ namespace ukive {
         return id_;
     }
 
-    int Animator::getFps() const {
-        return fps_;
-    }
-
-    uint64_t Animator::getDuration() const {
-        return duration_;
+    Animator::ns Animator::getDuration() const {
+        return ns(duration_);
     }
 
     double Animator::getCurValue() const {
@@ -217,13 +194,9 @@ namespace ukive {
         return interpolator_.get();
     }
 
-    void Animator::AnimationProgress() {
-        update();
-    }
-
     // static
-    uint64_t Animator::upTimeMillis() {
-        return TimeUtils::upTimeMillis();
+    uint64_t Animator::now() {
+        return utl::TimeUtils::upTimeNanos();
     }
 
 }

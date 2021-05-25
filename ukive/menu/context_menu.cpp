@@ -80,11 +80,13 @@ namespace ukive {
         callback_->onDestroyContextMenu(this);
         inner_window_->markDismissing();
 
+        using namespace std::chrono_literals;
+
         // 异步关闭 ContextMenu，以防止在输入事件处理流程中
         // 关闭菜单时出现问题。
         std::weak_ptr<InnerWindow> ptr = inner_window_;
         inner_window_->getDecorView()->animate()->
-            setDuration(100)->alpha(0.f)->setFinishedHandler(
+            setDuration(100ms)->alpha(0.f)->setFinishedHandler(
                 [ptr](AnimationDirector* director)
         {
             auto window = ptr.lock();

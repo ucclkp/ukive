@@ -8,6 +8,7 @@
 #define UKIVE_VIEWS_RADIO_BUTTON_H_
 
 #include "ukive/animation/animator.h"
+#include "ukive/graphics/vsyncable.h"
 #include "ukive/views/text_view.h"
 
 
@@ -15,7 +16,7 @@ namespace ukive {
 
     class OnRadioSelectedListener;
 
-    class RadioButton : public TextView {
+    class RadioButton : public TextView, public VSyncable {
     public:
         static void StartGroup();
         static void EndGroup();
@@ -29,6 +30,10 @@ namespace ukive {
 
         void onDraw(Canvas* canvas) override;
         bool onInputEvent(InputEvent* e) override;
+
+        // VSyncable
+        void onVSync(
+            uint64_t start_time, uint32_t display_freq, uint32_t real_interval) override;
 
     private:
         using super = TextView;

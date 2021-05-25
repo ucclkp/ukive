@@ -11,10 +11,10 @@
 
 #include "utils/log.h"
 
-#include "ukive/app/application.h"
 #include "ukive/event/input_consts.h"
-#include "ukive/system/time_utils.h"
-#include "ukive/window/window.h"
+
+#define NANO_RATIO   1000000000
+#define NANO_RATIO_D 1000000000.0
 
 
 namespace {
@@ -31,7 +31,7 @@ namespace {
 
 namespace ukive {
 
-    Scroller::Scroller(Context c)
+    Scroller::Scroller()
         : touch_curve_(
               kBezierBaseVelocity,
               kBezierBaseTime * 4,
@@ -43,9 +43,8 @@ namespace ukive {
               { 1, kBezierBaseVelocity },
               { 0, 0 })
     {
-        // inertia
-        auto dpi_x = c.getScale() * c.getDefaultDpi();
-        init_dec_ = kInertiaMU * (9.78 * 100 / 2.54 * dpi_x);
+        // a = μg
+        init_dec_ = kInertiaMU * (9.78 * 100 / 2.54);
 
         // bezier
         sf_ = 1;
@@ -55,7 +54,7 @@ namespace ukive {
     Scroller::~Scroller() {
     }
 
-    void Scroller::linear(int start, int distance, uint64_t duration) {
+    void Scroller::linear(int start, int distance, nsp duration) {
         if (distance == 0) {
             return;
         }
@@ -64,10 +63,10 @@ namespace ukive {
         prev_ = cur_ = start_ = start;
         type_ = LINEAR;
 
-        // 当该动画正在运行时，开始时间将设置为上次增量的结束时间
-        // 以防在开始的瞬间出现卡顿，下同。
-        if (is_finished_) {
-            start_time_ = TimeUtils::upTimeMicros();
+        bool finished = is_preparing_ || is_finished_;
+        if (finished) {
+            start_time_ = 0;
+            is_preparing_ = true;
         } else {
             start_time_ = prev_time_;
         }
@@ -75,51 +74,32 @@ namespace ukive {
         is_finished_ = false;
 
         distance_ = distance;
-        duration_ = duration;
+        duration_ = duration.count();
     }
 
-    void Scroller::inertia(
-        int start, float velocity, Continuity continuity)
-    {
+    void Scroller::inertia(float acc_scale, int start, float velocity) {
         if (velocity == 0) {
             return;
         }
 
         delta_ = 0;
         prev_ = cur_ = start_ = start;
-        start_time_ = TimeUtils::upTimeMicros();
         type_ = INERTIA;
-        decelerate_ = init_dec_;
+        decelerate_ = init_dec_ * acc_scale;
         if (velocity >= 0) {
             decelerate_ *= -1;
         }
 
-        bool should_not_continue =
-            is_finished_ ||
+        bool finished =
+            is_preparing_ || is_finished_ ||
             (cur_velocity_ * velocity < 0);
-
-        switch (continuity) {
-        case Continuity::None:
+        if (finished) {
             cur_velocity_ = velocity;
-            prev_time_ = start_time_;
-            break;
-        case Continuity::Time:
-            cur_velocity_ = velocity;
-            if (!should_not_continue) {
-                start_time_ = prev_time_;
-            } else {
-                prev_time_ = start_time_;
-            }
-            break;
-        case Continuity::VelocityAndTime:
-            if (should_not_continue) {
-                cur_velocity_ = velocity;
-                prev_time_ = start_time_;
-            } else {
-                cur_velocity_ += velocity;
-                start_time_ = prev_time_;
-            }
-            break;
+            prev_time_ = start_time_ = 0;
+            is_preparing_ = true;
+        } else {
+            cur_velocity_ += velocity;
+            start_time_ = prev_time_;
         }
 
         cur_velocity_ = std::clamp(
@@ -127,10 +107,7 @@ namespace ukive {
         is_finished_ = false;
     }
 
-    void Scroller::bezier(
-        int start, float velocity,
-        Continuity continuity, bool is_touch)
-    {
+    void Scroller::bezier(int start, float velocity, bool is_touch) {
         if (velocity == 0) {
             return;
         }
@@ -138,32 +115,18 @@ namespace ukive {
         delta_ = 0;
         prev_ = cur_ = start_ = start;
         type_ = BEZIER;
-        start_time_ = TimeUtils::upTimeMicros();
 
-        bool should_not_continue =
-            is_finished_ ||
+        bool finished =
+            is_preparing_ || is_finished_ ||
             (cur_velocity_ * velocity < 0) ||
             (use_touch_curve_ ^ is_touch);
-
-        switch (continuity) {
-        case Continuity::None:
+        if (finished) {
             cur_velocity_ = velocity;
-            prev_time_ = start_time_;
-            break;
-        case Continuity::Time:
-            cur_velocity_ = velocity;
-            if (should_not_continue) {
-                prev_time_ = start_time_;
-            }
-            break;
-        case Continuity::VelocityAndTime:
-            if (should_not_continue) {
-                cur_velocity_ = velocity;
-                prev_time_ = start_time_;
-            } else {
-                cur_velocity_ += velocity;
-            }
-            break;
+            prev_time_ = start_time_ = 0;
+            is_preparing_ = true;
+        } else {
+            cur_velocity_ += velocity;
+            start_time_ = prev_time_;
         }
 
         cur_velocity_ = std::clamp(
@@ -175,12 +138,16 @@ namespace ukive {
         //DLOG(Log::INFO) << "Start bezier! st: " << start_time_ << " pt: " << prev_time_;
     }
 
-    bool Scroller::compute() {
+    bool Scroller::compute(uint64_t cur_time, uint32_t display_freq) {
         if (is_finished_) {
             return false;
         }
 
-        auto cur_time = TimeUtils::upTimeMicros();
+        if (is_preparing_) {
+            is_preparing_ = false;
+            start_time_ = cur_time - (NANO_RATIO / display_freq);
+            prev_time_ = start_time_;
+        }
 
         switch (type_) {
         case LINEAR:
@@ -207,23 +174,20 @@ namespace ukive {
     }
 
     void Scroller::computeLinear(uint64_t cur_time) {
-        auto elapsed = (cur_time - start_time_) / 1000.0;
-        if (elapsed >= duration_) {
+        auto elapsed = (cur_time - start_time_) / NANO_RATIO_D;
+        auto duration = duration_ / NANO_RATIO_D;
+
+        if (elapsed >= duration) {
             cur_ = start_ + distance_;
             is_finished_ = true;
         } else {
-            double percent = std::min(elapsed / double(duration_), 1.0);
+            double percent = std::min(elapsed / duration, 1.0);
             cur_ = start_ + distance_ * percent;
         }
     }
 
     void Scroller::computeInertia(uint64_t cur_time) {
-        /*auto dt = (cur_time - prev_time_) / 1000000.0;
-        if (Application::isVSyncEnabled() && dt < 1.0 / refresh_rate_) {
-            cur_time = prev_time_ + 1000000 / refresh_rate_;
-        }*/
-
-        double elapsed = (cur_time - start_time_) / 1000000.0;
+        double elapsed = (cur_time - start_time_) / NANO_RATIO_D;
 
         auto v1 = cur_velocity_ + decelerate_ * elapsed;
         if (v1 * cur_velocity_ < 0) {
@@ -243,13 +207,8 @@ namespace ukive {
     }
 
     void Scroller::computeBezier(uint64_t cur_time) {
-        auto dt = (cur_time - prev_time_) / 1000000.0;
-
-        /**
-         * 当前的滑动动画开始的时机没有和垂直信号进行同步，因此在触摸滑动的情况下，
-         * 松手的瞬间启动动画的话，动画开始的时机很可能不是一帧的开始时间，就会在短时间出现卡顿。
-         */
-        auto elapsed = (cur_time - start_time_) / 1000000.0;
+        auto dt = (cur_time - prev_time_) / NANO_RATIO_D;
+        auto elapsed = (cur_time - start_time_) / NANO_RATIO_D;
 
         if (cur_velocity_ != 0) {
             double v;
@@ -277,6 +236,7 @@ namespace ukive {
     }
 
     void Scroller::finish() {
+        is_preparing_ = false;
         is_finished_ = true;
         cur_velocity_ = 0;
     }

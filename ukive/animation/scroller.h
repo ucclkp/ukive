@@ -10,21 +10,17 @@
 #include <cstdint>
 
 #include "ukive/animation/bezier_curve.h"
+#include "utils/time_utils.h"
 
 
 namespace ukive {
 
-    class Context;
-
     class Scroller {
     public:
-        enum class Continuity {
-            None,
-            Time,
-            VelocityAndTime,
-        };
+        using ns = utl::TimeUtils::ns;
+        using nsp = utl::TimeUtils::nsp;
 
-        explicit Scroller(Context c);
+        Scroller();
         ~Scroller();
 
         /**
@@ -33,29 +29,26 @@ namespace ukive {
          * @param distance 表示要经历的值段
          * @param duration 表示经历 distance 所花的时间
          */
-        void linear(int start, int distance, uint64_t duration);
+        void linear(int start, int distance, nsp duration);
 
         /**
          * 抛物线动画，将由起始速度根据特定加速度减速到零。
+         * @param acc_scale 加速度缩放，通常设置为 dpi 值
          * @param start 表示起始值
          * @param velocity 表示起始速度
-         * @param continuity 表示延续模式
          */
-        void inertia(
-            int start, float velocity, Continuity continuity);
+        void inertia(float acc_scale, int start, float velocity);
 
         /**
          * 近似三次贝塞尔曲线动画，参见 BezierCurve。
          * @param start 表示起始值
          * @param velocity 表示起始速度
-         * @param continuity 表示延续模式
          * @param is_touch 指示是否是由触摸触发的滚动
          */
-        void bezier(
-            int start, float velocity,
-            Continuity continuity, bool is_touch);
+        void bezier(int start, float velocity, bool is_touch);
 
-        bool compute();
+        bool compute(uint64_t cur_time, uint32_t display_freq);
+
         void finish();
 
         bool isFinished() const;
@@ -76,6 +69,7 @@ namespace ukive {
         double cur_ = 0;
         double prev_ = 0;
         double delta_ = 0;
+        bool is_preparing_ = false;
         bool is_finished_ = true;
 
         int start_ = 0;

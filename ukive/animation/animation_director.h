@@ -42,9 +42,9 @@ namespace ukive {
         void stop();
         void finish();
         void reset();
-        void update();
+        void update(uint64_t cur_time, uint32_t display_freq);
 
-        void setDuration(int id, uint64_t duration);
+        void setDuration(int id, Animator::nsp duration);
         void setInitValue(int id, double init_val);
         void setInterpolator(int id, Interpolator* ipr);
         void setListener(AnimationDirectorListener* l);
@@ -52,7 +52,7 @@ namespace ukive {
         bool isRunning() const;
         bool isFinished() const;
 
-        uint64_t getDuration(int id) const;
+        Animator::ns getDuration(int id) const;
         double getCurValue(int id) const;
         double getInitValue(int id) const;
         Interpolator* getInterpolator(int id) const;

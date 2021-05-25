@@ -16,6 +16,12 @@ namespace ukive {
     public:
         virtual ~VSyncCallback() = default;
 
+        /**
+         * 垂直同步信号回调。
+         * @param start_time    垂直同步信号后一帧的开始时间，单位为纳秒
+         * @param display_freq  主显示器的刷新率，单位为 Hz
+         * @param real_interval 等待本次请求的垂直同步信号所花费的时间，单位为纳秒
+         */
         virtual void onVSync(
             uint64_t start_time, uint32_t display_freq, uint32_t real_interval) = 0;
     };

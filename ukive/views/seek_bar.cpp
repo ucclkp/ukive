@@ -51,7 +51,8 @@ namespace ukive {
             ++thumb_max_diameter_;
         }
 
-        thumb_animator_.setDuration(200);
+        using namespace std::chrono_literals;
+        thumb_animator_.setDuration(200ms);
         thumb_animator_.setInterpolator(new LinearInterpolator(1));
 
         setFocusable(true);
@@ -144,6 +145,7 @@ namespace ukive {
         }
 
         thumb_animator_.start();
+        startVSync();
         requestDraw();
     }
 
@@ -158,6 +160,7 @@ namespace ukive {
         }
 
         thumb_animator_.start();
+        startVSync();
         requestDraw();
     }
 
@@ -201,8 +204,6 @@ namespace ukive {
     void SeekBar::onDraw(Canvas* canvas) {
         super::onDraw(canvas);
 
-        thumb_animator_.update();
-
         float left = thumb_max_diameter_ / 2.f;
         float top = (thumb_max_diameter_ - track_height_) / 2.f;
         int trackWidth = getContentBounds().width() - thumb_max_diameter_;
@@ -240,10 +241,6 @@ namespace ukive {
         }
         canvas->fillCircle(
             PointF(center_x, center_y), thumb_cur_diameter / 2.f, Color::Blue400);
-
-        if (thumb_animator_.isRunning()) {
-            requestDraw();
-        }
     }
 
     bool SeekBar::onInputEvent(InputEvent* e) {
@@ -345,6 +342,19 @@ namespace ukive {
         }
 
         return result;
+    }
+
+    void SeekBar::onVSync(
+        uint64_t start_time, uint32_t display_freq, uint32_t real_interval)
+    {
+        thumb_animator_.update(start_time, display_freq);
+
+        if (thumb_animator_.isRunning()) {
+            requestVSync();
+        } else {
+            stopVSync();
+        }
+        requestDraw();
     }
 
 }

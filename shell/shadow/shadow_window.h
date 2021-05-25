@@ -9,6 +9,7 @@
 
 #include "ukive/window/window.h"
 #include "ukive/animation/animator.h"
+#include "ukive/graphics/vsyncable.h"
 
 
 namespace ukive {
@@ -21,7 +22,10 @@ namespace ukive {
 namespace shell {
 
     class ShadowWindow :
-        public ukive::Window, public ukive::AnimationListener {
+        public ukive::Window,
+        public ukive::AnimationListener,
+        public ukive::VSyncable
+    {
     public:
         ShadowWindow();
         ~ShadowWindow();
@@ -35,6 +39,10 @@ namespace shell {
 
         // ukive::AnimationListener
         void onAnimationProgress(ukive::Animator* animator) override;
+
+        // ukive::VSyncable
+        void onVSync(
+            uint64_t start_time, uint32_t display_freq, uint32_t real_interval) override;
 
     private:
         void createImages();

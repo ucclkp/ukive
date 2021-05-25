@@ -15,8 +15,8 @@
 #include "ukive/window/window.h"
 #include "ukive/animation/interpolator.h"
 
-#define DOWN_UP_SEC      200
-#define HOVER_LEAVE_SEC  200
+#define DOWN_UP_SEC      200ms
+#define HOVER_LEAVE_SEC  200ms
 
 #define HOVER_ALPHA  0.07
 #define DOWN_ALPHA   0.13
@@ -28,7 +28,9 @@ namespace ukive {
         : MultiElement(),
           alpha_(0)
     {
-        ripple_animator_.setDuration(500);
+        using namespace std::chrono_literals;
+
+        ripple_animator_.setDuration(500ms);
         ripple_animator_.setInterpolator(new LinearInterpolator(1));
 
         hover_animator_.setListener(this);
@@ -62,12 +64,6 @@ namespace ukive {
     }
 
     void RippleElement::draw(Canvas *canvas) {
-        hover_animator_.update();
-        leave_animator_.update();
-        down_animator_.update();
-        up_animator_.update();
-        ripple_animator_.update();
-
         auto bound = getBounds();
         Color color(0.f, 0.f, 0.f, float(alpha_));
 
@@ -139,15 +135,6 @@ namespace ukive {
                 MultiElement::draw(canvas);
             }
         }
-
-        if (hover_animator_.isRunning() ||
-            leave_animator_.isRunning() ||
-            down_animator_.isRunning() ||
-            up_animator_.isRunning() ||
-            ripple_animator_.isRunning())
-        {
-            requestDraw();
-        }
     }
 
     bool RippleElement::onStateChanged(int new_state, int prev_state) {
@@ -168,6 +155,7 @@ namespace ukive {
                 leave_animator_.setInitValue(alpha_);
                 leave_animator_.reset();
                 leave_animator_.start();
+                startVSync();
 
                 need_redraw |= true;
             } else if (prev_state == STATE_PRESSED) {
@@ -178,6 +166,7 @@ namespace ukive {
                 up_animator_.setInterpolator(new LinearInterpolator(0));
                 up_animator_.reset();
                 up_animator_.start();
+                startVSync();
 
                 need_redraw |= true;
             }
@@ -189,6 +178,7 @@ namespace ukive {
                 alpha_ = 0;
                 hover_animator_.reset();
                 hover_animator_.start();
+                startVSync();
 
                 need_redraw |= true;
             } else if (prev_state == STATE_PRESSED) {
@@ -202,6 +192,7 @@ namespace ukive {
 
                 ripple_animator_.reset();
                 ripple_animator_.start();
+                startVSync();
 
                 need_redraw |= true;
             }
@@ -214,6 +205,7 @@ namespace ukive {
             down_animator_.setInitValue(alpha_);
             down_animator_.reset();
             down_animator_.start();
+            startVSync();
 
             need_redraw |= true;
             break;
@@ -268,6 +260,28 @@ namespace ukive {
 
     Element::Opacity RippleElement::getOpacity() const {
         return OPA_OPAQUE;
+    }
+
+    void RippleElement::onVSync(
+        uint64_t start_time, uint32_t display_freq, uint32_t real_interval)
+    {
+        hover_animator_.update(start_time, display_freq);
+        leave_animator_.update(start_time, display_freq);
+        down_animator_.update(start_time, display_freq);
+        up_animator_.update(start_time, display_freq);
+        ripple_animator_.update(start_time, display_freq);
+
+        if (hover_animator_.isRunning() ||
+            leave_animator_.isRunning() ||
+            down_animator_.isRunning() ||
+            up_animator_.isRunning() ||
+            ripple_animator_.isRunning())
+        {
+            requestVSync();
+        } else {
+            stopVSync();
+        }
+        requestDraw();
     }
 
     void RippleElement::onAnimationProgress(Animator* animator) {

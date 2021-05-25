@@ -23,7 +23,9 @@ namespace ukive {
     {
         thickness_ = v->getContext().dp2px(2);
 
-        timer_.setDuration(500);
+        using namespace std::chrono_literals;
+
+        timer_.setDuration(500ms);
         timer_.setRepeat(true);
         timer_.setRunner(std::bind(&TextBlink::onRun, this));
     }

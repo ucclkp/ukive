@@ -10,6 +10,7 @@
 #include <string>
 
 #include "ukive/animation/animator.h"
+#include "ukive/graphics/vsyncable.h"
 #include "ukive/views/layout/sequence_layout.h"
 #include "ukive/views/click_listener.h"
 
@@ -22,7 +23,8 @@ namespace ukive {
     class TabStripView :
         public SequenceLayout,
         public OnClickListener,
-        public AnimationListener
+        public AnimationListener,
+        public VSyncable
     {
     public:
         explicit TabStripView(Context c);
@@ -33,6 +35,10 @@ namespace ukive {
 
         // OnClickListener
         void onClick(View* v) override;
+
+        // VSyncable
+        void onVSync(
+            uint64_t start_time, uint32_t display_freq, uint32_t real_interval) override;
 
         void setSelectedItem(size_t index);
         void setSelectionListener(TabStripSelectionListener* l);

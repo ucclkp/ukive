@@ -9,6 +9,7 @@
 
 #include "ukive/animation/animator.h"
 #include "ukive/graphics/size.hpp"
+#include "ukive/graphics/vsyncable.h"
 #include "ukive/views/view.h"
 
 #include "ukive/diagnostic/grid_navigator.h"
@@ -19,7 +20,7 @@ namespace ukive {
     class Path;
     class TextLayout;
 
-    class GridView : public View {
+    class GridView : public View, public VSyncable {
     public:
         explicit GridView(Context c);
         GridView(Context c, AttrsRef attrs);
@@ -48,6 +49,10 @@ namespace ukive {
         void onDraw(Canvas* canvas) override;
         bool onInputEvent(InputEvent* e) override;
         void onVisibilityChanged(int visibility) override;
+
+        // VSyncable
+        void onVSync(
+            uint64_t start_time, uint32_t display_freq, uint32_t real_interval) override;
 
     private:
         using super = View;

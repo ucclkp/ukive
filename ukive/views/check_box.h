@@ -8,6 +8,7 @@
 #define UKIVE_VIEWS_CHECK_BOX_H_
 
 #include "ukive/animation/animator.h"
+#include "ukive/graphics/vsyncable.h"
 #include "ukive/views/text_view.h"
 
 
@@ -15,7 +16,7 @@ namespace ukive {
 
     class OnCheckListener;
 
-    class CheckBox : public TextView {
+    class CheckBox : public TextView, public VSyncable {
     public:
         explicit CheckBox(Context c);
         CheckBox(Context c, AttrsRef attrs);
@@ -25,6 +26,10 @@ namespace ukive {
 
         void onDraw(Canvas* canvas) override;
         bool onInputEvent(InputEvent* e) override;
+
+        // VSyncable
+        void onVSync(
+            uint64_t start_time, uint32_t display_freq, uint32_t real_interval) override;
 
     private:
         using super = TextView;

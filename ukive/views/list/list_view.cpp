@@ -27,8 +27,7 @@ namespace ukive {
         : ListView(c, {}) {}
 
     ListView::ListView(Context c, AttrsRef attrs)
-        : LayoutView(c, attrs),
-          scroller_(c)
+        : LayoutView(c, attrs)
     {
         scroll_bar_ = std::make_unique<OverlayScrollBar>();
         scroll_bar_->registerScrollHandler(std::bind(&ListView::onScrollBarChanged, this, std::placeholders::_1));
@@ -150,15 +149,14 @@ namespace ukive {
 
             result = true;
             if (e->getWheelGranularity() == InputEvent::WG_HIGH_PRECISE) {
+                scroller_.finish();
                 scroller_.bezier(
-                    0, getContext().dp2px(10 * wheel),
-                    Scroller::Continuity::Time, true);
+                    0, getContext().dp2px(10 * wheel), true);
             } else {
                 scroller_.bezier(
-                    0, getContext().dp2px(6 * wheel),
-                    Scroller::Continuity::VelocityAndTime, false);
+                    0, getContext().dp2px(6 * wheel), false);
             }
-            requestDraw();
+            startVSync();
             break;
         }
 
@@ -206,9 +204,8 @@ namespace ukive {
             /*DLOG(Log::INFO) << "EVT_UP | vx=" << velocity_calculator_.getVelocityX()
                 << " vy=" << velocity_calculator_.getVelocityY();*/
 
-            scroller_.bezier(
-                0, vy, Scroller::Continuity::VelocityAndTime, true);
-            requestDraw();
+            scroller_.bezier(0, vy, true);
+            startVSync();
             break;
         }
 
@@ -245,14 +242,19 @@ namespace ukive {
         scroll_bar_->onDraw(canvas);
     }
 
-    void ListView::onPreDraw() {
-        if (scroller_.compute()) {
+    void ListView::onVSync(
+        uint64_t start_time, uint32_t display_freq, uint32_t real_interval)
+    {
+        if (scroller_.compute(start_time, display_freq)) {
             auto dy = scroller_.getDelta();
 
             if (dy != 0 && processVerticalScroll(dy) == 0) {
                 scroller_.finish();
             }
             requestDraw();
+            requestVSync();
+        } else {
+            stopVSync();
         }
     }
 

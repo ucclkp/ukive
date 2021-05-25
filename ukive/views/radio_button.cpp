@@ -40,7 +40,8 @@ namespace ukive {
         group_id_ = g_group_id_;
         g_groups_[g_group_id_].push_back(this);
 
-        anim_.setDuration(200);
+        using namespace std::chrono_literals;
+        anim_.setDuration(200ms);
         anim_.setInterpolator(new LinearInterpolator(1));
 
         Rect space;
@@ -91,6 +92,7 @@ namespace ukive {
         if (selected_) {
             anim_.reset();
             anim_.start();
+            startVSync();
         } else {
             anim_.stop();
         }
@@ -103,8 +105,6 @@ namespace ukive {
 
     void RadioButton::onDraw(Canvas* canvas) {
         super::onDraw(canvas);
-
-        anim_.update();
 
         auto bounds = getContentBounds();
         int length = std::min(getContext().dp2pxi(20), bounds.height());
@@ -120,10 +120,6 @@ namespace ukive {
             auto value = static_cast<float>(anim_.getCurValue());
             auto cur_radius = value * radius * 0.6f;
             canvas->fillCircle(PointF(cx, cy), cur_radius, Color::Blue600);
-        }
-
-        if (anim_.isRunning()) {
-            requestDraw();
         }
     }
 
@@ -145,4 +141,17 @@ namespace ukive {
 
         return super::onInputEvent(e);
     }
+
+    void RadioButton::onVSync(
+        uint64_t start_time, uint32_t display_freq, uint32_t real_interval)
+    {
+        anim_.update(start_time, display_freq);
+        if (anim_.isRunning()) {
+            requestVSync();
+        } else {
+            stopVSync();
+        }
+        requestDraw();
+    }
+
 }

@@ -17,6 +17,8 @@ namespace ukive {
 
     class Timer {
     public:
+        using ns = utl::Cycler::ns;
+        using nsp = utl::Cycler::nsp;
         using Runner = std::function<void()>;
 
         Timer();
@@ -27,17 +29,17 @@ namespace ukive {
 
         void setRepeat(bool repeat);
         void setRunner(const Runner& runner);
-        void setDuration(uint64_t duration);
+        void setDuration(nsp duration);
 
         bool isRepeat() const;
         bool isRunning() const;
-        uint64_t getDuration() const;
+        nsp getDuration() const;
 
     private:
         void onTimer();
         void postToMessageLoop();
 
-        uint64_t duration_;
+        ns duration_;
         bool is_repeat_;
         bool is_running_;
         Runner runner_;

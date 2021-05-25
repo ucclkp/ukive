@@ -212,10 +212,12 @@ namespace ukive {
 
         int height = inner_window_->getHeight();
 
+        using namespace std::chrono_literals;
+
         inner_window_->dismiss();
         inner_window_->setWidth(width);
         inner_window_->show(w, x, y);
-        inner_window_->getDecorView()->animate()->setDuration(150)->
+        inner_window_->getDecorView()->animate()->setDuration(150ms)->
             rectReveal(center_x, center_y, width, width, 0, height)->start();
         list_view_->setEnabled(true);
 
@@ -241,8 +243,9 @@ namespace ukive {
         std::weak_ptr<InnerWindow> ptr = inner_window_;
         auto dec_view = inner_window_->getDecorView();
         if (dec_view) {
+            using namespace std::chrono_literals;
             dec_view->animate()->
-                setDuration(100)->alpha(0.f)->setFinishedHandler(
+                setDuration(100ms)->alpha(0.f)->setFinishedHandler(
                     [ptr](AnimationDirector* director)
             {
                 auto window = ptr.lock();

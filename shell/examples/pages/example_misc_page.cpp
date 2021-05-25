@@ -145,12 +145,12 @@ namespace {
 namespace shell {
 
     ExampleMiscPage::ExampleMiscPage(ukive::Window* w)
-        : Page(w),
-          animator_(true) {}
+        : Page(w) {}
 
     ukive::View* ExampleMiscPage::onCreate(ukive::LayoutView* parent) {
+        using namespace std::chrono_literals;
         animator_.setListener(this);
-        animator_.setDuration(5 * 1000);
+        animator_.setDuration(5000ms);
         animator_.setInitValue(0);
         animator_.setInterpolator(new ukive::LinearInterpolator(400));
         animator_.setRepeat(true);

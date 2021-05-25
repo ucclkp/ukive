@@ -8,6 +8,7 @@
 #define UKIVE_VIEWS_SWITCH_VIEW_H_
 
 #include "ukive/animation/animator.h"
+#include "ukive/graphics/vsyncable.h"
 #include "ukive/views/view.h"
 
 
@@ -15,7 +16,11 @@ namespace ukive {
 
     class OnCheckListener;
 
-    class SwitchView : public View, public AnimationListener {
+    class SwitchView :
+        public View,
+        public AnimationListener,
+        public VSyncable
+    {
     public:
         explicit SwitchView(Context c);
         SwitchView(Context c, AttrsRef attrs);
@@ -31,6 +36,10 @@ namespace ukive {
 
         // AnimationListener
         void onAnimationProgress(Animator* animator) override;
+
+        // VSyncable
+        void onVSync(
+            uint64_t start_time, uint32_t display_freq, uint32_t real_interval) override;
 
     private:
         using super = View;

@@ -9,12 +9,13 @@
 
 #include "ukive/views/view.h"
 #include "ukive/animation/animator.h"
+#include "ukive/graphics/vsyncable.h"
 #include "ukive/views/seek_value_changed_listener.h"
 
 
 namespace ukive {
 
-    class SeekBar : public View {
+    class SeekBar : public View, public VSyncable {
     public:
         explicit SeekBar(Context c);
         SeekBar(Context c, AttrsRef attrs);
@@ -29,6 +30,10 @@ namespace ukive {
         Size onDetermineSize(const SizeInfo& info) override;
         void onDraw(Canvas* canvas) override;
         bool onInputEvent(InputEvent* e) override;
+
+        // VSyncable
+        void onVSync(
+            uint64_t start_time, uint32_t display_freq, uint32_t real_interval) override;
 
     private:
         using super = View;

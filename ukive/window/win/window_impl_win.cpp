@@ -18,6 +18,7 @@
 #include "utils/convert.h"
 #include "utils/message/win/message_pump_ui_win.h"
 #include "utils/number.hpp"
+#include "utils/time_utils.h"
 
 #include "ukive/app/application.h"
 #include "ukive/event/keyboard.h"
@@ -34,7 +35,6 @@
 #include "ukive/system/win/win_app_bar.h"
 #include "ukive/system/win/win10_version.h"
 #include "ukive/system/win/dynamic_windows_api.h"
-#include "ukive/system/time_utils.h"
 #include "ukive/system/win/ui_utils_win.h"
 #include "ukive/graphics/dirty_region.h"
 #include "ukive/graphics/win/display_win.h"
@@ -1269,7 +1269,7 @@ namespace ukive {
 
                 if (/*(input.dwFlags & TOUCHEVENTF_PRIMARY) &&*/ (input.dwFlags & TOUCHEVENTF_UP)) {
                     is_prev_touched_ = true;
-                    prev_touch_time_ = TimeUtils::upTimeMillisLow();
+                    prev_touch_time_ = utl::TimeUtils::upTimeMillis();
                 }
 
                 ev.setRawX(pt.x);
@@ -1774,7 +1774,7 @@ namespace ukive {
             // 以下网址中包含有相关讨论和解决方法：
             // https://social.msdn.microsoft.com/Forums/en-US/1b7217bb-1e60-4e00-83c9-193c7f88c249
             if (is_prev_touched_) {
-                if (TimeUtils::upTimeMillisLow() - prev_touch_time_ <= 1000) {
+                if (utl::TimeUtils::upTimeMillis() - prev_touch_time_ <= 1000) {
                     if (GET_X_LPARAM(lParam) == prev_touch_x_ && GET_Y_LPARAM(lParam) == prev_touch_y_) {
                         is_prev_touched_ = false;
                         return 0;

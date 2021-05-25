@@ -120,8 +120,9 @@ namespace ukive {
         std::weak_ptr<InnerWindow> ptr = inner_window_;
         auto dec_view = inner_window_->getDecorView();
         if (dec_view) {
+            using namespace std::chrono_literals;
             dec_view->animate()->
-                setDuration(100)->alpha(0.f)->setFinishedHandler(
+                setDuration(100ms)->alpha(0.f)->setFinishedHandler(
                     [ptr](AnimationDirector* director)
             {
                 auto window = ptr.lock();

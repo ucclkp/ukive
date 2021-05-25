@@ -91,9 +91,6 @@
     <ClCompile Include="views\layout\root_layout.cpp">
       <Filter>views\layout</Filter>
     </ClCompile>
-    <ClCompile Include="system\time_utils.cpp">
-      <Filter>system</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\paint.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
@@ -173,9 +170,6 @@
       <Filter>text\win</Filter>
     </ClCompile>
     <ClCompile Include="system\win\dynamic_windows_api.cpp">
-      <Filter>system\win</Filter>
-    </ClCompile>
-    <ClCompile Include="system\win\qpc_service.cpp">
       <Filter>system\win</Filter>
     </ClCompile>
     <ClCompile Include="system\win\reg_manager.cpp">
@@ -613,6 +607,9 @@
     <ClCompile Include="graphics\vsync_provider.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\vsyncable.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">
@@ -723,9 +720,6 @@
     <ClInclude Include="views\layout\root_layout.h">
       <Filter>views\layout</Filter>
     </ClInclude>
-    <ClInclude Include="system\time_utils.h">
-      <Filter>system</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\paint.h">
       <Filter>graphics</Filter>
     </ClInclude>
@@ -820,9 +814,6 @@
       <Filter>system\win</Filter>
     </ClInclude>
     <ClInclude Include="system\win\dynamic_windows_api.h">
-      <Filter>system\win</Filter>
-    </ClInclude>
-    <ClInclude Include="system\win\qpc_service.h">
       <Filter>system\win</Filter>
     </ClInclude>
     <ClInclude Include="system\win\reg_manager.h">
@@ -1387,6 +1378,9 @@
       <Filter>graphics\win</Filter>
     </ClInclude>
     <ClInclude Include="graphics\vsync_provider.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\vsyncable.h">
       <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>

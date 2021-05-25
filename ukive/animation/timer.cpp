@@ -42,7 +42,7 @@ namespace ukive {
         runner_ = runner;
     }
 
-    void Timer::setDuration(uint64_t duration) {
+    void Timer::setDuration(nsp duration) {
         duration_ = duration;
     }
 
@@ -54,7 +54,7 @@ namespace ukive {
         return is_running_;
     }
 
-    uint64_t Timer::getDuration() const {
+    Timer::nsp Timer::getDuration() const {
         return duration_;
     }
 

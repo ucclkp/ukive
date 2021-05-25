@@ -9,6 +9,8 @@
 
 #include <memory>
 
+#include "utils/time_utils.h"
+
 #include "ukive/animation/timer.h"
 
 
@@ -30,19 +32,22 @@ namespace ukive {
 
     class Animator {
     public:
-        explicit Animator(bool timer_driven = false);
+        using ns = utl::TimeUtils::ns;
+        using nsp = utl::TimeUtils::nsp;
+
+        Animator();
         ~Animator();
 
         void start();
         void stop();
         void finish();
         void reset();
-        void update();
+        void update(uint64_t cur_time, uint32_t display_freq);
 
         void setId(int id);
-        void setFps(int fps);
+
         void setRepeat(bool repeat);
-        void setDuration(uint64_t duration);
+        void setDuration(nsp duration);
         void setInterpolator(Interpolator* ipr);
         void setListener(AnimationListener* listener);
         void setInitValue(double init_val);
@@ -53,20 +58,17 @@ namespace ukive {
         bool isFinished() const;
 
         int getId() const;
-        int getFps() const;
-        uint64_t getDuration() const;
+        ns getDuration() const;
         double getCurValue() const;
         double getInitValue() const;
         Interpolator* getInterpolator() const;
 
     private:
-        static uint64_t upTimeMillis();
+        static uint64_t now();
 
         void restart();
-        void AnimationProgress();
 
         int id_;
-        int fps_;
         double cur_val_;
         double init_val_;
         uint64_t duration_;
@@ -74,12 +76,11 @@ namespace ukive {
         uint64_t start_time_;
 
         bool is_repeat_;
+        bool is_preparing_ = false;
         bool is_started_;
         bool is_running_;
         bool is_finished_;
-        bool is_timer_driven_;
 
-        Timer timer_;
         AnimationListener* listener_;
         std::unique_ptr<Interpolator> interpolator_;
     };

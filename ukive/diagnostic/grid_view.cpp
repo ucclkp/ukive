@@ -84,6 +84,7 @@ namespace ukive {
             pixels_.push_back(info);
         }
 
+        startVSync();
         animator_.start();
         showNewNav();
         requestDraw();
@@ -201,8 +202,6 @@ namespace ukive {
         canvas->fillCircle(
             pf, float(getContext().dp2pxi(4)), Color(0, 0, 0, 1));
 
-        animator_.update();
-
         size_t index = 0;
         for (const auto& info : pixels_) {
             drawGridPixel(
@@ -222,10 +221,6 @@ namespace ukive {
 
         if (has_text_ && scale_level_ >= 0) {
             drawGridText(canvas, text_col_, text_row_);
-        }
-
-        if (!animator_.isFinished()) {
-            requestDraw();
         }
     }
 
@@ -349,6 +344,19 @@ namespace ukive {
             new_nav_.closeNav();
             org_nav_.closeNav();
         }
+    }
+
+    void GridView::onVSync(
+        uint64_t start_time, uint32_t display_freq, uint32_t real_interval)
+    {
+        animator_.update(start_time, display_freq);
+
+        if (!animator_.isFinished()) {
+            requestVSync();
+        } else {
+            stopVSync();
+        }
+        requestDraw();
     }
 
     void GridView::drawGridLines(Canvas* canvas) {

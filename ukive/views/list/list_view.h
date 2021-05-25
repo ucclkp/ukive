@@ -11,6 +11,7 @@
 
 #include "ukive/animation/scroller.h"
 #include "ukive/event/velocity_calculator.h"
+#include "ukive/graphics/vsyncable.h"
 #include "ukive/views/layout/layout_view.h"
 #include "ukive/views/list/list_source.h"
 
@@ -33,7 +34,8 @@ namespace ukive {
 
     class ListView :
         public LayoutView,
-        public ListItemChangedNotifier
+        public ListItemChangedNotifier,
+        public VSyncable
     {
     public:
         explicit ListView(Context c);
@@ -66,7 +68,10 @@ namespace ukive {
         bool onInputEvent(InputEvent* e) override;
         void onDraw(Canvas* canvas) override;
         void onDrawOverChildren(Canvas* canvas) override;
-        void onPreDraw() override;
+
+        // VSyncCallback
+        void onVSync(
+            uint64_t start_time, uint32_t display_freq, uint32_t real_interval) override;
 
     private:
         struct SizeCache {

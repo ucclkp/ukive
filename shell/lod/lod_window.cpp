@@ -10,6 +10,7 @@
 
 #include "utils/convert.h"
 #include "utils/string_utils.h"
+#include "utils/time_utils.h"
 
 #include "ukive/app/application.h"
 #include "ukive/graphics/color.h"
@@ -23,7 +24,6 @@
 #include "ukive/elements/color_element.h"
 #include "ukive/elements/texteditor_element.h"
 #include "ukive/views/space3d_view.h"
-#include "ukive/system/time_utils.h"
 
 #include "shell/lod/terrain_scene.h"
 #include "shell/lod/lod_generator.h"
@@ -420,7 +420,7 @@ namespace shell {
     }
 
     void LodWindow::onRender() {
-        auto current_time = ukive::TimeUtils::upTimeMillisLow();
+        auto current_time = utl::TimeUtils::upTimeMillis();
         if (prev_time_ > 0) {
             ++frame_counter_;
             if (current_time - prev_time_ > 500) {

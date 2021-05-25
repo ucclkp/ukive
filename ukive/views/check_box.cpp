@@ -24,7 +24,9 @@ namespace ukive {
         : super(c, attrs),
           checked_(false)
     {
-        anim_.setDuration(200);
+        using namespace std::chrono_literals;
+
+        anim_.setDuration(200ms);
         anim_.setInterpolator(new LinearInterpolator(1));
 
         Rect space;
@@ -48,6 +50,7 @@ namespace ukive {
         if (checked_) {
             anim_.reset();
             anim_.start();
+            startVSync();
         } else {
             anim_.stop();
         }
@@ -60,8 +63,6 @@ namespace ukive {
 
     void CheckBox::onDraw(Canvas* canvas) {
         super::onDraw(canvas);
-
-        anim_.update();
 
         auto bounds = getContentBounds();
         int length = std::min(getContext().dp2pxi(20), bounds.height());
@@ -103,10 +104,6 @@ namespace ukive {
                 line2s, line2s + vec2 * (std::max(value - 0.5f, 0.f) * 2),
                 std::floor(getContext().dp2px(2.5f)), Color::Blue800);
         }
-
-        if (anim_.isRunning()) {
-            requestDraw();
-        }
     }
 
     bool CheckBox::onInputEvent(InputEvent* e) {
@@ -127,4 +124,17 @@ namespace ukive {
 
         return super::onInputEvent(e);
     }
+
+    void CheckBox::onVSync(
+        uint64_t start_time, uint32_t display_freq, uint32_t real_interval)
+    {
+        anim_.update(start_time, display_freq);
+        if (anim_.isRunning()) {
+            requestVSync();
+        } else {
+            stopVSync();
+        }
+        requestDraw();
+    }
+
 }

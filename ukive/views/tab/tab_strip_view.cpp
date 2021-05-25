@@ -26,8 +26,9 @@ namespace ukive {
     {
         setOrientation(HORIZONTAL);
 
+        using namespace std::chrono_literals;
         animator_.setListener(this);
-        animator_.setDuration(150);
+        animator_.setDuration(150ms);
         animator_.setInitValue(0);
         animator_.setInterpolator(new LinearInterpolator(1));
         animator_.setRepeat(false);
@@ -44,6 +45,7 @@ namespace ukive {
                 prev_rect_ = sel_view_->getBounds();
                 animator_.reset();
                 animator_.start();
+                startVSync();
             }
 
             sel_view_ = view;
@@ -56,8 +58,6 @@ namespace ukive {
     }
 
     void TabStripView::onDrawOverChildren(Canvas* canvas) {
-        animator_.update();
-
         SequenceLayout::onDrawOverChildren(canvas);
 
         if (sel_view_) {
@@ -74,10 +74,6 @@ namespace ukive {
                 canvas->fillRect(RectF(rect), Color::Blue400);
             }
         }
-
-        if (animator_.isRunning()) {
-            requestDraw();
-        }
     }
 
     void TabStripView::onClick(View* v) {
@@ -89,6 +85,7 @@ namespace ukive {
             prev_rect_ = sel_view_->getBounds();
             animator_.reset();
             animator_.start();
+            startVSync();
         }
         sel_view_ = static_cast<TextView*>(v);
 
@@ -101,6 +98,18 @@ namespace ukive {
             }
         }
 
+        requestDraw();
+    }
+
+    void TabStripView::onVSync(
+        uint64_t start_time, uint32_t display_freq, uint32_t real_interval)
+    {
+        animator_.update(start_time, display_freq);
+        if (animator_.isRunning()) {
+            requestVSync();
+        } else {
+            stopVSync();
+        }
         requestDraw();
     }
 

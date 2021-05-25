@@ -10,13 +10,15 @@
 #include "ukive/animation/animator.h"
 #include "ukive/elements/multi_element.h"
 #include "ukive/graphics/color.h"
+#include "ukive/graphics/vsyncable.h"
 
 
 namespace ukive {
 
     class RippleElement :
         public MultiElement,
-        public AnimationListener
+        public AnimationListener,
+        public VSyncable
     {
     public:
         RippleElement();
@@ -28,6 +30,10 @@ namespace ukive {
         void draw(Canvas* canvas) override;
 
         Opacity getOpacity() const override;
+
+        // VSyncable
+        void onVSync(
+            uint64_t start_time, uint32_t display_freq, uint32_t real_interval) override;
 
         // AnimationListener
         void onAnimationProgress(Animator* animator) override;

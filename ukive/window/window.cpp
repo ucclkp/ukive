@@ -9,6 +9,7 @@
 #include "utils/convert.h"
 #include "utils/log.h"
 #include "utils/message/message_pump.h"
+#include "utils/time_utils.h"
 
 #include "ukive/app/application.h"
 #include "ukive/window/window_native.h"
@@ -29,7 +30,6 @@
 #include "ukive/graphics/cyro_buffer.h"
 #include "ukive/graphics/cyro_renderer.h"
 #include "ukive/diagnostic/statistic_drawer.h"
-#include "ukive/system/time_utils.h"
 #include "ukive/views/size_info.h"
 #include "ukive/window/window_listener.h"
 
@@ -775,7 +775,7 @@ namespace ukive {
         uint64_t micro = 0;
         bool enable_ui_debug = (debug_drawer_ && debug_drawer_->getMode() == StatisticDrawer::Mode::LAYOUT);
         if (enable_ui_debug) {
-            micro = TimeUtils::upTimeMicros();
+            micro = utl::TimeUtils::upTimeMicros();
         }
 
         SizeInfo size_info;
@@ -788,7 +788,7 @@ namespace ukive {
         root_layout_->layout(Rect(left, top, determined_size.width, determined_size.height));
 
         if (enable_ui_debug) {
-            auto duration = TimeUtils::upTimeMicros() - micro;
+            auto duration = utl::TimeUtils::upTimeMicros() - micro;
             debug_drawer_->addDuration(duration);
         }
     }
@@ -832,7 +832,7 @@ namespace ukive {
         uint64_t micro = 0;
         bool enable_ui_debug = debug_drawer_->getMode() == StatisticDrawer::Mode::RENDER;
         if (enable_ui_debug) {
-            micro = TimeUtils::upTimeMicros();
+            micro = utl::TimeUtils::upTimeMicros();
         }
 
         // 先在离屏画布上画
@@ -851,7 +851,7 @@ namespace ukive {
         canvas_->drawImage(img.get());
 
         if (enable_ui_debug) {
-            auto duration = TimeUtils::upTimeMicros() - micro;
+            auto duration = utl::TimeUtils::upTimeMicros() - micro;
             debug_drawer_->addDuration(duration);
         }
 

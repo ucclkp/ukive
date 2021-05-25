@@ -8,10 +8,10 @@
 
 #include "utils/log.h"
 #include "utils/message/message.h"
+#include "utils/time_utils.h"
 
 #include "ukive/graphics/display.h"
 #include "ukive/graphics/win/display_win.h"
-#include "ukive/system/time_utils.h"
 
 
 namespace ukive {
@@ -75,12 +75,15 @@ namespace ukive {
 
             auto primary = static_cast<DisplayWin*>(Display::primary());
 
-            auto before_ts = TimeUtils::upTimeMicros();
+            auto before_ts = utl::TimeUtils::upTimeNanos();
             bool ret = primary->waitForVSync();
-            auto after_ts = TimeUtils::upTimeMicros();
+            auto after_ts = utl::TimeUtils::upTimeNanos();
 
             auto real_interval = after_ts - before_ts;
             auto refresh_rate = primary->getRefreshRate();
+            if (refresh_rate == 0) {
+                refresh_rate = 1;
+            }
 
             /**
              * 即使显示器关闭，waitForVSync 仍会返回成功，因此需要外部告知显示器状态。
@@ -89,8 +92,8 @@ namespace ukive {
              * TODO：需要测试 E-Ink 屏幕的行为。刷新率可能是 0 ？
              */
             if (!ret || !pm_opened_.load(std::memory_order_relaxed)) {
-                std::this_thread::sleep_for(std::chrono::microseconds(1000000 / refresh_rate));
-                after_ts = TimeUtils::upTimeMicros();
+                std::this_thread::sleep_for(std::chrono::nanoseconds(1000000000 / refresh_rate));
+                after_ts = utl::TimeUtils::upTimeNanos();
                 real_interval = after_ts - before_ts;
                 //DLOG(Log::INFO) << "VSync fallback. interval: " << real_interval << "us";
             } else {

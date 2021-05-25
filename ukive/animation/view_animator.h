@@ -8,13 +8,14 @@
 #define UKIVE_ANIMATION_VIEW_ANIMATOR_H_
 
 #include "ukive/animation/animation_director.h"
+#include "ukive/graphics/vsyncable.h"
 
 
 namespace ukive {
 
     class View;
 
-    class ViewAnimator : public AnimationDirectorListener {
+    class ViewAnimator : public AnimationDirectorListener, public VSyncable {
     public:
         enum RevealShape {
             REVEAL_RECT = 0,
@@ -28,7 +29,7 @@ namespace ukive {
 
         void start();
         void cancel();
-        ViewAnimator* setDuration(uint64_t duration);
+        ViewAnimator* setDuration(Animator::nsp duration);
 
         ViewAnimator* alpha(double value);
         ViewAnimator* scaleX(double value);
@@ -49,12 +50,21 @@ namespace ukive {
         void onPreViewDraw();
         void onPostViewDraw();
 
+        // VSyncable
+        void onVSync(
+            uint64_t start_time, uint32_t display_freq, uint32_t real_interval) override;
+
         // AnimationDirectorListener
-        void onDirectorStarted(AnimationDirector* director, const Animator* animator) override;
-        void onDirectorProgress(AnimationDirector* director, const Animator* animator) override;
-        void onDirectorStopped(AnimationDirector* director, const Animator* animator) override;
-        void onDirectorFinished(AnimationDirector* director, const Animator* animator) override;
-        void onDirectorReset(AnimationDirector* director, const Animator* animator) override;
+        void onDirectorStarted(
+            AnimationDirector* director, const Animator* animator) override;
+        void onDirectorProgress(
+            AnimationDirector* director, const Animator* animator) override;
+        void onDirectorStopped(
+            AnimationDirector* director, const Animator* animator) override;
+        void onDirectorFinished(
+            AnimationDirector* director, const Animator* animator) override;
+        void onDirectorReset(
+            AnimationDirector* director, const Animator* animator) override;
 
     private:
         enum ViewAnimId {
@@ -69,7 +79,7 @@ namespace ukive {
             VIEW_ANIM_CIRCLE_REVEAL_R,
         };
 
-        uint64_t duration_;
+        Animator::ns duration_;
         View* owner_view_;
         AnimationDirector director_;
 

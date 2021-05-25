@@ -31,7 +31,8 @@ namespace ukive {
     SwitchView::SwitchView(Context c, AttrsRef attrs)
         : super(c, attrs)
     {
-        anim_.setDuration(200);
+        using namespace std::chrono_literals;
+        anim_.setDuration(200ms);
         anim_.setInterpolator(new LinearInterpolator(1));
         anim_.setListener(this);
 
@@ -64,6 +65,7 @@ namespace ukive {
             anim_.setInitValue(1 - cur_pos_ / double(range));
         }
         anim_.start();
+        startVSync();
         requestDraw();
     }
 
@@ -82,8 +84,6 @@ namespace ukive {
 
     void SwitchView::onDraw(Canvas* canvas) {
         super::onDraw(canvas);
-
-        anim_.update();
 
         auto range = def_track_width_ - def_track_height_;
         float cur_value = cur_pos_ / float(range);
@@ -110,10 +110,6 @@ namespace ukive {
                 kNormalThumbColor, kCheckedThumbColor, cur_value, &target_color);
 
             canvas->fillCircle(PointF(target_cx, float(cx)), float(cx), target_color);
-        }
-
-        if (anim_.isRunning()) {
-            requestDraw();
         }
     }
 
@@ -191,6 +187,7 @@ namespace ukive {
                 anim_.reset();
                 anim_.setInitValue(cur_pos_ / double(range));
                 anim_.start();
+                startVSync();
                 requestDraw();
             } else {
                 setChecked(false);
@@ -200,6 +197,7 @@ namespace ukive {
                 anim_.reset();
                 anim_.setInitValue(1 - cur_pos_ / double(range));
                 anim_.start();
+                startVSync();
                 requestDraw();
             } else {
                 setChecked(true);
@@ -224,4 +222,18 @@ namespace ukive {
             cur_pos_ = int((1 - animator->getCurValue()) * range);
         }
     }
+
+    void SwitchView::onVSync(
+        uint64_t start_time, uint32_t display_freq, uint32_t real_interval)
+    {
+        anim_.update(start_time, display_freq);
+
+        if (anim_.isRunning()) {
+            requestVSync();
+        } else {
+            stopVSync();
+        }
+        requestDraw();
+    }
+
 }

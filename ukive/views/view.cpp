@@ -11,6 +11,7 @@
 #include "utils/convert.h"
 #include "utils/log.h"
 #include "utils/string_utils.h"
+#include "utils/time_utils.h"
 #include "utils/weak_bind.hpp"
 
 #include "ukive/diagnostic/ui_tracker.h"
@@ -28,7 +29,6 @@
 #include "ukive/app/application.h"
 #include "ukive/graphics/effects/shadow_effect.h"
 #include "ukive/resources/dimension_utils.h"
-#include "ukive/system/time_utils.h"
 #include "ukive/system/ui_utils.h"
 
 #include "necro/layout_constants.h"
@@ -1241,14 +1241,14 @@ namespace ukive {
         if (is_dbclkable_) {
             if (!wait_for_dbclk_) {
                 wait_for_dbclk_ = true;
-                first_clk_ts = TimeUtils::upTimeMillisLow();
+                first_clk_ts = utl::TimeUtils::upTimeMillis();
             } else {
-                if (TimeUtils::upTimeMillisLow() - first_clk_ts <= getDoubleClickTime()) {
+                if (utl::TimeUtils::upTimeMillis() - first_clk_ts <= getDoubleClickTime()) {
                     wait_for_dbclk_ = false;
                     need_perform_click = false;
                     performDoubleClick();
                 } else {
-                    first_clk_ts = TimeUtils::upTimeMillisLow();
+                    first_clk_ts = utl::TimeUtils::upTimeMillis();
                 }
             }
         }

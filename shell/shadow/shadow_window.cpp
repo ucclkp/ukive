@@ -59,16 +59,16 @@ namespace shell {
         ce_button_->setExtraLayoutInfo(ce_button_lp);
         layout->addView(ce_button_);
 
+        using namespace std::chrono_literals;
         animator_.setInitValue(RADIUS);
         animator_.setListener(this);
-        animator_.setDuration(4000);
+        animator_.setDuration(4000ms);
         animator_.setInterpolator(new ukive::LinearInterpolator(256));
         //animator_.start();
+        //startVSync();
     }
 
     void ShadowWindow::onPreDrawCanvas(ukive::Canvas* canvas) {
-        animator_.update();
-
         Window::onPreDrawCanvas(canvas);
 
         canvas->save();
@@ -119,6 +119,18 @@ namespace shell {
 
         shadow_img_ = shadow_effect_->getOutput();
         requestDraw();
+    }
+
+    void ShadowWindow::onVSync(
+        uint64_t start_time, uint32_t display_freq, uint32_t real_interval)
+    {
+        animator_.update(start_time, display_freq);
+
+        if (animator_.isRunning()) {
+            requestVSync();
+        } else {
+            stopVSync();
+        }
     }
 
     void ShadowWindow::createImages() {

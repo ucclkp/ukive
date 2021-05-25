@@ -280,6 +280,7 @@
     <ClInclude Include="graphics\render_node\render_tree.h" />
     <ClInclude Include="graphics\size.hpp" />
     <ClInclude Include="graphics\vector2.hpp" />
+    <ClInclude Include="graphics\vsyncable.h" />
     <ClInclude Include="graphics\vsync_provider.h" />
     <ClInclude Include="graphics\win\cyro_renderer_d2d.h" />
     <ClInclude Include="graphics\win\cyro_render_target_d2d.h" />
@@ -338,7 +339,6 @@
     <ClInclude Include="system\ipc\pipe_client.h" />
     <ClInclude Include="system\ipc\pipe_server.h" />
     <ClInclude Include="system\theme_info.h" />
-    <ClInclude Include="system\time_utils.h" />
     <ClInclude Include="system\ui_utils.h" />
     <ClInclude Include="system\win\com_ptr.hpp" />
     <ClInclude Include="system\win\dialogs\open_file_dialog_win.h" />
@@ -346,7 +346,6 @@
     <ClInclude Include="system\win\critical_section.h" />
     <ClInclude Include="system\win\ipc\pipe_client_win.h" />
     <ClInclude Include="system\win\ipc\pipe_server_win.h" />
-    <ClInclude Include="system\win\qpc_service.h" />
     <ClInclude Include="system\win\reg_manager.h" />
     <ClInclude Include="system\win\ui_utils_win.h" />
     <ClInclude Include="system\win\win10_version.h" />
@@ -514,6 +513,7 @@
     <ClCompile Include="graphics\path.cpp" />
     <ClCompile Include="graphics\render_node\render_node.cpp" />
     <ClCompile Include="graphics\render_node\render_tree.cpp" />
+    <ClCompile Include="graphics\vsyncable.cpp" />
     <ClCompile Include="graphics\vsync_provider.cpp" />
     <ClCompile Include="graphics\win\cyro_renderer_d2d.cpp" />
     <ClCompile Include="graphics\win\cyro_render_target_d2d.cpp" />
@@ -565,13 +565,11 @@
     <ClCompile Include="system\dialogs\open_file_dialog.cpp" />
     <ClCompile Include="system\ipc\pipe_client.cpp" />
     <ClCompile Include="system\ipc\pipe_server.cpp" />
-    <ClCompile Include="system\time_utils.cpp" />
     <ClCompile Include="system\win\dialogs\open_file_dialog_win.cpp" />
     <ClCompile Include="system\win\dynamic_windows_api.cpp" />
     <ClCompile Include="system\win\critical_section.cpp" />
     <ClCompile Include="system\win\ipc\pipe_client_win.cpp" />
     <ClCompile Include="system\win\ipc\pipe_server_win.cpp" />
-    <ClCompile Include="system\win\qpc_service.cpp" />
     <ClCompile Include="system\win\reg_manager.cpp" />
     <ClCompile Include="system\win\ui_utils_win.cpp" />
     <ClCompile Include="system\win\win10_version.cpp" />

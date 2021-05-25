@@ -15,10 +15,11 @@
 namespace ukive {
 
     ViewAnimator::ViewAnimator(View* v)
-        : duration_(200),
-          owner_view_(v),
+        : owner_view_(v),
           listener_(nullptr)
     {
+        using namespace std::chrono_literals;
+        duration_ = 200ms;
         director_.setListener(this);
     }
 
@@ -27,14 +28,14 @@ namespace ukive {
 
     void ViewAnimator::start() {
         director_.start();
-        owner_view_->requestDraw();
+        startVSync();
     }
 
     void ViewAnimator::cancel() {
         director_.stop();
     }
 
-    ViewAnimator* ViewAnimator::setDuration(uint64_t duration) {
+    ViewAnimator* ViewAnimator::setDuration(Animator::nsp duration) {
         duration_ = duration;
         return this;
     }
@@ -140,23 +141,33 @@ namespace ukive {
         return this;
     }
 
-    void ViewAnimator::onPreViewDraw() {
-        director_.update();
-    }
+    void ViewAnimator::onPreViewDraw() {}
 
-    void ViewAnimator::onPostViewDraw() {
+    void ViewAnimator::onPostViewDraw() {}
+
+    void ViewAnimator::onVSync(
+        uint64_t start_time, uint32_t display_freq, uint32_t real_interval)
+    {
+        director_.update(start_time, display_freq);
         if (director_.isRunning()) {
-            owner_view_->requestDraw();
+            requestVSync();
+        } else {
+            stopVSync();
         }
+        owner_view_->requestDraw();
     }
 
-    void ViewAnimator::onDirectorStarted(AnimationDirector* director, const Animator* animator) {
+    void ViewAnimator::onDirectorStarted(
+        AnimationDirector* director, const Animator* animator)
+    {
         if (listener_) {
             listener_->onDirectorStarted(director, animator);
         }
     }
 
-    void ViewAnimator::onDirectorProgress(AnimationDirector* director, const Animator* animator) {
+    void ViewAnimator::onDirectorProgress(
+        AnimationDirector* director, const Animator* animator)
+    {
         double new_value = animator->getCurValue();
 
         switch (animator->getId()) {
@@ -196,13 +207,17 @@ namespace ukive {
         }
     }
 
-    void ViewAnimator::onDirectorStopped(AnimationDirector* director, const Animator* animator) {
+    void ViewAnimator::onDirectorStopped(
+        AnimationDirector* director, const Animator* animator)
+    {
         if (listener_) {
             listener_->onDirectorStopped(director, animator);
         }
     }
 
-    void ViewAnimator::onDirectorFinished(AnimationDirector* director, const Animator* animator) {
+    void ViewAnimator::onDirectorFinished(
+        AnimationDirector* director, const Animator* animator)
+    {
         if (animator &&
             (animator->getId() == VIEW_ANIM_RECT_REVEAL_R_X ||
                 animator->getId() == VIEW_ANIM_RECT_REVEAL_R_Y ||
@@ -240,7 +255,9 @@ namespace ukive {
         }
     }
 
-    void ViewAnimator::onDirectorReset(AnimationDirector* director, const Animator* animator) {
+    void ViewAnimator::onDirectorReset(
+        AnimationDirector* director, const Animator* animator)
+    {
         if (listener_) {
             listener_->onDirectorReset(director, animator);
         }
