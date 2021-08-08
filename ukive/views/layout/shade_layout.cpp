@@ -46,7 +46,8 @@ namespace ukive {
                     calculateGravityBounds(
                         getBoundsInRoot(), li->is_max_visible, li->is_discretized,
                         li->anchor, li->gravity, size, &bounds, &li->adj_gravity);
-                    // li->anchor 是 RootLayout 中的坐标
+                    // li->anchor 是 RootLayout 中的坐标，计算出的 bounds 也一样。
+                    // 需要转换到 ShadeLayout 中的坐标。
                     bounds.offset(-getLeft(), -getTop());
                     child->layout(bounds);
                 }

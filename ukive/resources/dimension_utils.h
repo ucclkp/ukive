@@ -10,7 +10,7 @@
 #include "ukive/graphics/padding.hpp"
 #include "ukive/graphics/size.hpp"
 #include "ukive/resources/attributes.h"
-#include "ukive/resources/dimension.h"
+#include "ukive/resources/dim.hpp"
 
 
 namespace ukive {
@@ -24,7 +24,7 @@ namespace ukive {
     bool resolveDimension(
         const Context& c, const std::string_view& dm, float* out);
     bool resolveDimensionRaw(
-        const std::string_view& dm, Dimension* out);
+        const std::string_view& dm, dim* out);
 
     int resolveAttrInt(
         AttrsRef attrs, const std::string& key, int def_val);
@@ -32,8 +32,8 @@ namespace ukive {
         AttrsRef attrs, const std::string& key, float def_val);
     float resolveAttrDimension(
         const Context& c, AttrsRef attrs, const std::string& key, float def_val);
-    Dimension resolveAttrDimensionRaw(
-        AttrsRef attrs, const std::string& key, DimCRef def_val);
+    dim resolveAttrDimensionRaw(
+        AttrsRef attrs, const std::string& key, dimcref def_val);
     bool resolveAttrBool(
         AttrsRef attrs, const std::string& key, bool def_val);
     std::string resolveAttrString(

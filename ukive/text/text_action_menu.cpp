@@ -101,9 +101,16 @@ namespace ukive {
 
         inner_window_->dismiss();
 
+        using namespace std::chrono_literals;
+
         inner_window_->show(window_, x, y);
         inner_window_->getDecorView()->animate()->
-            circleReveal(center_x, center_y, 0, 150)->start();
+            setDuration(2s)->
+            circleReveal(
+                tval::ofReal(center_x),
+                tval::ofReal(center_y),
+                tval::ofReal(0),
+                tval::ofAuto())->start();
     }
 
     void TextActionMenu::close() {

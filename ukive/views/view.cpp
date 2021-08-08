@@ -898,21 +898,13 @@ namespace ukive {
                     c->getBuffer()->getImageOptions());
                 offscreen.beginDraw();
                 offscreen.clear();
-                if (anime_params_.getRevealType() == ViewAnimator::REVEAL_CIRCULE) {
+                if (anime_params_.reveal().getType() == ViewRevealTVals::Type::Circle) {
+                    auto r = anime_params_.reveal().getRV(this);
                     offscreen.fillCircle(
-                        PointF(PointD(
-                            anime_params_.getRevealCenterX(),
-                            anime_params_.getRevealCenterY())),
-                        float(anime_params_.getRevealRadius()),
-                        bg_img.get());
+                        PointF(r.pos()), float(r.width()), bg_img.get());
                 } else {
                     offscreen.fillRect(
-                        RectF(RectD(
-                            anime_params_.getRevealCenterX(),
-                            anime_params_.getRevealCenterY(),
-                            anime_params_.getRevealWidthRadius(),
-                            anime_params_.getRevealHeightRadius())),
-                        bg_img.get());
+                        RectF(anime_params_.reveal().getRV(this)), bg_img.get());
                 }
                 offscreen.endDraw();
                 auto buffer = static_cast<OffscreenBuffer*>(offscreen.getBuffer());
@@ -938,22 +930,15 @@ namespace ukive {
         cur_c.endDraw();
         std::shared_ptr<ImageFrame> c_img(cur_c.extractImage());
         if (c_img) {
-            if (anime_params_.getRevealType() == ViewAnimator::REVEAL_CIRCULE) {
+            if (anime_params_.reveal().getType() == ViewRevealTVals::Type::Circle) {
                 c->pushClip(RectF(0, 0, float(getWidth()), float(getHeight())));
+                auto r = anime_params_.reveal().getRV(this);
                 c->fillCircle(
-                    PointF(PointD(
-                        anime_params_.getRevealCenterX(),
-                        anime_params_.getRevealCenterY())),
-                    float(anime_params_.getRevealRadius()), c_img.get());
+                    PointF(r.pos()), float(r.width()), c_img.get());
                 c->popClip();
             } else {
                 c->fillRect(
-                    RectF(RectD(
-                        anime_params_.getRevealCenterX(),
-                        anime_params_.getRevealCenterY(),
-                        anime_params_.getRevealWidthRadius(),
-                        anime_params_.getRevealHeightRadius())),
-                    c_img.get());
+                    RectF(anime_params_.reveal().getRV(this)), c_img.get());
             }
         }
     }

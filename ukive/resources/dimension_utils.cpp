@@ -10,7 +10,6 @@
 #include "utils/log.h"
 #include "utils/string_utils.h"
 
-#include "ukive/views/size_info.h"
 #include "ukive/views/view.h"
 #include "ukive/window/context.h"
 
@@ -75,24 +74,24 @@ namespace ukive {
     }
 
     bool resolveDimensionRaw(
-        const std::string_view& dm, Dimension* out)
+        const std::string_view& dm, dim* out)
     {
         if (utl::ascii::endWith(dm, "dp", false)) {
             float val = 0;
             if (utl::stringToNumber(dm.substr(0, dm.length() - 2), &val)) {
-                *out = val;
+                out->set_dp(val);
                 return true;
             }
         } else if (utl::ascii::endWith(dm, "px", false)) {
             float val = 0;
             if (utl::stringToNumber(dm.substr(0, dm.length() - 2), &val)) {
-                *out = int(val);
+                out->set_px(val);
                 return true;
             }
         } else {
             float val = 0;
             if (utl::stringToNumber(dm, &val)) {
-                *out = val;
+                out->set_dp(val);
                 return true;
             }
         }
@@ -144,12 +143,12 @@ namespace ukive {
         return def_val;
     }
 
-    Dimension resolveAttrDimensionRaw(
-        AttrsRef attrs, const std::string& key, DimCRef def_val)
+    dim resolveAttrDimensionRaw(
+        AttrsRef attrs, const std::string& key, dimcref def_val)
     {
         auto it = attrs.find(key);
         if (it != attrs.end()) {
-            Dimension val;
+            dim val;
             if (resolveDimensionRaw(it->second, &val)) {
                 return val;
             }

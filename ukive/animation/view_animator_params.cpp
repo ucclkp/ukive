@@ -6,14 +6,12 @@
 
 #include "ukive/animation/view_animator_params.h"
 
-#include "ukive/animation/view_animator.h"
 #include "ukive/graphics/matrix_2x3_f.h"
 
 
 namespace ukive {
 
-    ViewAnimatorParams::ViewAnimatorParams()
-        : reveal_type_(ViewAnimator::REVEAL_CIRCULE) {}
+    ViewAnimatorParams::ViewAnimatorParams() {}
 
     void ViewAnimatorParams::setAlpha(double alpha) {
         alpha_ = alpha;
@@ -55,36 +53,8 @@ namespace ukive {
         r_pivot_y_ = py;
     }
 
-    void ViewAnimatorParams::setOrder(Order order) {
-        order_ = order;
-    }
-
-    void ViewAnimatorParams::setRevealType(int type) {
-        reveal_type_ = type;
-    }
-
     void ViewAnimatorParams::setHasReveal(bool reveal) {
         has_reveal_ = reveal;
-    }
-
-    void ViewAnimatorParams::setRevealRadius(double radius) {
-        reveal_radius_ = radius;
-    }
-
-    void ViewAnimatorParams::setRevealCenterX(double cx) {
-        reveal_center_x_ = cx;
-    }
-
-    void ViewAnimatorParams::setRevealCenterY(double cy) {
-        reveal_center_y_ = cy;
-    }
-
-    void ViewAnimatorParams::setRevealWidthRadius(double r) {
-        reveal_width_radius_ = r;
-    }
-
-    void ViewAnimatorParams::setRevealHeightRadius(double r) {
-        reveal_height_radius_ = r;
     }
 
     double ViewAnimatorParams::getAlpha() const {
@@ -127,36 +97,20 @@ namespace ukive {
         return r_pivot_y_;
     }
 
-    ViewAnimatorParams::Order ViewAnimatorParams::getOrder() const {
-        return order_;
-    }
-
-    int ViewAnimatorParams::getRevealType() const {
-        return reveal_type_;
-    }
-
     bool ViewAnimatorParams::hasReveal() const {
         return has_reveal_;
     }
 
-    double ViewAnimatorParams::getRevealRadius() const {
-        return reveal_radius_;
+    ViewRevealTVals& ViewAnimatorParams::reveal() {
+        return reveal_tvals_;
     }
 
-    double ViewAnimatorParams::getRevealCenterX() const {
-        return reveal_center_x_;
+    void ViewAnimatorParams::setOrder(Order order) {
+        order_ = order;
     }
 
-    double ViewAnimatorParams::getRevealCenterY() const {
-        return reveal_center_y_;
-    }
-
-    double ViewAnimatorParams::getRevealWidthRadius() const {
-        return reveal_width_radius_;
-    }
-
-    double ViewAnimatorParams::getRevealHeightRadius() const {
-        return reveal_height_radius_;
+    ViewAnimatorParams::Order ViewAnimatorParams::getOrder() const {
+        return order_;
     }
 
     void ViewAnimatorParams::generateMatrix(int x, int y, Matrix2x3F* out) const {

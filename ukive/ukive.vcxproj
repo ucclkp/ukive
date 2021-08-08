@@ -197,6 +197,7 @@
     <ClInclude Include="animation\timer.h" />
     <ClInclude Include="animation\view_animator.h" />
     <ClInclude Include="animation\view_animator_params.h" />
+    <ClInclude Include="animation\view_tval.h" />
     <ClInclude Include="app\application.h" />
     <ClInclude Include="diagnostic\grid_navigator.h" />
     <ClInclude Include="diagnostic\grid_view.h" />
@@ -330,10 +331,11 @@
     <ClInclude Include="menu\menu_item_impl.h" />
     <ClInclude Include="page\page.h" />
     <ClInclude Include="resources\attributes.h" />
-    <ClInclude Include="resources\dimension.h" />
+    <ClInclude Include="resources\dim.hpp" />
     <ClInclude Include="resources\dimension_utils.h" />
     <ClInclude Include="resources\layout_instantiator.h" />
     <ClInclude Include="resources\resource_manager.h" />
+    <ClInclude Include="resources\tval.hpp" />
     <ClInclude Include="system\clipboard_manager.h" />
     <ClInclude Include="system\dialogs\open_file_dialog.h" />
     <ClInclude Include="system\ipc\pipe_client.h" />
@@ -459,6 +461,7 @@
     <ClCompile Include="animation\timer.cpp" />
     <ClCompile Include="animation\view_animator.cpp" />
     <ClCompile Include="animation\view_animator_params.cpp" />
+    <ClCompile Include="animation\view_tval.cpp" />
     <ClCompile Include="app\application.cpp" />
     <ClCompile Include="app\win\application_win.cpp" />
     <ClCompile Include="diagnostic\grid_navigator.cpp" />
@@ -560,7 +563,6 @@
     <ClCompile Include="menu\menu_impl.cpp" />
     <ClCompile Include="menu\menu_item_impl.cpp" />
     <ClCompile Include="page\page.cpp" />
-    <ClCompile Include="resources\dimension.cpp" />
     <ClCompile Include="resources\dimension_utils.cpp" />
     <ClCompile Include="resources\layout_instantiator.cpp" />
     <ClCompile Include="resources\resource_manager.cpp" />

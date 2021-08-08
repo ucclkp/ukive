@@ -9,6 +9,7 @@
 
 #include "ukive/animation/animation_director.h"
 #include "ukive/graphics/vsyncable.h"
+#include "ukive/resources/tval.hpp"
 
 
 namespace ukive {
@@ -38,11 +39,12 @@ namespace ukive {
         ViewAnimator* translateX(double value);
         ViewAnimator* translateY(double value);
         ViewAnimator* rectReveal(
-            double center_x, double center_y,
-            double start_hori_radius, double end_hori_radius,
-            double start_vert_radius, double end_vert_radius);
+            tvalcr x, tvalcr y,
+            tvalcr start_width, tvalcr end_width,
+            tvalcr start_height, tvalcr end_height);
         ViewAnimator* circleReveal(
-            double center_x, double center_y, double start_radius, double end_radius);
+            tvalcr center_x, tvalcr center_y,
+            tvalcr start_radius, tvalcr end_radius);
 
         ViewAnimator* setListener(AnimationDirectorListener* l);
         ViewAnimator* setFinishedHandler(const FinishedHandler& h);

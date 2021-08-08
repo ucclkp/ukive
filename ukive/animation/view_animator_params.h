@@ -7,6 +7,8 @@
 #ifndef UKIVE_ANIMATION_VIEW_ANIMATOR_PARAMS_H_
 #define UKIVE_ANIMATION_VIEW_ANIMATOR_PARAMS_H_
 
+#include "ukive/animation/view_tval.h"
+
 
 namespace ukive {
 
@@ -35,16 +37,7 @@ namespace ukive {
         void setSPivotY(double py);
         void setRPivotX(double px);
         void setRPivotY(double py);
-
-        void setOrder(Order order);
-
-        void setRevealType(int type);
         void setHasReveal(bool reveal);
-        void setRevealRadius(double radius);
-        void setRevealCenterX(double cx);
-        void setRevealCenterY(double cy);
-        void setRevealWidthRadius(double r);
-        void setRevealHeightRadius(double r);
 
         double getAlpha() const;
         double getScaleX() const;
@@ -57,16 +50,11 @@ namespace ukive {
         double getRPivotX() const;
         double getRPivotY() const;
 
-        Order getOrder() const;
-
-        int getRevealType() const;
         bool hasReveal() const;
-        double getRevealRadius() const;
-        double getRevealCenterX() const;
-        double getRevealCenterY() const;
-        double getRevealWidthRadius() const;
-        double getRevealHeightRadius() const;
+        ViewRevealTVals& reveal();
 
+        void setOrder(Order order);
+        Order getOrder() const;
         void generateMatrix(int x, int y, Matrix2x3F* out) const;
 
     private:
@@ -81,13 +69,8 @@ namespace ukive {
         double r_pivot_x_ = 0.0, r_pivot_y_ = 0.0;
 
         // 揭露动画变量。
-        int reveal_type_;
         bool has_reveal_ = false;
-        double reveal_radius_ = 0.0;
-        double reveal_center_x_ = 0.0;
-        double reveal_center_y_ = 0.0;
-        double reveal_width_radius_ = 0.0;
-        double reveal_height_radius_ = 0.0;
+        ViewRevealTVals reveal_tvals_;
 
         Order order_ = TSR;
     };

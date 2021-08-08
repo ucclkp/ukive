@@ -289,9 +289,6 @@
     <ClCompile Include="graphics\win\display_win.cpp">
       <Filter>graphics\win</Filter>
     </ClCompile>
-    <ClCompile Include="resources\dimension.cpp">
-      <Filter>resources</Filter>
-    </ClCompile>
     <ClCompile Include="animation\view_animator_params.cpp">
       <Filter>animation</Filter>
     </ClCompile>
@@ -618,6 +615,9 @@
     </ClCompile>
     <ClCompile Include="views\layout_info\gravity.cpp">
       <Filter>views\layout_info</Filter>
+    </ClCompile>
+    <ClCompile Include="animation\view_tval.cpp">
+      <Filter>animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -973,9 +973,6 @@
       <Filter>graphics\win</Filter>
     </ClInclude>
     <ClInclude Include="resources\attributes.h">
-      <Filter>resources</Filter>
-    </ClInclude>
-    <ClInclude Include="resources\dimension.h">
       <Filter>resources</Filter>
     </ClInclude>
     <ClInclude Include="animation\view_animator_params.h">
@@ -1400,6 +1397,15 @@
     </ClInclude>
     <ClInclude Include="views\layout\shade_layout.h">
       <Filter>views\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\dim.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\tval.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="animation\view_tval.h">
+      <Filter>animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

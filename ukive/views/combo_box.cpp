@@ -210,15 +210,16 @@ namespace ukive {
             x -= width;
         }
 
-        int height = inner_window_->getHeight();
-
         using namespace std::chrono_literals;
 
         inner_window_->dismiss();
         inner_window_->setWidth(width);
         inner_window_->show(w, x, y);
         inner_window_->getDecorView()->animate()->setDuration(150ms)->
-            rectReveal(center_x, center_y, width, width, 0, height)->start();
+            rectReveal(
+                tval::ofReal(center_x), tval::ofReal(center_y),
+                tval::ofReal(width), tval::ofReal(width),
+                tval::ofReal(0), tval::ofAuto())->start();
         list_view_->setEnabled(true);
 
         auto last_input_view = w->getLastInputView();

@@ -89,43 +89,43 @@ namespace ukive {
     }
 
     ViewAnimator* ViewAnimator::rectReveal(
-        double center_x, double center_y,
-        double start_hori_radius, double end_hori_radius,
-        double start_vert_radius, double end_vert_radius)
+        tvalcr x, tvalcr y,
+        tvalcr start_width, tvalcr end_width,
+        tvalcr start_height, tvalcr end_height)
     {
         director_.addAnimator(VIEW_ANIM_RECT_REVEAL_R_X);
-        director_.setInitValue(VIEW_ANIM_RECT_REVEAL_R_X, start_hori_radius);
+        director_.setInitValue(VIEW_ANIM_RECT_REVEAL_R_X, 0);
         director_.setDuration(VIEW_ANIM_RECT_REVEAL_R_X, duration_);
-        director_.setInterpolator(VIEW_ANIM_RECT_REVEAL_R_X, new LinearInterpolator(end_hori_radius));
+        director_.setInterpolator(VIEW_ANIM_RECT_REVEAL_R_X, new LinearInterpolator(1));
 
         director_.addAnimator(VIEW_ANIM_RECT_REVEAL_R_Y);
-        director_.setInitValue(VIEW_ANIM_RECT_REVEAL_R_Y, start_vert_radius);
+        director_.setInitValue(VIEW_ANIM_RECT_REVEAL_R_Y, 0);
         director_.setDuration(VIEW_ANIM_RECT_REVEAL_R_Y, duration_);
-        director_.setInterpolator(VIEW_ANIM_RECT_REVEAL_R_Y, new LinearInterpolator(end_vert_radius));
+        director_.setInterpolator(VIEW_ANIM_RECT_REVEAL_R_Y, new LinearInterpolator(1));
 
-        owner_view_->animeParams()->setHasReveal(true);
-        owner_view_->animeParams()->setRevealType(REVEAL_RECT);
-        owner_view_->animeParams()->setRevealCenterX(center_x);
-        owner_view_->animeParams()->setRevealCenterY(center_y);
-        owner_view_->animeParams()->setRevealWidthRadius(start_hori_radius);
-        owner_view_->animeParams()->setRevealHeightRadius(start_vert_radius);
+        auto p = owner_view_->animeParams();
+        p->setHasReveal(true);
+        p->reveal().setRect(
+            x, y,
+            start_width, end_width,
+            start_height, end_height);
 
         return this;
     }
 
     ViewAnimator* ViewAnimator::circleReveal(
-        double center_x, double center_y, double start_radius, double end_radius)
+        tvalcr center_x, tvalcr center_y, tvalcr start_radius, tvalcr end_radius)
     {
         director_.addAnimator(VIEW_ANIM_CIRCLE_REVEAL_R);
-        director_.setInitValue(VIEW_ANIM_CIRCLE_REVEAL_R, start_radius);
+        director_.setInitValue(VIEW_ANIM_CIRCLE_REVEAL_R, 0);
         director_.setDuration(VIEW_ANIM_CIRCLE_REVEAL_R, duration_);
-        director_.setInterpolator(VIEW_ANIM_CIRCLE_REVEAL_R, new LinearInterpolator(end_radius));
+        director_.setInterpolator(VIEW_ANIM_CIRCLE_REVEAL_R, new LinearInterpolator(1));
 
-        owner_view_->animeParams()->setHasReveal(true);
-        owner_view_->animeParams()->setRevealType(REVEAL_CIRCULE);
-        owner_view_->animeParams()->setRevealCenterX(center_x);
-        owner_view_->animeParams()->setRevealCenterY(center_y);
-        owner_view_->animeParams()->setRevealRadius(start_radius);
+        auto p = owner_view_->animeParams();
+        p->setHasReveal(true);
+        p->reveal().setCircle(
+            center_x, center_y,
+            start_radius, end_radius);
 
         return this;
     }
@@ -167,35 +167,36 @@ namespace ukive {
     void ViewAnimator::onDirectorProgress(
         AnimationDirector* director, const Animator* animator)
     {
+        auto p = owner_view_->animeParams();
         double new_value = animator->getCurValue();
 
         switch (animator->getId()) {
         case VIEW_ANIM_ALPHA:
-            owner_view_->animeParams()->setAlpha(new_value);
+            p->setAlpha(new_value);
             break;
         case VIEW_ANIM_SCALE_X:
-            owner_view_->animeParams()->setScaleX(new_value);
+            p->setScaleX(new_value);
             break;
         case VIEW_ANIM_SCALE_Y:
-            owner_view_->animeParams()->setScaleY(new_value);
+            p->setScaleY(new_value);
             break;
         case VIEW_ANIM_TRANSLATE_X:
-            owner_view_->animeParams()->setTranslateX(new_value);
+            p->setTranslateX(new_value);
             break;
         case VIEW_ANIM_TRANSLATE_Y:
-            owner_view_->animeParams()->setTranslateY(new_value);
+            p->setTranslateY(new_value);
             break;
         case VIEW_ANIM_ROTATE:
-            owner_view_->animeParams()->setRotate(new_value);
+            p->setRotate(new_value);
             break;
         case VIEW_ANIM_RECT_REVEAL_R_X:
-            owner_view_->animeParams()->setRevealWidthRadius(new_value);
+            p->reveal().calculate(owner_view_, new_value);
             break;
         case VIEW_ANIM_RECT_REVEAL_R_Y:
-            owner_view_->animeParams()->setRevealHeightRadius(new_value);
+            p->reveal().calculate(owner_view_, new_value);
             break;
         case VIEW_ANIM_CIRCLE_REVEAL_R:
-            owner_view_->animeParams()->setRevealRadius(new_value);
+            p->reveal().calculate(owner_view_, new_value);
             break;
         default:
             break;

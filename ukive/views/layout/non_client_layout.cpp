@@ -42,7 +42,7 @@ namespace ukive {
             row = 2;
         }
 
-        HitPoint hitTests[3][3] = {
+        static HitPoint hitTests[3][3]{
             { HitPoint::TOP_LEFT,    HitPoint::TOP,    HitPoint::TOP_RIGHT    },
             { HitPoint::LEFT,        HitPoint::CLIENT, HitPoint::RIGHT        },
             { HitPoint::BOTTOM_LEFT, HitPoint::BOTTOM, HitPoint::BOTTOM_RIGHT },
