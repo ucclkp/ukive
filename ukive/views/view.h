@@ -37,16 +37,6 @@ namespace ukive {
 
     class View : public ElementCallback {
     public:
-        enum Gravity {
-            LEFT,
-            TOP,
-            RIGHT,
-            BOTTOM,
-            CENTER,
-            CENTER_HORIZONTAL,
-            CENTER_VERTICAL,
-        };
-
         enum Visibility {
             SHOW,
             HIDE,

@@ -29,7 +29,8 @@ namespace ukive {
         void hideTitleBar();
         void removeTitleBar();
 
-        void addShade(View* shade);
+        void addShade(View* shade, const Rect& anchor, int gravity);
+        void updateShade(View* shade, const Rect& anchor, int gravity);
         void removeShade(View* shade);
 
         bool isTitleBarShowing() const;

@@ -8,6 +8,7 @@
 #define UKIVE_MENU_INNER_WINDOW_H_
 
 #include "ukive/views/layout/simple_layout.h"
+#include "ukive/views/layout_info/gravity.h"
 
 
 namespace ukive {
@@ -84,9 +85,9 @@ namespace ukive {
         bool isShowing() const;
 
         void show(Window* w, int x, int y);
-        void show(Window* w, View* anchor, View::Gravity gravity);
+        void show(View* anchor, int gravity);
         void update(int x, int y);
-        void update(View* anchor, View::Gravity gravity);
+        void update(View* anchor, int gravity);
         void markDismissing();
         void dismiss();
 

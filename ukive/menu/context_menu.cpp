@@ -72,6 +72,15 @@ namespace ukive {
         inner_window_->show(window_, x, y);
     }
 
+    void ContextMenu::show(View* anchor, int gravity) {
+        if (!is_finished_) return;
+
+        is_finished_ = false;
+
+        inner_window_->dismiss();
+        inner_window_->show(anchor, gravity);
+    }
+
     void ContextMenu::close() {
         if (is_finished_)
             return;

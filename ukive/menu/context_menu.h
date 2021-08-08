@@ -34,6 +34,7 @@ namespace ukive {
         void invalidateMenu();
 
         void show(int x, int y);
+        void show(View* anchor, int gravity);
         void close();
 
     protected:

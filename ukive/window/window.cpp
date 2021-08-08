@@ -578,7 +578,7 @@ namespace ukive {
     }
 
     ContextMenu* Window::startContextMenu(
-        ContextMenuCallback* callback, View* anchor, View::Gravity gravity)
+        ContextMenuCallback* callback, View* anchor, int gravity)
     {
         auto context_menu = new ContextMenu(this, callback);
 
@@ -597,50 +597,30 @@ namespace ukive {
         }
 
         context_menu_.reset(context_menu);
-
-        Rect rect = anchor->getBoundsInRoot();
-
-        int x;
-        int y = rect.bottom;
-
-        switch (gravity) {
-        case View::LEFT:
-            x = rect.left;
-            break;
-        case View::RIGHT:
-            x = rect.right - 92;
-            break;
-        case View::CENTER:
-            x = rect.left - (92 - rect.width()) / 2;
-            break;
-        default:
-            x = rect.left;
-        }
-
-        context_menu_->show(x, y);
+        context_menu_->show(anchor, gravity);
         return context_menu;
     }
 
     TextActionMenu* Window::startTextActionMenu(TextActionMenuCallback* callback) {
-        auto action_mode = new TextActionMenu(this, callback);
+        auto action_menu = new TextActionMenu(this, callback);
         if (!callback->onCreateActionMode(
-            action_mode, action_mode->getMenu())) {
-            delete action_mode;
+            action_menu, action_menu->getMenu())) {
+            delete action_menu;
             return nullptr;
         }
 
         callback->onPrepareActionMode(
-            action_mode, action_mode->getMenu());
+            action_menu, action_menu->getMenu());
 
-        if (action_mode->getMenu()->getItemCount() == 0) {
-            delete action_mode;
+        if (action_menu->getMenu()->getItemCount() == 0) {
+            delete action_menu;
             return nullptr;
         }
 
-        text_action_mode_.reset(action_mode);
-        text_action_mode_->show();
+        text_action_menu_.reset(action_menu);
+        text_action_menu_->show();
 
-        return action_mode;
+        return action_menu;
     }
 
     void Window::onCreate() {
@@ -999,7 +979,7 @@ namespace ukive {
 
     void Window::onDestroy() {
         context_menu_.reset();
-        text_action_mode_.reset();
+        text_action_menu_.reset();
 
         root_layout_->dispatchDetachFromWindow();
         delete root_layout_;

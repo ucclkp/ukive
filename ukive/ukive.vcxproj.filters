@@ -610,6 +610,15 @@
     <ClCompile Include="graphics\vsyncable.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
+    <ClCompile Include="views\layout_info\shade_layout_info.cpp">
+      <Filter>views\layout_info</Filter>
+    </ClCompile>
+    <ClCompile Include="views\layout\shade_layout.cpp">
+      <Filter>views\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="views\layout_info\gravity.cpp">
+      <Filter>views\layout_info</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">
@@ -1382,6 +1391,15 @@
     </ClInclude>
     <ClInclude Include="graphics\vsyncable.h">
       <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="views\layout_info\gravity.h">
+      <Filter>views\layout_info</Filter>
+    </ClInclude>
+    <ClInclude Include="views\layout_info\shade_layout_info.h">
+      <Filter>views\layout_info</Filter>
+    </ClInclude>
+    <ClInclude Include="views\layout\shade_layout.h">
+      <Filter>views\layout</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

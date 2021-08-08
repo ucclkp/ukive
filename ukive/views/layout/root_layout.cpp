@@ -9,6 +9,8 @@
 #include <typeinfo>
 
 #include "ukive/views/layout/simple_layout.h"
+#include "ukive/views/layout/shade_layout.h"
+#include "ukive/views/layout_info/shade_layout_info.h"
 #include "ukive/window/window.h"
 #include "ukive/views/title_bar/default_title_bar.h"
 #include "ukive/resources/layout_instantiator.h"
@@ -52,6 +54,7 @@ namespace {
             return getWrappedSize(info);
         }
     };
+
 }
 
 namespace ukive {
@@ -71,7 +74,7 @@ namespace ukive {
         content_layout_->setLayoutSize(LS_FILL, LS_FILL);
         addView(content_layout_);
 
-        shade_layout_ = new SimpleLayout(c);
+        shade_layout_ = new ShadeLayout(c);
         shade_layout_->setLayoutSize(LS_FILL, LS_FILL);
     }
 
@@ -105,11 +108,31 @@ namespace ukive {
         }
     }
 
-    void RootLayout::addShade(View* shade) {
+    void RootLayout::addShade(View* shade, const Rect& anchor, int gravity) {
+        auto li = new ShadeLayoutInfo();
+        li->anchor = anchor;
+        li->gravity = gravity;
+        shade->setExtraLayoutInfo(li);
+
         shade_layout_->addView(shade);
         if (shade_layout_->getChildCount() == 1) {
             addView(shade_layout_);
             shade_added_ = true;
+        }
+    }
+
+    void RootLayout::updateShade(View* shade, const Rect& anchor, int gravity) {
+        for (auto v : *shade_layout_) {
+            if (v == shade) {
+                auto li = static_cast<ShadeLayoutInfo*>(v->getExtraLayoutInfo());
+                if (li->anchor != anchor || li->gravity == gravity) {
+                    li->anchor = anchor;
+                    li->gravity = gravity;
+                    requestLayout();
+                    requestDraw();
+                }
+                return;
+            }
         }
     }
 

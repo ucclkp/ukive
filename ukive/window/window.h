@@ -18,6 +18,7 @@
 #include "ukive/graphics/size.hpp"
 #include "ukive/graphics/vsync_provider.h"
 #include "ukive/system/theme_info.h"
+#include "ukive/views/layout_info/gravity.h"
 #include "ukive/views/view.h"
 #include "ukive/window/context.h"
 #include "ukive/window/purpose.h"
@@ -173,7 +174,7 @@ namespace ukive {
         }
 
         ContextMenu* startContextMenu(
-            ContextMenuCallback* callback, View* anchor, View::Gravity gravity);
+            ContextMenuCallback* callback, View* anchor, int gravity);
         TextActionMenu* startTextActionMenu(TextActionMenuCallback* callback);
 
     protected:
@@ -248,7 +249,7 @@ namespace ukive {
         Window* parent_ = nullptr;
 
         std::unique_ptr<ContextMenu> context_menu_;
-        std::unique_ptr<TextActionMenu> text_action_mode_;
+        std::unique_ptr<TextActionMenu> text_action_menu_;
         std::vector<OnWindowStatusChangedListener*> status_changed_listeners_;
 
         Color background_color_;

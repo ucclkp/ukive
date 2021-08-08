@@ -168,21 +168,42 @@ namespace ukive {
         decor_view_->setLayoutSize(View::LS_AUTO, View::LS_AUTO);
         decor_view_->setLayoutMargin(x, y, 0, 0);
 
-        w->getRootLayout()->addShade(decor_view_);
+        w->getRootLayout()->addShade(decor_view_, {}, GV_NONE);
 
         window_ = w;
         is_showing_ = true;
     }
 
-    void InnerWindow::show(Window* w, View* anchor, View::Gravity gravity) {
-        if (!content_view_ || !anchor || is_showing_) {
+    void InnerWindow::show(View* anchor, int gravity) {
+        if (!content_view_ || !anchor) {
+            return;
+        }
+
+        if (is_showing_) {
+            update(anchor, gravity);
+            return;
+        }
+
+        if (decor_view_) {
+            decor_view_->removeAllViews(false);
+            delete decor_view_;
+        }
+
+        auto w = anchor->getWindow();
+        if (!w) {
             return;
         }
 
         createDecorView(w->getContext());
 
-        window_ = w;
         is_marked_as_dismissing_ = false;
+
+        decor_view_->setLayoutSize(View::LS_AUTO, View::LS_AUTO);
+
+        w->getRootLayout()->addShade(decor_view_, anchor->getBoundsInRoot(), gravity);
+
+        window_ = w;
+        is_showing_ = true;
     }
 
     void InnerWindow::update(int x, int y) {
@@ -193,7 +214,17 @@ namespace ukive {
         decor_view_->setLayoutMargin(x, y, 0, 0);
     }
 
-    void InnerWindow::update(View* anchor, View::Gravity gravity) {
+    void InnerWindow::update(View* anchor, int gravity) {
+        if (!decor_view_ || !is_showing_ || !anchor) {
+            return;
+        }
+
+        auto w = anchor->getWindow();
+        if (!w) {
+            return;
+        }
+
+        w->getRootLayout()->updateShade(decor_view_, anchor->getBoundsInRoot(), gravity);
     }
 
     void InnerWindow::markDismissing() {

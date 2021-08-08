@@ -99,7 +99,6 @@ namespace ukive {
         director_.setInterpolator(VIEW_ANIM_RECT_REVEAL_R_X, new LinearInterpolator(end_hori_radius));
 
         director_.addAnimator(VIEW_ANIM_RECT_REVEAL_R_Y);
-        director_.addAnimator(VIEW_ANIM_RECT_REVEAL_R_Y);
         director_.setInitValue(VIEW_ANIM_RECT_REVEAL_R_Y, start_vert_radius);
         director_.setDuration(VIEW_ANIM_RECT_REVEAL_R_Y, duration_);
         director_.setInterpolator(VIEW_ANIM_RECT_REVEAL_R_Y, new LinearInterpolator(end_vert_radius));

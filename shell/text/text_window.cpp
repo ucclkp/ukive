@@ -153,7 +153,7 @@ namespace shell {
         case ID_TOOLBAR_ITEM_FONT:
             if (context_menu_ == nullptr) {
                 context_menu_ = startContextMenu(
-                    this, v, ukive::View::Gravity::LEFT);
+                    this, v, ukive::GV_MID_START | ukive::GV_BOTTOM);
 
                 findView(ID_TOOLBAR_ITEM_FONT)->requestFocus();
             }
@@ -162,7 +162,7 @@ namespace shell {
         case ID_TOOLBAR_ITEM_FORMAT:
             if (context_menu_ == nullptr) {
                 context_menu_ = startContextMenu(
-                    this, v, ukive::View::Gravity::LEFT);
+                    this, v, ukive::GV_MID_START | ukive::GV_BOTTOM);
 
                 findView(ID_TOOLBAR_ITEM_FORMAT)->requestFocus();
             }

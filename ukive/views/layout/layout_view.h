@@ -41,7 +41,7 @@ namespace ukive {
         virtual LayoutInfo* makeExtraLayoutInfo(AttrsRef attrs) const;
         virtual bool isValidExtraLayoutInfo(LayoutInfo* lp) const;
 
-        bool isLayoutView() const override;
+        bool isLayoutView() const final;
 
         /**
          * 向当前 LayoutView 的尾部添加子 View。
