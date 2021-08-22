@@ -105,7 +105,7 @@ namespace ukive {
 
         inner_window_->show(window_, x, y);
         inner_window_->getDecorView()->animate()->
-            setDuration(2s)->
+            setDuration(100ms)->
             circleReveal(
                 tval::ofReal(center_x),
                 tval::ofReal(center_y),

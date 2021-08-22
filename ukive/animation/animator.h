@@ -35,6 +35,8 @@ namespace ukive {
         using ns = utl::TimeUtils::ns;
         using nsp = utl::TimeUtils::nsp;
 
+        static uint64_t now();
+
         Animator();
         ~Animator();
 
@@ -42,7 +44,7 @@ namespace ukive {
         void stop();
         void finish();
         void reset();
-        void update(uint64_t cur_time, uint32_t display_freq);
+        bool update(uint64_t cur_time, uint32_t display_freq);
 
         void setId(int id);
 
@@ -64,9 +66,7 @@ namespace ukive {
         Interpolator* getInterpolator() const;
 
     private:
-        static uint64_t now();
-
-        void restart();
+        void restart(uint64_t cur_time);
 
         int id_;
         double cur_val_;

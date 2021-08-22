@@ -22,21 +22,48 @@ namespace ukive {
     public:
         virtual ~AnimationDirectorListener() = default;
 
-        virtual void onDirectorStarted(AnimationDirector* director, const Animator* animator) {}
-        virtual void onDirectorProgress(AnimationDirector* director, const Animator* animator) {}
-        virtual void onDirectorStopped(AnimationDirector* director, const Animator* animator) {}
-        virtual void onDirectorFinished(AnimationDirector* director, const Animator* animator) {}
-        virtual void onDirectorReset(AnimationDirector* director, const Animator* animator) {}
+        virtual void onDirectorStarted(AnimationDirector* director) {}
+        virtual void onDirectorProgress(AnimationDirector* director) {}
+        virtual void onDirectorStopped(AnimationDirector* director) {}
+        virtual void onDirectorFinished(AnimationDirector* director) {}
+        virtual void onDirectorReset(AnimationDirector* director) {}
+
+        virtual void onDirectorAnimationStarted(
+            AnimationDirector* director, const Animator* animator) {}
+        virtual void onDirectorAnimationProgress(
+            AnimationDirector* director, const Animator* animator) {}
+        virtual void onDirectorAnimationStopped(
+            AnimationDirector* director, const Animator* animator) {}
+        virtual void onDirectorAnimationFinished(
+            AnimationDirector* director, const Animator* animator) {}
+        virtual void onDirectorAnimationReset(
+            AnimationDirector* director, const Animator* animator) {}
     };
 
     class AnimationDirector : public AnimationListener {
     public:
+        using ns = Animator::ns;
+        using nsp = Animator::nsp;
+        using APtr = std::unique_ptr<Animator>;
+
+        struct Animation {
+            ns st;
+            APtr ptr;
+        };
+
+        using APtrVec = std::vector<Animation>;
+
         AnimationDirector();
 
-        void addAnimator(int id);
-        void removeAnimator(int id);
-        bool hasAnimator(int id) const;
-        const Animator* getAnimator(int id) const;
+        Animator* add(int id);
+        Animator* add(int id, nsp st);
+        void remove(int id);
+        void remove(int id, nsp st);
+        void clear();
+        bool contains(int id) const;
+        bool contains(int id, nsp st) const;
+        const APtrVec& get(int id) const;
+        Animator* get(int id, nsp st) const;
 
         void start();
         void stop();
@@ -44,20 +71,19 @@ namespace ukive {
         void reset();
         void update(uint64_t cur_time, uint32_t display_freq);
 
-        void setDuration(int id, Animator::nsp duration);
-        void setInitValue(int id, double init_val);
-        void setInterpolator(int id, Interpolator* ipr);
         void setListener(AnimationDirectorListener* l);
 
         bool isRunning() const;
         bool isFinished() const;
 
-        Animator::ns getDuration(int id) const;
         double getCurValue(int id) const;
         double getInitValue(int id) const;
-        Interpolator* getInterpolator(int id) const;
+        ns getDuration(int id) const;
+        ns getTotalDuration() const;
 
     private:
+        void restart(uint64_t cur_time);
+
         // AnimationListener
         void onAnimationStarted(Animator* animator) override;
         void onAnimationProgress(Animator* animator) override;
@@ -65,8 +91,15 @@ namespace ukive {
         void onAnimationFinished(Animator* animator) override;
         void onAnimationReset(Animator* animator) override;
 
+        uint64_t start_time_ = 0;
+        uint64_t elapsed_time_ = 0;
+
+        bool is_repeat_;
+        bool is_started_;
+        bool is_running_;
+        bool is_finished_;
         AnimationDirectorListener* listener_;
-        std::map<int, std::unique_ptr<Animator>> animators_;
+        std::map<int, APtrVec> animators_;
     };
 
 }

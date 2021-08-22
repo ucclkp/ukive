@@ -7,13 +7,17 @@
 #ifndef UKIVE_SYSTEM_WIN_UI_UTILS_WIN_H_
 #define UKIVE_SYSTEM_WIN_UI_UTILS_WIN_H_
 
-#include "ukive/system/ui_utils.h"
+#include <Windows.h>
 
 
 namespace ukive {
 namespace win {
 
+    bool isActivated();
+
     bool isAeroEnabled();
+
+    HMODULE SecureSysLoadLibrary(LPCWSTR name);
 
 }
 }

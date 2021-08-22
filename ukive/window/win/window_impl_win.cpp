@@ -393,9 +393,11 @@ namespace ukive {
             return;
         }
 
+        if (!win::isActivated()) {
+            type = TRANS_OPAQUE;
+        }
+
         if ((type & TRANS_LAYERED) && IsWindows8OrGreater()) {
-            LOG(Log::WARNING) << "TRANS_LAYERED has been deprecated on Windows 8 or higher. "
-                << "Using TRANS_TRANSPARENT instead.";
             type = TRANS_TRANSPARENT;
         }
 

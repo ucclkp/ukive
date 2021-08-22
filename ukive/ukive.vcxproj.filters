@@ -127,9 +127,6 @@
     <ClCompile Include="animation\interpolator.cpp">
       <Filter>animation</Filter>
     </ClCompile>
-    <ClCompile Include="animation\animation_director.cpp">
-      <Filter>animation</Filter>
-    </ClCompile>
     <ClCompile Include="animation\animator.cpp">
       <Filter>animation</Filter>
     </ClCompile>
@@ -619,6 +616,9 @@
     <ClCompile Include="animation\view_tval.cpp">
       <Filter>animation</Filter>
     </ClCompile>
+    <ClCompile Include="animation\animation_director.cpp">
+      <Filter>animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">
@@ -769,9 +769,6 @@
       <Filter>animation</Filter>
     </ClInclude>
     <ClInclude Include="animation\interpolator.h">
-      <Filter>animation</Filter>
-    </ClInclude>
-    <ClInclude Include="animation\animation_director.h">
       <Filter>animation</Filter>
     </ClInclude>
     <ClInclude Include="animation\animator.h">
@@ -1405,6 +1402,9 @@
       <Filter>resources</Filter>
     </ClInclude>
     <ClInclude Include="animation\view_tval.h">
+      <Filter>animation</Filter>
+    </ClInclude>
+    <ClInclude Include="animation\animation_director.h">
       <Filter>animation</Filter>
     </ClInclude>
   </ItemGroup>

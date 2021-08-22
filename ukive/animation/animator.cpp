@@ -28,7 +28,9 @@ namespace ukive {
           interpolator_(std::make_unique<LinearInterpolator>(1))
     {}
 
-    Animator::~Animator() {}
+    Animator::~Animator() {
+        stop();
+    }
 
     void Animator::start() {
         if (is_running_ || is_finished_) {
@@ -42,10 +44,9 @@ namespace ukive {
             interpolator_->setInitVal(init_val_);
         }
 
+        is_running_ = true;
         is_finished_ = false;
         start_time_ = 0;
-
-        is_running_ = true;
 
         if (listener_) {
             listener_->onAnimationStarted(this);
@@ -53,54 +54,60 @@ namespace ukive {
     }
 
     void Animator::stop() {
-        if (is_running_) {
-            is_running_ = false;
+        if (!is_running_) {
+            return;
+        }
 
-            if (is_preparing_) {
-                is_preparing_ = false;
-            } else {
-                elapsed_duration_ = now() - start_time_;
-            }
+        is_running_ = false;
 
-            if (listener_) {
-                listener_->onAnimationStopped(this);
-            }
+        if (is_preparing_) {
+            is_preparing_ = false;
+        } else {
+            elapsed_duration_ = now() - start_time_;
+        }
+
+        if (listener_) {
+            listener_->onAnimationStopped(this);
         }
     }
 
     void Animator::finish() {
-        if (is_started_) {
-            is_preparing_ = false;
-            is_running_ = false;
-            is_finished_ = true;
+        if (!is_started_ || is_finished_) {
+            return;
+        }
 
-            cur_val_ = interpolator_->interpolate(1);
+        is_preparing_ = false;
+        is_running_ = false;
+        is_finished_ = true;
 
-            if (listener_) {
-                listener_->onAnimationFinished(this);
-            }
+        cur_val_ = interpolator_->interpolate(1);
+
+        if (listener_) {
+            listener_->onAnimationFinished(this);
         }
     }
 
     void Animator::reset() {
-        if (is_started_) {
-            is_preparing_ = false;
-            is_started_ = false;
-            is_running_ = false;
-            is_finished_ = false;
+        if (!is_started_) {
+            return;
+        }
 
-            cur_val_ = init_val_;
-            elapsed_duration_ = 0;
+        is_preparing_ = false;
+        is_started_ = false;
+        is_running_ = false;
+        is_finished_ = false;
 
-            if (listener_) {
-                listener_->onAnimationReset(this);
-            }
+        cur_val_ = init_val_;
+        elapsed_duration_ = 0;
+
+        if (listener_) {
+            listener_->onAnimationReset(this);
         }
     }
 
-    void Animator::update(uint64_t cur_time, uint32_t display_freq) {
+    bool Animator::update(uint64_t cur_time, uint32_t display_freq) {
         if (!is_running_) {
-            return;
+            return false;
         }
 
         if (is_preparing_) {
@@ -118,17 +125,19 @@ namespace ukive {
 
         if (finished) {
             if (is_repeat_) {
-                restart();
+                restart(cur_time);
             } else {
                 finish();
             }
         }
+
+        return true;
     }
 
-    void Animator::restart() {
+    void Animator::restart(uint64_t cur_time) {
         cur_val_ = init_val_;
         elapsed_duration_ = 0;
-        start_time_ = now();
+        start_time_ = cur_time;
     }
 
     void Animator::setId(int id) {

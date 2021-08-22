@@ -71,6 +71,8 @@ namespace ukive {
 
 
     void Application::initPlatform() {
+        ::SetDllDirectoryW(L"");
+
         prev_unhandled_filter = ::SetUnhandledExceptionFilter(handleUnhandledException);
         cur_vectored_filter = ::AddVectoredExceptionHandler(1, handleVectoredException);
         prev_purecall_handler = _set_purecall_handler(handlePureCall);

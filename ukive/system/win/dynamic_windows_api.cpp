@@ -5,6 +5,7 @@
 // found in the LICENSE file.
 
 #include "ukive/system/win/dynamic_windows_api.h"
+#include "ukive/system/win/ui_utils_win.h"
 
 
 namespace ukive {
@@ -15,7 +16,7 @@ namespace win {
     {
         using GetDpiForMonitorPtr = HRESULT(STDAPICALLTYPE*)(HMONITOR, MONITOR_DPI_TYPE, UINT*, UINT*);
         auto func = reinterpret_cast<GetDpiForMonitorPtr>(
-            ::GetProcAddress(::LoadLibraryW(L"Shcore.dll"), "GetDpiForMonitor"));
+            ::GetProcAddress(SecureSysLoadLibrary(L"Shcore.dll"), "GetDpiForMonitor"));
         if (func) {
             return func(hmonitor, dpiType, dpiX, dpiY);
         }
@@ -77,7 +78,7 @@ namespace win {
     STDAPI UDDCompositionCreateDevice(IDXGIDevice *dxgiDevice, REFIID iid, void **dcompositionDevice) {
         using DCompositionCreateDevicePtr = HRESULT(STDAPICALLTYPE*)(IDXGIDevice*, REFIID, void**);
         auto func = reinterpret_cast<DCompositionCreateDevicePtr>(
-            ::GetProcAddress(::LoadLibraryW(L"Dcomp.dll"), "DCompositionCreateDevice"));
+            ::GetProcAddress(SecureSysLoadLibrary(L"Dcomp.dll"), "DCompositionCreateDevice"));
         if (func) {
             return func(dxgiDevice, iid, dcompositionDevice);
         }

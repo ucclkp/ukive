@@ -57,15 +57,20 @@ namespace ukive {
             uint64_t start_time, uint32_t display_freq, uint32_t real_interval) override;
 
         // AnimationDirectorListener
-        void onDirectorStarted(
+        void onDirectorStarted(AnimationDirector* director) override;
+        void onDirectorProgress(AnimationDirector* director) override;
+        void onDirectorStopped(AnimationDirector* director) override;
+        void onDirectorFinished(AnimationDirector* director) override;
+        void onDirectorReset(AnimationDirector* director) override;
+        void onDirectorAnimationStarted(
             AnimationDirector* director, const Animator* animator) override;
-        void onDirectorProgress(
+        void onDirectorAnimationProgress(
             AnimationDirector* director, const Animator* animator) override;
-        void onDirectorStopped(
+        void onDirectorAnimationStopped(
             AnimationDirector* director, const Animator* animator) override;
-        void onDirectorFinished(
+        void onDirectorAnimationFinished(
             AnimationDirector* director, const Animator* animator) override;
-        void onDirectorReset(
+        void onDirectorAnimationReset(
             AnimationDirector* director, const Animator* animator) override;
 
     private:
