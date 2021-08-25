@@ -14,20 +14,17 @@ namespace ukive {
     public:
         virtual ~Interpolator() = default;
 
-        virtual void setInitVal(double init_val) = 0;
-        virtual double interpolate(double progress) = 0;
+        virtual double interpolate(
+            double init_val, double final_val, double progress) = 0;
     };
+
 
     class LinearInterpolator : public Interpolator {
     public:
-        explicit LinearInterpolator(double final_val);
+        LinearInterpolator();
 
-        void setInitVal(double init_val) override;
-        double interpolate(double progress) override;
-
-    private:
-        double init_val_;
-        double final_val_;
+        double interpolate(
+            double init_val, double final_val, double progress) override;
     };
 
 }

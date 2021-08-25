@@ -9,21 +9,19 @@
 
 namespace ukive {
 
-    LinearInterpolator::LinearInterpolator(double final_val)
-        : init_val_(0),
-          final_val_(final_val) {}
+    // LinearInterpolator
+    LinearInterpolator::LinearInterpolator()
+    {}
 
-    void LinearInterpolator::setInitVal(double init_val) {
-        init_val_ = init_val;
-    }
-
-    double LinearInterpolator::interpolate(double progress) {
+    double LinearInterpolator::interpolate(
+        double init_val, double final_val, double progress)
+    {
         if (progress == 1) {
-            return final_val_;
+            return final_val;
         }
 
-        auto distance = final_val_ - init_val_;
-        return init_val_ + distance * progress;
+        auto distance = final_val - init_val;
+        return init_val + distance * progress;
     }
 
 }

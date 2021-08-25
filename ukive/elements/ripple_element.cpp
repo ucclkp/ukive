@@ -31,22 +31,26 @@ namespace ukive {
         using namespace std::chrono_literals;
 
         ripple_animator_.setDuration(500ms);
-        ripple_animator_.setInterpolator(new LinearInterpolator(1));
+        ripple_animator_.setInterpolator(new LinearInterpolator());
+        ripple_animator_.setFinalValue(1);
 
         hover_animator_.setListener(this);
         hover_animator_.setDuration(HOVER_LEAVE_SEC);
-        hover_animator_.setInterpolator(new LinearInterpolator(HOVER_ALPHA));
+        hover_animator_.setInterpolator(new LinearInterpolator());
+        hover_animator_.setFinalValue(HOVER_ALPHA);
 
         down_animator_.setListener(this);
         down_animator_.setDuration(DOWN_UP_SEC);
-        down_animator_.setInterpolator(new LinearInterpolator(DOWN_ALPHA));
+        down_animator_.setInterpolator(new LinearInterpolator());
+        down_animator_.setFinalValue(DOWN_ALPHA);
 
         up_animator_.setListener(this);
         up_animator_.setDuration(DOWN_UP_SEC);
 
         leave_animator_.setListener(this);
         leave_animator_.setDuration(HOVER_LEAVE_SEC);
-        leave_animator_.setInterpolator(new LinearInterpolator(0));
+        leave_animator_.setInterpolator(new LinearInterpolator());
+        leave_animator_.setFinalValue(0);
     }
 
     RippleElement::~RippleElement() {
@@ -162,8 +166,8 @@ namespace ukive {
                 down_animator_.stop();
                 alpha_ = down_animator_.getCurValue();
 
-                up_animator_.setInitValue(alpha_);
-                up_animator_.setInterpolator(new LinearInterpolator(0));
+                up_animator_.setValueRange(alpha_, 0);
+                up_animator_.setInterpolator(new LinearInterpolator());
                 up_animator_.reset();
                 up_animator_.start();
                 startVSync();
@@ -185,8 +189,8 @@ namespace ukive {
                 down_animator_.stop();
                 alpha_ = down_animator_.getCurValue();
 
-                up_animator_.setInitValue(alpha_);
-                up_animator_.setInterpolator(new LinearInterpolator(HOVER_ALPHA));
+                up_animator_.setValueRange(alpha_, HOVER_ALPHA);
+                up_animator_.setInterpolator(new LinearInterpolator());
                 up_animator_.reset();
                 up_animator_.start();
 

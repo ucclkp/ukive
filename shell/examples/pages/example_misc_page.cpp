@@ -149,12 +149,15 @@ namespace shell {
 
     ukive::View* ExampleMiscPage::onCreate(ukive::LayoutView* parent) {
         using namespace std::chrono_literals;
-        animator_.setListener(this);
-        animator_.setDuration(5000ms);
-        animator_.setInitValue(0);
-        animator_.setInterpolator(new ukive::LinearInterpolator(400));
-        animator_.setRepeat(true);
-        animator_.start();
+        director_.setListener(this);
+        auto animator = director_.add(0);
+        director_.setInitValue(0, 0);
+        animator->setDuration(5s);
+        animator->setFinalValue(400);
+        animator->setInterpolator(new ukive::LinearInterpolator());
+        director_.addLoop(2s, 1s, 10);
+        director_.start();
+        startVSync();
 
         auto v = ukive::LayoutInstantiator::from(
             parent->getContext(), parent, Res::Layout::example_misc_page_layout_xml);
@@ -236,15 +239,15 @@ namespace shell {
     }
 
     void ExampleMiscPage::onDestroy() {
-        animator_.stop();
+        director_.stop();
     }
 
-    void ExampleMiscPage::onAnimationProgress(ukive::Animator* animator) {
+    void ExampleMiscPage::onDirectorProgress(ukive::AnimationDirector* director) {
         image_view_->requestDraw();
-        image_view_->animeParams()->setTranslateX(animator->getCurValue());
-        image_view_->animeParams()->setScaleX(animator->getCurValue() / 400);
-        image_view_->animeParams()->setScaleY(animator->getCurValue() / 400);
-        image_view_->animeParams()->setRotate(animator->getCurValue() / 400 * 360);
+        image_view_->animeParams()->setTranslateX(director->getCurValue(0));
+        image_view_->animeParams()->setScaleX(director->getCurValue(0) / 400);
+        image_view_->animeParams()->setScaleY(director->getCurValue(0) / 400);
+        image_view_->animeParams()->setRotate(director->getCurValue(0) / 400 * 360);
         image_view_->animeParams()->setRPivotX(image_view_->getWidth() / 2.0);
         image_view_->animeParams()->setRPivotY(image_view_->getHeight() / 2.0);
         image_view_->animeParams()->setSPivotX(image_view_->getWidth() / 2.0);
@@ -255,6 +258,24 @@ namespace shell {
     void ExampleMiscPage::onClick(ukive::View* v) {
         if (test_button_ == v) {
             //test_button_->setEnabled(false);
+            if (director_.isRunning()) {
+                director_.stop();
+            } else {
+                director_.start();
+                startVSync();
+            }
+        }
+    }
+
+    void ExampleMiscPage::onVSync(
+        uint64_t start_time,
+        uint32_t display_freq,
+        uint32_t real_interval)
+    {
+        if (director_.update(start_time, display_freq)) {
+            requestVSync();
+        } else {
+            stopVSync();
         }
     }
 

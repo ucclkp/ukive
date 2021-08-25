@@ -60,10 +60,10 @@ namespace shell {
         layout->addView(ce_button_);
 
         using namespace std::chrono_literals;
-        animator_.setInitValue(RADIUS);
+        animator_.setValueRange(RADIUS, 256);
         animator_.setListener(this);
         animator_.setDuration(4000ms);
-        animator_.setInterpolator(new ukive::LinearInterpolator(256));
+        animator_.setInterpolator(new ukive::LinearInterpolator());
         //animator_.start();
         //startVSync();
     }

@@ -7,6 +7,8 @@
 #ifndef UKIVE_ANIMATION_VIEW_ANIMATOR_H_
 #define UKIVE_ANIMATION_VIEW_ANIMATOR_H_
 
+#include <functional>
+
 #include "ukive/animation/animation_director.h"
 #include "ukive/graphics/vsyncable.h"
 #include "ukive/resources/tval.hpp"
@@ -18,6 +20,9 @@ namespace ukive {
 
     class ViewAnimator : public AnimationDirectorListener, public VSyncable {
     public:
+        using ns = utl::TimeUtils::ns;
+        using nsp = utl::TimeUtils::nsp;
+
         enum RevealShape {
             REVEAL_RECT = 0,
             REVEAL_CIRCULE = 1,
@@ -30,7 +35,7 @@ namespace ukive {
 
         void start();
         void cancel();
-        ViewAnimator* setDuration(Animator::nsp duration);
+        ViewAnimator* setDuration(nsp duration);
 
         ViewAnimator* alpha(double value);
         ViewAnimator* scaleX(double value);
@@ -62,16 +67,16 @@ namespace ukive {
         void onDirectorStopped(AnimationDirector* director) override;
         void onDirectorFinished(AnimationDirector* director) override;
         void onDirectorReset(AnimationDirector* director) override;
-        void onDirectorAnimationStarted(
-            AnimationDirector* director, const Animator* animator) override;
-        void onDirectorAnimationProgress(
-            AnimationDirector* director, const Animator* animator) override;
-        void onDirectorAnimationStopped(
-            AnimationDirector* director, const Animator* animator) override;
-        void onDirectorAnimationFinished(
-            AnimationDirector* director, const Animator* animator) override;
-        void onDirectorAnimationReset(
-            AnimationDirector* director, const Animator* animator) override;
+        void onDirectorAnitomStarted(
+            AnimationDirector* director, const Anitom* anitom) override;
+        void onDirectorAnitomProgress(
+            AnimationDirector* director, const Anitom* anitom) override;
+        void onDirectorAnitomStopped(
+            AnimationDirector* director, const Anitom* anitom) override;
+        void onDirectorAnitomFinished(
+            AnimationDirector* director, const Anitom* anitom) override;
+        void onDirectorAnitomReset(
+            AnimationDirector* director, const Anitom* anitom) override;
 
     private:
         enum ViewAnimId {
@@ -86,7 +91,7 @@ namespace ukive {
             VIEW_ANIM_CIRCLE_REVEAL_R,
         };
 
-        Animator::ns duration_;
+        ns duration_;
         View* owner_view_;
         AnimationDirector director_;
 

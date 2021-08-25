@@ -53,7 +53,8 @@ namespace ukive {
 
         using namespace std::chrono_literals;
         thumb_animator_.setDuration(200ms);
-        thumb_animator_.setInterpolator(new LinearInterpolator(1));
+        thumb_animator_.setInterpolator(new LinearInterpolator());
+        thumb_animator_.setValueRange(0, 1);
 
         setFocusable(true);
         setTouchCapturable(true);

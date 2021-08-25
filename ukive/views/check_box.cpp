@@ -27,7 +27,8 @@ namespace ukive {
         using namespace std::chrono_literals;
 
         anim_.setDuration(200ms);
-        anim_.setInterpolator(new LinearInterpolator(1));
+        anim_.setInterpolator(new LinearInterpolator());
+        anim_.setValueRange(0, 1);
 
         Rect space;
         space.left = c.dp2pxi(24);

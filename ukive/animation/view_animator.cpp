@@ -35,56 +35,62 @@ namespace ukive {
         director_.stop();
     }
 
-    ViewAnimator* ViewAnimator::setDuration(Animator::nsp duration) {
+    ViewAnimator* ViewAnimator::setDuration(nsp duration) {
         duration_ = duration;
         return this;
     }
 
     ViewAnimator* ViewAnimator::alpha(double value) {
         auto anim = director_.add(VIEW_ANIM_ALPHA);
-        anim->setInitValue(owner_view_->animeParams()->getAlpha());
+        director_.setInitValue(VIEW_ANIM_ALPHA, owner_view_->animeParams()->getAlpha());
+        anim->setFinalValue(value);
         anim->setDuration(duration_);
-        anim->setInterpolator(new LinearInterpolator(value));
+        anim->setInterpolator(new LinearInterpolator());
         return this;
     }
 
     ViewAnimator* ViewAnimator::scaleX(double value) {
         auto anim = director_.add(VIEW_ANIM_SCALE_X);
-        anim->setInitValue(owner_view_->animeParams()->getScaleX());
+        director_.setInitValue(VIEW_ANIM_SCALE_X, owner_view_->animeParams()->getScaleX());
+        anim->setFinalValue(value);
         anim->setDuration(duration_);
-        anim->setInterpolator(new LinearInterpolator(value));
+        anim->setInterpolator(new LinearInterpolator());
         return this;
     }
 
     ViewAnimator* ViewAnimator::scaleY(double value) {
         auto anim = director_.add(VIEW_ANIM_SCALE_Y);
-        anim->setInitValue(owner_view_->animeParams()->getScaleY());
+        director_.setInitValue(VIEW_ANIM_SCALE_Y, owner_view_->animeParams()->getScaleY());
+        anim->setFinalValue(value);
         anim->setDuration(duration_);
-        anim->setInterpolator(new LinearInterpolator(value));
+        anim->setInterpolator(new LinearInterpolator());
         return this;
     }
 
     ViewAnimator* ViewAnimator::rotate(double value) {
         auto anim = director_.add(VIEW_ANIM_ROTATE);
-        anim->setInitValue(owner_view_->animeParams()->getRotate());
+        director_.setInitValue(VIEW_ANIM_ROTATE, owner_view_->animeParams()->getRotate());
+        anim->setFinalValue(value);
         anim->setDuration(duration_);
-        anim->setInterpolator(new LinearInterpolator(value));
+        anim->setInterpolator(new LinearInterpolator());
         return this;
     }
 
     ViewAnimator* ViewAnimator::translateX(double value) {
         auto anim = director_.add(VIEW_ANIM_TRANSLATE_X);
-        anim->setInitValue(owner_view_->animeParams()->getTranslateX());
+        director_.setInitValue(VIEW_ANIM_TRANSLATE_X, owner_view_->animeParams()->getTranslateX());
+        anim->setFinalValue(value);
         anim->setDuration(duration_);
-        anim->setInterpolator(new LinearInterpolator(value));
+        anim->setInterpolator(new LinearInterpolator());
         return this;
     }
 
     ViewAnimator* ViewAnimator::translateY(double value) {
         auto anim = director_.add(VIEW_ANIM_TRANSLATE_Y);
-        anim->setInitValue(owner_view_->animeParams()->getTranslateY());
+        director_.setInitValue(VIEW_ANIM_TRANSLATE_Y, owner_view_->animeParams()->getTranslateY());
+        anim->setFinalValue(value);
         anim->setDuration(duration_);
-        anim->setInterpolator(new LinearInterpolator(value));
+        anim->setInterpolator(new LinearInterpolator());
         return this;
     }
 
@@ -94,17 +100,18 @@ namespace ukive {
         tvalcr start_height, tvalcr end_height)
     {
         auto anim = director_.add(VIEW_ANIM_RECT_REVEAL_R_X);
-        anim->setInitValue(0);
+        director_.setInitValue(VIEW_ANIM_RECT_REVEAL_R_X, 0);
+        anim->setFinalValue(1);
         anim->setDuration(duration_);
-        anim->setInterpolator(new LinearInterpolator(1));
+        anim->setInterpolator(new LinearInterpolator());
 
         anim = director_.add(VIEW_ANIM_RECT_REVEAL_R_Y);
-        anim->setInitValue(0);
+        director_.setInitValue(VIEW_ANIM_RECT_REVEAL_R_Y, 0);
+        anim->setFinalValue(1);
         anim->setDuration(duration_);
-        anim->setInterpolator(new LinearInterpolator(1));
+        anim->setInterpolator(new LinearInterpolator());
 
         auto p = owner_view_->animeParams();
-        p->setHasReveal(true);
         p->reveal().setRect(
             x, y,
             start_width, end_width,
@@ -117,12 +124,12 @@ namespace ukive {
         tvalcr center_x, tvalcr center_y, tvalcr start_radius, tvalcr end_radius)
     {
         auto anim = director_.add(VIEW_ANIM_CIRCLE_REVEAL_R);
-        anim->setInitValue(0);
+        director_.setInitValue(VIEW_ANIM_CIRCLE_REVEAL_R, 0);
+        anim->setFinalValue(1);
         anim->setDuration(duration_);
-        anim->setInterpolator(new LinearInterpolator(1));
+        anim->setInterpolator(new LinearInterpolator());
 
         auto p = owner_view_->animeParams();
-        p->setHasReveal(true);
         p->reveal().setCircle(
             center_x, center_y,
             start_radius, end_radius);
@@ -190,18 +197,33 @@ namespace ukive {
         }
     }
 
-    void ViewAnimator::onDirectorAnimationStarted(
-        AnimationDirector* director, const Animator* animator)
-    {
-    }
-
-    void ViewAnimator::onDirectorAnimationProgress(
-        AnimationDirector* director, const Animator* animator)
+    void ViewAnimator::onDirectorAnitomStarted(
+        AnimationDirector* director, const Anitom* anitom)
     {
         auto p = owner_view_->animeParams();
-        double new_value = animator->getCurValue();
 
-        switch (animator->getId()) {
+        switch (anitom->getId()) {
+        case VIEW_ANIM_RECT_REVEAL_R_X:
+            p->setHasReveal(true);
+            break;
+        case VIEW_ANIM_RECT_REVEAL_R_Y:
+            p->setHasReveal(true);
+            break;
+        case VIEW_ANIM_CIRCLE_REVEAL_R:
+            p->setHasReveal(true);
+            break;
+        default:
+            break;
+        }
+    }
+
+    void ViewAnimator::onDirectorAnitomProgress(
+        AnimationDirector* director, const Anitom* anitom)
+    {
+        auto p = owner_view_->animeParams();
+        double new_value = director->getCurValue(anitom->getId());
+
+        switch (anitom->getId()) {
         case VIEW_ANIM_ALPHA:
             p->setAlpha(new_value);
             break;
@@ -234,23 +256,23 @@ namespace ukive {
         }
 
         if (listener_) {
-            listener_->onDirectorAnimationProgress(director, animator);
+            listener_->onDirectorAnitomProgress(director, anitom);
         }
     }
 
-    void ViewAnimator::onDirectorAnimationStopped(
-        AnimationDirector* director, const Animator* animator)
+    void ViewAnimator::onDirectorAnitomStopped(
+        AnimationDirector* director, const Anitom* anitom)
     {
 
     }
 
-    void ViewAnimator::onDirectorAnimationFinished(
-        AnimationDirector* director, const Animator* animator)
+    void ViewAnimator::onDirectorAnitomFinished(
+        AnimationDirector* director, const Anitom* anitom)
     {
         using namespace std::chrono_literals;
-        if (animator->getId() == VIEW_ANIM_RECT_REVEAL_R_X ||
-            animator->getId() == VIEW_ANIM_RECT_REVEAL_R_Y ||
-            animator->getId() == VIEW_ANIM_CIRCLE_REVEAL_R)
+        if (anitom->getId() == VIEW_ANIM_RECT_REVEAL_R_X ||
+            anitom->getId() == VIEW_ANIM_RECT_REVEAL_R_Y ||
+            anitom->getId() == VIEW_ANIM_CIRCLE_REVEAL_R)
         {
             bool has_reval = false;
             auto rev_anim = director->get(VIEW_ANIM_RECT_REVEAL_R_X, 0s);
@@ -276,8 +298,8 @@ namespace ukive {
         }
     }
 
-    void ViewAnimator::onDirectorAnimationReset(
-        AnimationDirector* director, const Animator* animator)
+    void ViewAnimator::onDirectorAnitomReset(
+        AnimationDirector* director, const Anitom* anitom)
     {
 
     }

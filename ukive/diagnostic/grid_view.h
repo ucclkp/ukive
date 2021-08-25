@@ -7,12 +7,13 @@
 #ifndef UKIVE_DIAGNOSTIC_GRID_VIEW_H_
 #define UKIVE_DIAGNOSTIC_GRID_VIEW_H_
 
+#include "utils/weak_ref_nest.hpp"
+
 #include "ukive/animation/animator.h"
+#include "ukive/diagnostic/grid_navigator.h"
 #include "ukive/graphics/size.hpp"
 #include "ukive/graphics/vsyncable.h"
 #include "ukive/views/view.h"
-
-#include "ukive/diagnostic/grid_navigator.h"
 
 
 namespace ukive {

@@ -38,13 +38,13 @@ GUI_MAIN() {
     ukive::Window::InitParams native_params;
     native_params.frame_type = ukive::WINDOW_FRAME_NATIVE;
 
-    auto text_window = std::make_shared<shell::TextWindow>();
+    /*auto text_window = std::make_shared<shell::TextWindow>();
     text_window->init(native_params);
     text_window->setTitle(u"Text");
     text_window->setWidth(ukive::Application::dp2pxi(400));
     text_window->setHeight(ukive::Application::dp2pxi(400));
     text_window->center();
-    text_window->show();
+    text_window->show();*/
 
     /*auto lod_window = std::make_shared<shell::LodWindow>();
     lod_window->init(ukive::Window::InitParams());

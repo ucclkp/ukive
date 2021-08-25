@@ -16,7 +16,6 @@ namespace ukive {
     Animator::Animator()
         : id_(0),
           cur_val_(0),
-          init_val_(0),
           duration_(250),
           elapsed_duration_(0),
           start_time_(0),
@@ -25,7 +24,7 @@ namespace ukive {
           is_running_(false),
           is_finished_(false),
           listener_(nullptr),
-          interpolator_(std::make_unique<LinearInterpolator>(1))
+          interpolator_(std::make_unique<LinearInterpolator>())
     {}
 
     Animator::~Animator() {
@@ -39,11 +38,10 @@ namespace ukive {
 
         if (!is_started_) {
             is_started_ = true;
-            is_preparing_ = true;
             cur_val_ = init_val_;
-            interpolator_->setInitVal(init_val_);
         }
 
+        is_preparing_ = true;
         is_running_ = true;
         is_finished_ = false;
         start_time_ = 0;
@@ -60,9 +58,7 @@ namespace ukive {
 
         is_running_ = false;
 
-        if (is_preparing_) {
-            is_preparing_ = false;
-        } else {
+        if (!is_preparing_) {
             elapsed_duration_ = now() - start_time_;
         }
 
@@ -80,7 +76,7 @@ namespace ukive {
         is_running_ = false;
         is_finished_ = true;
 
-        cur_val_ = interpolator_->interpolate(1);
+        cur_val_ = final_val_;
 
         if (listener_) {
             listener_->onAnimationFinished(this);
@@ -99,6 +95,7 @@ namespace ukive {
 
         cur_val_ = init_val_;
         elapsed_duration_ = 0;
+        start_time_ = 0;
 
         if (listener_) {
             listener_->onAnimationReset(this);
@@ -112,12 +109,12 @@ namespace ukive {
 
         if (is_preparing_) {
             is_preparing_ = false;
-            start_time_ = cur_time - (NANO_RATIO / display_freq);
+            start_time_ = cur_time - (NANO_RATIO / display_freq) - elapsed_duration_;
         }
 
         bool finished = cur_time >= start_time_ + duration_;
         double progress = finished ? 1 : double(cur_time - start_time_) / duration_;
-        cur_val_ = interpolator_->interpolate(progress);
+        cur_val_ = interpolator_->interpolate(init_val_, final_val_, progress);
 
         if (listener_) {
             listener_->onAnimationProgress(this);
@@ -156,6 +153,7 @@ namespace ukive {
         if (!ipr || interpolator_.get() == ipr) {
             return;
         }
+
         interpolator_.reset(ipr);
     }
 
@@ -165,6 +163,15 @@ namespace ukive {
 
     void Animator::setInitValue(double init_val) {
         init_val_ = init_val;
+    }
+
+    void Animator::setFinalValue(double final_val) {
+        final_val_ = final_val;
+    }
+
+    void Animator::setValueRange(double init_val, double final_val) {
+        init_val_ = init_val;
+        final_val_ = final_val;
     }
 
     bool Animator::isRepeat() const {
@@ -197,6 +204,10 @@ namespace ukive {
 
     double Animator::getInitValue() const {
         return init_val_;
+    }
+
+    double Animator::getFinalValue() const {
+        return final_val_;
     }
 
     Interpolator* Animator::getInterpolator() const {

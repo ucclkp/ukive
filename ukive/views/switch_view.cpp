@@ -33,8 +33,9 @@ namespace ukive {
     {
         using namespace std::chrono_literals;
         anim_.setDuration(200ms);
-        anim_.setInterpolator(new LinearInterpolator(1));
+        anim_.setInterpolator(new LinearInterpolator());
         anim_.setListener(this);
+        anim_.setValueRange(0, 1);
 
         def_track_width_ = c.dp2pxi(34);
         def_track_height_ = c.dp2pxi(14);

@@ -11,8 +11,6 @@
 
 #include "utils/time_utils.h"
 
-#include "ukive/animation/timer.h"
-
 
 namespace ukive {
 
@@ -52,7 +50,10 @@ namespace ukive {
         void setDuration(nsp duration);
         void setInterpolator(Interpolator* ipr);
         void setListener(AnimationListener* listener);
+
         void setInitValue(double init_val);
+        void setFinalValue(double final_val);
+        void setValueRange(double init_val, double final_val);
 
         bool isRepeat() const;
         bool isStarted() const;
@@ -63,14 +64,18 @@ namespace ukive {
         ns getDuration() const;
         double getCurValue() const;
         double getInitValue() const;
+        double getFinalValue() const;
         Interpolator* getInterpolator() const;
 
     private:
         void restart(uint64_t cur_time);
+        friend class AnimationDirector;
 
         int id_;
         double cur_val_;
-        double init_val_;
+        double init_val_ = 0;
+        double final_val_ = 1;
+
         uint64_t duration_;
         uint64_t elapsed_duration_;
         uint64_t start_time_;

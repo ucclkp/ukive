@@ -9,13 +9,14 @@
 
 #include <map>
 #include <memory>
+#include <optional>
+#include <vector>
 
-#include "ukive/animation/animator.h"
+#include "ukive/animation/anitom.h"
 
 
 namespace ukive {
 
-    class Animator;
     class AnimationDirector;
 
     class AnimationDirectorListener {
@@ -28,51 +29,57 @@ namespace ukive {
         virtual void onDirectorFinished(AnimationDirector* director) {}
         virtual void onDirectorReset(AnimationDirector* director) {}
 
-        virtual void onDirectorAnimationStarted(
-            AnimationDirector* director, const Animator* animator) {}
-        virtual void onDirectorAnimationProgress(
-            AnimationDirector* director, const Animator* animator) {}
-        virtual void onDirectorAnimationStopped(
-            AnimationDirector* director, const Animator* animator) {}
-        virtual void onDirectorAnimationFinished(
-            AnimationDirector* director, const Animator* animator) {}
-        virtual void onDirectorAnimationReset(
-            AnimationDirector* director, const Animator* animator) {}
+        virtual void onDirectorAnitomStarted(
+            AnimationDirector* director, const Anitom* anitom) {}
+        virtual void onDirectorAnitomProgress(
+            AnimationDirector* director, const Anitom* anitom) {}
+        virtual void onDirectorAnitomStopped(
+            AnimationDirector* director, const Anitom* anitom) {}
+        virtual void onDirectorAnitomFinished(
+            AnimationDirector* director, const Anitom* anitom) {}
+        virtual void onDirectorAnitomReset(
+            AnimationDirector* director, const Anitom* anitom) {}
     };
 
-    class AnimationDirector : public AnimationListener {
+    class AnimationDirector {
     public:
-        using ns = Animator::ns;
-        using nsp = Animator::nsp;
-        using APtr = std::unique_ptr<Animator>;
+        using ns = Anitom::ns;
+        using nsp = Anitom::nsp;
+        using Anitoms = std::vector<std::unique_ptr<Anitom>>;
 
-        struct Animation {
-            ns st;
-            APtr ptr;
+        struct Channel {
+            Anitoms anitoms;
+            double init_val = 0;
+            double cur_val = 0;
         };
-
-        using APtrVec = std::vector<Animation>;
 
         AnimationDirector();
 
-        Animator* add(int id);
-        Animator* add(int id, nsp st);
+        Anitom* add(int id);
+        Anitom* add(int id, nsp st);
         void remove(int id);
         void remove(int id, nsp st);
         void clear();
         bool contains(int id) const;
         bool contains(int id, nsp st) const;
-        const APtrVec& get(int id) const;
-        Animator* get(int id, nsp st) const;
+        const Channel& get(int id) const;
+        Anitom* get(int id, nsp st) const;
+
+        void addLoop(nsp start, nsp duration, uint32_t count);
+        void removeLoop(nsp start);
+        void removeLoops();
 
         void start();
         void stop();
         void finish();
         void reset();
-        void update(uint64_t cur_time, uint32_t display_freq);
+        bool update(uint64_t cur_time, uint32_t display_freq);
 
+        void setRepeat(bool repeat);
+        void setInitValue(int id, double init_val);
         void setListener(AnimationDirectorListener* l);
 
+        bool isRepeat() const;
         bool isRunning() const;
         bool isFinished() const;
 
@@ -82,24 +89,33 @@ namespace ukive {
         ns getTotalDuration() const;
 
     private:
-        void restart(uint64_t cur_time);
+        struct LoopItem {
+            uint64_t start;
+            uint64_t duration;
+            uint32_t count;
+        };
 
-        // AnimationListener
-        void onAnimationStarted(Animator* animator) override;
-        void onAnimationProgress(Animator* animator) override;
-        void onAnimationStopped(Animator* animator) override;
-        void onAnimationFinished(Animator* animator) override;
-        void onAnimationReset(Animator* animator) override;
+        Anitom* findCurAnitom(
+            uint64_t local_time, const Anitoms& anitoms) const;
+        void anitomToFinish(Anitom* anim);
+        void anitomToReset(Anitom* anim);
+
+        bool updateInternal(uint64_t local_time);
+        void updateAnitom(uint64_t local_time, Anitom* anim, double& cur_val);
+        void restart(uint64_t cur_time);
 
         uint64_t start_time_ = 0;
         uint64_t elapsed_time_ = 0;
+        uint64_t looped_time_ = 0;
+        std::optional<LoopItem> cur_loop_;
 
-        bool is_repeat_;
-        bool is_started_;
-        bool is_running_;
-        bool is_finished_;
+        bool is_repeat_ = true;
+        bool is_started_ = false;
+        bool is_running_ = false;
+        bool is_finished_ = false;
         AnimationDirectorListener* listener_;
-        std::map<int, APtrVec> animators_;
+        std::map<int, Channel> channels_;
+        std::vector<LoopItem> loops_;
     };
 
 }

@@ -29,8 +29,8 @@ namespace ukive {
         using namespace std::chrono_literals;
         animator_.setListener(this);
         animator_.setDuration(150ms);
-        animator_.setInitValue(0);
-        animator_.setInterpolator(new LinearInterpolator(1));
+        animator_.setValueRange(0, 1);
+        animator_.setInterpolator(new LinearInterpolator());
         animator_.setRepeat(false);
     }
 

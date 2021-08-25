@@ -9,7 +9,8 @@
 
 #include "ukive/page/page.h"
 #include "ukive/views/click_listener.h"
-#include "ukive/animation/animator.h"
+#include "ukive/animation/animation_director.h"
+#include "ukive/graphics/vsyncable.h"
 
 
 namespace ukive {
@@ -24,7 +25,8 @@ namespace shell {
     class ExampleMiscPage :
         public ukive::Page,
         public ukive::OnClickListener,
-        public ukive::AnimationListener
+        public ukive::AnimationDirectorListener,
+        public ukive::VSyncable
     {
     public:
         explicit ExampleMiscPage(ukive::Window* w);
@@ -34,13 +36,19 @@ namespace shell {
         void onDestroy() override;
 
         // ukive::AnimationListener
-        void onAnimationProgress(ukive::Animator* animator) override;
+        void onDirectorProgress(ukive::AnimationDirector* director) override;
 
         // ukive::OnClickListener
         void onClick(ukive::View* v) override;
 
+        // ukive::VSyncable
+        void onVSync(
+            uint64_t start_time,
+            uint32_t display_freq,
+            uint32_t real_interval) override;
+
     private:
-        ukive::Animator animator_;
+        ukive::AnimationDirector director_;
 
         ukive::Button* test_button_ = nullptr;
         ukive::ImageView* image_view_ = nullptr;

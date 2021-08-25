@@ -191,6 +191,7 @@
   <ItemGroup>
     <ClInclude Include="animation\animation_director.h" />
     <ClInclude Include="animation\animator.h" />
+    <ClInclude Include="animation\anitom.h" />
     <ClInclude Include="animation\bezier_curve.h" />
     <ClInclude Include="animation\interpolator.h" />
     <ClInclude Include="animation\scroller.h" />
@@ -455,6 +456,7 @@
   <ItemGroup>
     <ClCompile Include="animation\animation_director.cpp" />
     <ClCompile Include="animation\animator.cpp" />
+    <ClCompile Include="animation\anitom.cpp" />
     <ClCompile Include="animation\bezier_curve.cpp" />
     <ClCompile Include="animation\interpolator.cpp" />
     <ClCompile Include="animation\scroller.cpp" />
