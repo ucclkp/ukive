@@ -41,7 +41,9 @@ namespace ukive {
     }
 
     ViewAnimator* ViewAnimator::alpha(double value) {
-        auto anim = director_.add(VIEW_ANIM_ALPHA);
+        director_.removeFinished();
+
+        auto anim = director_.add(VIEW_ANIM_ALPHA, true);
         director_.setInitValue(VIEW_ANIM_ALPHA, owner_view_->animeParams()->getAlpha());
         anim->setFinalValue(value);
         anim->setDuration(duration_);
@@ -50,6 +52,8 @@ namespace ukive {
     }
 
     ViewAnimator* ViewAnimator::scaleX(double value) {
+        director_.removeFinished();
+
         auto anim = director_.add(VIEW_ANIM_SCALE_X);
         director_.setInitValue(VIEW_ANIM_SCALE_X, owner_view_->animeParams()->getScaleX());
         anim->setFinalValue(value);
@@ -59,6 +63,8 @@ namespace ukive {
     }
 
     ViewAnimator* ViewAnimator::scaleY(double value) {
+        director_.removeFinished();
+
         auto anim = director_.add(VIEW_ANIM_SCALE_Y);
         director_.setInitValue(VIEW_ANIM_SCALE_Y, owner_view_->animeParams()->getScaleY());
         anim->setFinalValue(value);
@@ -68,6 +74,8 @@ namespace ukive {
     }
 
     ViewAnimator* ViewAnimator::rotate(double value) {
+        director_.removeFinished();
+
         auto anim = director_.add(VIEW_ANIM_ROTATE);
         director_.setInitValue(VIEW_ANIM_ROTATE, owner_view_->animeParams()->getRotate());
         anim->setFinalValue(value);
@@ -77,6 +85,8 @@ namespace ukive {
     }
 
     ViewAnimator* ViewAnimator::translateX(double value) {
+        director_.removeFinished();
+
         auto anim = director_.add(VIEW_ANIM_TRANSLATE_X);
         director_.setInitValue(VIEW_ANIM_TRANSLATE_X, owner_view_->animeParams()->getTranslateX());
         anim->setFinalValue(value);
@@ -86,6 +96,8 @@ namespace ukive {
     }
 
     ViewAnimator* ViewAnimator::translateY(double value) {
+        director_.removeFinished();
+
         auto anim = director_.add(VIEW_ANIM_TRANSLATE_Y);
         director_.setInitValue(VIEW_ANIM_TRANSLATE_Y, owner_view_->animeParams()->getTranslateY());
         anim->setFinalValue(value);
@@ -99,6 +111,8 @@ namespace ukive {
         tvalcr start_width, tvalcr end_width,
         tvalcr start_height, tvalcr end_height)
     {
+        director_.removeFinished();
+
         auto anim = director_.add(VIEW_ANIM_RECT_REVEAL_R_X);
         director_.setInitValue(VIEW_ANIM_RECT_REVEAL_R_X, 0);
         anim->setFinalValue(1);
@@ -112,6 +126,7 @@ namespace ukive {
         anim->setInterpolator(new LinearInterpolator());
 
         auto p = owner_view_->animeParams();
+        p->setHasReveal(true);
         p->reveal().setRect(
             x, y,
             start_width, end_width,
@@ -123,6 +138,8 @@ namespace ukive {
     ViewAnimator* ViewAnimator::circleReveal(
         tvalcr center_x, tvalcr center_y, tvalcr start_radius, tvalcr end_radius)
     {
+        director_.removeFinished();
+
         auto anim = director_.add(VIEW_ANIM_CIRCLE_REVEAL_R);
         director_.setInitValue(VIEW_ANIM_CIRCLE_REVEAL_R, 0);
         anim->setFinalValue(1);
@@ -130,6 +147,7 @@ namespace ukive {
         anim->setInterpolator(new LinearInterpolator());
 
         auto p = owner_view_->animeParams();
+        p->setHasReveal(true);
         p->reveal().setCircle(
             center_x, center_y,
             start_radius, end_radius);

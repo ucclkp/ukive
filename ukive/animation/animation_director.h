@@ -56,9 +56,11 @@ namespace ukive {
         AnimationDirector();
 
         Anitom* add(int id);
+        Anitom* add(int id, bool continuous);
         Anitom* add(int id, nsp st);
         void remove(int id);
         void remove(int id, nsp st);
+        void removeFinished();
         void clear();
         bool contains(int id) const;
         bool contains(int id, nsp st) const;
@@ -109,7 +111,7 @@ namespace ukive {
         uint64_t looped_time_ = 0;
         std::optional<LoopItem> cur_loop_;
 
-        bool is_repeat_ = true;
+        bool is_repeat_ = false;
         bool is_started_ = false;
         bool is_running_ = false;
         bool is_finished_ = false;

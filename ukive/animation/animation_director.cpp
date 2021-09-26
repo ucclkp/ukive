@@ -6,8 +6,6 @@
 
 #include "ukive/animation/animation_director.h"
 
-#include <assert.h>
-
 #include "animator.h"
 
 
@@ -18,6 +16,17 @@ namespace ukive {
 
     Anitom* AnimationDirector::add(int id) {
         return add(id, ns(0));
+    }
+
+    Anitom* AnimationDirector::add(int id, bool continuous) {
+        ns start_time;
+        if (continuous && is_started_ && !is_finished_) {
+            start_time = ns(Animator::now() - start_time_ - looped_time_);
+        } else {
+            start_time = ns(0);
+        }
+
+        return add(id, start_time);
     }
 
     Anitom* AnimationDirector::add(int id, nsp st) {
@@ -47,6 +56,10 @@ namespace ukive {
             vec.push_back(std::move(animator));
         }
 
+        if (is_started_ && !is_finished_ && vec.size() == 1) {
+            channels_[id].cur_val = channels_[id].init_val;
+        }
+
         return ptr;
     }
 
@@ -71,6 +84,25 @@ namespace ukive {
                     channels_.erase(mit);
                 }
                 break;
+            }
+        }
+    }
+
+    void AnimationDirector::removeFinished() {
+        for (auto it = channels_.begin(); it != channels_.end();) {
+            auto& vec = it->second.anitoms;
+            for (auto ia = vec.begin(); ia != vec.end();) {
+                if (ia->get()->isFinished()) {
+                    ia = vec.erase(ia);
+                } else {
+                    ++ia;
+                }
+            }
+
+            if (vec.empty()) {
+                it = channels_.erase(it);
+            } else {
+                ++it;
             }
         }
     }
@@ -164,8 +196,12 @@ namespace ukive {
     }
 
     void AnimationDirector::start() {
-        if (is_running_ || is_finished_ || channels_.empty()) {
+        if (is_running_ || channels_.empty()) {
             return;
+        }
+
+        if (is_finished_) {
+            reset();
         }
 
         if (!is_started_) {
@@ -427,7 +463,30 @@ namespace ukive {
     }
 
     void AnimationDirector::setInitValue(int id, double init_val) {
-        channels_[id].init_val = init_val;
+        auto& pair = channels_[id];
+        pair.init_val = init_val;
+
+        if (is_started_ && !is_finished_) {
+            ns start_time;
+            bool first = true;
+            auto& vec = pair.anitoms;
+            for (auto& a : vec) {
+                if (first) {
+                    start_time = a->getStartTime();
+                    first = false;
+                } else {
+                    auto st = a->getStartTime();
+                    if (st > start_time) {
+                        break;
+                    }
+                }
+                a->setInitValue(init_val);
+            }
+
+            if (vec.size() == 1 && !vec[0]->isStarted()) {
+                pair.cur_val = pair.init_val;
+            }
+        }
     }
 
     void AnimationDirector::setListener(AnimationDirectorListener* l) {
