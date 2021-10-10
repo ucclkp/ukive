@@ -269,20 +269,13 @@ namespace ukive {
     void RippleElement::onVSync(
         uint64_t start_time, uint32_t display_freq, uint32_t real_interval)
     {
-        hover_animator_.update(start_time, display_freq);
-        leave_animator_.update(start_time, display_freq);
-        down_animator_.update(start_time, display_freq);
-        up_animator_.update(start_time, display_freq);
-        ripple_animator_.update(start_time, display_freq);
+        bool ret = hover_animator_.update(start_time, display_freq);
+        ret |= leave_animator_.update(start_time, display_freq);
+        ret |= down_animator_.update(start_time, display_freq);
+        ret |= up_animator_.update(start_time, display_freq);
+        ret |= ripple_animator_.update(start_time, display_freq);
 
-        if (hover_animator_.isRunning() ||
-            leave_animator_.isRunning() ||
-            down_animator_.isRunning() ||
-            up_animator_.isRunning() ||
-            ripple_animator_.isRunning())
-        {
-            requestVSync();
-        } else {
+        if (!ret) {
             stopVSync();
         }
         requestDraw();

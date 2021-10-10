@@ -172,10 +172,7 @@ namespace ukive {
     void ViewAnimator::onVSync(
         uint64_t start_time, uint32_t display_freq, uint32_t real_interval)
     {
-        director_.update(start_time, display_freq);
-        if (director_.isRunning()) {
-            requestVSync();
-        } else {
+        if (!director_.update(start_time, display_freq)) {
             stopVSync();
         }
         owner_view_->requestDraw();

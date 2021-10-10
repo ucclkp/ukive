@@ -55,13 +55,9 @@ namespace ukive {
     {
         WindowManager::getInstance()->addWindow(this);
         WindowManager::getInstance()->addListener(this);
-        Application::getVSyncProvider()->addCallback(this);
     }
 
     Window::~Window() {
-        Application::getVSyncProvider()->removeCallback(this);
-        WindowManager::getInstance()->removeListener(this);
-        WindowManager::getInstance()->removeWindow(this);
     }
 
     bool Window::init(const InitParams& params) {
@@ -1197,11 +1193,6 @@ namespace ukive {
         if (w == parent_) {
             parent_ = nullptr;
         }
-    }
-
-    void Window::onVSync(
-        uint64_t start_time, uint32_t display_freq, uint32_t real_interval) {
-
     }
 
 }

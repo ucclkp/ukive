@@ -272,9 +272,7 @@ namespace shell {
         uint32_t display_freq,
         uint32_t real_interval)
     {
-        if (director_.update(start_time, display_freq)) {
-            requestVSync();
-        } else {
+        if (!director_.update(start_time, display_freq)) {
             stopVSync();
         }
     }

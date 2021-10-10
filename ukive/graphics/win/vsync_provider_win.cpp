@@ -16,22 +16,34 @@
 
 namespace ukive {
 
-    VSyncProviderWin::VSyncProviderWin() {
+    VSyncProviderWin::VSyncProviderWin()
+        : is_finished_(false),
+          is_running_(false),
+          pm_opened_(true)
+    {
         cycler_.setListener(this);
         worker_ = std::thread(std::bind(&VSyncProviderWin::onWork, this));
     }
 
     VSyncProviderWin::~VSyncProviderWin() {
-        need_working_ = false;
-        run();
+        is_finished_ = true;
+        is_running_ = false;
+        wake();
 
         if (worker_.joinable()) {
             worker_.join();
         }
     }
 
-    void VSyncProviderWin::requestVSync() {
-        run();
+    bool VSyncProviderWin::onStartVSync() {
+        is_running_.store(true, std::memory_order_relaxed);
+        wake();
+        return true;
+    }
+
+    bool VSyncProviderWin::onStopVSync() {
+        is_running_.store(false, std::memory_order_relaxed);
+        return true;
     }
 
     void VSyncProviderWin::setPrimaryMonitorStatus(bool opened) {
@@ -41,7 +53,9 @@ namespace ukive {
     void VSyncProviderWin::onHandleMessage(const utl::Message& msg) {
         switch(msg.id) {
         case MSG_VSYNC:
-            notifyCallbacks(msg.ui1, uint32_t(msg.ui2 >> 32), uint32_t(msg.ui2));
+            if (is_running_) {
+                notifyCallbacks(msg.ui1, uint32_t(msg.ui2 >> 32), uint32_t(msg.ui2));
+            }
             break;
 
         default:
@@ -49,27 +63,31 @@ namespace ukive {
         }
     }
 
-    void VSyncProviderWin::run() {
+    void VSyncProviderWin::wake() {
         std::unique_lock<std::mutex> ul(cv_mutex_);
         cv_.notify_one();
         cv_pred_ = true;
     }
 
+    void VSyncProviderWin::wait() {
+        if (!is_running_) {
+            std::unique_lock<std::mutex> ul(cv_mutex_);
+            while (!cv_pred_) {
+                cv_.wait(ul);
+            }
+            cv_pred_ = false;
+        }
+    }
+
     void VSyncProviderWin::onWork() {
         for (;;) {
-            if (!need_working_) {
+            if (is_finished_) {
                 break;
             }
 
-            {
-                std::unique_lock<std::mutex> ul(cv_mutex_);
-                while (!cv_pred_) {
-                    cv_.wait(ul);
-                }
-                cv_pred_ = false;
-            }
+            wait();
 
-            if (!need_working_) {
+            if (is_finished_) {
                 break;
             }
 

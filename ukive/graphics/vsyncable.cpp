@@ -6,8 +6,6 @@
 
 #include "vsyncable.h"
 
-#include "utils/log.h"
-
 #include "ukive/app/application.h"
 
 
@@ -16,34 +14,23 @@ namespace ukive {
     VSyncable::VSyncable() {}
 
     VSyncable::~VSyncable() {
-        stopListenVSync();
+        stopVSync();
     }
 
     void VSyncable::startVSync() {
-        startListenVSync();
-        requestVSync();
+        if (!is_started_) {
+            is_started_ = true;
+            Application::getVSyncProvider()->addCallback(this);
+            Application::getVSyncProvider()->startVSync();
+        }
     }
 
     void VSyncable::stopVSync() {
-        stopListenVSync();
-    }
-
-    void VSyncable::startListenVSync() {
-        if (!is_start_listening_) {
-            is_start_listening_ = true;
-            Application::getVSyncProvider()->addCallback(this);
-        }
-    }
-
-    void VSyncable::stopListenVSync() {
-        if (is_start_listening_) {
-            is_start_listening_ = false;
+        if (is_started_) {
+            Application::getVSyncProvider()->stopVSync();
             Application::getVSyncProvider()->removeCallback(this);
+            is_started_ = false;
         }
-    }
-
-    void VSyncable::requestVSync() {
-        Application::getVSyncProvider()->requestVSync();
     }
 
 }

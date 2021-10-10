@@ -35,13 +35,18 @@ namespace ukive {
         void addCallback(VSyncCallback* cb);
         void removeCallback(VSyncCallback* cb);
 
-        virtual void requestVSync() = 0;
+        bool startVSync();
+        bool stopVSync();
 
     protected:
+        virtual bool onStartVSync() = 0;
+        virtual bool onStopVSync() = 0;
+
         void notifyCallbacks(
             uint64_t start_time, uint32_t display_freq, uint32_t real_interval);
 
     private:
+        int counter_ = 0;
         std::vector<VSyncCallback*> callbacks_;
     };
 

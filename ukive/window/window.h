@@ -16,7 +16,6 @@
 #include "ukive/graphics/color.h"
 #include "ukive/graphics/dirty_region.h"
 #include "ukive/graphics/size.hpp"
-#include "ukive/graphics/vsync_provider.h"
 #include "ukive/system/theme_info.h"
 #include "ukive/views/layout_info/gravity.h"
 #include "ukive/views/view.h"
@@ -46,8 +45,7 @@ namespace ukive {
 
     class Window :
         public WindowManageListener,
-        public WindowNativeDelegate,
-        public VSyncCallback
+        public WindowNativeDelegate
     {
     public:
         struct InitParams {
@@ -212,10 +210,6 @@ namespace ukive {
         // WindowManageListener
         void onWindowAdded(Window* w) override;
         void onWindowRemoved(Window* w) override;
-
-        // VSyncCallback
-        void onVSync(
-            uint64_t start_time, uint32_t display_freq, uint32_t real_interval) override;
 
     private:
         enum {

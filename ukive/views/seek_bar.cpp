@@ -348,11 +348,7 @@ namespace ukive {
     void SeekBar::onVSync(
         uint64_t start_time, uint32_t display_freq, uint32_t real_interval)
     {
-        thumb_animator_.update(start_time, display_freq);
-
-        if (thumb_animator_.isRunning()) {
-            requestVSync();
-        } else {
+        if (!thumb_animator_.update(start_time, display_freq)) {
             stopVSync();
         }
         requestDraw();

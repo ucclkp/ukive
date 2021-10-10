@@ -31,6 +31,28 @@ namespace ukive {
         utl::removeCallbackFrom(callbacks_, cb);
     }
 
+    bool VSyncProvider::startVSync() {
+        if (counter_ <= 0) {
+            counter_ = 1;
+            return onStartVSync();
+        }
+        ++counter_;
+        return true;
+    }
+
+    bool VSyncProvider::stopVSync() {
+        if (counter_ <= 0) {
+            return false;
+        }
+
+        --counter_;
+        if (counter_ <= 0) {
+            counter_ = 0;
+            return onStopVSync();
+        }
+        return true;
+    }
+
     void VSyncProvider::notifyCallbacks(
         uint64_t start_time, uint32_t display_freq, uint32_t real_interval)
     {

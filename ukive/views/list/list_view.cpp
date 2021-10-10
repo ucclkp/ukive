@@ -252,7 +252,6 @@ namespace ukive {
                 scroller_.finish();
             }
             requestDraw();
-            requestVSync();
         } else {
             stopVSync();
         }

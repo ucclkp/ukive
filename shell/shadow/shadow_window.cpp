@@ -124,11 +124,7 @@ namespace shell {
     void ShadowWindow::onVSync(
         uint64_t start_time, uint32_t display_freq, uint32_t real_interval)
     {
-        animator_.update(start_time, display_freq);
-
-        if (animator_.isRunning()) {
-            requestVSync();
-        } else {
+        if (!animator_.update(start_time, display_freq)) {
             stopVSync();
         }
     }

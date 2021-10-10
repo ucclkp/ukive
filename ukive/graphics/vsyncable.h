@@ -20,12 +20,8 @@ namespace ukive {
         void startVSync();
         void stopVSync();
 
-        void startListenVSync();
-        void stopListenVSync();
-        void requestVSync();
-
     private:
-        bool is_start_listening_ = false;
+        bool is_started_ = false;
     };
 
 }

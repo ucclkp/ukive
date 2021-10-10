@@ -227,11 +227,7 @@ namespace ukive {
     void SwitchView::onVSync(
         uint64_t start_time, uint32_t display_freq, uint32_t real_interval)
     {
-        anim_.update(start_time, display_freq);
-
-        if (anim_.isRunning()) {
-            requestVSync();
-        } else {
+        if (!anim_.update(start_time, display_freq)) {
             stopVSync();
         }
         requestDraw();

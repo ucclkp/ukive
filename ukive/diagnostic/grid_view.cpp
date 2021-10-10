@@ -349,11 +349,7 @@ namespace ukive {
     void GridView::onVSync(
         uint64_t start_time, uint32_t display_freq, uint32_t real_interval)
     {
-        animator_.update(start_time, display_freq);
-
-        if (!animator_.isFinished()) {
-            requestVSync();
-        } else {
+        if (!animator_.update(start_time, display_freq)) {
             stopVSync();
         }
         requestDraw();

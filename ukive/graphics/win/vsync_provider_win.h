@@ -30,8 +30,6 @@ namespace ukive {
         VSyncProviderWin();
         ~VSyncProviderWin();
 
-        void requestVSync() override;
-
         void setPrimaryMonitorStatus(bool opened);
 
     protected:
@@ -39,11 +37,16 @@ namespace ukive {
             MSG_VSYNC = 0,
         };
 
+        // VSyncProvider
+        bool onStartVSync() override;
+        bool onStopVSync() override;
+
         // CyclerListener
         void onHandleMessage(const utl::Message& msg) override;
 
     private:
-        void run();
+        void wake();
+        void wait();
         void onWork();
 
         utl::Cycler cycler_;
@@ -51,8 +54,9 @@ namespace ukive {
         std::mutex cv_mutex_;
         std::condition_variable cv_;
         bool cv_pred_ = false;
-        bool need_working_ = true;
-        std::atomic_bool pm_opened_ = true;
+        std::atomic_bool is_finished_;
+        std::atomic_bool is_running_;
+        std::atomic_bool pm_opened_;
     };
 
 }
