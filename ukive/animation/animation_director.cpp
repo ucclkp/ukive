@@ -373,6 +373,7 @@ namespace ukive {
         uint64_t local_time, Anitom* anim, double& cur_val)
     {
         if (anim->getEndTime() <= ns(local_time)) {
+            cur_val = anim->getCurValue(ns(local_time));
             anitomToFinish(anim);
             return;
         }
