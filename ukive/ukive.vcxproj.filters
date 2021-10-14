@@ -622,6 +622,27 @@
     <ClCompile Include="animation\anitom.cpp">
       <Filter>animation</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\effects\image_effect.cpp">
+      <Filter>graphics\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\direct3d\effects\image_effect_dx.cpp">
+      <Filter>graphics\win\direct3d\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\color_manager_win.cpp">
+      <Filter>graphics\win</Filter>
+    </ClCompile>
+    <ClCompile Include="event\win\window_message_buncher_win.cpp">
+      <Filter>event\win</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\display_manager.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\display_manager_win.cpp">
+      <Filter>graphics\win</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\color_manager.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">
@@ -1413,6 +1434,27 @@
     <ClInclude Include="animation\anitom.h">
       <Filter>animation</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\effects\image_effect.h">
+      <Filter>graphics\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\direct3d\effects\image_effect_dx.h">
+      <Filter>graphics\win\direct3d\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\color_manager_win.h">
+      <Filter>graphics\win</Filter>
+    </ClInclude>
+    <ClInclude Include="event\win\window_message_buncher_win.h">
+      <Filter>event\win</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\display_manager.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\display_manager_win.h">
+      <Filter>graphics\win</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\color_manager.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="window">
@@ -1574,6 +1616,12 @@
       <Filter>graphics\win\direct3d\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="graphics\win\direct3d\hlsl\model_vertex_shader.hlsl">
+      <Filter>graphics\win\direct3d\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="graphics\win\direct3d\hlsl\image_effect_ps.hlsl">
+      <Filter>graphics\win\direct3d\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="graphics\win\direct3d\hlsl\image_effect_vs.hlsl">
       <Filter>graphics\win\direct3d\hlsl</Filter>
     </FxCompile>
   </ItemGroup>

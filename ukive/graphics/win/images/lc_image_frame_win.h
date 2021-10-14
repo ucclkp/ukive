@@ -20,20 +20,36 @@ namespace ukive {
 
     class LcImageFrameWin : public LcImageFrame {
     public:
-        explicit LcImageFrameWin(const ComPtr<IWICBitmap>& source);
+        LcImageFrameWin(
+            const ComPtr<IWICImagingFactory>& factory,
+            const ComPtr<IWICBitmapSource>& source);
+        LcImageFrameWin(
+            const ComPtr<IWICImagingFactory>& factory,
+            const ComPtr<IWICBitmap>& bitmap);
+
+        bool createIfNecessary();
 
         void setDpi(float dpi_x, float dpi_y) override;
         void getDpi(float* dpi_x, float* dpi_y) const override;
 
-        Size getSize() const override;
+        SizeF getSize() const override;
+        SizeU getPixelSize() const override;
 
-        bool getPixels(std::string* out, int* width, int* height) override;
-        bool getBWPixels(std::string* out, int* width, int* height) override;
+        bool copyPixels(
+            size_t stride, uint8_t* pixels, size_t buf_size) override;
+        uint8_t* lockPixels() override;
+        void unlockPixels() override;
 
         ComPtr<IWICBitmap> getNative() const;
+        ComPtr<IWICBitmapSource> getNativeSrc() const;
 
     private:
+        float dpi_x_ = 0;
+        float dpi_y_ = 0;
         ComPtr<IWICBitmap> native_bitmap_;
+        ComPtr<IWICBitmapLock> lock_;
+        ComPtr<IWICBitmapSource> native_src_;
+        ComPtr<IWICImagingFactory> wic_factory_;
     };
 
 }

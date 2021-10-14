@@ -25,7 +25,7 @@ namespace ukive {
         void getDpi(float* dpi_x, float* dpi_y) const override;
 
         SizeF getSize() const override;
-        Size getPixelSize() const override;
+        SizeU getPixelSize() const override;
 
         ComPtr<ID2D1Bitmap> getNative() const;
 

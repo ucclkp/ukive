@@ -6,46 +6,35 @@
 
 #include "ukive/graphics/display.h"
 
-#include <memory>
-
-#include "utils/platform_utils.h"
-
-#ifdef OS_WINDOWS
-#include "ukive/graphics/win/display_win.h"
-#elif defined OS_MAC
-#include "ukive/graphics/mac/display_mac.h"
-#endif
+#include "ukive/app/application.h"
+#include "ukive/graphics/display_manager.h"
 
 
 namespace ukive {
 
-    thread_local std::unique_ptr<Display> current;
-
     // static
-    Display* Display::create() {
-#ifdef OS_WINDOWS
-        return new DisplayWin();
-#elif defined OS_MAC
-        return new DisplayMac();
-#endif
+    Display::DisplayPtr Display::fromNull() {
+        return Application::getDisplayManager()->fromNull();
     }
 
     // static
-    Display* Display::primary() {
-        if (!current) {
-            current.reset(create());
-        }
-        current->makePrimary();
-        return current.get();
+    Display::DisplayPtr Display::fromPrimary() {
+        return Application::getDisplayManager()->fromPrimary();
     }
 
     // static
-    Display* Display::fromWindow(Window* w) {
-        if (!current) {
-            current.reset(create());
-        }
-        current->makeFromWindow(w);
-        return current.get();
+    Display::DisplayPtr Display::fromPoint(const Point& p) {
+        return Application::getDisplayManager()->fromPoint(p);
+    }
+
+    // static
+    Display::DisplayPtr Display::fromRect(const Rect& r) {
+        return Application::getDisplayManager()->fromRect(r);
+    }
+
+    // static
+    Display::DisplayPtr Display::fromWindow(Window* w) {
+        return Application::getDisplayManager()->fromWindow(w);
     }
 
 }

@@ -22,14 +22,15 @@ namespace ukive {
 
     class DisplayWin : public Display {
     public:
-        DisplayWin();
+        explicit DisplayWin(HMONITOR native);
+        ~DisplayWin();
 
-        bool makePrimary() override;
-        bool makeFromPoint(const Point& p) override;
-        bool makeFromRect(const Rect& r) override;
-        bool makeFromWindow(Window* w) override;
+        static DisplayPtr fromWindowImpl(const WindowImplWin* win);
 
+        bool isValid() const override;
         bool isInHDRMode() const override;
+        bool isSame(const Display* rhs) const override;
+        bool isSameDisplay(const Display* rhs) const override;
 
         void getName(std::u16string* name) override;
         void getAdapterName(std::u16string* name) override;
@@ -40,8 +41,9 @@ namespace ukive {
         void getUserScale(float* sx, float* sy) const override;
         uint32_t getRefreshRate() const override;
 
-        bool makeFromWindowImpl(WindowImplWin* win);
         bool waitForVSync();
+        bool getICMProfilePath(std::wstring* path) const;
+        HMONITOR getNative() const;
 
     private:
         bool queryMonitorInfo(HMONITOR monitor);

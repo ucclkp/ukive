@@ -46,6 +46,7 @@ namespace ukive {
         size_t addItem(const std::u16string& title);
         size_t addItem(size_t index, const std::u16string& title);
         void removeItem(size_t index);
+        void clearItems();
         size_t getItemCount() const;
 
     private:

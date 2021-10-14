@@ -68,7 +68,7 @@ namespace win {
              * Windows 7 只有主显示器才会显示 AppBar，且使用
              * ABM_GETAUTOHIDEBAREX 什么也拿不到。
              */
-            if (Display::primary() != display) {
+            if (!Display::fromPrimary()->isSameDisplay(display)) {
                 return None;
             }
 

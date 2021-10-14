@@ -11,10 +11,11 @@
 #include "ukive/app/application.h"
 #include "ukive/system/win/com_ptr.hpp"
 #include "ukive/system/win/dynamic_windows_api.h"
-#include "ukive/window/window.h"
 #include "ukive/window/win/window_impl_win.h"
 #include "ukive/window/window_dpi_utils.h"
+#include "ukive/graphics/win/color_manager_win.h"
 #include "ukive/graphics/win/directx_manager.h"
+#include "ukive/graphics/win/display_manager_win.h"
 
 #include <VersionHelpers.h>
 #include <dxgi1_6.h>
@@ -30,56 +31,26 @@ namespace {
 
 namespace ukive {
 
-    DisplayWin::DisplayWin()
+    // static
+    Display::DisplayPtr DisplayWin::fromWindowImpl(const WindowImplWin* win) {
+        return static_cast<DisplayManagerWin*>(
+            Application::getDisplayManager())->fromWindowImpl(win);
+    }
+
+    DisplayWin::DisplayWin(HMONITOR native)
         : monitor_(nullptr),
           monitor_mode_(),
-          monitor_info_() {
+          monitor_info_()
+    {
+        if (native) {
+            queryMonitorInfo(native);
+        }
     }
 
-    bool DisplayWin::makePrimary() {
-        POINT pt = { 0, 0 };
-        HMONITOR monitor = ::MonitorFromPoint(pt, MONITOR_DEFAULTTOPRIMARY);
-        if (!monitor) {
-            LOG(Log::WARNING) << "Failed to get monitor handle!";
-            return false;
-        }
+    DisplayWin::~DisplayWin() {}
 
-        return queryMonitorInfo(monitor);
-    }
-
-    bool DisplayWin::makeFromPoint(const Point& p) {
-        POINT pt{ p.x, p.y };
-        HMONITOR monitor = ::MonitorFromPoint(pt, MONITOR_DEFAULTTONEAREST);
-        if (!monitor) {
-            LOG(Log::WARNING) << "Failed to get monitor handle!";
-            return false;
-        }
-
-        return queryMonitorInfo(monitor);
-    }
-
-    bool DisplayWin::makeFromRect(const Rect& r) {
-        RECT win_rect{ r.left, r.top, r.right, r.bottom };
-        HMONITOR monitor = ::MonitorFromRect(&win_rect, MONITOR_DEFAULTTONEAREST);
-        if (!monitor) {
-            LOG(Log::WARNING) << "Failed to get monitor handle!";
-            return false;
-        }
-
-        return queryMonitorInfo(monitor);
-    }
-
-    bool DisplayWin::makeFromWindow(Window* w) {
-        if (!w) {
-            return false;
-        }
-
-        auto win = static_cast<WindowImplWin*>(w->getImpl());
-        if (!win) {
-            return false;
-        }
-
-        return makeFromWindowImpl(win);
+    bool DisplayWin::isValid() const {
+        return !is_empty_;
     }
 
     bool DisplayWin::isInHDRMode() const {
@@ -95,6 +66,40 @@ namespace ukive {
 
         return desc1.ColorSpace ==
             DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020;
+    }
+
+    bool DisplayWin::isSame(const Display* rhs) const {
+        if (!isValid() || !rhs->isValid()) {
+            return !isValid() && !rhs->isValid();
+        }
+
+        auto rhs_win = static_cast<const DisplayWin*>(rhs);
+        if (monitor_ != rhs_win->monitor_) {
+            return false;
+        }
+
+        if (monitor_mode_.dmBitsPerPel != rhs_win->monitor_mode_.dmBitsPerPel ||
+            monitor_mode_.dmPelsWidth != rhs_win->monitor_mode_.dmPelsWidth ||
+            monitor_mode_.dmPelsHeight != rhs_win->monitor_mode_.dmPelsHeight ||
+            monitor_mode_.dmDisplayFlags != rhs_win->monitor_mode_.dmDisplayFlags ||
+            monitor_mode_.dmDisplayFrequency != rhs_win->monitor_mode_.dmDisplayFrequency)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    bool DisplayWin::isSameDisplay(const Display* rhs) const {
+        if (!isValid() || !rhs->isValid()) {
+            return !isValid() && !rhs->isValid();
+        }
+
+        auto rhs_win = static_cast<const DisplayWin*>(rhs);
+        if (monitor_ != rhs_win->monitor_) {
+            return false;
+        }
+        return true;
     }
 
     void DisplayWin::getName(std::u16string* name) {
@@ -224,31 +229,6 @@ namespace ukive {
         return monitor_mode_.dmDisplayFrequency;
     }
 
-    bool DisplayWin::makeFromWindowImpl(WindowImplWin* win) {
-        HMONITOR monitor;
-        if (win->isCreated()) {
-            monitor = ::MonitorFromWindow(win->getHandle(), MONITOR_DEFAULTTONEAREST);
-            if (!monitor) {
-                LOG(Log::WARNING) << "Failed to get monitor handle!";
-                return false;
-            }
-        } else {
-            auto bounds = win->getBounds();
-            RECT win_rect;
-            win_rect.left = bounds.left;
-            win_rect.top = bounds.top;
-            win_rect.right = bounds.right;
-            win_rect.bottom = bounds.bottom;
-            monitor = ::MonitorFromRect(&win_rect, MONITOR_DEFAULTTONEAREST);
-            if (!monitor) {
-                LOG(Log::WARNING) << "Failed to get monitor handle!";
-                return false;
-            }
-        }
-
-        return queryMonitorInfo(monitor);
-    }
-
     bool DisplayWin::waitForVSync() {
         if (is_empty_ || !cur_output_) {
             return false;
@@ -262,6 +242,26 @@ namespace ukive {
         return true;
     }
 
+    bool DisplayWin::getICMProfilePath(std::wstring* path) const {
+        if (is_empty_) {
+            return false;
+        }
+
+        HDC hdc = ::CreateDCW(nullptr, monitor_info_.szDevice, nullptr, nullptr);
+        if (!hdc) {
+            return false;
+        }
+
+        bool ret = ColorManagerWin::getICMProfile(hdc, path);
+
+        ::DeleteDC(hdc);
+        return ret;
+    }
+
+    HMONITOR DisplayWin::getNative() const {
+        return monitor_;
+    }
+
     bool DisplayWin::queryMonitorInfo(HMONITOR monitor) {
         MONITORINFOEXW info;
         info.cbSize = sizeof(MONITORINFOEXW);
@@ -272,6 +272,8 @@ namespace ukive {
         }
 
         DEVMODEW mode;
+        mode.dmSize = sizeof(DEVMODEW);
+        mode.dmDriverExtra = 0;
         if (::EnumDisplaySettingsW(
             info.szDevice, ENUM_CURRENT_SETTINGS, &mode) == 0)
         {

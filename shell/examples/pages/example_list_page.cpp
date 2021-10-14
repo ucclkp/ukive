@@ -27,7 +27,7 @@ namespace shell {
             parent->getContext(), parent, Res::Layout::example_list_page_layout_xml);
 
         // Buttons
-        dwm_button_ = findViewById<ukive::Button>(v, Res::Id::bt_dwm_button);
+        dwm_button_ = findView<ukive::Button>(v, Res::Id::bt_dwm_button);
         dwm_button_->setOnClickListener(this);
 
         // ListView
@@ -36,7 +36,7 @@ namespace shell {
             list_source_->addItem(0, u"test", u"test test");
         }
 
-        list_view_ = findViewById<ukive::ListView>(v, Res::Id::lv_list_page_list);
+        list_view_ = findView<ukive::ListView>(v, Res::Id::lv_list_page_list);
         list_view_->setLayouter(new ukive::GridListLayouter(4));
         //list_view_->setLayouter(new ukive::LinearListLayouter());
         list_view_->setSource(list_source_);

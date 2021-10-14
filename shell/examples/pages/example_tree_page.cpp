@@ -45,7 +45,7 @@ namespace shell {
             root_node_.addNode(node);
         }
 
-        list_view_ = findViewById<ukive::ListView>(v, Res::Id::lv_test_tree);
+        list_view_ = findView<ukive::ListView>(v, Res::Id::lv_test_tree);
         list_view_->setLayouter(layouter);
         list_view_->setSource(this);
         list_view_->setSecDimUnknown(true);

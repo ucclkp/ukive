@@ -4,12 +4,13 @@
 // This program is licensed under GPLv3 license that can be
 // found in the LICENSE file.
 
-#ifndef SHELL_SHADOW_SHADOW_WINDOW_H_
-#define SHELL_SHADOW_SHADOW_WINDOW_H_
+#ifndef SHELL_EFFECTS_EFFECT_WINDOW_H_
+#define SHELL_EFFECTS_EFFECT_WINDOW_H_
 
 #include "ukive/window/window.h"
 #include "ukive/animation/animator.h"
 #include "ukive/graphics/vsyncable.h"
+#include "ukive/graphics/win/direct3d/effects/image_effect_dx.h"
 
 
 namespace ukive {
@@ -21,14 +22,14 @@ namespace ukive {
 
 namespace shell {
 
-    class ShadowWindow :
+    class EffectWindow :
         public ukive::Window,
         public ukive::AnimationListener,
         public ukive::VSyncable
     {
     public:
-        ShadowWindow();
-        ~ShadowWindow();
+        EffectWindow();
+        ~EffectWindow();
 
         void onCreated() override;
         void onPreDrawCanvas(ukive::Canvas* canvas) override;
@@ -51,10 +52,12 @@ namespace shell {
         ukive::Animator animator_;
 
         ukive::ImageFrame* shadow_img_ = nullptr;
+        ukive::ImageFrame* image_img_ = nullptr;
         std::shared_ptr<ukive::ImageFrame> content_img_;
         std::unique_ptr<ukive::ShadowEffect> shadow_effect_;
+        std::unique_ptr<ukive::ImageEffectDX> image_effect_;
     };
 
 }
 
-#endif  // SHELL_SHADOW_SHADOW_WINDOW_H_
+#endif  // SHELL_EFFECTS_EFFECT_WINDOW_H_

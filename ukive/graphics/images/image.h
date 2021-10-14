@@ -21,16 +21,17 @@ namespace ukive {
 
         void addFrame(ImageFrame* frame);
         void removeFrame(ImageFrame* frame, bool del);
-        void clear();
+        void clearFrames(bool del);
 
         bool isValid() const;
 
-        SizeF getBoundSize() const;
+        SizeF getBounds() const;
+        SizeU getPixelBounds() const;
         const std::vector<ImageFrame*>& getFrames() const;
 
     private:
-        class ImageData;
-        std::shared_ptr<ImageData> data_;
+        class ImageOntic;
+        std::shared_ptr<ImageOntic> ontic_;
     };
 
 }

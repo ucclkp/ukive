@@ -20,9 +20,6 @@
     <Filter Include="gallery\picture">
       <UniqueIdentifier>{7631e548-1fc9-42d3-98ba-f53acf3281ba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shadow">
-      <UniqueIdentifier>{06d0fcd8-fb1a-4a35-9c4f-26795d3f5c45}</UniqueIdentifier>
-    </Filter>
     <Filter Include="text">
       <UniqueIdentifier>{bc6c9ed1-f5de-4d31-9217-3435ba1564ca}</UniqueIdentifier>
     </Filter>
@@ -43,6 +40,9 @@
     </Filter>
     <Filter Include="lod\direct3d\hlsl">
       <UniqueIdentifier>{33406f95-be4f-41a0-8ce6-1b26417c866e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="effects">
+      <UniqueIdentifier>{06d0fcd8-fb1a-4a35-9c4f-26795d3f5c45}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -82,9 +82,6 @@
     <ClCompile Include="text\text_window.cpp">
       <Filter>text</Filter>
     </ClCompile>
-    <ClCompile Include="shadow\shadow_window.cpp">
-      <Filter>shadow</Filter>
-    </ClCompile>
     <ClCompile Include="examples\pages\example_list_page.cpp">
       <Filter>examples\pages</Filter>
     </ClCompile>
@@ -108,6 +105,9 @@
     </ClCompile>
     <ClCompile Include="examples\example_list_source.cpp">
       <Filter>examples</Filter>
+    </ClCompile>
+    <ClCompile Include="effects\effect_window.cpp">
+      <Filter>effects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -147,9 +147,6 @@
     <ClInclude Include="text\text_window.h">
       <Filter>text</Filter>
     </ClInclude>
-    <ClInclude Include="shadow\shadow_window.h">
-      <Filter>shadow</Filter>
-    </ClInclude>
     <ClInclude Include="examples\pages\example_list_page.h">
       <Filter>examples\pages</Filter>
     </ClInclude>
@@ -173,6 +170,9 @@
     </ClInclude>
     <ClInclude Include="examples\example_list_source.h">
       <Filter>examples</Filter>
+    </ClInclude>
+    <ClInclude Include="effects\effect_window.h">
+      <Filter>effects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

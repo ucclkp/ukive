@@ -40,9 +40,10 @@ namespace ukive {
             int frame_width, int frame_height,
             std::string* out, int* real_w, int* real_h, ImageOptions* options) override;
 
-        bool saveToPNGFile(
+        bool saveToFile(
             int width, int height,
             uint8_t* data, size_t byte_count, size_t stride,
+            ImageContainer container,
             const ImageOptions& options,
             const std::u16string& file_name) override;
 
@@ -54,11 +55,15 @@ namespace ukive {
 
         ComPtr<IWICBitmapDecoder> createDecoder(const std::u16string& file_name);
         ComPtr<IWICBitmapDecoder> createDecoder(uint8_t* buffer, size_t size);
-        ComPtr<IWICBitmap> convertPixelFormat(
+        ComPtr<IWICBitmapSource> convertPixelFormat(
             IWICBitmapSource* frame, const ImageOptions& options);
 
         LcImage processDecoder(
             IWICBitmapDecoder* decoder, const ImageOptions& options);
+
+        bool exploreColorProfile(IWICBitmapFrameDecode* frame);
+        ComPtr<IWICBitmapSource> convertGamut(
+            IWICBitmapFrameDecode* src, IWICColorContext* dst_cc);
 
         ComPtr<IWICImagingFactory> wic_factory_;
     };

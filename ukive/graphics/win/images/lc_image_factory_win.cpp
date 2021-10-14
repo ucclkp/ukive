@@ -6,6 +6,7 @@
 
 #include "ukive/graphics/win/images/lc_image_factory_win.h"
 
+#include <Icm.h>
 #include <ShlObj.h>
 #include <VersionHelpers.h>
 
@@ -14,6 +15,8 @@
 #include "utils/number.hpp"
 
 #include "ukive/graphics/images/lc_image.h"
+#include "ukive/graphics/win/color_manager_win.h"
+#include "ukive/graphics/win/display_win.h"
 #include "ukive/graphics/win/images/lc_image_frame_win.h"
 #include "ukive/window/window_dpi_utils.h"
 
@@ -47,6 +50,20 @@ namespace ukive {
         }
 
         return format;
+    }
+
+    GUID mapImageContainer(ImageContainer container) {
+        switch (container) {
+        case ImageContainer::PNG:
+            return GUID_ContainerFormatPng;
+        case ImageContainer::JPEG:
+            return GUID_ContainerFormatJpeg;
+        case ImageContainer::BMP:
+            return GUID_ContainerFormatBmp;
+        default:
+            DCHECK(false);
+            return GUID_ContainerFormatPng;
+        }
     }
 
 }
@@ -105,7 +122,7 @@ namespace ukive {
             break;
         }
 
-        return new LcImageFrameWin(bmp);
+        return new LcImageFrameWin(wic_factory_, bmp);
     }
 
     LcImageFrame* LcImageFactoryWin::create(
@@ -144,7 +161,7 @@ namespace ukive {
             break;
         }
 
-        return new LcImageFrameWin(bmp);
+        return new LcImageFrameWin(wic_factory_, bmp);
     }
 
     LcImage LcImageFactoryWin::decodeFile(
@@ -186,8 +203,7 @@ namespace ukive {
             if (SUCCEEDED(hr)) {
                 BITMAP bmp;
                 if (::GetObjectW(hbmp, sizeof(BITMAP), &bmp) && bmp.bmBitsPixel == 32) {
-                    BITMAPINFO info;
-                    std::memset(&info, 0, sizeof(BITMAPINFO));
+                    BITMAPINFO info = {};
                     info.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
                     info.bmiHeader.biWidth = bmp.bmWidth;
                     info.bmiHeader.biHeight = -bmp.bmHeight;
@@ -200,7 +216,7 @@ namespace ukive {
                     HDC hdc = ::GetDC(nullptr);
                     if (::GetDIBits(
                         hdc, hbmp, 0, bmp.bmHeight,
-                        static_cast<void*>(&*out->begin()), &info, DIB_RGB_COLORS))
+                        &*out->begin(), &info, DIB_RGB_COLORS))
                     {
                         *real_w = bmp.bmWidth;
                         *real_h = bmp.bmHeight;
@@ -219,9 +235,10 @@ namespace ukive {
         return succeeded;
     }
 
-    bool LcImageFactoryWin::saveToPNGFile(
+    bool LcImageFactoryWin::saveToFile(
         int width, int height,
         uint8_t* data, size_t byte_count, size_t stride,
+        ImageContainer container,
         const ImageOptions& options,
         const std::u16string& file_name)
     {
@@ -246,7 +263,7 @@ namespace ukive {
         }
 
         ComPtr<IWICBitmapEncoder> encoder;
-        hr = wic_factory_->CreateEncoder(GUID_ContainerFormatPng, nullptr, &encoder);
+        hr = wic_factory_->CreateEncoder(mapImageContainer(container), nullptr, &encoder);
         if (FAILED(hr)) {
             return false;
         }
@@ -496,7 +513,7 @@ namespace ukive {
         return decoder;
     }
 
-    ComPtr<IWICBitmap> LcImageFactoryWin::convertPixelFormat(
+    ComPtr<IWICBitmapSource> LcImageFactoryWin::convertPixelFormat(
         IWICBitmapSource* frame, const ImageOptions& options)
     {
         // Format convert the frame to 32bppPBGRA
@@ -523,15 +540,7 @@ namespace ukive {
             return {};
         }
 
-        ComPtr<IWICBitmap> wic_bitmap;
-        hr = wic_factory_->CreateBitmapFromSource(
-            converter.get(), WICBitmapCacheOnDemand, &wic_bitmap);
-        if (FAILED(hr)) {
-            DCHECK(false);
-            return {};
-        }
-
-        return wic_bitmap;
+        return converter.cast<IWICBitmapSource>();
     }
 
     LcImage LcImageFactoryWin::processDecoder(
@@ -558,6 +567,20 @@ namespace ukive {
             image.setData(data);
         }
 
+        ComPtr<IWICColorContext> dst_cc;
+        hr = wic_factory_->CreateColorContext(&dst_cc);
+        if (SUCCEEDED(hr)) {
+            std::wstring display_icm;
+
+            auto display = Display::fromPrimary();
+            static_cast<DisplayWin*>(display.get())->getICMProfilePath(&display_icm);
+
+            hr = dst_cc->InitializeFromFilename(display_icm.c_str());
+            if (FAILED(hr)) {
+                dst_cc.reset();
+            }
+        }
+
         for (UINT i = 0; i < frame_count; ++i) {
             ComPtr<IWICBitmapFrameDecode> frame_decoder;
             hr = decoder->GetFrame(i, &frame_decoder);
@@ -566,34 +589,34 @@ namespace ukive {
                 return {};
             }
 
-            ComPtr<IWICBitmap> wic_bitmap;
-            if (options.pixel_format == ImagePixelFormat::RAW) {
-                hr = wic_factory_->CreateBitmapFromSource(
-                    frame_decoder.get(), WICBitmapCacheOnDemand, &wic_bitmap);
-                if (FAILED(hr)) {
-                    DCHECK(false);
-                    return {};
-                }
-            } else {
-                wic_bitmap = convertPixelFormat(frame_decoder.get(), options);
+            //exploreColorProfile(frame_decoder.get());
+
+            ComPtr<IWICBitmapSource> source;
+            source = convertGamut(frame_decoder.get(), dst_cc.get());
+            if (!source) {
+                source = frame_decoder.cast<IWICBitmapSource>();
             }
 
-            if (!wic_bitmap) {
+            if (options.pixel_format != ImagePixelFormat::RAW) {
+                source = convertPixelFormat(source.get(), options);
+            }
+
+            if (!source) {
                 return {};
             }
 
+            LcImageFrame* frame = new LcImageFrameWin(wic_factory_, source);
+
             switch (options.dpi_type) {
             case ImageDPIType::SPECIFIED:
-                wic_bitmap->SetResolution(options.dpi_x, options.dpi_y);
+                frame->setDpi(options.dpi_x, options.dpi_y);
                 break;
 
             case ImageDPIType::DEFAULT:
             default:
-                wic_bitmap->SetResolution(kDefaultDpi, kDefaultDpi);
+                frame->setDpi(kDefaultDpi, kDefaultDpi);
                 break;
             }
-
-            LcImageFrame* frame = new LcImageFrameWin(wic_bitmap);
 
             if (img_format == GUID_ContainerFormatGif) {
                 auto fr_data = std::make_shared<GifImageFrData>();
@@ -604,6 +627,150 @@ namespace ukive {
         }
 
         return image;
+    }
+
+    bool LcImageFactoryWin::exploreColorProfile(IWICBitmapFrameDecode* frame) {
+        UINT cc_count;
+        HRESULT hr = frame->GetColorContexts(0, nullptr, &cc_count);
+        if (FAILED(hr)) {
+            return false;
+        }
+
+        bool constructing = true;
+        IWICColorContext** ccs = new IWICColorContext*[cc_count];
+        for (UINT i = 0; i < cc_count; ++i) {
+            if (constructing) {
+                hr = wic_factory_->CreateColorContext(&ccs[i]);
+                if (FAILED(hr)) {
+                    cc_count = i;
+                    i = 0;
+                    constructing = false;
+                }
+            } else {
+                ccs[i]->Release();
+            }
+        }
+
+        if (!constructing) {
+            return false;
+        }
+
+        std::shared_ptr<IWICColorContext*> ccs_stub(
+            ccs, [cc_count](IWICColorContext** c)
+        {
+                for (UINT i = 0; i < cc_count; ++i) {
+                    c[i]->Release();
+                }
+        });
+
+        hr = frame->GetColorContexts(cc_count, ccs, &cc_count);
+        if (FAILED(hr)) {
+            return false;
+        }
+
+        for (UINT i = 0; i < cc_count; ++i) {
+            auto cc = ccs[i];
+
+            WICColorContextType cc_type;
+            hr = cc->GetType(&cc_type);
+            if (FAILED(hr)) {
+                return false;
+            }
+
+            if (cc_type != WICColorContextProfile) {
+                continue;
+            }
+
+            UINT length;
+            hr = cc->GetProfileBytes(0, nullptr, &length);
+            if (FAILED(hr)) {
+                return false;
+            }
+
+            std::unique_ptr<BYTE[]> buf(new BYTE[length]);
+            hr = cc->GetProfileBytes(length, buf.get(), &length);
+            if (FAILED(hr)) {
+                return false;
+            }
+
+            PROFILE profile{ PROFILE_MEMBUFFER, buf.get(), length };
+            HPROFILE cf = ::WcsOpenColorProfileW(
+                &profile, nullptr, nullptr, PROFILE_READ, FILE_SHARE_READ, OPEN_EXISTING, 0);
+            if (!cf) {
+                return false;
+            }
+
+            PROFILEHEADER header;
+            if (::GetColorProfileHeader(cf, &header) != TRUE) {
+                return false;
+            }
+
+            char* cmm_type = reinterpret_cast<char*>(&header.phCMMType);
+            char* signature = reinterpret_cast<char*>(&header.phSignature);
+            char* platform = reinterpret_cast<char*>(&header.phPlatform);
+
+            DWORD size = 256;
+            char desc[256];
+            BOOL ref;
+            if (::GetColorProfileElement(cf, 0x64657363, 12, &size, desc, &ref) == FALSE) {
+            }
+
+            ::CloseColorProfile(cf);
+        }
+
+        return true;
+    }
+
+    ComPtr<IWICBitmapSource> LcImageFactoryWin::convertGamut(
+        IWICBitmapFrameDecode* src, IWICColorContext* dst_cc)
+    {
+        if (!src || !dst_cc) {
+            return {};
+        }
+
+        ComPtr<IWICColorTransform> transform;
+        HRESULT hr = wic_factory_->CreateColorTransformer(&transform);
+        if (FAILED(hr)) {
+            return {};
+        }
+
+        WICPixelFormatGUID pf;
+        hr = src->GetPixelFormat(&pf);
+        if (FAILED(hr)) {
+            return {};
+        }
+
+        ComPtr<IWICColorContext> src_cc;
+        hr = wic_factory_->CreateColorContext(&src_cc);
+        if (FAILED(hr)) {
+            return {};
+        }
+
+        UINT cc_count;
+        hr = src->GetColorContexts(1, &src_cc, &cc_count);
+        if (FAILED(hr)) {
+            return {};
+        }
+
+        if (cc_count == 0) {
+            // 图片里没嵌颜色配置文件的话，就用默认的 sRGB
+            std::wstring srgb_profile_path;
+            if (!ColorManagerWin::getSRGBProfile(&srgb_profile_path)) {
+                return {};
+            }
+
+            hr = src_cc->InitializeFromFilename(srgb_profile_path.c_str());
+            if (FAILED(hr)) {
+                return {};
+            }
+        }
+
+        hr = transform->Initialize(src, src_cc.get(), dst_cc, pf);
+        if (FAILED(hr)) {
+            return {};
+        }
+
+        return transform.cast<IWICBitmapSource>();
     }
 
 }

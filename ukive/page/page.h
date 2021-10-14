@@ -25,7 +25,7 @@ namespace ukive {
         void destroy();
 
         template <typename T>
-        T* findViewById(View* v, int id) const {
+        T* findView(View* v, int id) const {
             return static_cast<T*>(v->findView(id));
         }
 

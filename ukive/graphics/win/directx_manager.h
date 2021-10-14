@@ -53,6 +53,7 @@ namespace ukive {
 
         ComPtr<ID3D11Texture2D> createTexture2D(
             UINT width, UINT height, bool shader_res, bool hdr, bool gdi_compat);
+        ComPtr<ID3D11Texture2D> createTexture2D(IWICBitmap* wic_bmp);
         ComPtr<ID2D1RenderTarget> createDXGIRenderTarget(
             IDXGISurface* surface, bool gdi_compat, const ImageOptions& options);
 

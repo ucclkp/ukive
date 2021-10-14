@@ -13,9 +13,9 @@
 
 namespace ukive {
 
-    class Image::ImageData {
+    class Image::ImageOntic {
     public:
-        ~ImageData() {
+        ~ImageOntic() {
             utl::STLDeleteElements(&frames);
         }
 
@@ -29,18 +29,18 @@ namespace ukive {
     Image::Image() {}
 
     void Image::addFrame(ImageFrame* frame) {
-        if (!data_) {
-            data_ = std::make_shared<ImageData>();
+        if (!ontic_) {
+            ontic_ = std::make_shared<ImageOntic>();
         }
-        data_->frames.push_back(frame);
+        ontic_->frames.push_back(frame);
     }
 
     void Image::removeFrame(ImageFrame* frame, bool del) {
-        if (!data_ || !frame) {
+        if (!ontic_ || !frame) {
             return;
         }
 
-        auto& frames = data_->frames;
+        auto& frames = ontic_->frames;
         for (auto it = frames.begin(); it != frames.end();) {
             if (*it == frame) {
                 it = frames.erase(it);
@@ -54,39 +54,57 @@ namespace ukive {
         }
 
         if (frames.empty()) {
-            data_.reset();
+            ontic_.reset();
         }
     }
 
-    void Image::clear() {
-        if (data_) {
-            data_->frames.clear();
-            data_.reset();
+    void Image::clearFrames(bool del) {
+        if (!ontic_) {
+            return;
         }
+
+        if (del) {
+            utl::STLDeleteElements(&ontic_->frames);
+        }
+
+        ontic_->frames.clear();
+        ontic_.reset();
     }
 
     bool Image::isValid() const {
-        return !!data_;
+        return !!ontic_;
     }
 
-    SizeF Image::getBoundSize() const {
-        if (!data_) {
+    SizeF Image::getBounds() const {
+        if (!ontic_) {
             return {};
         }
 
         SizeF size;
-        for (const auto frame : data_->frames) {
+        for (const auto frame : ontic_->frames) {
             size.setToMax(frame->getSize());
+        }
+        return size;
+    }
+
+    SizeU Image::getPixelBounds() const {
+        if (!ontic_) {
+            return {};
+        }
+
+        SizeU size;
+        for (const auto frame : ontic_->frames) {
+            size.setToMax(frame->getPixelSize());
         }
         return size;
     }
 
     const std::vector<ImageFrame*>& Image::getFrames() const {
         static std::vector<ImageFrame*> stub;
-        if (!data_) {
+        if (!ontic_) {
             return stub;
         }
-        return data_->frames;
+        return ontic_->frames;
     }
 
 }

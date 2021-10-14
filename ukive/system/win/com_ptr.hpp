@@ -96,7 +96,7 @@ namespace ukive {
         }
 
         template<class Ct>
-        ComPtr<Ct> cast() {
+        ComPtr<Ct> cast() const {
             Ct* casted = nullptr;
             ptr_->template QueryInterface<Ct>(&casted);
             return ComPtr<Ct>(casted);

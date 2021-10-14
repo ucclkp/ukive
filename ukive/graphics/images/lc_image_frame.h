@@ -9,7 +9,9 @@
 
 #include <string>
 
+#include "ukive/graphics/images/image_options.h"
 #include "ukive/graphics/size.hpp"
+
 
 
 namespace ukive {
@@ -20,9 +22,10 @@ namespace ukive {
     class LcImageFrame {
     public:
         static LcImageFrame* create(int width, int height, const ImageOptions& options);
-        static bool saveToPngFile(
+        static bool saveToFile(
             int width, int height,
             uint8_t* data, size_t byte_count, size_t stride,
+            ImageContainer container,
             const ImageOptions& options,
             const std::u16string& file_name);
 
@@ -35,12 +38,13 @@ namespace ukive {
         virtual void setDpi(float dpi_x, float dpi_y) = 0;
         virtual void getDpi(float* dpi_x, float* dpi_y) const = 0;
 
-        virtual Size getSize() const = 0;
+        virtual SizeF getSize() const = 0;
+        virtual SizeU getPixelSize() const = 0;
 
-        virtual bool getPixels(
-            std::string* out, int* width, int* height) = 0;
-        virtual bool getBWPixels(
-            std::string* out, int* width, int* height) = 0;
+        virtual bool copyPixels(
+            size_t stride, uint8_t* pixels, size_t buf_size) = 0;
+        virtual uint8_t* lockPixels() = 0;
+        virtual void unlockPixels() = 0;
 
     private:
         std::shared_ptr<ImageData> data_;

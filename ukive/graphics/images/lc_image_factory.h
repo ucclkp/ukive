@@ -43,9 +43,10 @@ namespace ukive {
             int frame_width, int frame_height,
             std::string* out, int* real_w, int* real_h, ImageOptions* options) = 0;
 
-        virtual bool saveToPNGFile(
+        virtual bool saveToFile(
             int width, int height,
             uint8_t* data, size_t byte_count, size_t stride,
+            ImageContainer container,
             const ImageOptions& options,
             const std::u16string& file_name) = 0;
     };

@@ -12,46 +12,93 @@
 
 namespace ukive {
 
-    LcImageFrameWin::LcImageFrameWin(const ComPtr<IWICBitmap>& source)
-        : native_bitmap_(source) {
+    LcImageFrameWin::LcImageFrameWin(
+        const ComPtr<IWICImagingFactory>& factory,
+        const ComPtr<IWICBitmapSource>& source)
+        : native_src_(source),
+          wic_factory_(factory)
+    {
+        assert(source);
+        assert(factory);
+        getDpi(&dpi_x_, &dpi_y_);
+    }
+
+    LcImageFrameWin::LcImageFrameWin(
+        const ComPtr<IWICImagingFactory>& factory,
+        const ComPtr<IWICBitmap>& bitmap)
+        : native_bitmap_(bitmap),
+          native_src_(bitmap.cast<IWICBitmapSource>()),
+          wic_factory_(factory)
+    {
+        assert(bitmap);
+        assert(factory);
+        getDpi(&dpi_x_, &dpi_y_);
+    }
+
+    bool LcImageFrameWin::createIfNecessary() {
+        if (native_bitmap_) {
+            return true;
+        }
+
+        HRESULT hr = wic_factory_->CreateBitmapFromSource(
+            native_src_.get(), WICBitmapCacheOnDemand, &native_bitmap_);
+        if (FAILED(hr)) {
+            assert(false);
+            return false;
+        }
+
+        return true;
     }
 
     void LcImageFrameWin::setDpi(float dpi_x, float dpi_y) {
         if (dpi_x > 0 && dpi_y > 0) {
-            native_bitmap_->SetResolution(dpi_x, dpi_y);
+            dpi_x_ = dpi_x;
+            dpi_y_ = dpi_y;
+
+            if (!createIfNecessary()) {
+                return;
+            }
+
+            HRESULT hr = native_bitmap_->SetResolution(dpi_x, dpi_y);
+            assert(SUCCEEDED(hr));
         }
     }
 
     void LcImageFrameWin::getDpi(float* dpi_x, float* dpi_y) const {
         double dx, dy;
-        native_bitmap_->GetResolution(&dx, &dy);
+        HRESULT hr = native_src_->GetResolution(&dx, &dy);
+        if (FAILED(hr)) {
+            assert(false);
+            dx = USER_DEFAULT_SCREEN_DPI;
+            dy = USER_DEFAULT_SCREEN_DPI;
+        }
         *dpi_x = float(dx);
         *dpi_y = float(dy);
     }
 
-    Size LcImageFrameWin::getSize() const {
+    SizeF LcImageFrameWin::getSize() const {
+        float dpi_x, dpi_y;
+        getDpi(&dpi_x, &dpi_y);
+        auto size = getPixelSize();
+        return SizeF(size.width * dpi_x, size.height * dpi_y);
+    }
+
+    SizeU LcImageFrameWin::getPixelSize() const {
         UINT width = 0, height = 0;
-        HRESULT hr = native_bitmap_->GetSize(&width, &height);
-        if (FAILED(hr)) {
-            DCHECK(false);
-        }
-        return Size(
-            utl::num_cast<Size::type>(width),
-            utl::num_cast<Size::type>(height));
+        HRESULT hr = native_src_->GetSize(&width, &height);
+        assert(SUCCEEDED(hr));
+        return SizeU(
+            utl::num_cast<SizeU::type>(width),
+            utl::num_cast<SizeU::type>(height));
     }
 
-    bool LcImageFrameWin::getPixels(
-        std::string* out, int* width, int* height)
+    bool LcImageFrameWin::copyPixels(
+        size_t stride, uint8_t* pixels, size_t buf_size)
     {
-        auto size = getSize();
-        *width = size.width;
-        *height = size.height;
-
-        out->resize((*width) * (*height) * 4);
-        HRESULT hr = native_bitmap_->CopyPixels(
+        HRESULT hr = native_src_->CopyPixels(
             nullptr,
-            (*width) * 4, (*width) * (*height) * 4,
-            reinterpret_cast<BYTE*>(&*out->begin()));
+            utl::num_cast<UINT>(stride),
+            utl::num_cast<UINT>(buf_size), pixels);
         if (FAILED(hr)) {
             return false;
         }
@@ -59,27 +106,40 @@ namespace ukive {
         return true;
     }
 
-    bool LcImageFrameWin::getBWPixels(
-        std::string* out, int* width, int* height)
-    {
-        auto size = getSize();
-        *width = size.width;
-        *height = size.height;
-
-        UINT stride = ((*width) + 7) / 8;
-        out->resize(stride * (*height));
-        HRESULT hr = native_bitmap_->CopyPixels(
-            nullptr, stride, stride * (*height),
-            reinterpret_cast<BYTE*>(&*out->begin()));
-        if (FAILED(hr)) {
-            return false;
+    uint8_t* LcImageFrameWin::lockPixels() {
+        if (!createIfNecessary()) {
+            return nullptr;
         }
 
-        return true;
+        HRESULT hr;
+        if (!lock_) {
+            hr = native_bitmap_->Lock(
+                nullptr, WICBitmapLockRead | WICBitmapLockWrite, &lock_);
+            if (FAILED(hr)) {
+                return nullptr;
+            }
+        }
+
+        UINT buf_size;
+        WICInProcPointer ptr;
+        hr = lock_->GetDataPointer(&buf_size, &ptr);
+        if (FAILED(hr)) {
+            return nullptr;
+        }
+
+        return ptr;
+    }
+
+    void LcImageFrameWin::unlockPixels() {
+        lock_.reset();
     }
 
     ComPtr<IWICBitmap> LcImageFrameWin::getNative() const {
         return native_bitmap_;
+    }
+
+    ComPtr<IWICBitmapSource> LcImageFrameWin::getNativeSrc() const {
+        return native_src_;
     }
 
 }

@@ -106,7 +106,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;mfuuid.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;mfuuid.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;Mscms.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <FxCompile>
       <ObjectFileOutput>$(SolutionDir)build\x86\$(Configuration)\shaders\%(Filename).cso</ObjectFileOutput>
@@ -132,7 +132,7 @@
       <ShaderModel>4.0</ShaderModel>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;mfuuid.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;mfuuid.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;Mscms.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -159,7 +159,7 @@
       <ShaderModel>4.0</ShaderModel>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;mfuuid.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;mfuuid.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;Mscms.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -185,7 +185,7 @@
       <ShaderModel>4.0</ShaderModel>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;mfuuid.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;mfuuid.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;Mscms.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -217,6 +217,7 @@
     <ClInclude Include="event\input_event.h" />
     <ClInclude Include="event\keyboard.h" />
     <ClInclude Include="event\velocity_calculator.h" />
+    <ClInclude Include="event\win\window_message_buncher_win.h" />
     <ClInclude Include="graphics\3d\camera.h" />
     <ClInclude Include="graphics\3d\drawing_object_manager.h" />
     <ClInclude Include="graphics\3d\geocal.hpp" />
@@ -227,13 +228,16 @@
     <ClInclude Include="graphics\3d\vector.hpp" />
     <ClInclude Include="graphics\canvas.h" />
     <ClInclude Include="graphics\color.h" />
+    <ClInclude Include="graphics\color_manager.h" />
     <ClInclude Include="graphics\cursor.h" />
     <ClInclude Include="graphics\cyro_buffer.h" />
     <ClInclude Include="graphics\cyro_renderer.h" />
     <ClInclude Include="graphics\cyro_render_target.h" />
     <ClInclude Include="graphics\dirty_region.h" />
     <ClInclude Include="graphics\display.h" />
+    <ClInclude Include="graphics\display_manager.h" />
     <ClInclude Include="graphics\effects\cyro_effect.h" />
+    <ClInclude Include="graphics\effects\image_effect.h" />
     <ClInclude Include="graphics\effects\shadow_effect.h" />
     <ClInclude Include="graphics\graphics_utils.h" />
     <ClInclude Include="graphics\gpu\gpu_buffer.h" />
@@ -284,12 +288,15 @@
     <ClInclude Include="graphics\vector2.hpp" />
     <ClInclude Include="graphics\vsyncable.h" />
     <ClInclude Include="graphics\vsync_provider.h" />
+    <ClInclude Include="graphics\win\color_manager_win.h" />
     <ClInclude Include="graphics\win\cyro_renderer_d2d.h" />
     <ClInclude Include="graphics\win\cyro_render_target_d2d.h" />
     <ClInclude Include="graphics\win\direct3d\assist_configure.h" />
+    <ClInclude Include="graphics\win\direct3d\effects\image_effect_dx.h" />
     <ClInclude Include="graphics\win\direct3d\effects\shadow_effect_dx.h" />
     <ClInclude Include="graphics\win\direct3d\model_configure.h" />
     <ClInclude Include="graphics\win\directx_manager.h" />
+    <ClInclude Include="graphics\win\display_manager_win.h" />
     <ClInclude Include="graphics\win\display_win.h" />
     <ClInclude Include="graphics\win\images\image_frame_win.h" />
     <ClInclude Include="graphics\win\images\image_options_d2d_utils.h" />
@@ -484,17 +491,21 @@
     <ClCompile Include="event\keyboard.cpp" />
     <ClCompile Include="event\velocity_calculator.cpp" />
     <ClCompile Include="event\win\keyboard_win.cpp" />
+    <ClCompile Include="event\win\window_message_buncher_win.cpp" />
     <ClCompile Include="graphics\3d\camera.cpp" />
     <ClCompile Include="graphics\3d\drawing_object_manager.cpp" />
     <ClCompile Include="graphics\3d\graph_creator.cpp" />
     <ClCompile Include="graphics\3d\scene.cpp" />
     <ClCompile Include="graphics\canvas.cpp" />
     <ClCompile Include="graphics\color.cpp" />
+    <ClCompile Include="graphics\color_manager.cpp" />
     <ClCompile Include="graphics\cursor.cpp" />
     <ClCompile Include="graphics\cyro_buffer.cpp" />
     <ClCompile Include="graphics\cyro_renderer.cpp" />
     <ClCompile Include="graphics\dirty_region.cpp" />
     <ClCompile Include="graphics\display.cpp" />
+    <ClCompile Include="graphics\display_manager.cpp" />
+    <ClCompile Include="graphics\effects\image_effect.cpp" />
     <ClCompile Include="graphics\effects\shadow_effect.cpp" />
     <ClCompile Include="graphics\graphic_device_manager.cpp" />
     <ClCompile Include="graphics\images\image.cpp" />
@@ -523,12 +534,15 @@
     <ClCompile Include="graphics\render_node\render_tree.cpp" />
     <ClCompile Include="graphics\vsyncable.cpp" />
     <ClCompile Include="graphics\vsync_provider.cpp" />
+    <ClCompile Include="graphics\win\color_manager_win.cpp" />
     <ClCompile Include="graphics\win\cyro_renderer_d2d.cpp" />
     <ClCompile Include="graphics\win\cyro_render_target_d2d.cpp" />
     <ClCompile Include="graphics\win\direct3d\assist_configure.cpp" />
+    <ClCompile Include="graphics\win\direct3d\effects\image_effect_dx.cpp" />
     <ClCompile Include="graphics\win\direct3d\effects\shadow_effect_dx.cpp" />
     <ClCompile Include="graphics\win\direct3d\model_configure.cpp" />
     <ClCompile Include="graphics\win\directx_manager.cpp" />
+    <ClCompile Include="graphics\win\display_manager_win.cpp" />
     <ClCompile Include="graphics\win\display_win.cpp" />
     <ClCompile Include="graphics\win\images\image_frame_win.cpp" />
     <ClCompile Include="graphics\win\images\image_options_d2d_utils.cpp" />
@@ -670,6 +684,18 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="graphics\win\direct3d\hlsl\assist_vertex_shader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="graphics\win\direct3d\hlsl\image_effect_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="graphics\win\direct3d\hlsl\image_effect_vs.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>

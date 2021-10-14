@@ -17,6 +17,8 @@
 #include "ukive/graphics/cursor.h"
 #include "ukive/window/window_native.h"
 
+#include "ukive/graphics/win/display_win.h"
+
 #define WM_NCDRAWCLASSIC1  0xAE
 #define WM_NCDRAWCLASSIC2  0xAF
 #define WM_NCMOUSEFIRST    WM_NCMOUSEMOVE
@@ -134,6 +136,7 @@ namespace ukive {
         int getTextureHeight() const;
         float getUserScale() const;
         void getThemeConfig(ThemeConfig* config) const;
+        bool getICMProfilePath(std::wstring* path) const;
 
         static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -273,6 +276,8 @@ namespace ukive {
 
         // Power Manager
         HPOWERNOTIFY display_power_notify_ = nullptr;
+
+        std::shared_ptr<Display> display_;
     };
 
 }

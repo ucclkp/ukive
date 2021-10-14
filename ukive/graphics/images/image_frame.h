@@ -44,7 +44,7 @@ namespace ukive {
         virtual void getDpi(float* dpi_x, float* dpi_y) const = 0;
 
         virtual SizeF getSize() const = 0;
-        virtual Size getPixelSize() const = 0;
+        virtual SizeU getPixelSize() const = 0;
     };
 
 }

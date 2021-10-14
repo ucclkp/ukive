@@ -35,6 +35,15 @@ namespace ukive {
     }
 
     void TabView::setStripView(TabStripView* tsv) {
+        if (tsv == strip_view_) {
+            return;
+        }
+
+        if (strip_view_) {
+            strip_view_->setSelectionListener(nullptr);
+            strip_view_->clearItems();
+        }
+
         strip_view_ = tsv;
 
         if (strip_view_) {

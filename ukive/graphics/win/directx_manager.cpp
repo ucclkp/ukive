@@ -6,6 +6,8 @@
 
 #include "ukive/graphics/win/directx_manager.h"
 
+#include <wincodec.h>
+
 #include "utils/log.h"
 
 #include "ukive/graphics/images/image_options.h"
@@ -311,6 +313,63 @@ namespace ukive {
             }
             return {};
         }
+        return tex;
+    }
+
+    ComPtr<ID3D11Texture2D> DirectXManager::createTexture2D(IWICBitmap* wic_bmp) {
+        UINT width, height;
+        HRESULT hr = wic_bmp->GetSize(&width, &height);
+        if (FAILED(hr)) {
+            return {};
+        }
+
+        D3D11_TEXTURE2D_DESC tex_desc = { 0 };
+        tex_desc.ArraySize = 1;
+        tex_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+        tex_desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+        tex_desc.Width = width;
+        tex_desc.Height = height;
+        tex_desc.MipLevels = 1;
+        tex_desc.SampleDesc.Count = 1;
+        tex_desc.SampleDesc.Quality = 0;
+        tex_desc.MiscFlags = 0;
+
+        WICRect lock_rect = { 0, 0, INT(width), INT(height) };
+        ComPtr<IWICBitmapLock> lock;
+        hr = wic_bmp->Lock(&lock_rect, WICBitmapLockRead, &lock);
+        if (FAILED(hr)) {
+            return {};
+        }
+
+        UINT buf_size;
+        BYTE* buf;
+        hr = lock->GetDataPointer(&buf_size, &buf);
+        if (FAILED(hr)) {
+            return {};
+        }
+
+        UINT stride;
+        hr = lock->GetStride(&stride);
+        if (FAILED(hr)) {
+            return {};
+        }
+
+        D3D11_SUBRESOURCE_DATA tex_data;
+        tex_data.SysMemPitch = stride;
+        tex_data.SysMemSlicePitch = 0;
+        tex_data.pSysMem = buf;
+
+        ComPtr<ID3D11Texture2D> tex;
+        hr = d3d_device_->CreateTexture2D(&tex_desc, &tex_data, &tex);
+        if (FAILED(hr)) {
+            if (hr != DXGI_ERROR_DEVICE_REMOVED &&
+                hr != DXGI_ERROR_DEVICE_RESET)
+            {
+                LOG(Log::WARNING) << "Failed to create 2d texture.";
+            }
+            return {};
+        }
+
         return tex;
     }
 

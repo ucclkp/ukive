@@ -36,6 +36,11 @@ namespace ukive {
         static int getG(uint32_t argb);
         static int getB(uint32_t argb);
 
+        static float linearToSRGB(float L);
+        static void linearToSRGB(Color* c);
+        static float sRGBToLinear(float S);
+        static void sRGBToLinear(Color* c);
+
         // Color Black.
         const static Color Black;
         // Color White.

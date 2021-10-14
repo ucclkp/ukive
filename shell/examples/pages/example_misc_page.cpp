@@ -162,7 +162,7 @@ namespace shell {
         auto v = ukive::LayoutInstantiator::from(
             parent->getContext(), parent, Res::Layout::example_misc_page_layout_xml);
 
-        auto sv = findViewById<ukive::ScrollView>(v, Res::Id::sv_misc_page);
+        auto sv = findView<ukive::ScrollView>(v, Res::Id::sv_misc_page);
 
         std::u16string output_name;
         std::u16string adapter_name;
@@ -173,10 +173,10 @@ namespace shell {
         deviceDesc.append(u"Device: ").append(adapter_name)
             .append(u"\n").append(u"Monitor: ").append(output_name);
 
-        auto deviceTextView = findViewById<ukive::TextView>(v, Res::Id::tv_dev_text_params);
+        auto deviceTextView = findView<ukive::TextView>(v, Res::Id::tv_dev_text_params);
         deviceTextView->setText(deviceDesc);
 
-        auto chart_view = findViewById<ukive::ChartView>(v, Res::Id::cv_data_chart);
+        auto chart_view = findView<ukive::ChartView>(v, Res::Id::cv_data_chart);
         chart_view->setBackground(new ukive::ColorElement(ukive::Color::Grey100));
         chart_view->setVisibility(ukive::View::VANISHED);
 
@@ -185,18 +185,18 @@ namespace shell {
         //fillChartView3(chart_view);
         fillChartView4(chart_view);
 
-        check_box_ = findViewById<ukive::CheckBox>(v, Res::Id::cb_misc_anim_test);
+        check_box_ = findView<ukive::CheckBox>(v, Res::Id::cb_misc_anim_test);
         check_box_->setChecked(true);
 
-        combo_box_ = findViewById<ukive::ComboBox>(v, Res::Id::sv_misc_combobox);
+        combo_box_ = findView<ukive::ComboBox>(v, Res::Id::sv_misc_combobox);
         combo_box_->addItem(u"Test01");
         combo_box_->addItem(u"Test02");
         combo_box_->addItem(u"Test03");
 
-        auto progress_bar = findViewById<ukive::ProgressBar>(v, Res::Id::pb_misc_anim_test);
+        auto progress_bar = findView<ukive::ProgressBar>(v, Res::Id::pb_misc_anim_test);
         progress_bar->setProgress(50);
 
-        auto textView = findViewById<ukive::TextView>(v, Res::Id::tv_misc_txt);
+        auto textView = findView<ukive::TextView>(v, Res::Id::tv_misc_txt);
         textView->setText(u"这\n是一个示\n例程序，\n在这里可以显示文本。");
         textView->setBackground(new ukive::TextEditorElement(parent->getContext()));
         textView->setLineSpacing(ukive::TextLayout::LineSpacing::UNIFORM, 10);
@@ -224,7 +224,7 @@ namespace shell {
         }
         textView->requestFocus();
 
-        image_view_ = findViewById<ukive::ImageView>(v, Res::Id::iv_misc_img);
+        image_view_ = findView<ukive::ImageView>(v, Res::Id::iv_misc_img);
 
         auto rm = ukive::Application::getResourceManager();
         auto img_path = rm->getResRootPath() / u"freshpaint.png";
@@ -232,7 +232,7 @@ namespace shell {
         image_view_->setImage(std::shared_ptr<ukive::ImageFrame>(img));
         image_view_->animeParams()->setOrder(ukive::ViewAnimatorParams::RST);
 
-        test_button_ = findViewById<ukive::Button>(v, Res::Id::bt_misc_button);
+        test_button_ = findView<ukive::Button>(v, Res::Id::bt_misc_button);
         test_button_->setOnClickListener(this);
 
         return v;

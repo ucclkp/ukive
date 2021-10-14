@@ -161,14 +161,28 @@ namespace ukive {
         }
 
         auto item = getChildAt(index);
-        bool remove_sel = sel_view_ == item;
+        bool sel_removed = sel_view_ == item;
 
         removeView(item);
 
-        if (remove_sel && getChildCount() > 0) {
+        if (sel_removed) {
             sel_view_ = nullptr;
-            setSelectedItem(0);
         }
+
+        if (getChildCount() > index) {
+            setSelectedItem(index);
+        } else {
+            if (index > 0 && getChildCount() > index - 1) {
+                setSelectedItem(index - 1);
+            } else if (getChildCount() > 0) {
+                setSelectedItem(0);
+            }
+        }
+    }
+
+    void TabStripView::clearItems() {
+        removeAllViews();
+        sel_view_ = nullptr;
     }
 
     size_t TabStripView::getItemCount() const {

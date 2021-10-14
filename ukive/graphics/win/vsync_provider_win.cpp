@@ -91,7 +91,9 @@ namespace ukive {
                 break;
             }
 
-            auto primary = static_cast<DisplayWin*>(Display::primary());
+            // TODO: 移出该线程
+            auto primary_display = Display::fromPrimary();
+            auto primary = static_cast<DisplayWin*>(primary_display.get());
 
             auto before_ts = utl::TimeUtils::upTimeNanos();
             bool ret = primary->waitForVSync();

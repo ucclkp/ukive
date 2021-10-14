@@ -4,7 +4,7 @@
 // This program is licensed under GPLv3 license that can be
 // found in the LICENSE file.
 
-#include "shadow_window.h"
+#include "effect_window.h"
 
 #include "utils/log.h"
 
@@ -20,25 +20,35 @@
 #include "ukive/graphics/images/image_options.h"
 #include "ukive/animation/interpolator.h"
 
+#include "ukive/graphics/color_manager.h"
+#include "ukive/graphics/images/image_frame.h"
+#include "ukive/graphics/display.h"
+#include "ukive/graphics/images/lc_image_factory.h"
+#include "ukive/graphics/images/lc_image.h"
+#include "ukive/resources/resource_manager.h"
+
+
 #define RADIUS 4
 #define BACKGROUND_SIZE 100
 
 
 namespace shell {
 
-    ShadowWindow::ShadowWindow()
+    ukive::Color color_;
+
+    EffectWindow::EffectWindow()
         : ce_button_(nullptr) {}
 
-    ShadowWindow::~ShadowWindow() {}
+    EffectWindow::~EffectWindow() {}
 
-    void ShadowWindow::onCreated() {
+    void EffectWindow::onCreated() {
         Window::onCreated();
 
         setBackgroundColor(ukive::Color::White);
 
         createImages();
 
-        using Rlp = ukive::RestraintLayoutInfo;
+        /*using Rlp = ukive::RestraintLayoutInfo;
 
         auto layout = new ukive::RestraintLayout(getContext());
         layout->setLayoutSize(ukive::View::LS_FILL, ukive::View::LS_FILL);
@@ -57,7 +67,7 @@ namespace shell {
             .start(layout->getId()).top(layout->getId())
             .end(layout->getId()).bottom(layout->getId()).build();
         ce_button_->setExtraLayoutInfo(ce_button_lp);
-        layout->addView(ce_button_);
+        layout->addView(ce_button_);*/
 
         using namespace std::chrono_literals;
         animator_.setValueRange(RADIUS, 256);
@@ -66,32 +76,48 @@ namespace shell {
         animator_.setInterpolator(new ukive::LinearInterpolator());
         //animator_.start();
         //startVSync();
+
+        auto rm = ukive::Application::getResourceManager();
+        //auto modified_img_path = rm->getResRootPath() / u"AdobeRGB_2.jpg";
+        auto modified_img_path = rm->getResRootPath() / u"wcg_test.png";
+        image_img_ = ukive::ImageFrame::decodeFile(this, modified_img_path.u16string());
+
+        ukive::Color src(0.5f, 0.5f, 0.5f, 1);
+
+        ukive::Color dst;
+        auto cm = ukive::Application::getColorManager();
+        cm->convertColor(src, &dst);
+
+        color_ = dst;
     }
 
-    void ShadowWindow::onPreDrawCanvas(ukive::Canvas* canvas) {
+    void EffectWindow::onPreDrawCanvas(ukive::Canvas* canvas) {
         Window::onPreDrawCanvas(canvas);
 
-        canvas->save();
+        /*canvas->save();
         canvas->translate(-RADIUS, -RADIUS);
 
         canvas->drawImage(100, 10, shadow_img_);
 
-        canvas->restore();
+        canvas->restore();*/
 
-        canvas->drawImage(100, 10, content_img_.get());
+        //canvas->drawImage(100, 10, content_img_.get());
+        //canvas->drawImage(100, 10, image_img_);
+
+        canvas->fillRect(ukive::RectF(0, 0, 1000, 1000), color_);
     }
 
-    void ShadowWindow::onDestroy() {
+    void EffectWindow::onDestroy() {
         animator_.stop();
 
         Window::onDestroy();
     }
 
-    bool ShadowWindow::onInputEvent(ukive::InputEvent* e) {
+    bool EffectWindow::onInputEvent(ukive::InputEvent* e) {
         return Window::onInputEvent(e);
     }
 
-    void ShadowWindow::onContextChanged(const ukive::Context& context) {
+    void EffectWindow::onContextChanged(const ukive::Context& context) {
         switch (context.getChanged()) {
         case ukive::Context::DEV_LOST:
         {
@@ -113,7 +139,7 @@ namespace shell {
         }
     }
 
-    void ShadowWindow::onAnimationProgress(ukive::Animator* animator) {
+    void EffectWindow::onAnimationProgress(ukive::Animator* animator) {
         shadow_effect_->setRadius(int(animator->getCurValue()));
         shadow_effect_->generate(getCanvas());
 
@@ -121,7 +147,7 @@ namespace shell {
         requestDraw();
     }
 
-    void ShadowWindow::onVSync(
+    void EffectWindow::onVSync(
         uint64_t start_time, uint32_t display_freq, uint32_t real_interval)
     {
         if (!animator_.update(start_time, display_freq)) {
@@ -129,7 +155,7 @@ namespace shell {
         }
     }
 
-    void ShadowWindow::createImages() {
+    void EffectWindow::createImages() {
         ukive::Canvas canvas(
             BACKGROUND_SIZE, BACKGROUND_SIZE,
             getCanvas()->getBuffer()->getImageOptions());

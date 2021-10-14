@@ -21,13 +21,15 @@ namespace ukive {
 
         void addFrame(LcImageFrame* frame);
         void removeFrame(LcImageFrame* frame, bool del);
+        void clearFrames(bool del);
 
         bool isValid() const;
 
         void setData(const std::shared_ptr<ImageData>& data);
         const std::shared_ptr<ImageData>& getData() const;
 
-        Size getSize() const;
+        SizeF getBounds() const;
+        SizeU getPixelBounds() const;
         const std::vector<LcImageFrame*>& getFrames() const;
 
     private:

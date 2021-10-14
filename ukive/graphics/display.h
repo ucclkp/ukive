@@ -20,19 +20,20 @@ namespace ukive {
 
     class Display {
     public:
-        static Display* create();
+        using DisplayPtr = std::shared_ptr<Display>;
 
-        static Display* primary();
-        static Display* fromWindow(Window* w);
+        static DisplayPtr fromNull();
+        static DisplayPtr fromPrimary();
+        static DisplayPtr fromPoint(const Point& p);
+        static DisplayPtr fromRect(const Rect& r);
+        static DisplayPtr fromWindow(Window* w);
 
         virtual ~Display() = default;
 
-        virtual bool makePrimary() = 0;
-        virtual bool makeFromPoint(const Point& p) = 0;
-        virtual bool makeFromRect(const Rect& r) = 0;
-        virtual bool makeFromWindow(Window* w) = 0;
-
+        virtual bool isValid() const = 0;
         virtual bool isInHDRMode() const = 0;
+        virtual bool isSame(const Display* rhs) const = 0;
+        virtual bool isSameDisplay(const Display* rhs) const = 0;
 
         virtual void getName(std::u16string* name) = 0;
         virtual void getAdapterName(std::u16string* name) = 0;

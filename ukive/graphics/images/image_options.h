@@ -10,6 +10,12 @@
 
 namespace ukive {
 
+    enum class ImageContainer {
+        PNG,
+        JPEG,
+        BMP,
+    };
+
     enum class ImagePixelFormat {
         B8G8R8A8_UNORM,
         RAW,

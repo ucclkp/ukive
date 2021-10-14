@@ -37,8 +37,9 @@
 #include "ukive/system/win/dynamic_windows_api.h"
 #include "ukive/system/win/ui_utils_win.h"
 #include "ukive/graphics/dirty_region.h"
-#include "ukive/graphics/win/display_win.h"
+#include "ukive/graphics/win/color_manager_win.h"
 #include "ukive/graphics/win/directx_manager.h"
+#include "ukive/graphics/win/display_manager_win.h"
 #include "ukive/graphics/win/vsync_provider_win.h"
 #include "ukive/window/window_listener.h"
 #include "ukive/window/window_native_delegate.h"
@@ -310,7 +311,7 @@ namespace ukive {
     }
 
     void WindowImplWin::center() {
-        auto display_bounds = Display::primary()->getPixelWorkArea();
+        auto display_bounds = DisplayWin::fromWindowImpl(this)->getPixelWorkArea();
         x_ = int(std::round((display_bounds.width() - width_) / 2.f));
         y_ = int(std::round((display_bounds.height() - height_) / 2.f));
 
@@ -720,7 +721,7 @@ namespace ukive {
         }
 
         float sx, sy;
-        Display::primary()->getUserScale(&sx, &sy);
+        DisplayWin::fromWindowImpl(this)->getUserScale(&sx, &sy);
         return sx;
     }
 
@@ -742,6 +743,18 @@ namespace ukive {
             config->light_theme = info.apps_use_light_theme;
             config->transparency_enabled = info.transparency_enabled;
         }
+    }
+
+    bool WindowImplWin::getICMProfilePath(std::wstring* path) const {
+        HDC hdc = ::GetDC(hWnd_);
+        if (!hdc) {
+            return false;
+        }
+
+        bool ret = ColorManagerWin::getICMProfile(hdc, path);
+
+        ::ReleaseDC(hWnd_, hdc);
+        return ret;
     }
 
     HWND WindowImplWin::getHandle() const {
@@ -1017,13 +1030,13 @@ namespace ukive {
     void WindowImplWin::updateAppBarAwareRect() {
         int thickness = win::WinAppBar::getAutoHideBarThickness();
 
-        DisplayWin display;
-        if (!display.makeFromWindowImpl(this)) {
+        auto display = DisplayWin::fromWindowImpl(this);
+        if (!display->isValid()) {
             return;
         }
 
         Rect rect;
-        auto edge = win::WinAppBar::findAutoHideEdge(&display);
+        auto edge = win::WinAppBar::findAutoHideEdge(display.get());
         switch (edge) {
         case win::WinAppBar::Bottom: rect.bottom = thickness; break;
         case win::WinAppBar::Left:   rect.left = thickness;   break;
@@ -2282,7 +2295,11 @@ namespace ukive {
     }
 
     LRESULT WindowImplWin::onDisplayChanged(WPARAM wParam, LPARAM lParam, bool* handled) {
+        static_cast<DisplayManagerWin*>(
+            Application::getDisplayManager())->notifyChanged(hWnd_);
+
         *handled = false;
+        display_ = DisplayWin::fromWindowImpl(this);
         return 0;
     }
 
@@ -2395,6 +2412,12 @@ namespace ukive {
         if (!(win_pos->flags & SWP_NOZORDER) && ::IsWindow(hWnd_)) {
             is_keep_on_top_ = ::GetWindowLongPtr(hWnd_, GWL_EXSTYLE) & WS_EX_TOPMOST;
         }
+
+        auto display = DisplayWin::fromWindowImpl(this);
+        if (!display_ || !display_->isSame(display.get())) {
+            display_ = display;
+        }
+
         return 0;
     }
 
@@ -2737,12 +2760,12 @@ namespace ukive {
     void WindowImplWin::enableFullscreen(DWORD cur_style) {
         ::GetWindowPlacement(hWnd_, &saved_place_);
 
-        DisplayWin display;
-        if (!display.makeFromWindowImpl(this)) {
+        auto display = DisplayWin::fromWindowImpl(this);
+        if (!display->isValid()) {
             return;
         }
 
-        auto bounds = display.getPixelBounds();
+        auto bounds = display->getPixelBounds();
 
         ::SetWindowLongPtr(hWnd_, GWL_STYLE, cur_style & ~WS_OVERLAPPEDWINDOW);
         ::SetWindowPos(

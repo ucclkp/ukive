@@ -59,6 +59,19 @@ namespace ukive {
         }
     }
 
+    void LcImage::clearFrames(bool del) {
+        if (!ontic_) {
+            return;
+        }
+
+        if (del) {
+            utl::STLDeleteElements(&ontic_->frames);
+        }
+
+        ontic_->frames.clear();
+        ontic_.reset();
+    }
+
     void LcImage::setData(const std::shared_ptr<ImageData>& data) {
         if (!ontic_) {
             ontic_ = std::make_shared<ImageOntic>();
@@ -81,14 +94,26 @@ namespace ukive {
         return !ontic_->frames.empty();
     }
 
-    Size LcImage::getSize() const {
+    SizeF LcImage::getBounds() const {
         if (!ontic_) {
             return {};
         }
 
-        Size size;
+        SizeF size;
         for (const auto frame : ontic_->frames) {
             size.setToMax(frame->getSize());
+        }
+        return size;
+    }
+
+    SizeU LcImage::getPixelBounds() const {
+        if (!ontic_) {
+            return {};
+        }
+
+        SizeU size;
+        for (const auto frame : ontic_->frames) {
+            size.setToMax(frame->getPixelSize());
         }
         return size;
     }

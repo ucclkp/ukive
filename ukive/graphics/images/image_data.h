@@ -16,7 +16,7 @@ namespace ukive {
     public:
         enum Type {
             GIF_IMAGE_DATA = 1,
-            GIF_FRAME_DATA = 1,
+            GIF_FRAME_DATA = 2,
         };
 
         virtual ~ImageData() = default;

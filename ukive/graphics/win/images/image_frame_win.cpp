@@ -24,11 +24,11 @@ namespace ukive {
         return SizeF(size.width, size.height);
     }
 
-    Size ImageFrameWin::getPixelSize() const {
+    SizeU ImageFrameWin::getPixelSize() const {
         auto size(native_bitmap_->GetPixelSize());
-        return Size(
-            utl::num_cast<Size::type>(size.width),
-            utl::num_cast<Size::type>(size.height));
+        return SizeU(
+            utl::num_cast<SizeU::type>(size.width),
+            utl::num_cast<SizeU::type>(size.height));
     }
 
     ComPtr<ID2D1Bitmap> ImageFrameWin::getNative() const {

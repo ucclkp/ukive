@@ -18,6 +18,7 @@ namespace ukive {
     Color::Color(float r, float g, float b, float a)
         : a(a), r(r), g(g), b(b) {}
 
+    // static
     Color Color::parse(const std::string_view& color) {
         if (color.empty() || color.at(0) != '#') {
             LOG(Log::ERR) << "Unknown color: " << color;
@@ -55,10 +56,12 @@ namespace ukive {
         return Red500;
     }
 
+    // static
     Color Color::ofInt(int r, int g, int b, int a) {
         return Color(r / 255.f, g / 255.f, b / 255.f, a / 255.f);
     }
 
+    // static
     Color Color::ofRGB(uint32_t rgb, float a) {
         return Color(
             ((rgb & red_mask) >> red_shift) / 255.f,
@@ -67,6 +70,7 @@ namespace ukive {
             a);
     }
 
+    // static
     Color Color::ofARGB(uint32_t argb) {
         return Color(
             ((argb & red_mask) >> red_shift) / 255.f,
@@ -75,20 +79,62 @@ namespace ukive {
             ((argb & alpha_mask) >> alpha_shift) / 255.f);
     }
 
+    // static
     int Color::getA(uint32_t argb) {
         return (argb & alpha_mask) >> alpha_shift;
     }
 
+    // static
     int Color::getR(uint32_t argb) {
         return (argb & red_mask) >> red_shift;
     }
 
+    // static
     int Color::getG(uint32_t argb) {
         return (argb & green_mask) >> green_shift;
     }
 
+    // static
     int Color::getB(uint32_t argb) {
         return (argb & blue_mask) >> blue_shift;
+    }
+
+    // static
+    float Color::linearToSRGB(float L) {
+        if (L < 0) { return 0; }
+        if (L > 1) { return 1; }
+
+        if (L <= 0.0031308f) {
+            return L * 12.92f;
+        }
+
+        return float(1.055 * std::pow(L, 1 / 2.4) - 0.055);
+    }
+
+    // static
+    void Color::linearToSRGB(Color* c) {
+        c->r = linearToSRGB(c->r);
+        c->g = linearToSRGB(c->g);
+        c->b = linearToSRGB(c->b);
+    }
+
+    // static
+    float Color::sRGBToLinear(float S) {
+        if (S < 0) { return 0; }
+        if (S > 1) { return 1; }
+
+        if (S <= 0.04045f) {
+            return S / 12.92f;
+        }
+
+        return float(std::pow((S + 0.055) / 1.055, 2.4));
+    }
+
+    // static
+    void Color::sRGBToLinear(Color* c) {
+        c->r = sRGBToLinear(c->r);
+        c->g = sRGBToLinear(c->g);
+        c->b = sRGBToLinear(c->b);
     }
 
 

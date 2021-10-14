@@ -17,7 +17,7 @@
 //#include "shell/gallery/picture/picture_window.h"
 #include "shell/examples/example_window.h"
 #include "shell/text/text_window.h"
-//#include "shell/shadow/shadow_window.h"
+//#include "shell/effects/effect_window.h"
 //#include "shell/grid/grid_window.h"
 //#include "shell/visualize/visualization_window.h"
 
@@ -54,11 +54,11 @@ GUI_MAIN() {
     lod_window->center();
     lod_window->show();*/
 
-    /*auto shadow_window = std::make_shared<shell::ShadowWindow>();
+    /*auto shadow_window = std::make_shared<shell::EffectWindow>();
     shadow_window->init(native_params);
     shadow_window->setTitle(u"Shadow");
-    shadow_window->setWidth(ukive::Application::dp2pxi(600));
-    shadow_window->setHeight(ukive::Application::dp2pxi(400));
+    shadow_window->setWidth(ukive::Application::dp2pxi(1500));
+    shadow_window->setHeight(ukive::Application::dp2pxi(1300));
     shadow_window->center();
     shadow_window->show();*/
 

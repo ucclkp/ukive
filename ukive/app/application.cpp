@@ -11,7 +11,9 @@
 #include "utils/message/message.h"
 #include "utils/message/message_pump.h"
 
+#include "ukive/graphics/color_manager.h"
 #include "ukive/graphics/display.h"
+#include "ukive/graphics/display_manager.h"
 #include "ukive/graphics/graphic_device_manager.h"
 #include "ukive/graphics/images/lc_image_factory.h"
 #include "ukive/graphics/vsync_provider.h"
@@ -52,9 +54,11 @@ namespace ukive {
         initPlatform();
 
         utl::MessagePump::createForUI();
+        dm_.reset(DisplayManager::create());
 
         LayoutInstantiator::init();
 
+        cm_.reset(ColorManager::create());
         gdm_.reset(GraphicDeviceManager::create());
         if (!gdm_->initialize()) {
             LOG(Log::FATAL) << "Failed to initialize GraphicDeviceManager";
@@ -97,6 +101,8 @@ namespace ukive {
 
         gdm_->destroy();
         gdm_.reset();
+        cm_.reset();
+        dm_.reset();
 
         cleanPlatform();
     }
@@ -141,6 +147,16 @@ namespace ukive {
     }
 
     // static
+    DisplayManager* Application::getDisplayManager() {
+        return instance_->dm_.get();
+    }
+
+    // static
+    ColorManager* Application::getColorManager() {
+        return instance_->cm_.get();
+    }
+
+    // static
     int Application::getViewID() {
         ++view_uid_;
         return view_uid_;
@@ -158,7 +174,7 @@ namespace ukive {
         }
 
         float sx, sy;
-        Display::primary()->getUserScale(&sx, &sy);
+        instance_->dm_->fromPrimary()->getUserScale(&sx, &sy);
         return sx * dp;
     }
 
@@ -169,7 +185,7 @@ namespace ukive {
         }
 
         float sx, sy;
-        Display::primary()->getUserScale(&sx, &sy);
+        instance_->dm_->fromPrimary()->getUserScale(&sx, &sy);
         return sy * dp;
     }
 
@@ -180,7 +196,7 @@ namespace ukive {
         }
 
         float sx, sy;
-        Display::primary()->getUserScale(&sx, &sy);
+        instance_->dm_->fromPrimary()->getUserScale(&sx, &sy);
         return static_cast<int>(sx * dp);
     }
 
@@ -191,7 +207,7 @@ namespace ukive {
         }
 
         float sx, sy;
-        Display::primary()->getUserScale(&sx, &sy);
+        instance_->dm_->fromPrimary()->getUserScale(&sx, &sy);
         return static_cast<int>(sy * dp);
     }
 

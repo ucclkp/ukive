@@ -61,19 +61,29 @@ namespace ukive {
         }
 
         void insets(const SizeT& rhs) {
-            width -= rhs.width;
-            height -= rhs.height;
+            insets(rhs.width, rhs.height);
         }
 
         void insets(Ty w, Ty h) {
-            width -= w;
-            height -= h;
+            if (w < width) {
+                width = width - w;
+            } else {
+                width = 0;
+            }
+
+            if (h < height) {
+                height = height - h;
+            } else {
+                height = 0;
+            }
         }
 
         Ty width, height;
     };
 
     using Size = SizeT<int>;
+    using SizeU = SizeT<unsigned int>;
+    using SizeS = SizeT<size_t>;
     using SizeF = SizeT<float>;
 
 }

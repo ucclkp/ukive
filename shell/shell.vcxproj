@@ -222,6 +222,7 @@ $(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro" -d "$(OutDir)necro\"</
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="app\shell.cpp" />
+    <ClCompile Include="effects\effect_window.cpp" />
     <ClCompile Include="examples\pages\example_list_page.cpp" />
     <ClCompile Include="examples\pages\example_misc_page.cpp" />
     <ClCompile Include="examples\pages\example_tree_page.cpp" />
@@ -238,7 +239,6 @@ $(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro" -d "$(OutDir)necro\"</
     <ClCompile Include="lod\terrain_configure.cpp" />
     <ClCompile Include="lod\terrain_scene.cpp" />
     <ClCompile Include="lod\lod_generator.cpp" />
-    <ClCompile Include="shadow\shadow_window.cpp" />
     <ClCompile Include="text\text_window.cpp" />
     <ClCompile Include="visualize\visualization_window.cpp" />
     <ClCompile Include="visualize\visual_layout_scene.cpp" />
@@ -249,6 +249,7 @@ $(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro" -d "$(OutDir)necro\"</
     </Manifest>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="effects\effect_window.h" />
     <ClInclude Include="examples\pages\example_list_page.h" />
     <ClInclude Include="examples\pages\example_misc_page.h" />
     <ClInclude Include="examples\pages\example_tree_page.h" />
@@ -266,7 +267,6 @@ $(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro" -d "$(OutDir)necro\"</
     <ClInclude Include="lod\terrain_scene.h" />
     <ClInclude Include="lod\lod_generator.h" />
     <ClInclude Include="resources\resource.h" />
-    <ClInclude Include="shadow\shadow_window.h" />
     <ClInclude Include="text\text_window.h" />
     <ClInclude Include="visualize\visualization_window.h" />
     <ClInclude Include="visualize\visual_layout_scene.h" />
