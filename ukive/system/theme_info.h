@@ -7,7 +7,7 @@
 #ifndef UKIVE_SYSTEM_THEME_INFO_H_
 #define UKIVE_SYSTEM_THEME_INFO_H_
 
-#include "ukive/graphics/color.h"
+#include "ukive/graphics/colors/color.h"
 
 
 namespace ukive {

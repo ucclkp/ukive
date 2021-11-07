@@ -9,7 +9,7 @@
 
 #include "ukive/animation/animator.h"
 #include "ukive/elements/multi_element.h"
-#include "ukive/graphics/color.h"
+#include "ukive/graphics/colors/color.h"
 #include "ukive/graphics/vsyncable.h"
 
 
@@ -24,7 +24,7 @@ namespace ukive {
         RippleElement();
         ~RippleElement();
 
-        void setTintColor(Color tint);
+        void setTintColor(const Color& tint);
         void setDrawMaskEnabled(bool enabled);
 
         void draw(Canvas* canvas) override;

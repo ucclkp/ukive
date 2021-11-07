@@ -14,7 +14,7 @@
 #include "ukive/graphics/win/cyro_render_target_d2d.h"
 #include "ukive/graphics/win/images/image_frame_win.h"
 #include "ukive/graphics/win/images/image_options_d2d_utils.h"
-#include "ukive/graphics/win/gpu/gpu_texture_d3d.h"
+#include "ukive/graphics/win/gpu/gpu_context_d3d.h"
 #include "ukive/graphics/canvas.h"
 #include "ukive/resources/resource_manager.h"
 #include "ukive/window/window.h"
@@ -152,13 +152,13 @@ namespace ukive {
 
         auto buffer = c->getBuffer();
         if (!buffer || !target_tex2d_) {
-            DCHECK(false);
+            assert(false);
             return false;
         }
 
         auto rt = static_cast<CyroRenderTargetD2D*>(buffer->getRT())->getNative();
         if (!rt) {
-            DCHECK(false);
+            assert(false);
             return false;
         }
 
@@ -166,15 +166,24 @@ namespace ukive {
 
         D2D1_BITMAP_PROPERTIES bmp_prop = mapBitmapProps(c->getBuffer()->getImageOptions());
 
+        auto dxgi_surface = target_tex2d_.cast<IDXGISurface>();
+        if (!dxgi_surface) {
+            assert(false);
+            return false;
+        }
+
         ComPtr<ID2D1Bitmap> bitmap;
         HRESULT hr = rt->CreateSharedBitmap(
-            __uuidof(IDXGISurface), target_tex2d_.cast<IDXGISurface>().get(), &bmp_prop, &bitmap);
+            __uuidof(IDXGISurface), dxgi_surface.get(), &bmp_prop, &bitmap);
         if (FAILED(hr)) {
             LOG(Log::WARNING) << "Failed to create shared bitmap: " << hr;
             return false;
         }
 
-        cache_.reset(new ImageFrameWin(bitmap));
+        auto context = static_cast<GPUContextD3D*>(
+            Application::getGraphicDeviceManager()->getGPUContext())->getNative();
+
+        cache_.reset(new ImageFrameWin(bitmap, rt, context, target_tex2d_));
         return true;
     }
 

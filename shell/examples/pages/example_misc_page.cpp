@@ -27,7 +27,7 @@
 #include "ukive/graphics/display.h"
 #include "ukive/elements/color_element.h"
 #include "ukive/elements/texteditor_element.h"
-#include "ukive/graphics/color.h"
+#include "ukive/graphics/colors/color.h"
 #include "ukive/animation/interpolator.h"
 #include "ukive/window/window.h"
 

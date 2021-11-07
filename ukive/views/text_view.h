@@ -7,7 +7,7 @@
 #ifndef UKIVE_VIEWS_TEXT_VIEW_H_
 #define UKIVE_VIEWS_TEXT_VIEW_H_
 
-#include "ukive/graphics/color.h"
+#include "ukive/graphics/colors/color.h"
 #include "ukive/text/editable.h"
 #include "ukive/text/text_action_menu_callback.h"
 #include "ukive/text/text_input_client.h"

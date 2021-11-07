@@ -13,7 +13,6 @@
 #include "utils/message/cycler.h"
 #include "utils/multi_callbacks.hpp"
 
-#include "ukive/graphics/color.h"
 #include "ukive/graphics/dirty_region.h"
 #include "ukive/graphics/size.hpp"
 #include "ukive/system/theme_info.h"

@@ -17,8 +17,8 @@ namespace ukive {
         return desc_;
     }
 
-    ID3D11Texture1D* GPUTexture1DD3D::getNative() const {
-        return t1d_.get();
+    ComPtr<ID3D11Texture1D> GPUTexture1DD3D::getNative() const {
+        return t1d_;
     }
 
 
@@ -30,8 +30,8 @@ namespace ukive {
         return desc_;
     }
 
-    ID3D11Texture2D* GPUTexture2DD3D::getNative() const {
-        return t2d_.get();
+    ComPtr<ID3D11Texture2D> GPUTexture2DD3D::getNative() const {
+        return t2d_;
     }
 
 
@@ -43,8 +43,8 @@ namespace ukive {
         return desc_;
     }
 
-    ID3D11Texture3D* GPUTexture3DD3D::getNative() const {
-        return t3d_.get();
+    ComPtr<ID3D11Texture3D> GPUTexture3DD3D::getNative() const {
+        return t3d_;
     }
 
 }

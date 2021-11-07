@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-#include "ukive/graphics/color.h"
+#include "ukive/graphics/colors/color.h"
 #include "ukive/graphics/point.hpp"
 #include "ukive/graphics/rect.hpp"
 #include "ukive/text/range.hpp"

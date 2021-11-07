@@ -227,8 +227,11 @@
     <ClInclude Include="graphics\3d\scene.h" />
     <ClInclude Include="graphics\3d\vector.hpp" />
     <ClInclude Include="graphics\canvas.h" />
-    <ClInclude Include="graphics\color.h" />
-    <ClInclude Include="graphics\color_manager.h" />
+    <ClInclude Include="graphics\colors\color.h" />
+    <ClInclude Include="graphics\colors\color_manager.h" />
+    <ClInclude Include="graphics\colors\icc_constants.h" />
+    <ClInclude Include="graphics\colors\icc_parser.h" />
+    <ClInclude Include="graphics\colors\icc_registry_constants.h" />
     <ClInclude Include="graphics\cursor.h" />
     <ClInclude Include="graphics\cyro_buffer.h" />
     <ClInclude Include="graphics\cyro_renderer.h" />
@@ -288,7 +291,7 @@
     <ClInclude Include="graphics\vector2.hpp" />
     <ClInclude Include="graphics\vsyncable.h" />
     <ClInclude Include="graphics\vsync_provider.h" />
-    <ClInclude Include="graphics\win\color_manager_win.h" />
+    <ClInclude Include="graphics\win\colors\color_manager_win.h" />
     <ClInclude Include="graphics\win\cyro_renderer_d2d.h" />
     <ClInclude Include="graphics\win\cyro_render_target_d2d.h" />
     <ClInclude Include="graphics\win\direct3d\assist_configure.h" />
@@ -497,8 +500,9 @@
     <ClCompile Include="graphics\3d\graph_creator.cpp" />
     <ClCompile Include="graphics\3d\scene.cpp" />
     <ClCompile Include="graphics\canvas.cpp" />
-    <ClCompile Include="graphics\color.cpp" />
-    <ClCompile Include="graphics\color_manager.cpp" />
+    <ClCompile Include="graphics\colors\color.cpp" />
+    <ClCompile Include="graphics\colors\color_manager.cpp" />
+    <ClCompile Include="graphics\colors\icc_parser.cpp" />
     <ClCompile Include="graphics\cursor.cpp" />
     <ClCompile Include="graphics\cyro_buffer.cpp" />
     <ClCompile Include="graphics\cyro_renderer.cpp" />
@@ -534,7 +538,7 @@
     <ClCompile Include="graphics\render_node\render_tree.cpp" />
     <ClCompile Include="graphics\vsyncable.cpp" />
     <ClCompile Include="graphics\vsync_provider.cpp" />
-    <ClCompile Include="graphics\win\color_manager_win.cpp" />
+    <ClCompile Include="graphics\win\colors\color_manager_win.cpp" />
     <ClCompile Include="graphics\win\cyro_renderer_d2d.cpp" />
     <ClCompile Include="graphics\win\cyro_render_target_d2d.cpp" />
     <ClCompile Include="graphics\win\direct3d\assist_configure.cpp" />

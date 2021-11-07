@@ -10,7 +10,6 @@
 #include "ukive/event/input_consts.h"
 #include "ukive/event/input_event.h"
 #include "ukive/graphics/canvas.h"
-#include "ukive/graphics/color.h"
 #include "ukive/views/check_listener.h"
 
 

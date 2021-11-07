@@ -4,12 +4,12 @@
 // This program is licensed under GPLv3 license that can be
 // found in the LICENSE file.
 
-#ifndef UKIVE_GRAPHICS_WIN_COLOR_MANAGER_WIN_H_
-#define UKIVE_GRAPHICS_WIN_COLOR_MANAGER_WIN_H_
+#ifndef UKIVE_GRAPHICS_WIN_COLORS_COLOR_MANAGER_WIN_H_
+#define UKIVE_GRAPHICS_WIN_COLORS_COLOR_MANAGER_WIN_H_
 
-#include "ukive/graphics/color.h"
+#include "ukive/graphics/colors/color.h"
 
-#include "ukive/graphics/color_manager.h"
+#include "ukive/graphics/colors/color_manager.h"
 
 #include <Windows.h>
 #include <Icm.h>
@@ -24,7 +24,7 @@ namespace ukive {
         bool convertColor(const Color& src, Color* dst) override;
 
         static bool getICMProfile(HDC hdc, std::wstring* path);
-        static bool getSRGBProfile(std::wstring* path);
+        static bool getDefaultProfile(std::wstring* path);
 
     private:
         HPROFILE getDisplayProfile();
@@ -32,4 +32,4 @@ namespace ukive {
 
 }
 
-#endif  // UKIVE_GRAPHICS_WIN_COLOR_MANAGER_WIN_H_
+#endif  // UKIVE_GRAPHICS_WIN_COLORS_COLOR_MANAGER_WIN_H_

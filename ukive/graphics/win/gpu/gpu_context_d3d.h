@@ -63,6 +63,8 @@ namespace ukive {
         void* lock(GPUResource* resource) override;
         void unlock(GPUResource* resource) override;
 
+        ComPtr<ID3D11DeviceContext> getNative() const;
+
     private:
         ComPtr<ID3D11DeviceContext> d3d_context_;
     };

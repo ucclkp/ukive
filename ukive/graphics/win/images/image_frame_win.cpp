@@ -11,8 +11,23 @@
 
 namespace ukive {
 
-    ImageFrameWin::ImageFrameWin(const ComPtr<ID2D1Bitmap>& source)
-        : native_bitmap_(source) {
+    ImageFrameWin::ImageFrameWin(
+        const ComPtr<ID2D1Bitmap>& bmp,
+        const ComPtr<ID2D1RenderTarget>& rt,
+        const ComPtr<IWICBitmapSource>& src)
+        : wic_src_(src),
+          native_bitmap_(bmp)
+    {
+    }
+
+    ImageFrameWin::ImageFrameWin(
+        const ComPtr<ID2D1Bitmap>& bmp,
+        const ComPtr<ID2D1RenderTarget>& rt,
+        const ComPtr<ID3D11DeviceContext>& ctx,
+        const ComPtr<ID3D11Texture2D>& src)
+        : d3d_src_(src),
+          native_bitmap_(bmp)
+    {
     }
 
     void ImageFrameWin::getDpi(float* dpi_x, float* dpi_y) const {

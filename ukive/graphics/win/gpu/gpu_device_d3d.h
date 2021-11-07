@@ -39,7 +39,7 @@ namespace ukive {
         GPUShader* createVertexShader(const void* shader_bc, size_t size) override;
         GPUShader* createPixelShader(const void* shader_bc, size_t size) override;
 
-        ID3D11Device* getNative() const;
+        ComPtr<ID3D11Device> getNative() const;
 
     private:
         ID3D11Resource* convertResource(GPUResource* res) const;

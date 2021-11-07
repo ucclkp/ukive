@@ -7,7 +7,7 @@
 #ifndef UKIVE_GRAPHICS_PAINT_H_
 #define UKIVE_GRAPHICS_PAINT_H_
 
-#include "ukive/graphics/color.h"
+#include "ukive/graphics/colors/color.h"
 
 
 namespace ukive {

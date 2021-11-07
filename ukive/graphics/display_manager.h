@@ -36,6 +36,9 @@ namespace ukive {
 
         virtual ~DisplayManager() = default;
 
+        virtual bool initialize() = 0;
+        virtual void destroy() = 0;
+
         virtual DisplayPtr fromNull() = 0;
         virtual DisplayPtr fromPrimary() = 0;
         virtual DisplayPtr fromPoint(const Point& p) = 0;

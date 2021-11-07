@@ -9,9 +9,9 @@
 #include "utils/platform_utils.h"
 
 #ifdef OS_WINDOWS
-#include "ukive/graphics/win/color_manager_win.h"
+#include "ukive/graphics/win/colors/color_manager_win.h"
 #elif defined OS_MAC
-#include "ukive/graphics/win/color_manager_mac.h"
+#include "ukive/graphics/win/colors/color_manager_mac.h"
 #endif
 
 

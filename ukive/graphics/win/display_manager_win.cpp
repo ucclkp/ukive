@@ -15,8 +15,23 @@
 
 namespace ukive {
 
-    DisplayManagerWin::DisplayManagerWin() {
+    DisplayManagerWin::DisplayManagerWin() {}
+
+    bool DisplayManagerWin::initialize() {
         null_display_ = std::make_shared<DisplayWin>(nullptr);
+        enumCCDInfo();
+        enumDisplays();
+        enumMonitors();
+        return true;
+    }
+
+    void DisplayManagerWin::destroy() {
+        cur_source_ = nullptr;
+        ccd_path_info_.reset();
+        ccd_monitor_info_.clear();
+        dd_list_.clear();
+        list_.clear();
+        null_display_.reset();
     }
 
     DisplayManager::DisplayPtr DisplayManagerWin::fromNull() {
@@ -134,8 +149,127 @@ namespace ukive {
         }
         cur_source_ = hWnd;
 
+        enumCCDInfo();
+        enumDisplays();
+        enumMonitors();
+
         for (auto l : listeners_) {
             l->onDisplayChanged();
+        }
+    }
+
+    // static
+    BOOL CALLBACK DisplayManagerWin::MonitorEnumProc(
+        HMONITOR monitor, HDC hdc, LPRECT rect, LPARAM lParam)
+    {
+        auto This = reinterpret_cast<DisplayManagerWin*>(lParam);
+
+        auto display = std::make_shared<DisplayWin>(monitor);
+        if (display->isValid()) {
+            This->list_.push_back(display);
+        }
+
+        return TRUE;
+    }
+
+    void DisplayManagerWin::enumMonitors() {
+        list_.clear();
+        BOOL ret = ::EnumDisplayMonitors(nullptr, nullptr, MonitorEnumProc, LPARAM(this));
+        assert(ret != 0);
+    }
+
+    void DisplayManagerWin::enumDisplays() {
+        dd_list_.clear();
+
+        DWORD adapter_num = 0;
+        DISPLAY_DEVICEW adapter_device = {};
+        adapter_device.cb = sizeof(DISPLAY_DEVICEW);
+        for (;;) {
+            BOOL ret = ::EnumDisplayDevicesW(nullptr, adapter_num, &adapter_device, 0);
+            if (ret == 0) {
+                break;
+            }
+
+            ++adapter_num;
+            if (!(adapter_device.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP)) {
+                continue;
+            }
+
+
+            DISPLAY_DEVICEW display_device = {};
+            display_device.cb = sizeof(DISPLAY_DEVICEW);
+
+            ret = ::EnumDisplayDevicesW(adapter_device.DeviceName, 0, &display_device, 0);
+            if (ret != 0) {
+                if (!(display_device.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP)) {
+                    continue;
+                }
+                dd_list_.push_back({ adapter_device, display_device });
+            }
+        }
+    }
+
+    void DisplayManagerWin::enumCCDInfo() {
+        ccd_path_info_.reset();
+        ccd_monitor_info_.clear();
+
+        // https://docs.microsoft.com/en-us/windows-hardware/drivers/display/connecting-and-configuring-displays
+        UINT32 path_count, mode_count;
+        auto ret = ::GetDisplayConfigBufferSizes(QDC_ONLY_ACTIVE_PATHS, &path_count, &mode_count);
+        if (ret != 0) {
+            return;
+        }
+
+        ccd_path_info_.reset(new DISPLAYCONFIG_PATH_INFO[path_count]);
+        std::unique_ptr<DISPLAYCONFIG_MODE_INFO[]> modes(new DISPLAYCONFIG_MODE_INFO[mode_count]);
+        ret = ::QueryDisplayConfig(
+            QDC_ONLY_ACTIVE_PATHS, &path_count, ccd_path_info_.get(), &mode_count, modes.get(), nullptr);
+        if (ret != 0) {
+            ccd_path_info_.reset();
+            return;
+        }
+
+        ccd_monitor_info_.resize(path_count);
+
+        for (size_t i = 0; i < path_count; ++i) {
+            auto& path = ccd_path_info_.get()[i];
+            auto& info = ccd_monitor_info_[i];
+
+            auto& source_info = info.source_info;
+            source_info = {};
+            source_info.header.type = DISPLAYCONFIG_DEVICE_INFO_GET_SOURCE_NAME;
+            source_info.header.size = sizeof(DISPLAYCONFIG_SOURCE_DEVICE_NAME);
+            source_info.header.adapterId = path.sourceInfo.adapterId;
+            source_info.header.id = path.sourceInfo.id;
+            ret = ::DisplayConfigGetDeviceInfo(reinterpret_cast<DISPLAYCONFIG_DEVICE_INFO_HEADER*>(&source_info));
+            info.has_source_info = (ret == 0);
+
+            auto& target_info = info.target_info;
+            target_info = {};
+            target_info.header.type = DISPLAYCONFIG_DEVICE_INFO_GET_TARGET_NAME;
+            target_info.header.size = sizeof(DISPLAYCONFIG_TARGET_DEVICE_NAME);
+            target_info.header.adapterId = path.targetInfo.adapterId;
+            target_info.header.id = path.targetInfo.id;
+            ret = ::DisplayConfigGetDeviceInfo(reinterpret_cast<DISPLAYCONFIG_DEVICE_INFO_HEADER*>(&target_info));
+            info.has_target_info = (ret == 0);
+
+            auto& color_info = info.advanced_color_info;
+            color_info = {};
+            color_info.header.type = DISPLAYCONFIG_DEVICE_INFO_GET_ADVANCED_COLOR_INFO;
+            color_info.header.size = sizeof(DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO);
+            color_info.header.adapterId = path.targetInfo.adapterId;
+            color_info.header.id = path.targetInfo.id;
+            ret = ::DisplayConfigGetDeviceInfo(reinterpret_cast<DISPLAYCONFIG_DEVICE_INFO_HEADER*>(&color_info));
+            info.has_advanced_color_info = (ret == 0);
+
+            auto& sdr_info = info.sdr_white_level;
+            sdr_info = {};
+            sdr_info.header.type = DISPLAYCONFIG_DEVICE_INFO_GET_SDR_WHITE_LEVEL;
+            sdr_info.header.size = sizeof(DISPLAYCONFIG_SDR_WHITE_LEVEL);
+            sdr_info.header.adapterId = path.targetInfo.adapterId;
+            sdr_info.header.id = path.targetInfo.id;
+            ret = ::DisplayConfigGetDeviceInfo(reinterpret_cast<DISPLAYCONFIG_DEVICE_INFO_HEADER*>(&sdr_info));
+            info.has_sdr_white_level_info = (ret == 0);
         }
     }
 

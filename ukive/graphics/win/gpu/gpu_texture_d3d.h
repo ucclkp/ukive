@@ -22,7 +22,7 @@ namespace ukive {
 
         const Desc& getDesc() const override;
 
-        ID3D11Texture1D* getNative() const;
+        ComPtr<ID3D11Texture1D> getNative() const;
 
     private:
         Desc desc_;
@@ -37,7 +37,7 @@ namespace ukive {
 
         const Desc& getDesc() const override;
 
-        ID3D11Texture2D* getNative() const;
+        ComPtr<ID3D11Texture2D> getNative() const;
 
     private:
         Desc desc_;
@@ -52,7 +52,7 @@ namespace ukive {
 
         const Desc& getDesc() const override;
 
-        ID3D11Texture3D* getNative() const;
+        ComPtr<ID3D11Texture3D> getNative() const;
 
     private:
         Desc desc_;

@@ -11,7 +11,7 @@
 #include "utils/message/message.h"
 #include "utils/message/message_pump.h"
 
-#include "ukive/graphics/color_manager.h"
+#include "ukive/graphics/colors/color_manager.h"
 #include "ukive/graphics/display.h"
 #include "ukive/graphics/display_manager.h"
 #include "ukive/graphics/graphic_device_manager.h"
@@ -32,17 +32,17 @@ namespace ukive {
     Application::Application(const Options& options)
         : options_(options)
     {
+        instance_ = this;
         utl::CommandLine::initialize();
         initApplication();
-        instance_ = this;
     }
 
     Application::Application(const Options& options, int argc, char16_t* argv[])
         : options_(options)
     {
+        instance_ = this;
         utl::CommandLine::initialize(argc, argv);
         initApplication();
-        instance_ = this;
     }
 
     Application::~Application() {
@@ -54,16 +54,22 @@ namespace ukive {
         initPlatform();
 
         utl::MessagePump::createForUI();
-        dm_.reset(DisplayManager::create());
 
-        LayoutInstantiator::init();
-
-        cm_.reset(ColorManager::create());
         gdm_.reset(GraphicDeviceManager::create());
         if (!gdm_->initialize()) {
             LOG(Log::FATAL) << "Failed to initialize GraphicDeviceManager";
             return;
         }
+
+        dm_.reset(DisplayManager::create());
+        if (!dm_->initialize()) {
+            LOG(Log::FATAL) << "Failed to initialize DisplayManager";
+            return;
+        }
+
+        cm_.reset(ColorManager::create());
+
+        LayoutInstantiator::init();
 
         ilf_.reset(LcImageFactory::create());
         bool ret = ilf_->initialization();
@@ -99,10 +105,13 @@ namespace ukive {
         imm_->destroy();
         imm_.reset();
 
+        cm_.reset();
+
+        dm_->destroy();
+        dm_.reset();
+
         gdm_->destroy();
         gdm_.reset();
-        cm_.reset();
-        dm_.reset();
 
         cleanPlatform();
     }

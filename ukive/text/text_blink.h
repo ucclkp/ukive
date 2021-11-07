@@ -9,7 +9,7 @@
 
 #include "ukive/animation/timer.h"
 #include "ukive/graphics/rect.hpp"
-#include "ukive/graphics/color.h"
+#include "ukive/graphics/colors/color.h"
 
 
 namespace ukive {

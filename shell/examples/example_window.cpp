@@ -11,7 +11,7 @@
 #include "ukive/views/button.h"
 #include "ukive/views/image_view.h"
 #include "ukive/elements/color_element.h"
-#include "ukive/graphics/color.h"
+#include "ukive/graphics/colors/color.h"
 #include "ukive/views/tab/tab_strip_view.h"
 #include "ukive/views/tab/tab_view.h"
 

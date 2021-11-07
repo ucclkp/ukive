@@ -4,10 +4,10 @@
 // This program is licensed under GPLv3 license that can be
 // found in the LICENSE file.
 
-#ifndef UKIVE_GRAPHICS_COLOR_MANAGER_H_
-#define UKIVE_GRAPHICS_COLOR_MANAGER_H_
+#ifndef UKIVE_GRAPHICS_COLORS_COLOR_MANAGER_H_
+#define UKIVE_GRAPHICS_COLORS_COLOR_MANAGER_H_
 
-#include "ukive/graphics/color.h"
+#include "ukive/graphics/colors/color.h"
 
 
 namespace ukive {
@@ -23,4 +23,4 @@ namespace ukive {
 
 }
 
-#endif  // UKIVE_GRAPHICS_WIN_COLOR_MANAGER_WIN_H_
+#endif  // UKIVE_GRAPHICS_COLORS_COLOR_MANAGER_H_

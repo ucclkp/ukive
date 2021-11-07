@@ -48,6 +48,7 @@ namespace ukive {
     private:
         bool queryMonitorInfo(HMONITOR monitor);
         bool queryDXGIInfo(HMONITOR monitor);
+        bool queryCCDInfo(const MONITORINFOEXW& monitor_info);
 
         bool is_empty_ = true;
         HMONITOR monitor_;

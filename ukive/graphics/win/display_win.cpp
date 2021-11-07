@@ -13,8 +13,7 @@
 #include "ukive/system/win/dynamic_windows_api.h"
 #include "ukive/window/win/window_impl_win.h"
 #include "ukive/window/window_dpi_utils.h"
-#include "ukive/graphics/win/color_manager_win.h"
-#include "ukive/graphics/win/directx_manager.h"
+#include "ukive/graphics/win/colors/color_manager_win.h"
 #include "ukive/graphics/win/display_manager_win.h"
 
 #include <VersionHelpers.h>
@@ -23,9 +22,9 @@
 
 namespace {
 
-    const float kDefaultScaleX = 1;
-    const float kDefaultScaleY = 1;
-    const uint32_t kDefaultRefreshRate = 60;
+    constexpr float kDefaultScaleX = 1;
+    constexpr float kDefaultScaleY = 1;
+    constexpr uint32_t kDefaultRefreshRate = 60;
 
 }
 
@@ -38,9 +37,7 @@ namespace ukive {
     }
 
     DisplayWin::DisplayWin(HMONITOR native)
-        : monitor_(nullptr),
-          monitor_mode_(),
-          monitor_info_()
+        : monitor_(nullptr)
     {
         if (native) {
             queryMonitorInfo(native);
@@ -282,6 +279,7 @@ namespace ukive {
         }
 
         queryDXGIInfo(monitor);
+        queryCCDInfo(info);
 
         monitor_ = monitor;
         monitor_info_ = info;
@@ -292,12 +290,19 @@ namespace ukive {
     }
 
     bool DisplayWin::queryDXGIInfo(HMONITOR monitor) {
+        ComPtr<IDXGIFactory1> dxgi_factory;
+        HRESULT hr = ::CreateDXGIFactory(
+            __uuidof(IDXGIFactory),
+            reinterpret_cast<void**>(&dxgi_factory));
+        if (FAILED(hr)) {
+            LOG(Log::ERR) << "Failed to create dxgi factory: " << hr;
+            return false;
+        }
+
         UINT adapter_index = 0;
         for (;;) {
             ComPtr<IDXGIAdapter1> adapter;
-            auto dxgi_factory = static_cast<DirectXManager*>(
-                Application::getGraphicDeviceManager())->getDXGIFactory();
-            HRESULT hr = dxgi_factory->EnumAdapters1(adapter_index, &adapter);
+            hr = dxgi_factory->EnumAdapters1(adapter_index, &adapter);
             if (FAILED(hr)) {
                 break;
             }
@@ -329,6 +334,19 @@ namespace ukive {
             adapter.reset();
         }
 
+        return false;
+    }
+
+    bool DisplayWin::queryCCDInfo(const MONITORINFOEXW& monitor_info) {
+        auto& ccd_info = static_cast<DisplayManagerWin*>(
+            Application::getDisplayManager())->getCCDInfo();
+        for (auto& ccd : ccd_info) {
+            if (ccd.has_source_info &&
+                std::wcsncmp(monitor_info.szDevice, ccd.source_info.viewGdiDeviceName, CCHDEVICENAME) == 0)
+            {
+                return true;
+            }
+        }
         return false;
     }
 

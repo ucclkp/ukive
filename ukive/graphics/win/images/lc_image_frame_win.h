@@ -14,6 +14,8 @@
 
 #define ILF_TO_WIC_BMP(ilf)  static_cast<LcImageFrameWin*>(ilf)->getNative().get()
 #define CILF_TO_WIC_BMP(ilf)  static_cast<const LcImageFrameWin*>(ilf)->getNative().get()
+#define ILF_TO_WIC_BMP_SRC(ilf)  static_cast<LcImageFrameWin*>(ilf)->getNativeSrc().get()
+#define CILF_TO_WIC_BMP_SRC(ilf)  static_cast<const LcImageFrameWin*>(ilf)->getNativeSrc().get()
 
 
 namespace ukive {

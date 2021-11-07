@@ -95,7 +95,7 @@ namespace ukive {
     }
 
     // static
-    bool ColorManagerWin::getSRGBProfile(std::wstring* path) {
+    bool ColorManagerWin::getDefaultProfile(std::wstring* path) {
         DWORD length = 0;
         BOOL ret = ::GetStandardColorSpaceProfileW(
             nullptr,

@@ -7,9 +7,8 @@
 #ifndef UKIVE_TEXT_WIN_DW_TEXT_RENDER_H_
 #define UKIVE_TEXT_WIN_DW_TEXT_RENDER_H_
 
-#include "ukive/graphics/color.h"
+#include "ukive/graphics/colors/color.h"
 #include "ukive/graphics/win/directx_manager.h"
-#include "ukive/system/win/com_ptr.hpp"
 
 
 namespace ukive {

@@ -15,7 +15,7 @@
 #include "utils/number.hpp"
 
 #include "ukive/graphics/images/lc_image.h"
-#include "ukive/graphics/win/color_manager_win.h"
+#include "ukive/graphics/win/colors/color_manager_win.h"
 #include "ukive/graphics/win/display_win.h"
 #include "ukive/graphics/win/images/lc_image_frame_win.h"
 #include "ukive/window/window_dpi_utils.h"
@@ -27,7 +27,7 @@ namespace ukive {
         WICPixelFormatGUID format;
         switch (options.pixel_format) {
         case ImagePixelFormat::HDR:
-            DCHECK(false);
+            assert(false);
             format = GUID_WICPixelFormat32bppPBGRA;
             break;
 
@@ -755,7 +755,7 @@ namespace ukive {
         if (cc_count == 0) {
             // 图片里没嵌颜色配置文件的话，就用默认的 sRGB
             std::wstring srgb_profile_path;
-            if (!ColorManagerWin::getSRGBProfile(&srgb_profile_path)) {
+            if (!ColorManagerWin::getDefaultProfile(&srgb_profile_path)) {
                 return {};
             }
 

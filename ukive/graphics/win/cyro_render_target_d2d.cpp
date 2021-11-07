@@ -8,8 +8,10 @@
 
 #include "utils/log.h"
 
+#include "ukive/app/application.h"
 #include "ukive/graphics/win/images/image_frame_win.h"
 #include "ukive/graphics/win/images/image_options_d2d_utils.h"
+#include "ukive/graphics/win/gpu/gpu_context_d3d.h"
 #include "ukive/graphics/win/gpu/gpu_texture_d3d.h"
 
 
@@ -18,20 +20,12 @@ namespace ukive {
     ImageFrame* CyroRenderTargetD2D::createSharedImageFrame(
         GPUTexture* texture, const ImageOptions& options)
     {
-        ID3D11Resource* res = nullptr;
         auto& desc = texture->getDesc();
-        switch (desc.dim) {
-        case GPUTexture::Dimension::_1D:
-            res = static_cast<GPUTexture1DD3D*>(texture)->getNative();
-            break;
-        case GPUTexture::Dimension::_2D:
-            res = static_cast<GPUTexture2DD3D*>(texture)->getNative();
-            break;
-        case GPUTexture::Dimension::_3D:
-            res = static_cast<GPUTexture3DD3D*>(texture)->getNative();
-            break;
+        if (desc.dim != GPUTexture::Dimension::_2D) {
+            return nullptr;
         }
 
+        auto res = static_cast<GPUTexture2DD3D*>(texture)->getNative();
         if (!res) {
             return nullptr;
         }
@@ -53,7 +47,10 @@ namespace ukive {
             return nullptr;
         }
 
-        return new ImageFrameWin(d2d_bmp);
+        auto context = static_cast<GPUContextD3D*>(
+            Application::getGraphicDeviceManager()->getGPUContext())->getNative();
+
+        return new ImageFrameWin(d2d_bmp, rt_, context, res);
     }
 
     void CyroRenderTargetD2D::destroy() {

@@ -8,21 +8,21 @@
 #define UKIVE_ELEMENTS_COLOR_ELEMENT_H_
 
 #include "ukive/elements/element.h"
-#include "ukive/graphics/color.h"
+#include "ukive/graphics/colors/color.h"
 
 
 namespace ukive {
 
     class ColorElement : public Element {
     public:
-        explicit ColorElement(Color color);
+        explicit ColorElement(const Color& color);
         ~ColorElement();
 
         void draw(Canvas *canvas) override;
         Opacity getOpacity() const override;
 
         void setColor(const Color& c);
-        Color getColor() const;
+        const Color& getColor() const;
 
     private:
         Color color_;

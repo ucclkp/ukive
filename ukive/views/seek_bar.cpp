@@ -8,11 +8,9 @@
 
 #include <algorithm>
 
-#include "ukive/app/application.h"
 #include "ukive/event/input_event.h"
 #include "ukive/graphics/canvas.h"
 #include "ukive/window/window.h"
-#include "ukive/graphics/color.h"
 #include "ukive/animation/interpolator.h"
 
 

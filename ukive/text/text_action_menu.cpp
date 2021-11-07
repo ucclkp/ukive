@@ -12,7 +12,6 @@
 
 #include "ukive/menu/menu_impl.h"
 #include "ukive/elements/shape_element.h"
-#include "ukive/graphics/color.h"
 #include "ukive/text/text_action_menu_callback.h"
 #include "ukive/animation/view_animator.h"
 #include "ukive/window/window.h"

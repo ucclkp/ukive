@@ -53,7 +53,7 @@ namespace ukive {
             auto color = D2D1ConvertColorSpace(
                 D2D1_COLOR_SPACE_SRGB, D2D1_COLOR_SPACE_SCRGB, c);
 
-            float wp_scale = 240 / D2D1_SCENE_REFERRED_SDR_WHITE_LEVEL;
+            float wp_scale = 80 / D2D1_SCENE_REFERRED_SDR_WHITE_LEVEL;
             color.r *= wp_scale;
             color.g *= wp_scale;
             color.b *= wp_scale;
@@ -139,14 +139,20 @@ namespace ukive {
         D2D1_BITMAP_PROPERTIES props =
             D2D1::BitmapProperties(D2D1::PixelFormat(), dpi_x, dpi_y);
 
-        ComPtr<ID2D1Bitmap> d2d_bmp;
-        HRESULT hr = rt_->CreateBitmapFromWicBitmap(CILF_TO_WIC_BMP(frame), &props, &d2d_bmp);
-        if (FAILED(hr)) {
-            DCHECK(false);
+        auto native_src = static_cast<const LcImageFrameWin*>(frame)->getNativeSrc();
+        if (!native_src) {
+            assert(false);
             return nullptr;
         }
 
-        return new ImageFrameWin(d2d_bmp);
+        ComPtr<ID2D1Bitmap> d2d_bmp;
+        HRESULT hr = rt_->CreateBitmapFromWicBitmap(native_src.get(), &props, &d2d_bmp);
+        if (FAILED(hr)) {
+            assert(false);
+            return nullptr;
+        }
+
+        return new ImageFrameWin(d2d_bmp, rt_, native_src);
     }
 
     ImageFrame* CyroRendererD2D::createImage(
@@ -161,7 +167,7 @@ namespace ukive {
             return nullptr;
         }
 
-        return new ImageFrameWin(d2d_bmp);
+        return new ImageFrameWin(d2d_bmp, rt_, {});
     }
 
     ImageFrame* CyroRendererD2D::createImage(
@@ -179,7 +185,7 @@ namespace ukive {
             return nullptr;
         }
 
-        return new ImageFrameWin(d2d_bmp);
+        return new ImageFrameWin(d2d_bmp, rt_, {});
     }
 
     void CyroRendererD2D::setOpacity(float opacity) {

@@ -56,7 +56,7 @@ namespace ukive {
     RippleElement::~RippleElement() {
     }
 
-    void RippleElement::setTintColor(Color tint) {
+    void RippleElement::setTintColor(const Color& tint) {
         tint_color_ = tint;
     }
 

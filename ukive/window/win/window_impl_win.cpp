@@ -37,7 +37,7 @@
 #include "ukive/system/win/dynamic_windows_api.h"
 #include "ukive/system/win/ui_utils_win.h"
 #include "ukive/graphics/dirty_region.h"
-#include "ukive/graphics/win/color_manager_win.h"
+#include "ukive/graphics/win/colors/color_manager_win.h"
 #include "ukive/graphics/win/directx_manager.h"
 #include "ukive/graphics/win/display_manager_win.h"
 #include "ukive/graphics/win/vsync_provider_win.h"

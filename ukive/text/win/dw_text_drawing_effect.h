@@ -9,7 +9,7 @@
 
 #include <Unknwn.h>
 
-#include "ukive/graphics/color.h"
+#include "ukive/graphics/colors/color.h"
 
 
 namespace ukive {

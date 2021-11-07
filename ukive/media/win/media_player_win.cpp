@@ -15,6 +15,7 @@
 
 #include "ukive/app/application.h"
 #include "ukive/graphics/graphic_device_manager.h"
+#include "ukive/graphics/win/gpu/gpu_context_d3d.h"
 #include "ukive/graphics/win/gpu/gpu_device_d3d.h"
 #include "ukive/window/win/window_impl_win.h"
 #include "ukive/media/win/mf_async_callback.h"
@@ -378,7 +379,12 @@ namespace ukive {
         //sample->AddRef();
         //video_sample_ = sample;
 
-        ImageFrameWin* frame = new ImageFrameWin(video_bitmap_);
+        auto rt = static_cast<CyroRenderTargetD2D*>(
+            window_->getCanvas()->getBuffer()->getRT())->getNative();
+        auto context = static_cast<GPUContextD3D*>(
+            Application::getGraphicDeviceManager()->getGPUContext())->getNative();
+
+        ImageFrameWin* frame = new ImageFrameWin(video_bitmap_, rt, context, video_texture_);
         utl::Message msg;
         msg.id = MSG_RENDER_SURFACE;
         msg.data = frame;

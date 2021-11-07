@@ -423,13 +423,13 @@ namespace ukive {
             auto& tex_desc = static_cast<GPUTexture*>(res)->getDesc();
             switch (tex_desc.dim) {
             case GPUTexture::Dimension::_1D:
-                d3d_res = static_cast<GPUTexture1DD3D*>(res)->getNative();
+                d3d_res = static_cast<GPUTexture1DD3D*>(res)->getNative().get();
                 break;
             case GPUTexture::Dimension::_2D:
-                d3d_res = static_cast<GPUTexture2DD3D*>(res)->getNative();
+                d3d_res = static_cast<GPUTexture2DD3D*>(res)->getNative().get();
                 break;
             case GPUTexture::Dimension::_3D:
-                d3d_res = static_cast<GPUTexture3DD3D*>(res)->getNative();
+                d3d_res = static_cast<GPUTexture3DD3D*>(res)->getNative().get();
                 break;
             }
             break;
@@ -438,8 +438,8 @@ namespace ukive {
         return d3d_res;
     }
 
-    ID3D11Device* GPUDeviceD3D::getNative() const {
-        return d3d_device_.get();
+    ComPtr<ID3D11Device> GPUDeviceD3D::getNative() const {
+        return d3d_device_;
     }
 
 }

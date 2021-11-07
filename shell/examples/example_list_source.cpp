@@ -14,7 +14,7 @@
 #include "ukive/views/image_view.h"
 #include "ukive/views/text_view.h"
 #include "ukive/elements/color_element.h"
-#include "ukive/graphics/color.h"
+#include "ukive/graphics/colors/color.h"
 
 
 namespace shell {

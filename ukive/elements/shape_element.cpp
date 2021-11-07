@@ -48,7 +48,7 @@ namespace ukive {
         has_solid_ = enable;
     }
 
-    void ShapeElement::setSolidColor(Color color) {
+    void ShapeElement::setSolidColor(const Color& color) {
         solid_color_ = color;
     }
 
@@ -60,7 +60,7 @@ namespace ukive {
         stroke_width_ = width;
     }
 
-    void ShapeElement::setStrokeColor(Color color) {
+    void ShapeElement::setStrokeColor(const Color& color) {
         stroke_color_ = color;
     }
 

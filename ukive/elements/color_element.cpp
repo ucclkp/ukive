@@ -11,7 +11,7 @@
 
 namespace ukive {
 
-    ColorElement::ColorElement(Color color)
+    ColorElement::ColorElement(const Color& color)
         : Element(),
           color_(color) {
     }
@@ -37,7 +37,7 @@ namespace ukive {
         color_ = c;
     }
 
-    Color ColorElement::getColor() const {
+    const Color& ColorElement::getColor() const {
         return color_;
     }
 

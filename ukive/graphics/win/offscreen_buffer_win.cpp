@@ -11,6 +11,7 @@
 
 #include "ukive/app/application.h"
 #include "ukive/graphics/images/image_options.h"
+#include "ukive/graphics/win/gpu/gpu_context_d3d.h"
 #include "ukive/graphics/win/images/image_options_d2d_utils.h"
 #include "ukive/graphics/win/images/image_frame_win.h"
 #include "ukive/window/window_dpi_utils.h"
@@ -103,7 +104,10 @@ namespace ukive {
             return nullptr;
         }
 
-        return new ImageFrameWin(bitmap);
+        auto context = static_cast<GPUContextD3D*>(
+            Application::getGraphicDeviceManager()->getGPUContext())->getNative();
+
+        return new ImageFrameWin(bitmap, rt_->getNative(), context, d3d_tex2d_);
     }
 
     Size OffscreenBufferWin::getSize() const {

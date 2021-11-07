@@ -8,7 +8,7 @@
 #define UKIVE_ELEMENTS_SHAPE_ELEMENT_H_
 
 #include "ukive/elements/element.h"
-#include "ukive/graphics/color.h"
+#include "ukive/graphics/colors/color.h"
 
 
 namespace ukive {
@@ -29,10 +29,10 @@ namespace ukive {
 
         void setShape(Shape shape);
         void setSolidEnable(bool enable);
-        void setSolidColor(Color color);
+        void setSolidColor(const Color& color);
         void setStrokeEnable(bool enable);
         void setStrokeWidth(float width);
-        void setStrokeColor(Color color);
+        void setStrokeColor(const Color& color);
 
         void draw(Canvas* canvas) override;
 

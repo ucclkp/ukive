@@ -47,6 +47,9 @@ namespace ukive {
             return false;
         }
 
+        hr = native_bitmap_->SetResolution(dpi_x_, dpi_y_);
+        assert(SUCCEEDED(hr));
+
         return true;
     }
 
@@ -55,12 +58,10 @@ namespace ukive {
             dpi_x_ = dpi_x;
             dpi_y_ = dpi_y;
 
-            if (!createIfNecessary()) {
-                return;
+            if (native_bitmap_) {
+                HRESULT hr = native_bitmap_->SetResolution(dpi_x, dpi_y);
+                assert(SUCCEEDED(hr));
             }
-
-            HRESULT hr = native_bitmap_->SetResolution(dpi_x, dpi_y);
-            assert(SUCCEEDED(hr));
         }
     }
 

@@ -4,8 +4,8 @@
 // This program is licensed under GPLv3 license that can be
 // found in the LICENSE file.
 
-#ifndef UKIVE_GRAPHICS_COLOR_H_
-#define UKIVE_GRAPHICS_COLOR_H_
+#ifndef UKIVE_GRAPHICS_COLORS_COLOR_H_
+#define UKIVE_GRAPHICS_COLORS_COLOR_H_
 
 #include <string>
 
@@ -77,17 +77,17 @@ namespace ukive {
             Grey500, Grey600, Grey700, Grey800, Grey900;
 
     private:
-        static const uint32_t alpha_shift = 24;
-        static const uint32_t red_shift = 16;
-        static const uint32_t green_shift = 8;
-        static const uint32_t blue_shift = 0;
+        static constexpr uint32_t alpha_shift = 24;
+        static constexpr uint32_t red_shift = 16;
+        static constexpr uint32_t green_shift = 8;
+        static constexpr uint32_t blue_shift = 0;
 
-        static const uint32_t alpha_mask = 0xff << alpha_shift;
-        static const uint32_t red_mask = 0xff << red_shift;
-        static const uint32_t green_mask = 0xff << green_shift;
-        static const uint32_t blue_mask = 0xff << blue_shift;
+        static constexpr uint32_t alpha_mask = 0xff << alpha_shift;
+        static constexpr uint32_t red_mask = 0xff << red_shift;
+        static constexpr uint32_t green_mask = 0xff << green_shift;
+        static constexpr uint32_t blue_mask = 0xff << blue_shift;
     };
 
 }
 
-#endif  // UKIVE_GRAPHICS_COLOR_H_
+#endif  // UKIVE_GRAPHICS_COLORS_COLOR_H_

@@ -9,7 +9,7 @@
 #include "utils/log.h"
 
 #include "ukive/app/application.h"
-#include "ukive/graphics/color.h"
+#include "ukive/graphics/colors/color.h"
 #include "ukive/graphics/canvas.h"
 #include "ukive/views/layout/restraint_layout.h"
 #include "ukive/views/layout_info/restraint_layout_info.h"
@@ -20,7 +20,7 @@
 #include "ukive/graphics/images/image_options.h"
 #include "ukive/animation/interpolator.h"
 
-#include "ukive/graphics/color_manager.h"
+#include "ukive/graphics/colors/color_manager.h"
 #include "ukive/graphics/images/image_frame.h"
 #include "ukive/graphics/display.h"
 #include "ukive/graphics/images/lc_image_factory.h"

@@ -7,7 +7,7 @@
 #ifndef UKIVE_GRAPHICS_IMAGES_IMAGE_DATA_H_
 #define UKIVE_GRAPHICS_IMAGES_IMAGE_DATA_H_
 
-#include "ukive/graphics/color.h"
+#include "ukive/graphics/colors/color.h"
 
 
 namespace ukive {

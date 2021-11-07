@@ -12,7 +12,7 @@
 #include "ukive/graphics/cyro_buffer.h"
 #include "ukive/graphics/win/cyro_renderer_d2d.h"
 #include "ukive/graphics/win/cyro_render_target_d2d.h"
-#include "ukive/graphics/color.h"
+#include "ukive/graphics/colors/color.h"
 #include "ukive/text/text_custom_drawing.h"
 #include "ukive/text/win/dw_text_drawing_effect.h"
 

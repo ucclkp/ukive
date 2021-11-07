@@ -13,9 +13,6 @@
     <ClCompile Include="graphics\canvas.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\color.cpp">
-      <Filter>graphics</Filter>
-    </ClCompile>
     <ClCompile Include="system\clipboard_manager.cpp">
       <Filter>system</Filter>
     </ClCompile>
@@ -628,9 +625,6 @@
     <ClCompile Include="graphics\win\direct3d\effects\image_effect_dx.cpp">
       <Filter>graphics\win\direct3d\effects</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\win\color_manager_win.cpp">
-      <Filter>graphics\win</Filter>
-    </ClCompile>
     <ClCompile Include="event\win\window_message_buncher_win.cpp">
       <Filter>event\win</Filter>
     </ClCompile>
@@ -640,8 +634,17 @@
     <ClCompile Include="graphics\win\display_manager_win.cpp">
       <Filter>graphics\win</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\color_manager.cpp">
-      <Filter>graphics</Filter>
+    <ClCompile Include="graphics\colors\color.cpp">
+      <Filter>graphics\colors</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\colors\color_manager.cpp">
+      <Filter>graphics\colors</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\colors\icc_parser.cpp">
+      <Filter>graphics\colors</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\colors\color_manager_win.cpp">
+      <Filter>graphics\win\colors</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -655,9 +658,6 @@
       <Filter>event</Filter>
     </ClInclude>
     <ClInclude Include="graphics\canvas.h">
-      <Filter>graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\color.h">
       <Filter>graphics</Filter>
     </ClInclude>
     <ClInclude Include="system\clipboard_manager.h">
@@ -1440,9 +1440,6 @@
     <ClInclude Include="graphics\win\direct3d\effects\image_effect_dx.h">
       <Filter>graphics\win\direct3d\effects</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\win\color_manager_win.h">
-      <Filter>graphics\win</Filter>
-    </ClInclude>
     <ClInclude Include="event\win\window_message_buncher_win.h">
       <Filter>event\win</Filter>
     </ClInclude>
@@ -1452,8 +1449,23 @@
     <ClInclude Include="graphics\win\display_manager_win.h">
       <Filter>graphics\win</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\color_manager.h">
-      <Filter>graphics</Filter>
+    <ClInclude Include="graphics\colors\color.h">
+      <Filter>graphics\colors</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\colors\color_manager.h">
+      <Filter>graphics\colors</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\colors\icc_parser.h">
+      <Filter>graphics\colors</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\colors\color_manager_win.h">
+      <Filter>graphics\win\colors</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\colors\icc_constants.h">
+      <Filter>graphics\colors</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\colors\icc_registry_constants.h">
+      <Filter>graphics\colors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1594,6 +1606,12 @@
     </Filter>
     <Filter Include="media\win">
       <UniqueIdentifier>{4c9bcb29-cd6e-4b65-bfb4-a0617494b0e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\colors">
+      <UniqueIdentifier>{54921843-308c-4228-b4fd-b96c318f5b68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\win\colors">
+      <UniqueIdentifier>{4f02eb5f-ad21-45e9-9233-b672edcdb55f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -8,7 +8,7 @@
 #define UKIVE_ELEMENTS_TEXTEDITOR_ELEMENT_H_
 
 #include "ukive/elements/element.h"
-#include "ukive/graphics/color.h"
+#include "ukive/graphics/colors/color.h"
 #include "ukive/window/context.h"
 
 

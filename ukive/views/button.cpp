@@ -8,7 +8,6 @@
 
 #include "ukive/window/window.h"
 #include "ukive/elements/ripple_element.h"
-#include "ukive/graphics/color.h"
 #include "ukive/graphics/canvas.h"
 #include "ukive/event/input_event.h"
 #include "ukive/graphics/path.h"
