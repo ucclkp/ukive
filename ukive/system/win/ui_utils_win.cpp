@@ -44,7 +44,7 @@ namespace win {
 
             bool is_genuine;
             typedef int (WINAPI *LegitCheck)();
-            LegitCheck f = ::GetProcAddress(mod, "LegitCheck");
+            LegitCheck f = LegitCheck(::GetProcAddress(mod, "LegitCheck"));
             if (f) {
                 is_genuine = f() == 0;
             } else {

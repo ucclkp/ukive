@@ -9,6 +9,7 @@
 
 #include <list>
 #include <memory>
+#include <string>
 
 
 namespace ukive {

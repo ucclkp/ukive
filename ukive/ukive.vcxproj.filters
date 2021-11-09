@@ -640,11 +640,41 @@
     <ClCompile Include="graphics\colors\color_manager.cpp">
       <Filter>graphics\colors</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\colors\icc_parser.cpp">
-      <Filter>graphics\colors</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\win\colors\color_manager_win.cpp">
       <Filter>graphics\win\colors</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\colors\icc\icc_parser.cpp">
+      <Filter>graphics\colors\icc</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\colors\icc\types\icc_type_lut16.cpp">
+      <Filter>graphics\colors\icc\types</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\colors\icc\types\icc_type_lut8.cpp">
+      <Filter>graphics\colors\icc\types</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\colors\icc\types\icc_type_xyz.cpp">
+      <Filter>graphics\colors\icc\types</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\colors\icc\types\icc_type.cpp">
+      <Filter>graphics\colors\icc\types</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\colors\icc\types\icc_type_multi_loc_unicode.cpp">
+      <Filter>graphics\colors\icc\types</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\colors\icc\types\icc_type_text_desc.cpp">
+      <Filter>graphics\colors\icc\types</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\colors\icc\types\icc_type_curve.cpp">
+      <Filter>graphics\colors\icc\types</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\colors\icc\types\icc_type_param_curve.cpp">
+      <Filter>graphics\colors\icc\types</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\colors\color_management_module.cpp">
+      <Filter>graphics\colors</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\colors\icc\types\icc_type_lut_a2b.cpp">
+      <Filter>graphics\colors\icc\types</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1455,17 +1485,47 @@
     <ClInclude Include="graphics\colors\color_manager.h">
       <Filter>graphics\colors</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\colors\icc_parser.h">
-      <Filter>graphics\colors</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\win\colors\color_manager_win.h">
       <Filter>graphics\win\colors</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\colors\icc_constants.h">
+    <ClInclude Include="graphics\colors\icc\icc_constants.h">
+      <Filter>graphics\colors\icc</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\colors\icc\icc_parser.h">
+      <Filter>graphics\colors\icc</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\colors\icc\icc_registry_constants.h">
+      <Filter>graphics\colors\icc</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\colors\icc\types\icc_type_lut16.h">
+      <Filter>graphics\colors\icc\types</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\colors\icc\types\icc_type_lut8.h">
+      <Filter>graphics\colors\icc\types</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\colors\icc\types\icc_type_xyz.h">
+      <Filter>graphics\colors\icc\types</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\colors\icc\types\icc_type.h">
+      <Filter>graphics\colors\icc\types</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\colors\icc\types\icc_type_multi_loc_unicode.h">
+      <Filter>graphics\colors\icc\types</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\colors\icc\types\icc_type_text_desc.h">
+      <Filter>graphics\colors\icc\types</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\colors\icc\types\icc_type_curve.h">
+      <Filter>graphics\colors\icc\types</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\colors\icc\types\icc_type_param_curve.h">
+      <Filter>graphics\colors\icc\types</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\colors\color_management_module.h">
       <Filter>graphics\colors</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\colors\icc_registry_constants.h">
-      <Filter>graphics\colors</Filter>
+    <ClInclude Include="graphics\colors\icc\types\icc_type_lut_a2b.h">
+      <Filter>graphics\colors\icc\types</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1612,6 +1672,12 @@
     </Filter>
     <Filter Include="graphics\win\colors">
       <UniqueIdentifier>{4f02eb5f-ad21-45e9-9233-b672edcdb55f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\colors\icc">
+      <UniqueIdentifier>{1ae965fb-d505-416c-8431-d894788a3e62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\colors\icc\types">
+      <UniqueIdentifier>{d89baae9-14f3-4072-b867-80cc9ca6b3f0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

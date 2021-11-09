@@ -192,7 +192,9 @@ namespace ukive {
         if (!padding_str.empty()) {
             auto paddings = utl::ascii::split(padding_str, ",");
             if (paddings.size() > 0) {
-                if (resolveDimension(c, utl::ascii::trim(paddings[0]), &padding->start)) {
+                auto padding_start = paddings[0];
+                utl::ascii::trim(&padding_start);
+                if (resolveDimension(c, padding_start, &padding->start)) {
                     if (paddings.size() == 1) {
                         padding->top = padding->start;
                         padding->end = padding->start;
@@ -201,13 +203,19 @@ namespace ukive {
                 }
             }
             if (paddings.size() > 1) {
-                resolveDimension(c, utl::ascii::trim(paddings[1]), &padding->top);
+                auto padding_top = paddings[1];
+                utl::ascii::trim(&padding_top);
+                resolveDimension(c, padding_top, &padding->top);
             }
             if (paddings.size() > 2) {
-                resolveDimension(c, utl::ascii::trim(paddings[2]), &padding->end);
+                auto padding_end = paddings[2];
+                utl::ascii::trim(&padding_end);
+                resolveDimension(c, padding_end, &padding->end);
             }
             if (paddings.size() > 3) {
-                resolveDimension(c, utl::ascii::trim(paddings[3]), &padding->bottom);
+                auto padding_bottom = paddings[3];
+                utl::ascii::trim(&padding_bottom);
+                resolveDimension(c, padding_bottom, &padding->bottom);
             }
             return true;
         }
@@ -221,7 +229,9 @@ namespace ukive {
         if (!margin_str.empty()) {
             auto margins = utl::ascii::split(margin_str, ",");
             if (margins.size() > 0) {
-                if (resolveDimension(c, utl::ascii::trim(margins[0]), &margin->start)) {
+                auto margin_start = margins[0];
+                utl::ascii::trim(&margin_start);
+                if (resolveDimension(c, margin_start, &margin->start)) {
                     if (margins.size() == 1) {
                         margin->top = margin->start;
                         margin->end = margin->start;
@@ -230,13 +240,19 @@ namespace ukive {
                 }
             }
             if (margins.size() > 1) {
-                resolveDimension(c, utl::ascii::trim(margins[1]), &margin->top);
+                auto margin_top = margins[1];
+                utl::ascii::trim(&margin_top);
+                resolveDimension(c, margin_top, &margin->top);
             }
             if (margins.size() > 2) {
-                resolveDimension(c, utl::ascii::trim(margins[2]), &margin->end);
+                auto margin_end = margins[2];
+                utl::ascii::trim(&margin_end);
+                resolveDimension(c, margin_end, &margin->end);
             }
             if (margins.size() > 3) {
-                resolveDimension(c, utl::ascii::trim(margins[3]), &margin->bottom);
+                auto margin_bottom = margins[3];
+                utl::ascii::trim(&margin_bottom);
+                resolveDimension(c, margin_bottom, &margin->bottom);
             }
             return true;
         }

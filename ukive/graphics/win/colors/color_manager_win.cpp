@@ -6,6 +6,8 @@
 
 #include "color_manager_win.h"
 
+#include "utils/number.hpp"
+
 #include "ukive/graphics/win/display_win.h"
 
 
@@ -67,7 +69,7 @@ namespace ukive {
         PROFILE profile{
             PROFILE_FILENAME,
             PVOID(display_icm.c_str()),
-            (display_icm.size() + 1) * sizeof(WCHAR) };
+            utl::num_cast<DWORD>((display_icm.size() + 1) * sizeof(WCHAR)) };
         HPROFILE cf = ::WcsOpenColorProfileW(
             &profile, nullptr, nullptr, PROFILE_READ, FILE_SHARE_READ, OPEN_EXISTING, 0);
         return cf;

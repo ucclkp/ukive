@@ -21,7 +21,7 @@
 
 namespace necro {
 
-    const char16_t kHistoryFileName[] = u"necro_histories";
+    constexpr char16_t kHistoryFileName[] = u"necro_histories";
 
     LayoutProcessor::LayoutProcessor()
         : need_second_(false),
@@ -355,7 +355,8 @@ namespace necro {
                         end_idx = attr_val.length();
                     }
 
-                    auto id_val = utl::ascii::trim(attr_val.substr(idx + 4, end_idx - idx - 4), false);
+                    auto id_val = attr_val.substr(idx + 4, end_idx - idx - 4);
+                    utl::ascii::trim(&id_val);
                     if (id_val.empty()) {
                         LOG(Log::ERR) << "The id in attr: " << attr.first
                             << " of element: " << element->tag_name

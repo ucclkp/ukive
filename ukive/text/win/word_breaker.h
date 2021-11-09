@@ -13,6 +13,7 @@
 #include <indexsrv.h>
 
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "ukive/system/win/com_ptr.hpp"

@@ -36,6 +36,8 @@
 #include "utils/math/algebra/optimization.hpp"
 #include "utils/math/algebra/dynamic_optimization.hpp"
 
+#include "ukive/graphics/win/colors/color_manager_win.h"
+
 #define BEZIER_BASE_VELOCITY  20000
 #define BEZIER_BASE_TIME      6
 
@@ -234,6 +236,11 @@ namespace shell {
 
         test_button_ = findView<ukive::Button>(v, Res::Id::bt_misc_button);
         test_button_->setOnClickListener(this);
+
+        std::wstring icc_path;
+        if (ukive::ColorManagerWin::getDefaultProfile(&icc_path)) {
+
+        }
 
         return v;
     }

@@ -82,11 +82,12 @@ int processGeneratorMode() {
         return 1;
     }
 
+    utl::ascii::trim(&res_path_param, u"\"", false);
+    utl::ascii::trim(&build_path_param, u"\"", false);
+
     std::error_code ec;
-    auto resource_path = std::filesystem::absolute(
-        utl::ascii::trim(res_path_param, u'"', false), ec);
-    auto build_path = std::filesystem::absolute(
-        utl::ascii::trim(build_path_param, u'"', false), ec);
+    auto resource_path = std::filesystem::absolute(res_path_param, ec);
+    auto build_path = std::filesystem::absolute(build_path_param, ec);
     if (!resource_path.empty() && !build_path.empty()) {
         return processXMLFiles(resource_path, build_path);
     }
@@ -116,11 +117,12 @@ int processCopyMode() {
         return 1;
     }
 
+    utl::ascii::trim(&src_path_param, u"\"", false);
+    utl::ascii::trim(&dst_path_param, u"\"", false);
+
     std::error_code ec;
-    auto src_path = std::filesystem::absolute(
-        utl::ascii::trim(src_path_param, u'"', false), ec);
-    auto dst_path = std::filesystem::absolute(
-        utl::ascii::trim(dst_path_param, u'"', false), ec);
+    auto src_path = std::filesystem::absolute(src_path_param, ec);
+    auto dst_path = std::filesystem::absolute(dst_path_param, ec);
     if (!src_path.empty() && !dst_path.empty()) {
         necro::CopyProcessor processor;
         processor.copy(src_path, dst_path);

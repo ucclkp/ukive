@@ -8,6 +8,7 @@
 #define UKIVE_GRAPHICS_DISPLAY_H_
 
 #include <cstdint>
+#include <memory>
 #include <string>
 
 #include "ukive/graphics/point.hpp"

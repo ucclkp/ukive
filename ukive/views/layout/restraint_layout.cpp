@@ -60,11 +60,15 @@ namespace ukive {
             auto params = utl::ascii::split(start_handle, ",");
             if (params.size() > 0) {
                 int id = -1;
-                utl::stringToNumber(utl::ascii::trim(params[0]), &id);
+                auto param = params[0];
+                utl::ascii::trim(&param);
+                utl::stringToNumber(param, &id);
                 if (id != -1) {
                     auto edge = RestraintLayoutInfo::Edge::START;
                     if (params.size() > 1) {
-                        resolveEdge(utl::ascii::trim(params[1]), &edge);
+                        param = params[1];
+                        utl::ascii::trim(&param);
+                        resolveEdge(param, &edge);
                     }
                     lp->startHandle(id, edge);
                 }
@@ -77,11 +81,15 @@ namespace ukive {
             auto params = utl::ascii::split(end_handle, ",");
             if (params.size() > 0) {
                 int id = -1;
-                utl::stringToNumber(utl::ascii::trim(params[0]), &id);
+                auto param = params[0];
+                utl::ascii::trim(&param);
+                utl::stringToNumber(param, &id);
                 if (id != -1) {
                     auto edge = RestraintLayoutInfo::Edge::END;
                     if (params.size() > 1) {
-                        resolveEdge(utl::ascii::trim(params[1]), &edge);
+                        param = params[1];
+                        utl::ascii::trim(&param);
+                        resolveEdge(param, &edge);
                     }
                     lp->endHandle(id, edge);
                 }
@@ -94,11 +102,15 @@ namespace ukive {
             auto params = utl::ascii::split(top_handle, ",");
             if (params.size() > 0) {
                 int id = -1;
-                utl::stringToNumber(utl::ascii::trim(params[0]), &id);
+                auto param = params[0];
+                utl::ascii::trim(&param);
+                utl::stringToNumber(param, &id);
                 if (id != -1) {
                     auto edge = RestraintLayoutInfo::Edge::TOP;
                     if (params.size() > 1) {
-                        resolveEdge(utl::ascii::trim(params[1]), &edge);
+                        param = params[1];
+                        utl::ascii::trim(&param);
+                        resolveEdge(param, &edge);
                     }
                     lp->topHandle(id, edge);
                 }
@@ -111,11 +123,15 @@ namespace ukive {
             auto params = utl::ascii::split(bottom_handle, ",");
             if (params.size() > 0) {
                 int id = -1;
-                utl::stringToNumber(utl::ascii::trim(params[0]), &id);
+                auto param = params[0];
+                utl::ascii::trim(&param);
+                utl::stringToNumber(param, &id);
                 if (id != -1) {
                     auto edge = RestraintLayoutInfo::Edge::BOTTOM;
                     if (params.size() > 1) {
-                        resolveEdge(utl::ascii::trim(params[1]), &edge);
+                        param = params[1];
+                        utl::ascii::trim(&param);
+                        resolveEdge(param, &edge);
                     }
                     lp->bottomHandle(id, edge);
                 }

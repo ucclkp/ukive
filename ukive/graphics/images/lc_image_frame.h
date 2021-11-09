@@ -7,6 +7,7 @@
 #ifndef UKIVE_GRAPHICS_IMAGES_LC_IMAGE_FRAME_H_
 #define UKIVE_GRAPHICS_IMAGES_LC_IMAGE_FRAME_H_
 
+#include <memory>
 #include <string>
 
 #include "ukive/graphics/images/image_options.h"
