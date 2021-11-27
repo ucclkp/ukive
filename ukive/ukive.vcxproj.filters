@@ -673,7 +673,10 @@
     <ClCompile Include="graphics\colors\color_management_module.cpp">
       <Filter>graphics\colors</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\colors\icc\types\icc_type_lut_a2b.cpp">
+    <ClCompile Include="graphics\colors\icc\types\icc_type_lut_ab.cpp">
+      <Filter>graphics\colors\icc\types</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\colors\icc\types\icc_type_multi_proc_elements.cpp">
       <Filter>graphics\colors\icc\types</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1524,7 +1527,10 @@
     <ClInclude Include="graphics\colors\color_management_module.h">
       <Filter>graphics\colors</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\colors\icc\types\icc_type_lut_a2b.h">
+    <ClInclude Include="graphics\colors\icc\types\icc_type_lut_ab.h">
+      <Filter>graphics\colors\icc\types</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\colors\icc\types\icc_type_multi_proc_elements.h">
       <Filter>graphics\colors\icc\types</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,6 +6,8 @@
 
 #include "example_misc_page.h"
 
+#include "utils/convert.h"
+
 #include "ukive/app/application.h"
 #include "ukive/graphics/canvas.h"
 #include "ukive/views/button.h"
@@ -37,6 +39,8 @@
 #include "utils/math/algebra/dynamic_optimization.hpp"
 
 #include "ukive/graphics/win/colors/color_manager_win.h"
+#include "ukive/graphics/colors/color_management_module.h"
+#include "utils/math/algebra/matrix.hpp"
 
 #define BEZIER_BASE_VELOCITY  20000
 #define BEZIER_BASE_TIME      6
@@ -238,9 +242,30 @@ namespace shell {
         test_button_->setOnClickListener(this);
 
         std::wstring icc_path;
-        if (ukive::ColorManagerWin::getDefaultProfile(&icc_path)) {
-
+        if (ukive::ColorManagerWin::getDefaultProfile(&icc_path))
+        {
+            ukive::Color tc;
+            ukive::ColorManagementModule cmm;
+            cmm.convertColor(
+                utl::WideToUTF16(icc_path),
+                ukive::ColorManagementModule::Intent::Perceptual,
+                ukive::Color(), &tc);
         }
+
+        math::MatrixT<double, 5, 5> mat {
+            2, 1, 3, 4, 5,
+            1, 1, 1, 10, 7,
+            4, 8, 9, 5, 1,
+            9, 7, 1, 6, 4,
+            1, 5, 3, 7, 4,
+        };
+        auto r = mat.det();
+        auto a = mat.cofactor(3, 3);
+
+        math::MatrixT<double, 5, 5> inv_mat;
+        mat.inverse(&inv_mat);
+
+        auto res = mat* inv_mat;
 
         return v;
     }

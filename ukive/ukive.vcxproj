@@ -106,7 +106,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;mfuuid.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;Mscms.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;mfuuid.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;Mscms.lib;dwmapi.lib;d2d1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <FxCompile>
       <ObjectFileOutput>$(SolutionDir)build\x86\$(Configuration)\shaders\%(Filename).cso</ObjectFileOutput>
@@ -132,7 +132,7 @@
       <ShaderModel>4.0</ShaderModel>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;mfuuid.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;Mscms.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;mfuuid.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;Mscms.lib;dwmapi.lib;d2d1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -159,7 +159,7 @@
       <ShaderModel>4.0</ShaderModel>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;mfuuid.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;Mscms.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;mfuuid.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;Mscms.lib;dwmapi.lib;d2d1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -185,7 +185,7 @@
       <ShaderModel>4.0</ShaderModel>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>dwmapi.lib;d2d1.lib;dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;mfuuid.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;Mscms.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;mfuuid.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;Mscms.lib;dwmapi.lib;d2d1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -237,8 +237,9 @@
     <ClInclude Include="graphics\colors\icc\types\icc_type_curve.h" />
     <ClInclude Include="graphics\colors\icc\types\icc_type_lut16.h" />
     <ClInclude Include="graphics\colors\icc\types\icc_type_lut8.h" />
-    <ClInclude Include="graphics\colors\icc\types\icc_type_lut_a2b.h" />
+    <ClInclude Include="graphics\colors\icc\types\icc_type_lut_ab.h" />
     <ClInclude Include="graphics\colors\icc\types\icc_type_multi_loc_unicode.h" />
+    <ClInclude Include="graphics\colors\icc\types\icc_type_multi_proc_elements.h" />
     <ClInclude Include="graphics\colors\icc\types\icc_type_param_curve.h" />
     <ClInclude Include="graphics\colors\icc\types\icc_type_text_desc.h" />
     <ClInclude Include="graphics\colors\icc\types\icc_type_xyz.h" />
@@ -518,8 +519,9 @@
     <ClCompile Include="graphics\colors\icc\types\icc_type_curve.cpp" />
     <ClCompile Include="graphics\colors\icc\types\icc_type_lut16.cpp" />
     <ClCompile Include="graphics\colors\icc\types\icc_type_lut8.cpp" />
-    <ClCompile Include="graphics\colors\icc\types\icc_type_lut_a2b.cpp" />
+    <ClCompile Include="graphics\colors\icc\types\icc_type_lut_ab.cpp" />
     <ClCompile Include="graphics\colors\icc\types\icc_type_multi_loc_unicode.cpp" />
+    <ClCompile Include="graphics\colors\icc\types\icc_type_multi_proc_elements.cpp" />
     <ClCompile Include="graphics\colors\icc\types\icc_type_param_curve.cpp" />
     <ClCompile Include="graphics\colors\icc\types\icc_type_text_desc.cpp" />
     <ClCompile Include="graphics\colors\icc\types\icc_type_xyz.cpp" />

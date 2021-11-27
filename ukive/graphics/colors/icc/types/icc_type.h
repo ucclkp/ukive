@@ -34,13 +34,15 @@ namespace icc {
         explicit ICCType(uint32_t type);
         virtual ~ICCType() = default;
 
+        bool parse(std::istream& s);
         bool parse(std::istream& s, uint32_t size);
 
         bool isParsed() const;
         uint32_t getType() const;
 
     protected:
-        virtual bool onParse(std::istream& s, uint32_t size) { return false; }
+        virtual bool onParse(std::istream& s, uint32_t size);
+        virtual bool onCheckSize(uint32_t read_size, uint32_t total_size) const;
 
     private:
         bool is_parsed_ = false;

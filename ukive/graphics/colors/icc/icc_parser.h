@@ -51,6 +51,7 @@ namespace icc {
         };
 
         ICCParser();
+        ~ICCParser();
 
         bool parse(std::istream& s);
         const ICCType* parseTagData(std::istream& s, uint32_t tag_sign);

@@ -20,11 +20,18 @@ namespace icc {
         explicit ParamCurveType(uint32_t type);
         ~ParamCurveType();
 
-        uint16_t func_type;
-        uint32_t g, a, b, c, d, e, f;
+        uint16_t func_type = 0;
+        uint32_t g = 0;
+        uint32_t a = 0;
+        uint32_t b = 0;
+        uint32_t c = 0;
+        uint32_t d = 0;
+        uint32_t e = 0;
+        uint32_t f = 0;
 
     protected:
         bool onParse(std::istream& s, uint32_t size) override;
+        bool onCheckSize(uint32_t read_size, uint32_t total_size) const override;
     };
 
 }

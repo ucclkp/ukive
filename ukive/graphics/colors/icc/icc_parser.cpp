@@ -8,16 +8,19 @@
 
 #include <cassert>
 
+#include "utils/stl_utils.h"
 #include "utils/stream_utils.h"
 
 #include "ukive/graphics/colors/icc/icc_constants.h"
-#include "ukive/graphics/colors/icc/types/icc_type_multi_loc_unicode.h"
-#include "ukive/graphics/colors/icc/types/icc_type_text_desc.h"
-#include "ukive/graphics/colors/icc/types/icc_type_xyz.h"
+#include "ukive/graphics/colors/icc/types/icc_type_curve.h"
 #include "ukive/graphics/colors/icc/types/icc_type_lut8.h"
 #include "ukive/graphics/colors/icc/types/icc_type_lut16.h"
-#include "ukive/graphics/colors/icc/types/icc_type_curve.h"
+#include "ukive/graphics/colors/icc/types/icc_type_lut_ab.h"
+#include "ukive/graphics/colors/icc/types/icc_type_multi_loc_unicode.h"
+#include "ukive/graphics/colors/icc/types/icc_type_multi_proc_elements.h"
 #include "ukive/graphics/colors/icc/types/icc_type_param_curve.h"
+#include "ukive/graphics/colors/icc/types/icc_type_text_desc.h"
+#include "ukive/graphics/colors/icc/types/icc_type_xyz.h"
 
 #define TYPE_PARSER(type_sign, type_class)      \
     case type_sign: {                           \
@@ -37,6 +40,10 @@ namespace icc {
 
     ICCParser::ICCParser() {}
 
+    ICCParser::~ICCParser() {
+        utl::STLDeleteElements(&types_);
+    }
+
     bool ICCParser::parse(std::istream& s) {
         if (!parserHeader(s)) {
             return false;
@@ -44,72 +51,6 @@ namespace icc {
         if (!parseTagTable(s)) {
             return false;
         }
-
-        auto tag = getTagElement(kTagAToB0);
-        if (tag) {
-            SEEKG_STREAM(tag->data_offset);
-
-            uint32_t type_sign;
-            READ_STREAM_BE(type_sign, 4);
-
-            switch (type_sign) {
-            case kTypeLut8:
-                break;
-
-            case kTypeLut16:
-                break;
-
-            case kTypeLutAToB:
-                break;
-
-            default:
-                return false;
-            }
-        }
-
-        tag = getTagElement(kTagProfileDesc);
-        if (tag) {
-            SEEKG_STREAM(tag->data_offset);
-
-            uint32_t type_sign;
-            READ_STREAM_BE(type_sign, 4);
-
-            switch (type_sign) {
-            case kTypeMultLocUnicode:
-            {
-                MultiLocUnicodeType mlu_type(type_sign);
-                mlu_type.parse(s, tag->data_size);
-                break;
-            }
-
-            case kTypeTextDesc:
-            {
-                TextDescType text_desc_type(type_sign);
-                text_desc_type.parse(s, tag->data_size);
-                break;
-            }
-
-            default:
-                return false;
-            }
-        }
-
-        tag = getTagElement(kTagRedMatCol);
-        if (tag) {
-            SEEKG_STREAM(tag->data_offset);
-
-            uint32_t type_sign;
-            READ_STREAM_BE(type_sign, 4);
-
-            switch (type_sign) {
-            case kTypeXYZ:
-                break;
-
-            default:
-                return false;
-            }
-        }
-
         return true;
     }
 
@@ -131,14 +72,16 @@ namespace icc {
         tag->type_signature = type_sign;
 
         switch (type_sign) {
-            TYPE_PARSER(kTypeCurve, CurveType);
-            TYPE_PARSER(kTypeLut16, Lut16Type);
-            TYPE_PARSER(kTypeLut8, Lut8Type);
-            TYPE_PARSER(kTypeParamCurve, ParamCurveType);
-            //TYPE_PARSER(kTypeLutAToB, );
+            TYPE_PARSER(kTypeCurve,      CurveType);
+            TYPE_PARSER(kTypeLut16,      Lut16Type);
+            TYPE_PARSER(kTypeLut8,       Lut8Type);
+            TYPE_PARSER(kTypeLutAToB,    LutABType);
+            TYPE_PARSER(kTypeLutBToA,    LutABType);
             TYPE_PARSER(kTypeMultLocUnicode, MultiLocUnicodeType);
-            TYPE_PARSER(kTypeTextDesc, TextDescType);
-            TYPE_PARSER(kTypeXYZ, XYZType);
+            TYPE_PARSER(kTypeParamCurve, ParamCurveType);
+            TYPE_PARSER(kTypeTextDesc,   TextDescType);
+            TYPE_PARSER(kTypeXYZ,        XYZType);
+            TYPE_PARSER(kTypeMultProcElem,   MultiProcElementsType);
 
         default:
             assert(false);

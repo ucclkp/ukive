@@ -20,9 +20,9 @@ namespace icc {
         explicit TextDescType(uint32_t type);
 
         std::string ascii_text;
-        uint32_t unicode_lang_code;
+        uint32_t unicode_lang_code = 0;
         std::u16string unicode_loc_desc;
-        uint16_t script_code;
+        uint16_t script_code = 0;
         std::string loc_mac_desc;
 
     protected:

@@ -6,6 +6,8 @@
 
 #include "icc_type_param_curve.h"
 
+#include <cassert>
+
 #include "utils/stream_utils.h"
 
 
@@ -61,10 +63,15 @@ namespace icc {
             break;
 
         default:
+            assert(false);
             return false;
         }
 
         return true;
+    }
+
+    bool ParamCurveType::onCheckSize(uint32_t read_size, uint32_t total_size) const {
+        return read_size <= total_size;
     }
 
 }
