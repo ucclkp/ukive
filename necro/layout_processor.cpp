@@ -14,7 +14,7 @@
 #include "utils/convert.h"
 #include "utils/endian.hpp"
 #include "utils/number.hpp"
-#include "utils/string_utils.h"
+#include "utils/string_utils.hpp"
 
 #include "necro/layout_constants.h"
 
@@ -34,7 +34,7 @@ namespace necro {
         std::error_code ec;
         std::vector<fs::directory_entry> xml_files;
         for (auto& f : fs::directory_iterator(res_dir, ec)) {
-            if (!f.is_directory(ec) && utl::toASCIILower(f.path().extension().u16string()) == u".xml") {
+            if (!f.is_directory(ec) && utl::tolatl(f.path().extension().u16string()) == u".xml") {
                 xml_files.push_back(f);
             }
         }
@@ -85,7 +85,7 @@ namespace necro {
         if (!*changed) {
             std::vector<fs::directory_entry> out_xml_files;
             for (auto& f : fs::directory_iterator(out_dir, ec)) {
-                if (!f.is_directory(ec) && utl::toASCIILower(f.path().extension().u16string()) == u".xml") {
+                if (!f.is_directory(ec) && utl::tolatl(f.path().extension().u16string()) == u".xml") {
                     out_xml_files.push_back(f);
                 }
             }
@@ -111,11 +111,11 @@ namespace necro {
 
         // 处理 XML 文件
         for (const auto& xml_file : xml_files) {
-            LOG(Log::INFO) << "Processing xml file: " << xml_file.path().u8string();
+            jour_i("Processing xml file: %s", xml_file.path());
 
             std::ifstream reader(xml_file.path(), std::ios::binary);
             if (!reader) {
-                LOG(Log::ERR) << "Cannot open xml file: " << xml_file.path().filename().u8string();
+                jour_e("Cannot open xml file: %s", xml_file.path().filename());
                 return false;
             }
 
@@ -123,20 +123,21 @@ namespace necro {
             std::shared_ptr<utl::xml::Element> root;
             if (!xml_parser.parse(reader, &root)) {
                 auto& pedometer = xml_parser.getPedometer();
-                LOG(Log::ERR) << "Failed to parse xml file: " << xml_file.path().filename().u8string()
-                    << " line: " << pedometer.getCurRow() << " col: " << pedometer.getCurCol();
+                jour_e(
+                    "Failed to parse xml file: %s line: %d col: %d",
+                    xml_file.path().filename(), pedometer.getCurRow(), pedometer.getCurCol());
                 return false;
             }
 
             IdMap cur_map;
             if (!traverseTree(root, true, &cur_map)) {
-                LOG(Log::ERR) << "Failed to traverse xml file: " << xml_file.path().filename().u8string();
+                jour_e("Failed to traverse xml file: %s", xml_file.path().filename());
                 return false;
             }
 
             if (need_second_) {
                 if (!traverseTree(root, false, &cur_map)) {
-                    LOG(Log::ERR) << "Failed to traverse xml file: " << xml_file.path().filename().u8string();
+                    jour_e("Failed to traverse xml file: %s", xml_file.path().filename());
                     return false;
                 }
             }
@@ -149,24 +150,26 @@ namespace necro {
             std::string xml_str;
             utl::XMLWriter xml_writer;
             if (!xml_writer.write(*root, &xml_str)) {
-                LOG(Log::ERR) << "Failed to write xml file: " << xml_file.path().filename().u8string();
+                jour_e("Failed to write xml file: %s", xml_file.path().filename());
                 return false;
             }
 
             fs::path new_file = out_dir / xml_file.path().filename();
             if (!fs::create_directories(out_dir, ec) && ec) {
-                LOG(Log::ERR) << "Failed to make dir: " << out_dir.u8string();
+                jour_e("Failed to make dir: %s", out_dir);
                 return false;
             }
             std::ofstream writer(new_file, std::ios::binary | std::ios::ate);
             if (!writer) {
-                LOG(Log::ERR) << "Cannot open file: " << new_file.u8string();
+                jour_e("Cannot open file: %s", new_file);
                 return false;
             }
 
             writer.write(xml_str.data(), xml_str.length());
 
-            auto xml_file_name = xml_file.path().filename().u8string();
+            // 直到 C++ 20 足够普及为止，这里先这样写
+            std::string xml_file_name = reinterpret_cast<const char*>(
+                xml_file.path().filename().u8string().c_str());
             if (!xml_file_name.empty()) {
                 layout_id_map_[xml_file_name] = cur_layout_id_;
                 ++cur_layout_id_;
@@ -305,7 +308,7 @@ namespace necro {
 
         for (auto& attr : element->attrs) {
             auto attr_val = attr.second;
-            if (utl::ascii::startWith(attr_val, "@+id/")) {
+            if (utl::startWith(attr_val, "@+id/")) {
                 auto id_val = attr_val.substr(5);
                 if (id_val.empty()) {
                     LOG(Log::ERR) << "The id attr: " << attr.first
@@ -323,9 +326,9 @@ namespace necro {
                 }
                 // 整个项目的 view_id 重复
                 if (view_id_map_.find(id_val) != view_id_map_.end()) {
-                    LOG(Log::ERR) << "The id: " << id_val
-                        << " of element: " << element->tag_name
-                        << " is duplicated in other file.";
+                    jour_e(
+                        "The id: %s of element: %s is duplicated in other files.",
+                        id_val.c_str(), element->tag_name.c_str());
                     return false;
                 }
 
@@ -344,7 +347,7 @@ namespace necro {
                         break;
                     }
 
-                    if (!utl::ascii::startWith(attr_val, "@id/", idx)) {
+                    if (!utl::startWith(attr_val, "@id/", idx)) {
                         LOG(Log::ERR) << "Unsupported @ operation in: " << attr_val
                             << " of element: " << element->tag_name;
                         return false;
@@ -356,7 +359,7 @@ namespace necro {
                     }
 
                     auto id_val = attr_val.substr(idx + 4, end_idx - idx - 4);
-                    utl::ascii::trim(&id_val);
+                    utl::trim(&id_val);
                     if (id_val.empty()) {
                         LOG(Log::ERR) << "The id in attr: " << attr.first
                             << " of element: " << element->tag_name

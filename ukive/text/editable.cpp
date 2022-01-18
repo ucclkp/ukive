@@ -135,7 +135,7 @@ namespace ukive {
 
         if (old_start == old_end) {
             if (length() < old_end) {
-                DCHECK(false);
+                ubassert(false);
                 text_.insert(text_.length(), text);
             } else {
                 text_.insert(old_end, text);

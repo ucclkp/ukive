@@ -7,6 +7,7 @@
 #include "example_tree_page.h"
 
 #include "utils/convert.h"
+#include "utils/int_conv.hpp"
 
 #include "ukive/views/layout/restraint_layout.h"
 #include "ukive/views/layout_info/restraint_layout_info.h"
@@ -38,7 +39,7 @@ namespace shell {
         auto layouter = new ukive::LinearListLayouter();
         for (int i = 0; i < 10; ++i) {
             std::u16string str(u"test");
-            str.append(utl::to_u16string(i));
+            str.append(utl::itos16(i));
 
             auto node = new ExampleTreeNode();
             node->text = str;

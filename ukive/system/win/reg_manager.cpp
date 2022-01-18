@@ -78,7 +78,7 @@ namespace ukive {
             HKEY_CURRENT_USER, progid_path.c_str(),
             0, nullptr, 0, KEY_WRITE, nullptr, &progid_key, nullptr);
         if (ls != ERROR_SUCCESS) {
-            DCHECK(false);
+            ubassert(false);
             return false;
         }
 
@@ -92,7 +92,7 @@ namespace ukive {
         ls = ::RegCloseKey(progid_key);
         result &= (ls == ERROR_SUCCESS);
         if (!result) {
-            DCHECK(false);
+            ubassert(false);
             return false;
         }
 
@@ -103,7 +103,7 @@ namespace ukive {
             HKEY_CURRENT_USER, command_path.c_str(),
             0, nullptr, 0, KEY_WRITE, nullptr, &cmd_key, nullptr);
         if (ls != ERROR_SUCCESS) {
-            DCHECK(false);
+            ubassert(false);
             return false;
         }
 
@@ -116,7 +116,7 @@ namespace ukive {
         ls = ::RegCloseKey(cmd_key);
         result &= (ls == ERROR_SUCCESS);
         if (!result) {
-            DCHECK(false);
+            ubassert(false);
             return false;
         }
 
@@ -130,7 +130,7 @@ namespace ukive {
         HKEY progid_key = nullptr;
         auto ls = ::RegOpenKeyExW(HKEY_CURRENT_USER, class_path.c_str(), 0, KEY_ALL_ACCESS, &progid_key);
         if (ls != ERROR_SUCCESS) {
-            DCHECK(false);
+            ubassert(false);
             return false;
         }
 
@@ -140,7 +140,7 @@ namespace ukive {
         ls = ::RegCloseKey(progid_key);
         result &= (ls == ERROR_SUCCESS);
         if (!result) {
-            DCHECK(false);
+            ubassert(false);
             return false;
         }
 
@@ -173,7 +173,7 @@ namespace ukive {
         auto ls = ::RegOpenKeyExW(
             HKEY_CURRENT_USER, ext_progid_path.c_str(), 0, KEY_SET_VALUE, &ext_progid_key);
         if (ls != ERROR_SUCCESS) {
-            DCHECK(false);
+            ubassert(false);
             return false;
         }
 
@@ -186,7 +186,7 @@ namespace ukive {
         ls = ::RegCloseKey(ext_progid_key);
         result &= (ls == ERROR_SUCCESS);
         if (!result) {
-            DCHECK(false);
+            ubassert(false);
             return false;
         }
 
@@ -202,7 +202,7 @@ namespace ukive {
         auto ls = ::RegOpenKeyExW(
             HKEY_CURRENT_USER, ext_progid_path.c_str(), 0, KEY_ALL_ACCESS, &ext_progid_key);
         if (ls != ERROR_SUCCESS) {
-            DCHECK(false);
+            ubassert(false);
             return false;
         }
 
@@ -214,7 +214,7 @@ namespace ukive {
         ls = ::RegCloseKey(ext_progid_key);
         result &= (ls == ERROR_SUCCESS);
         if (!result) {
-            DCHECK(false);
+            ubassert(false);
             return false;
         }
 

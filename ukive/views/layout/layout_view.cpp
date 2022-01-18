@@ -159,9 +159,9 @@ namespace ukive {
             views_.insert(views_.begin() + index, v);
         }
 
-        DCHECK(!v->isAttachedToWindow());
+        ubassert(!v->isAttachedToWindow());
         if (isAttachedToWindow() && !v->isAttachedToWindow()) {
-            DCHECK(getWindow());
+            ubassert(getWindow());
             v->dispatchAttachedToWindow(getWindow());
         }
 
@@ -478,7 +478,7 @@ namespace ukive {
         super::dispatchAttachedToWindow(w);
 
         for (auto view : views_) {
-            DCHECK(!view->isAttachedToWindow());
+            ubassert(!view->isAttachedToWindow());
             if (!view->isAttachedToWindow()) {
                 view->dispatchAttachedToWindow(w);
             }
@@ -487,7 +487,7 @@ namespace ukive {
 
     void LayoutView::dispatchDetachFromWindow() {
         for (auto view : views_) {
-            DCHECK(view->isAttachedToWindow());
+            ubassert(view->isAttachedToWindow());
             if (view->isAttachedToWindow()) {
                 view->dispatchDetachFromWindow();
             }

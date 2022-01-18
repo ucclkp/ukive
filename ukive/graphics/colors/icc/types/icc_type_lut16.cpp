@@ -40,7 +40,7 @@ namespace icc {
             READ_STREAM_BE(in_tabs[i], 2);
         }
 
-        uint32_t cv_num = utl::powi<uint32_t>(clut_grid_pt_num, in_channel_num) * out_channel_num;
+        uint32_t cv_num = utl::powui<uint32_t>(clut_grid_pt_num, in_channel_num) * out_channel_num;
         clut_vals.resize(cv_num);
         for (uint32_t i = 0; i < cv_num; ++i) {
             READ_STREAM_BE(clut_vals[i], 2);

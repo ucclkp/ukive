@@ -154,7 +154,7 @@ namespace ukive {
                     }
                 }
 
-                DCHECK(false);
+                ubassert(false);
                 return;
             }
         }

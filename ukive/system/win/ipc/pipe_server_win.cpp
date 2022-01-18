@@ -95,7 +95,7 @@ namespace ukive {
     }
 
     bool PipeServerWin::write(const std::string_view& buf) {
-        DCHECK(buf.size() <= std::numeric_limits<DWORD>::max());
+        ubassert(buf.size() <= std::numeric_limits<DWORD>::max());
 
         if (pipe_ == INVALID_HANDLE_VALUE) {
             return false;

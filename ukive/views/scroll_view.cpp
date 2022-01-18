@@ -97,8 +97,8 @@ namespace ukive {
         int final_width = 0;
         int final_height = 0;
 
-        // TODO:
-        DCHECK(getChildCount() <= 1) << "ScrollView can only have one child.";
+        // TODO: ScrollView can only have one child.
+        ubassert(getChildCount() <= 1);
 
         auto new_info = info;
         new_info.setHeight(SizeInfo::Value(0, SizeInfo::FREEDOM));

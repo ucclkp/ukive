@@ -47,7 +47,7 @@ namespace ukive {
     }
 
     void CustomNonClientFrame::getClientInsets(RECT* rect, int* bottom_beyond) {
-        DCHECK(rect);
+        ubassert(rect);
         // 从 Windows 7 到 Windows 10 1703，窗口渲染缓冲的大小需要
         // 与窗口客户区的大小完全一致，否则会出现模糊（可能是因为窗口交换缓冲设置的缩放模式为拉伸），
         // 重要的是底边非客户区设置的 -1 需要考虑在内。
@@ -73,7 +73,7 @@ namespace ukive {
     }
 
     void CustomNonClientFrame::getClientOffset(POINT* offset) {
-        DCHECK(offset);
+        ubassert(offset);
         if (window_->isMaximized()) {
             auto ext = getExtraSpacingWhenMaximized();
             offset->x = ext.left;
@@ -217,7 +217,7 @@ namespace ukive {
             // 这一像素是可以被覆盖的，如果覆盖的颜色完全不透明的话。
             MARGINS margins = { 0, 0, 0, 1 };
             HRESULT hr = ::DwmExtendFrameIntoClientArea(window_->getHandle(), &margins);
-            DCHECK(SUCCEEDED(hr));
+            ubassert(SUCCEEDED(hr));
             window_->sendFrameChanged();
         }
 

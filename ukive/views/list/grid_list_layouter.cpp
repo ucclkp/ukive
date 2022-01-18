@@ -127,7 +127,7 @@ namespace ukive {
                 }
 
                 auto item = columns_[col].getItem(row_index);
-                DCHECK(item);
+                ubassert(item);
 
                 int width = item->item_view->getDeterminedSize().width + item->getHoriMargins();
                 int height = item->item_view->getDeterminedSize().height + item->getVertMargins();
@@ -292,7 +292,7 @@ namespace ukive {
             auto row = cur_data_pos / col_count_;
             auto col = cur_data_pos % col_count_;
 
-            DCHECK(col + 1 == col_count_);
+            ubassert(col + 1 == col_count_);
 
             auto tmp_pos = cur_data_pos;
             std::vector<ListItem*> tmps;
@@ -364,7 +364,7 @@ namespace ukive {
             auto row = cur_data_pos / col_count_;
             auto col = cur_data_pos % col_count_;
 
-            DCHECK(col == 0);
+            ubassert(col == 0);
 
             int prev_bottom = 0;
             if (row > 0) {

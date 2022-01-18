@@ -70,7 +70,7 @@ namespace shell {
         if (hit) {
             cur_index_ = i;
         } else {
-            DCHECK(false);
+            ubassert(false);
         }
     }
 
@@ -97,7 +97,7 @@ namespace shell {
     }
 
     bool SlideImageView::checkFileExt(const std::u16string& ext) {
-        auto lower_ext = utl::toASCIILower(ext);
+        auto lower_ext = utl::tolatl(ext);
         for (const auto& allowed_ext : exts_) {
             if (lower_ext == allowed_ext) {
                 return true;

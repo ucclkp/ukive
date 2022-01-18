@@ -9,6 +9,7 @@
 #include <cmath>
 
 #include "utils/convert.h"
+#include "utils/int_conv.hpp"
 #include "utils/weak_bind.hpp"
 
 #include "ukive/event/input_event.h"
@@ -493,9 +494,9 @@ namespace ukive {
         {
             std::u16string coord;
             coord.append(u"(")
-                .append(utl::to_u16string(col))
+                .append(utl::itos16(col))
                 .append(u", ")
-                .append(utl::to_u16string(row))
+                .append(utl::itos16(row))
                 .append(u")");
             if (!coord_tl_->make(
                 coord, u"Consolas", getContext().dp2px(12),
@@ -519,13 +520,13 @@ namespace ukive {
             std::u16string color_text;
             color_text.append(u"ARGB: ");
             if (getGridColor(col, row, &color)) {
-                color_text.append(utl::to_u16string(int(color.a * 255)))
+                color_text.append(utl::itos16(int(color.a * 255)))
                     .append(u", ")
-                    .append(utl::to_u16string(int(color.r * 255)))
+                    .append(utl::itos16(int(color.r * 255)))
                     .append(u", ")
-                    .append(utl::to_u16string(int(color.g * 255)))
+                    .append(utl::itos16(int(color.g * 255)))
                     .append(u", ")
-                    .append(utl::to_u16string(int(color.b * 255)));
+                    .append(utl::itos16(int(color.b * 255)));
             } else {
                 color_text.append(u"N/A");
             }

@@ -26,7 +26,7 @@ namespace ukive {
     void WindowManager::addWindow(Window *window) {
         for (auto w : window_list_) {
             if (w == window) {
-                DCHECK(false);
+                ubassert(false);
                 return;
             }
         }

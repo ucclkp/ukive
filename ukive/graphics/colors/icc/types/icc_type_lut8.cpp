@@ -38,7 +38,7 @@ namespace icc {
         in_tabs.resize(it_num);
         READ_STREAM(in_tabs[0], it_num);
 
-        uint32_t cv_num = utl::powi<uint32_t>(clut_grid_pt_num, in_channel_num) * out_channel_num;
+        uint32_t cv_num = utl::powui<uint32_t>(clut_grid_pt_num, in_channel_num) * out_channel_num;
         clut_vals.resize(cv_num);
         READ_STREAM(clut_vals[0], cv_num);
 

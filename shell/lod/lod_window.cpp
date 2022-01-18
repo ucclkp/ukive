@@ -9,8 +9,9 @@
 #include <sstream>
 
 #include "utils/convert.h"
-#include "utils/string_utils.h"
+#include "utils/int_conv.hpp"
 #include "utils/time_utils.h"
+#include "utils/usprintf.h"
 
 #include "ukive/app/application.h"
 #include "ukive/graphics/colors/color.h"
@@ -398,11 +399,11 @@ namespace shell {
     void LodWindow::onSeekValueChanged(ukive::SeekBar *seekBar, float value) {
         switch (seekBar->getId()) {
         case ID_C1_SEEKBAR:
-            c1_value_tv_->setText(utl::stringPrintf(u"%.2f", 1.f + value));
+            c1_value_tv_->setText(utl::usprintf(u"%.2f", 1.f + value));
             break;
 
         case ID_C2_SEEKBAR:
-            c2_value_tv_->setText(utl::stringPrintf(u"%.2f", 1.f + value));
+            c2_value_tv_->setText(utl::usprintf(u"%.2f", 1.f + value));
             break;
         default:
             break;
@@ -412,7 +413,7 @@ namespace shell {
     void LodWindow::onSeekIntegerValueChanged(ukive::SeekBar *seekBar, int value) {
         switch (seekBar->getId()) {
         case ID_SPLIT_SEEKBAR:
-            split_value_tv_->setText(utl::to_u16string(1 + value));
+            split_value_tv_->setText(utl::itos16(1 + value));
             break;
         default:
             break;

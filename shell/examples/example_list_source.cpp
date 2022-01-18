@@ -8,6 +8,7 @@
 
 #include "utils/log.h"
 #include "utils/convert.h"
+#include "utils/int_conv.hpp"
 
 #include "ukive/views/layout/restraint_layout.h"
 #include "ukive/views/layout_info/restraint_layout_info.h"
@@ -82,7 +83,7 @@ namespace shell {
         ExampleListItem* example_list_item = reinterpret_cast<ExampleListItem*>(item);
 
         std::u16string str(data.title);
-        str.append(u" ").append(utl::to_u16string(item->data_pos));
+        str.append(u" ").append(utl::itos16(item->data_pos));
 
         example_list_item->title_label->setText(str);
         example_list_item->summary_label->setText(data.summary);

@@ -10,7 +10,7 @@
 
 #include "utils/convert.h"
 #include "utils/log.h"
-#include "utils/string_utils.h"
+#include "utils/string_utils.hpp"
 
 
 namespace necro {
@@ -34,22 +34,23 @@ namespace necro {
     {
         std::ofstream writer(path, std::ios::binary | std::ios::ate);
         if (writer.fail()) {
-            LOG(Log::ERR) << "Cannot open file: " << path;
+            jour_e("Cannot open file: %s", path);
             return false;
         }
 
         std::error_code ec;
         if (!fs::create_directories(path.parent_path(), ec) && ec) {
-            LOG(Log::ERR) << "Failed to make dir: " << path.parent_path().u8string();
+            jour_e("Failed to make dir: %s", path.parent_path());
             return false;
         }
-        auto name_macro = utl::toASCIIUpper(path.filename().u16string());
+        auto name_macro = utl::tolatu(path.filename().u16string());
         if (name_macro.empty()) {
-            LOG(Log::ERR) << "Invalid out file name: " << path.u8string();
+            jour_e("Invalid out file name: %s", path);
             return false;
         }
 
-        name_macro = utl::ascii::replaceAllTokens(name_macro, u".", u"_").append(u"_");
+        utl::replaceAllTokens(&name_macro, u".", u"_");
+        name_macro.append(u"_");
 
         std::string out_str;
         generateOutput(utl::UTF16ToUTF8(name_macro), view_id_map, layout_id_map, &out_str);
@@ -63,7 +64,7 @@ namespace necro {
         const std::string& name_macro,
         const IdMap& view_id_map, const IdMap& layout_id_map, std::string* out)
     {
-        DCHECK(out != nullptr && out->empty());
+        ubassert(out != nullptr && out->empty());
 
         out->append("#ifndef RESOURCES_NECRO_").append(name_macro);
         out->append(getLineBreak());
@@ -96,7 +97,11 @@ namespace necro {
 
         for (const auto& pair : layout_id_map) {
             out->append(getIndent(2)).append("const int ");
-            out->append(utl::ascii::replaceAllTokens(pair.first, ".", "_"));
+
+            auto id = pair.first;
+            utl::replaceAllTokens(&id, ".", "_");
+
+            out->append(id);
             out->append(" = ");
             out->append(std::to_string(pair.second));
             out->append(";");

@@ -20,19 +20,19 @@ namespace ukive {
             HRESULT hr = static_cast<DirectXManager*>(Application::getGraphicDeviceManager())->getD2DFactory()
                 ->CreatePathGeometry(&path_geo_);
             if (FAILED(hr)) {
-                DCHECK(false);
+                ubassert(false);
                 return false;
             }
         }
 
         if (sink_) {
-            DCHECK(false);
+            ubassert(false);
             return false;
         }
 
         HRESULT hr = path_geo_->Open(&sink_);
         if (FAILED(hr)) {
-            DCHECK(false);
+            ubassert(false);
             return false;
         }
 
@@ -40,26 +40,26 @@ namespace ukive {
     }
 
     void PathWin::begin(const PointF& start, bool fill) {
-        DCHECK(sink_);
+        ubassert(sink_);
         sink_->BeginFigure(
             D2D1::Point2F(start.x, start.y),
             fill ? D2D1_FIGURE_BEGIN_FILLED : D2D1_FIGURE_BEGIN_HOLLOW);
     }
 
     void PathWin::end(bool close) {
-        DCHECK(sink_);
+        ubassert(sink_);
         sink_->EndFigure(close ? D2D1_FIGURE_END_CLOSED : D2D1_FIGURE_END_OPEN);
     }
 
     bool PathWin::close() {
         if (!sink_) {
-            DCHECK(false);
+            ubassert(false);
             return false;
         }
 
         HRESULT hr = sink_->Close();
         if (FAILED(hr)) {
-            DCHECK(false);
+            ubassert(false);
             return false;
         }
 
@@ -67,12 +67,12 @@ namespace ukive {
     }
 
     void PathWin::addLine(const PointF& p) {
-        DCHECK(sink_);
+        ubassert(sink_);
         sink_->AddLine(D2D1::Point2F(p.x, p.y));
     }
 
     void PathWin::addQBezier(const PointF& p1, const PointF& p2) {
-        DCHECK(sink_);
+        ubassert(sink_);
         sink_->AddQuadraticBezier(
             D2D1::QuadraticBezierSegment(
                 D2D1::Point2F(p1.x, p1.y), D2D1::Point2F(p2.x, p2.y)));

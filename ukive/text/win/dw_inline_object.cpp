@@ -63,7 +63,7 @@ namespace ukive {
         IUnknown* clientDrawingEffect)
     {
         if (callback_) {
-            DCHECK(clientDrawingContext);
+            ubassert(clientDrawingContext);
             if (!clientDrawingContext) {
                 return S_OK;
             }

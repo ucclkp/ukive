@@ -8,7 +8,7 @@
 #include <filesystem>
 
 #include "utils/log.h"
-#include "utils/string_utils.h"
+#include "utils/string_utils.hpp"
 #include "utils/command_line.h"
 
 #include "necro/copy_processor.h"
@@ -82,8 +82,8 @@ int processGeneratorMode() {
         return 1;
     }
 
-    utl::ascii::trim(&res_path_param, u"\"", false);
-    utl::ascii::trim(&build_path_param, u"\"", false);
+    utl::trim(&res_path_param, u"\"");
+    utl::trim(&build_path_param, u"\"");
 
     std::error_code ec;
     auto resource_path = std::filesystem::absolute(res_path_param, ec);
@@ -117,8 +117,8 @@ int processCopyMode() {
         return 1;
     }
 
-    utl::ascii::trim(&src_path_param, u"\"", false);
-    utl::ascii::trim(&dst_path_param, u"\"", false);
+    utl::trim(&src_path_param, u"\"");
+    utl::trim(&dst_path_param, u"\"");
 
     std::error_code ec;
     auto src_path = std::filesystem::absolute(src_path_param, ec);
@@ -143,7 +143,6 @@ int main() {
     utl::InitLogging(log_params);
 
     utl::CommandLine::initialize();
-    auto& params = utl::CommandLine::getMap();
 
     if (utl::CommandLine::hasName("c")) {
         if (result == 0) {

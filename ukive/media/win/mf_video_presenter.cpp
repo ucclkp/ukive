@@ -7,7 +7,7 @@
 #include "mf_video_presenter.h"
 
 #include "utils/log.h"
-#include "utils/scope_utils.h"
+#include "utils/scope_utils.hpp"
 
 #include "ukive/system/win/com_ptr.hpp"
 
@@ -185,7 +185,7 @@ namespace ukive {
             return MF_E_SHUTDOWN;
         }
 
-        DCHECK(render_state_ == RenderState::Paused);
+        ubassert(render_state_ == RenderState::Paused);
 
         render_state_ = RenderState::Started;
 
@@ -1011,7 +1011,7 @@ namespace ukive {
             if (SUCCEEDED(hr)) {
                 hr = mixer_->SetOutputType(0, optimal_type, 0);
                 if (FAILED(hr)) {
-                    DCHECK(false);
+                    ubassert(false);
                     setMediaType(nullptr);
                 }
             }
@@ -1088,7 +1088,7 @@ namespace ukive {
     }
 
     HRESULT MFVideoPresenter::processOutput() {
-        DCHECK(is_sample_notify_ || is_repaint_);
+        ubassert(is_sample_notify_ || is_repaint_);
 
         if (render_state_ != RenderState::Started &&
             !is_repaint_ && is_prerolled_)
@@ -1107,7 +1107,7 @@ namespace ukive {
             return S_FALSE;
         }
 
-        DCHECK(::MFGetAttributeUINT32(sample.get(), MFSampleCounter, UINT32(-1)) == token_counter_);
+        ubassert(::MFGetAttributeUINT32(sample.get(), MFSampleCounter, UINT32(-1)) == token_counter_);
 
         LONGLONG mixer_start_time = 0;
         LONGLONG mixer_end_time = 0;
@@ -1178,7 +1178,7 @@ namespace ukive {
     }
 
     HRESULT MFVideoPresenter::deliverSample(const ComPtr<IMFSample>& sample, bool repaint) {
-        DCHECK(sample);
+        ubassert(sample);
         bool present_now = render_state_ != RenderState::Started || isScrubbing() || repaint;
 
         MFD3D9RenderEngine::DevState state;
@@ -1239,7 +1239,7 @@ namespace ukive {
     }
 
     HRESULT MFVideoPresenter::startFrameStep() {
-        DCHECK(render_state_ == RenderState::Started);
+        ubassert(render_state_ == RenderState::Started);
 
         HRESULT hr = S_OK;
         if (frame_step_.state == FrameStepState::Waiting) {
@@ -1490,7 +1490,7 @@ namespace ukive {
 
     // static
     bool MFVideoPresenter::isSampleTimePassed(IMFClock* clock, IMFSample* sample) {
-        DCHECK(clock && sample);
+        ubassert(clock && sample);
         if (!sample || !clock) {
             return false;
         }

@@ -391,7 +391,7 @@ namespace ukive {
 
         HRESULT hr = d2d_factory->CreateDxgiSurfaceRenderTarget(surface, props, &render_target);
         if (FAILED(hr)) {
-            DCHECK(false);
+            ubassert(false);
         }
 
         return render_target;

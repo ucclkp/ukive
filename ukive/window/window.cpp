@@ -437,7 +437,7 @@ namespace ukive {
         // 当已存在有捕获鼠标的 View 时，若此次调用该方法的 View
         // 与之前不同，此次调用将被忽略。在使用中应避免此种情况产生。
         if (mouse_holder_ref_ && v != mouse_holder_) {
-            DCHECK(false) << "abnormal capture mouse!!";
+            jour_de("abnormal capture mouse!!");
             return;
         }
 
@@ -476,7 +476,7 @@ namespace ukive {
         // 当已存在有捕获触摸的 View 时，若此次调用该方法的 View
         // 与之前不同，此次调用将被忽略。在使用中应避免此种情况产生。
         if (touch_holder_ref_ && v != touch_holder_) {
-            DCHECK(false) << "abnormal capture touch!!";
+            jour_de("abnormal capture touch!!");
             return;
         }
 
@@ -1184,11 +1184,11 @@ namespace ukive {
     }
 
     void Window::onWindowAdded(Window* w) {
-        DCHECK(w != this);
+        ubassert(w != this);
     }
 
     void Window::onWindowRemoved(Window* w) {
-        DCHECK(w != this);
+        ubassert(w != this);
 
         if (w == parent_) {
             parent_ = nullptr;

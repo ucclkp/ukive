@@ -106,12 +106,12 @@ namespace ukive {
 
     void DWTextLayout::setMaxWidth(float max_width) {
         HRESULT hr = text_layout_->SetMaxWidth(max_width);
-        DCHECK(SUCCEEDED(hr));
+        ubassert(SUCCEEDED(hr));
     }
 
     void DWTextLayout::setMaxHeight(float max_height) {
         HRESULT hr = text_layout_->SetMaxHeight(max_height);
-        DCHECK(SUCCEEDED(hr));
+        ubassert(SUCCEEDED(hr));
     }
 
     void DWTextLayout::setFontAttributes(const FontAttributes& attrs, const Range& range) {
@@ -125,20 +125,20 @@ namespace ukive {
         HRESULT hr;
         if (attrs.size.has_value()) {
             hr = text_layout_->SetFontSize(float(*attrs.size), makeTextRange(range));
-            DCHECK(SUCCEEDED(hr));
+            ubassert(SUCCEEDED(hr));
         }
         if (attrs.style.has_value()) {
             hr = text_layout_->SetFontStyle(mapFontStyle(*attrs.style), makeTextRange(range));
-            DCHECK(SUCCEEDED(hr));
+            ubassert(SUCCEEDED(hr));
         }
         if (attrs.weight.has_value()) {
             hr = text_layout_->SetFontWeight(mapFontWeight(*attrs.weight), makeTextRange(range));
-            DCHECK(SUCCEEDED(hr));
+            ubassert(SUCCEEDED(hr));
         }
         if (!attrs.name.empty()) {
             hr = text_layout_->SetFontFamilyName(
                 reinterpret_cast<const WCHAR*>(attrs.name.c_str()), makeTextRange(range));
-            DCHECK(SUCCEEDED(hr));
+            ubassert(SUCCEEDED(hr));
         }
 
         if (line_spacing_method_ == LineSpacing::UNIFORM) {
@@ -156,10 +156,10 @@ namespace ukive {
 
         HRESULT hr = text_layout_->SetUnderline(
             effects.has_underline ? TRUE : FALSE, makeTextRange(range));
-        DCHECK(SUCCEEDED(hr));
+        ubassert(SUCCEEDED(hr));
         hr = text_layout_->SetStrikethrough(
             effects.has_strikethrough ? TRUE : FALSE, makeTextRange(range));
-        DCHECK(SUCCEEDED(hr));
+        ubassert(SUCCEEDED(hr));
 
         auto drawing_effect = new DWTextDrawingEffect();
         drawing_effect->text_color_enabled = effects.text_color.has_value();
@@ -178,7 +178,7 @@ namespace ukive {
         }
 
         hr = text_layout_->SetDrawingEffect(drawing_effect, makeTextRange(range));
-        DCHECK(SUCCEEDED(hr));
+        ubassert(SUCCEEDED(hr));
     }
 
     void DWTextLayout::setInlineObject(TextInlineObject* tio, const Range& range) {
@@ -198,7 +198,7 @@ namespace ukive {
         }
 
         HRESULT hr = text_layout_->SetInlineObject(inline_obj, makeTextRange(range));
-        DCHECK(SUCCEEDED(hr));
+        ubassert(SUCCEEDED(hr));
 
         if (line_spacing_method_ == LineSpacing::UNIFORM) {
             setLineSpacing(line_spacing_method_, line_spacing_);
@@ -219,7 +219,7 @@ namespace ukive {
         }
 
         HRESULT hr = text_layout_->SetTextAlignment(dw_align);
-        DCHECK(SUCCEEDED(hr));
+        ubassert(SUCCEEDED(hr));
     }
 
     void DWTextLayout::setParagraphAlignment(Alignment align) {
@@ -232,7 +232,7 @@ namespace ukive {
         }
 
         HRESULT hr = text_layout_->SetParagraphAlignment(dw_align);
-        DCHECK(SUCCEEDED(hr));
+        ubassert(SUCCEEDED(hr));
     }
 
     void DWTextLayout::setTextWrapping(TextWrapping tw) {
@@ -243,7 +243,7 @@ namespace ukive {
         default: wrapping = DWRITE_WORD_WRAPPING_NO_WRAP; break;
         }
         HRESULT hr = text_layout_->SetWordWrapping(wrapping);
-        DCHECK(SUCCEEDED(hr));
+        ubassert(SUCCEEDED(hr));
     }
 
     void DWTextLayout::setLineSpacing(LineSpacing ls, float spacing) {
@@ -270,7 +270,7 @@ namespace ukive {
         }
 
         HRESULT hr = text_layout_->SetLineSpacing(method, spacing, spacing * 0.8f);
-        DCHECK(SUCCEEDED(hr));
+        ubassert(SUCCEEDED(hr));
     }
 
     float DWTextLayout::getMaxWidth() const {
@@ -285,7 +285,7 @@ namespace ukive {
         DWRITE_TEXT_METRICS metrics;
         HRESULT hr = text_layout_->GetMetrics(&metrics);
         if (FAILED(hr)) {
-            DCHECK(false);
+            ubassert(false);
             return false;
         }
 
@@ -327,7 +327,7 @@ namespace ukive {
             }
         }
 
-        DCHECK(false);
+        ubassert(false);
         return false;
     }
 
@@ -339,7 +339,7 @@ namespace ukive {
         DWRITE_HIT_TEST_METRICS metrics;
         HRESULT hr = text_layout_->HitTestPoint(x, y, &_is_trailing, &_is_inside, &metrics);
         if (FAILED(hr)) {
-            DCHECK(false);
+            ubassert(false);
             return false;
         }
 
@@ -358,8 +358,8 @@ namespace ukive {
     bool DWTextLayout::hitTestTextRange(
         size_t pos, size_t len, float org_x, float org_y, std::vector<HitTestInfo>* info)
     {
-        DCHECK(pos <= std::numeric_limits<UINT32>::max());
-        DCHECK(len <= std::numeric_limits<UINT32>::max());
+        ubassert(pos <= std::numeric_limits<UINT32>::max());
+        ubassert(len <= std::numeric_limits<UINT32>::max());
 
         UINT32 count;
         HRESULT hr = text_layout_->HitTestTextRange(
@@ -383,20 +383,20 @@ namespace ukive {
             }
         }
 
-        DCHECK(false);
+        ubassert(false);
         return false;
     }
 
     bool DWTextLayout::hitTestTextPos(
         size_t pos, bool is_trailing, PointF* pt, HitTestInfo* info)
     {
-        DCHECK(pos <= std::numeric_limits<UINT32>::max());
+        ubassert(pos <= std::numeric_limits<UINT32>::max());
 
         FLOAT x, y;
         DWRITE_HIT_TEST_METRICS metrics;
         HRESULT hr = text_layout_->HitTestTextPosition(UINT32(pos), is_trailing ? TRUE : FALSE, &x, &y, &metrics);
         if (FAILED(hr)) {
-            DCHECK(false);
+            ubassert(false);
             return false;
         }
 

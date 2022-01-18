@@ -32,7 +32,7 @@ namespace ukive {
             return;
         }
 
-        DCHECK(impl_->changed == NONE);
+        ubassert(impl_->changed == NONE);
         impl_->changed = type;
 
         for (auto l : impl_->ccl) {

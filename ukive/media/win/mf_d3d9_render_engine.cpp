@@ -7,7 +7,7 @@
 #include "mf_d3d9_render_engine.h"
 
 #include "utils/log.h"
-#include "utils/scope_utils.h"
+#include "utils/scope_utils.hpp"
 
 #include <evr.h>
 #include <Mferror.h>
@@ -103,8 +103,8 @@ namespace ukive {
     }
 
     HRESULT MFD3D9RenderEngine::setVideoWindow(HWND window) {
-        DCHECK(::IsWindow(window));
-        DCHECK(window != window_);
+        ubassert(::IsWindow(window));
+        ubassert(window != window_);
 
         win::CritSecGuard guard(crit_sec_);
 
@@ -326,8 +326,8 @@ namespace ukive {
     }
 
     HRESULT MFD3D9RenderEngine::initializeD3D9() {
-        DCHECK(!d3d9_);
-        DCHECK(!device_mgr_);
+        ubassert(!d3d9_);
+        ubassert(!device_mgr_);
 
         HRESULT hr = ::Direct3DCreate9Ex(D3D_SDK_VERSION, &d3d9_);
         if (FAILED(hr)) {

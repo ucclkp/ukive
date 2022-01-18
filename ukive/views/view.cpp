@@ -10,7 +10,7 @@
 
 #include "utils/convert.h"
 #include "utils/log.h"
-#include "utils/string_utils.h"
+#include "utils/string_utils.hpp"
 #include "utils/time_utils.h"
 #include "utils/weak_bind.hpp"
 
@@ -184,13 +184,13 @@ namespace ukive {
             return;
         }
 
-        DCHECK(!element->isAttachedToWindow());
+        ubassert(!element->isAttachedToWindow());
         if (bg_element_) {
             if (isAttachedToWindow()) {
-                DCHECK(bg_element_->isAttachedToWindow());
+                ubassert(bg_element_->isAttachedToWindow());
                 bg_element_->notifyDetachedFromWindow();
             } else {
-                DCHECK(!bg_element_->isAttachedToWindow());
+                ubassert(!bg_element_->isAttachedToWindow());
             }
         }
 
@@ -204,11 +204,11 @@ namespace ukive {
 
         if (bg_element_) {
             if (isAttachedToWindow()) {
-                DCHECK(getWindow());
-                DCHECK(!bg_element_->isAttachedToWindow());
+                ubassert(getWindow());
+                ubassert(!bg_element_->isAttachedToWindow());
                 bg_element_->notifyAttachedToWindow(getWindow());
             } else {
-                DCHECK(!bg_element_->isAttachedToWindow());
+                ubassert(!bg_element_->isAttachedToWindow());
             }
         }
 
@@ -222,13 +222,13 @@ namespace ukive {
             return;
         }
 
-        DCHECK(!element->isAttachedToWindow());
+        ubassert(!element->isAttachedToWindow());
         if (fg_element_) {
             if (isAttachedToWindow()) {
-                DCHECK(fg_element_->isAttachedToWindow());
+                ubassert(fg_element_->isAttachedToWindow());
                 fg_element_->notifyDetachedFromWindow();
             } else {
-                DCHECK(!fg_element_->isAttachedToWindow());
+                ubassert(!fg_element_->isAttachedToWindow());
             }
         }
 
@@ -242,11 +242,11 @@ namespace ukive {
 
         if (fg_element_) {
             if (isAttachedToWindow()) {
-                DCHECK(getWindow());
-                DCHECK(!fg_element_->isAttachedToWindow());
+                ubassert(getWindow());
+                ubassert(!fg_element_->isAttachedToWindow());
                 fg_element_->notifyAttachedToWindow(getWindow());
             } else {
-                DCHECK(!fg_element_->isAttachedToWindow());
+                ubassert(!fg_element_->isAttachedToWindow());
             }
         }
 
@@ -1025,7 +1025,7 @@ namespace ukive {
          * EV_LEAVE_VIEW 只能发送给最后接受输入的 View，这里不做判断，
          * 由调用方保证。
          */
-        DCHECK(
+        ubassert(
             e->getEvent() != InputEvent::EV_LEAVE_VIEW ||
             window_->getLastInputView() == this);
 
@@ -1353,7 +1353,7 @@ namespace ukive {
 
         case InputEvent::EVT_MOVE:
             if (consumed) {
-                DCHECK(is_touch_down_);
+                ubassert(is_touch_down_);
                 /**
                  * 对于触摸事件，一般来说存在移动阈值，超过阈值才算是真正操作
                  * 这个 View，所以触摸捕获不能放在按下事件里，需要延后，放在这里。
@@ -1827,7 +1827,7 @@ namespace ukive {
 
     void View::onWindowFocusChanged(bool window_focus) {
         if (!hasFocus()) {
-            DCHECK(getWindow()->getKeyboardHolder() != this);
+            ubassert(getWindow()->getKeyboardHolder() != this);
             return;
         }
 
@@ -1839,7 +1839,7 @@ namespace ukive {
 
                 if (input_connection_) {
                     bool ret = input_connection_->initialization();
-                    DCHECK(ret);
+                    ubassert(ret);
                     input_connection_->pushEditor();
                     input_connection_->requestFocus();
                 }
@@ -1847,10 +1847,10 @@ namespace ukive {
         } else {
             if (input_connection_) {
                 bool ret = input_connection_->terminateComposition();
-                DCHECK(ret);
+                ubassert(ret);
 
                 ret = input_connection_->discardFocus();
-                DCHECK(ret);
+                ubassert(ret);
             }
         }
     }

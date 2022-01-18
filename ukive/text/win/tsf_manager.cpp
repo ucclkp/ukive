@@ -64,9 +64,9 @@ namespace ukive {
             VariantInit(&valConvMode);
 
             HRESULT hr = open_mode->GetValue(&valOpenMode);
-            DCHECK(SUCCEEDED(hr));
+            ubassert(SUCCEEDED(hr));
             hr = conv_mode->GetValue(&valConvMode);
-            DCHECK(SUCCEEDED(hr));
+            ubassert(SUCCEEDED(hr));
 
             valOpenMode.vt = VT_I4;
             valConvMode.vt = VT_I4;
@@ -75,9 +75,9 @@ namespace ukive {
             valConvMode.lVal = 0;
 
             hr = open_mode->SetValue(client_id_, &valOpenMode);
-            DCHECK(SUCCEEDED(hr));
+            ubassert(SUCCEEDED(hr));
             hr = conv_mode->SetValue(client_id_, &valConvMode);
-            DCHECK(SUCCEEDED(hr));
+            ubassert(SUCCEEDED(hr));
 
             VariantClear(&valOpenMode);
             VariantClear(&valConvMode);

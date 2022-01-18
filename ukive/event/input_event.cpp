@@ -44,7 +44,7 @@ namespace ukive {
             touch_pos_[cur_touch_id_].x = x;
             return;
         }
-        DCHECK(false);
+        ubassert(false);
     }
 
     void InputEvent::setY(int y) {
@@ -56,7 +56,7 @@ namespace ukive {
             touch_pos_[cur_touch_id_].y = y;
             return;
         }
-        DCHECK(false);
+        ubassert(false);
     }
 
     void InputEvent::setX(int x, int id) {
@@ -64,7 +64,7 @@ namespace ukive {
             touch_pos_[id].x = x;
             return;
         }
-        DCHECK(false);
+        ubassert(false);
     }
 
     void InputEvent::setY(int y, int id) {
@@ -72,7 +72,7 @@ namespace ukive {
             touch_pos_[id].y = y;
             return;
         }
-        DCHECK(false);
+        ubassert(false);
     }
 
     void InputEvent::setRawX(int raw_x) {
@@ -84,7 +84,7 @@ namespace ukive {
             touch_pos_[cur_touch_id_].raw_x = raw_x;
             return;
         }
-        DCHECK(false);
+        ubassert(false);
     }
 
     void InputEvent::setRawY(int raw_y) {
@@ -96,7 +96,7 @@ namespace ukive {
             touch_pos_[cur_touch_id_].raw_y = raw_y;
             return;
         }
-        DCHECK(false);
+        ubassert(false);
     }
 
     void InputEvent::setRawX(int raw_x, int id) {
@@ -104,7 +104,7 @@ namespace ukive {
             touch_pos_[id].raw_x = raw_x;
             return;
         }
-        DCHECK(false);
+        ubassert(false);
     }
 
     void InputEvent::setRawY(int raw_y, int id) {
@@ -112,7 +112,7 @@ namespace ukive {
             touch_pos_[id].raw_y = raw_y;
             return;
         }
-        DCHECK(false);
+        ubassert(false);
     }
 
     void InputEvent::setWheelValue(int wheel, WheelGranularity granularity) {
@@ -202,7 +202,7 @@ namespace ukive {
                 return it->second.x;
             }
         }
-        DCHECK(false);
+        ubassert(false);
         return 0;
     }
 
@@ -216,7 +216,7 @@ namespace ukive {
                 return it->second.y;
             }
         }
-        DCHECK(false);
+        ubassert(false);
         return 0;
     }
 
@@ -227,7 +227,7 @@ namespace ukive {
                 return it->second.x;
             }
         }
-        DCHECK(false);
+        ubassert(false);
         return 0;
     }
 
@@ -238,7 +238,7 @@ namespace ukive {
                 return it->second.y;
             }
         }
-        DCHECK(false);
+        ubassert(false);
         return 0;
     }
 
@@ -252,7 +252,7 @@ namespace ukive {
                 return it->second.raw_x;
             }
         }
-        DCHECK(false);
+        ubassert(false);
         return 0;
     }
 
@@ -266,7 +266,7 @@ namespace ukive {
                 return it->second.raw_y;
             }
         }
-        DCHECK(false);
+        ubassert(false);
         return 0;
     }
 
@@ -277,7 +277,7 @@ namespace ukive {
                 return it->second.raw_x;
             }
         }
-        DCHECK(false);
+        ubassert(false);
         return 0;
     }
 
@@ -288,7 +288,7 @@ namespace ukive {
                 return it->second.raw_y;
             }
         }
-        DCHECK(false);
+        ubassert(false);
         return 0;
     }
 
@@ -317,17 +317,17 @@ namespace ukive {
     }
 
     bool InputEvent::isMouseEvent() const {
-        DCHECK(event_type_ == EV_LEAVE_VIEW || pointer_type_ != PT_NONE);
+        ubassert(event_type_ == EV_LEAVE_VIEW || pointer_type_ != PT_NONE);
         return pointer_type_ == PT_MOUSE;
     }
 
     bool InputEvent::isTouchEvent() const {
-        DCHECK(event_type_ == EV_LEAVE_VIEW || pointer_type_ != PT_NONE);
+        ubassert(event_type_ == EV_LEAVE_VIEW || pointer_type_ != PT_NONE);
         return pointer_type_ == PT_TOUCH;
     }
 
     bool InputEvent::isKeyboardEvent() const {
-        DCHECK(event_type_ == EV_LEAVE_VIEW || pointer_type_ != PT_NONE);
+        ubassert(event_type_ == EV_LEAVE_VIEW || pointer_type_ != PT_NONE);
         return pointer_type_ == PT_KEYBOARD;
     }
 
@@ -353,7 +353,7 @@ namespace ukive {
 
     void InputEvent::combineTouchEvent(InputEvent* e) {
         if (!e->isTouchEvent()) {
-            DCHECK(false);
+            ubassert(false);
             return;
         }
 
@@ -362,9 +362,9 @@ namespace ukive {
         } else if (isTouchEvent()) {
             switch (e->getEvent()) {
             case EVT_DOWN:
-                DCHECK(touch_pos_.find(e->getCurTouchId()) == touch_pos_.end());
+                ubassert(touch_pos_.find(e->getCurTouchId()) == touch_pos_.end());
                 if (e->isPrimaryTouchDown()) {
-                    DCHECK(touch_pos_.empty());
+                    ubassert(touch_pos_.empty());
                     touch_pos_.clear();
                 }
                 touch_pos_[e->getCurTouchId()] = { e->getX(), e->getY(), e->getRawX(), e->getRawY() };
@@ -373,14 +373,14 @@ namespace ukive {
                 break;
 
             case EVT_UP:
-                DCHECK(touch_pos_.find(e->getCurTouchId()) != touch_pos_.end());
+                ubassert(touch_pos_.find(e->getCurTouchId()) != touch_pos_.end());
                 touch_pos_[e->getCurTouchId()] = { e->getX(), e->getY(), e->getRawX(), e->getRawY() };
                 event_type_ = touch_pos_.size() > 1 ? EVT_MULTI_UP : EVT_UP;
                 cur_touch_id_ = e->getCurTouchId();
                 break;
 
             case EVT_MOVE:
-                DCHECK(touch_pos_.find(e->getCurTouchId()) != touch_pos_.end());
+                ubassert(touch_pos_.find(e->getCurTouchId()) != touch_pos_.end());
                 touch_pos_[e->getCurTouchId()] = { e->getX(), e->getY(), e->getRawX(), e->getRawY() };
                 event_type_ = EVT_MOVE;
                 cur_touch_id_ = e->getCurTouchId();
@@ -391,17 +391,17 @@ namespace ukive {
                 break;
 
             default:
-                DCHECK(false);
+                ubassert(false);
                 break;
             }
         } else {
-            DCHECK(false);
+            ubassert(false);
         }
     }
 
     bool InputEvent::hasTouchEvent(InputEvent* e) const {
         if (!e->isTouchEvent()) {
-            DCHECK(false);
+            ubassert(false);
             return false;
         }
 
@@ -411,13 +411,13 @@ namespace ukive {
             return touch_pos_.find(e->getCurTouchId()) != touch_pos_.end();
         }
 
-        DCHECK(false);
+        ubassert(false);
         return false;
     }
 
     void InputEvent::clearTouchUp() {
         if (!isTouchEvent()) {
-            DCHECK(false);
+            ubassert(false);
             return;
         }
 
@@ -428,7 +428,7 @@ namespace ukive {
             if (it != touch_pos_.end()) {
                 touch_pos_.erase(it);
             } else {
-                DCHECK(false);
+                ubassert(false);
             }
         } else if (event_type_ == EV_LEAVE_VIEW) {
             touch_pos_.clear();

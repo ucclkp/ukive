@@ -35,7 +35,7 @@ namespace ukive {
     }
 
     void NativeNonClientFrame::getClientInsets(RECT* rect, int* bottom_beyond) {
-        DCHECK(rect);
+        ubassert(rect);
         if (window_->isLayered()) {
             int border_thickness = getBorderThickness();
             if (window_->isMaximized()) {
@@ -61,7 +61,7 @@ namespace ukive {
     }
 
     void NativeNonClientFrame::getClientOffset(POINT* offset) {
-        DCHECK(offset);
+        ubassert(offset);
         if (window_->isLayered() &&
             window_->isMaximized())
         {

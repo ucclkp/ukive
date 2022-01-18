@@ -40,7 +40,7 @@ namespace ukive {
         case GPUDataFormat::UNKNOWN:
             return DXGI_FORMAT_UNKNOWN;
         default:
-            DCHECK(false);
+            ubassert(false);
             return DXGI_FORMAT_UNKNOWN;
         }
     }
@@ -58,7 +58,7 @@ namespace ukive {
         case GPUContext::Topology::TriangleStrip:
             return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
         default:
-            DCHECK(false);
+            ubassert(false);
             return D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
         }
     }
@@ -104,7 +104,7 @@ namespace ukive {
         case GPUDepthStencilState::WriteMask::Zero:
             return D3D11_DEPTH_WRITE_MASK_ZERO;
         }
-        DCHECK(false);
+        ubassert(false);
         return D3D11_DEPTH_WRITE_MASK_ZERO;
     }
 
@@ -127,7 +127,7 @@ namespace ukive {
         case ComparisonFunc::Always:
             return D3D11_COMPARISON_ALWAYS;
         }
-        DCHECK(false);
+        ubassert(false);
         return D3D11_COMPARISON_NEVER;
     }
 
@@ -150,7 +150,7 @@ namespace ukive {
         case GPUDepthStencilState::StencilOp::Decr:
             return D3D11_STENCIL_OP_DECR;
         }
-        DCHECK(false);
+        ubassert(false);
         return D3D11_STENCIL_OP_KEEP;
     }
 
@@ -161,7 +161,7 @@ namespace ukive {
         case GPURasterizerState::FillMode::WireFrame:
             return D3D11_FILL_WIREFRAME;
         }
-        DCHECK(false);
+        ubassert(false);
         return D3D11_FILL_WIREFRAME;
     }
 
@@ -174,7 +174,7 @@ namespace ukive {
         case GPURasterizerState::CullMode::Front:
             return D3D11_CULL_FRONT;
         }
-        DCHECK(false);
+        ubassert(false);
         return D3D11_CULL_NONE;
     }
 
@@ -185,7 +185,7 @@ namespace ukive {
         case GPUSamplerState::Filter::MinMagPointMipLinear:
             return D3D11_FILTER_MIN_MAG_POINT_MIP_LINEAR;
         }
-        DCHECK(false);
+        ubassert(false);
         return D3D11_FILTER_MIN_MAG_MIP_POINT;
     }
 
@@ -202,7 +202,7 @@ namespace ukive {
         case GPUSamplerState::TextureAddrMode::MirrorOnce:
             return D3D11_TEXTURE_ADDRESS_MIRROR_ONCE;
         }
-        DCHECK(false);
+        ubassert(false);
         return D3D11_TEXTURE_ADDRESS_CLAMP;
     }
 
@@ -225,7 +225,7 @@ namespace ukive {
         default:
             break;
         }
-        DCHECK(false);
+        ubassert(false);
         return D3D11_DSV_DIMENSION_UNKNOWN;
     }
 
@@ -259,7 +259,7 @@ namespace ukive {
             break;
         }
 
-        DCHECK(false);
+        ubassert(false);
         return D3D11_SRV_DIMENSION_UNKNOWN;
     }
 

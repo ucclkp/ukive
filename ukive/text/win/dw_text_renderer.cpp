@@ -54,7 +54,7 @@ namespace ukive {
         DWRITE_GLYPH_RUN_DESCRIPTION const* glyphRunDescription,
         IUnknown* clientDrawingEffect)
     {
-        DCHECK(clientDrawingContext);
+        ubassert(clientDrawingContext);
         if (!clientDrawingContext) {
             return S_OK;
         }
@@ -105,7 +105,7 @@ namespace ukive {
         DWRITE_UNDERLINE const* underline,
         IUnknown* clientDrawingEffect)
     {
-        DCHECK(clientDrawingContext);
+        ubassert(clientDrawingContext);
         if (!clientDrawingContext) {
             return S_OK;
         }
@@ -150,7 +150,7 @@ namespace ukive {
         DWRITE_STRIKETHROUGH const* strikethrough,
         IUnknown* clientDrawingEffect)
     {
-        DCHECK(clientDrawingContext);
+        ubassert(clientDrawingContext);
         if (!clientDrawingContext) {
             return S_OK;
         }
@@ -226,7 +226,7 @@ namespace ukive {
         void* clientDrawingContext,
         DWRITE_MATRIX* transform)
     {
-        DCHECK(clientDrawingContext);
+        ubassert(clientDrawingContext);
         if (!clientDrawingContext) {
             auto identity = D2D1::Matrix3x2F::Identity();
             transform->m11 = identity.m11;
@@ -257,7 +257,7 @@ namespace ukive {
     {
         float x, yUnused;
 
-        DCHECK(clientDrawingContext);
+        ubassert(clientDrawingContext);
         if (!clientDrawingContext) {
             *pixelsPerDip = 1;
             return S_OK;

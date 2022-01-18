@@ -10,7 +10,7 @@
 
 #include "utils/files/file_utils.h"
 #include "utils/number.hpp"
-#include "utils/string_utils.h"
+#include "utils/string_utils.hpp"
 
 #include "ukive/app/application.h"
 #include "ukive/elements/ripple_element.h"

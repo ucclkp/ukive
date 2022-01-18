@@ -20,28 +20,28 @@ namespace ukive {
         : parent_(parent) {}
 
     void ListItemRecycler::addToParent(ListItem* item) {
-        DCHECK(item);
+        ubassert(item);
 
         item->recycled = false;
         parent_->addView(item->item_view, false);
     }
 
     void ListItemRecycler::addToParent(ListItem* item, size_t pos) {
-        DCHECK(item);
+        ubassert(item);
 
         item->recycled = false;
         parent_->addView(pos, item->item_view, false);
     }
 
     void ListItemRecycler::addToRecycler(ListItem* item) {
-        DCHECK(item);
+        ubassert(item);
 
         item->recycled = true;
         recycled_items_[item->item_id].push_back(item);
     }
 
     void ListItemRecycler::recycleFromParent(ListItem* item) {
-        DCHECK(item);
+        ubassert(item);
 
         item->recycled = true;
         recycled_items_[item->item_id].push_back(item);

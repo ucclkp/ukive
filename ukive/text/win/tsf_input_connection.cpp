@@ -361,7 +361,7 @@ namespace ukive {
             break;
 
         default:
-            DCHECK(false);
+            ubassert(false);
             break;
         }
     }

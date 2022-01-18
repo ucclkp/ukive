@@ -435,7 +435,7 @@ namespace ukive {
             auto li = v->getExtraLayoutInfo();
             if (li && isValidExtraLayoutInfo(li)) {
                 auto item = static_cast<ListLayoutInfo*>(li)->item;
-                DCHECK(
+                ubassert(
                     item &&
                     item->item_view == v &&
                     item->item_view->getParent() == this);

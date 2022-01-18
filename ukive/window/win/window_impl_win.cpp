@@ -84,7 +84,7 @@ namespace ukive {
           is_first_nccalc_(true),
           close_methods_(WINDOW_CLOSE_BY_BUTTON | WINDOW_CLOSE_BY_MENU)
     {
-        DCHECK(delegate_);
+        ubassert(delegate_);
 
         saved_place_.length = sizeof(WINDOWPLACEMENT);
     }
@@ -390,7 +390,7 @@ namespace ukive {
     void WindowImplWin::setTranslucentType(TranslucentType type) {
         // TRANS_LAYERED 和其他选项互斥
         if ((type & TRANS_LAYERED) && type != TRANS_LAYERED) {
-            DCHECK(false);
+            ubassert(false);
             return;
         }
 
@@ -1243,8 +1243,8 @@ namespace ukive {
             if (input.dwFlags & TOUCHEVENTF_DOWN) {
                 //DLOG(Log::INFO) << "TOUCH DOWN";
 
-                DCHECK(!has_down_up);
-                DCHECK(prev_ti_.find(input.dwID) == prev_ti_.end());
+                ubassert(!has_down_up);
+                ubassert(prev_ti_.find(input.dwID) == prev_ti_.end());
                 has_down_up = true;
                 ev.setEvent(InputEvent::EVT_DOWN);
                 ev.setCurTouchId(utl::num_cast<int>(input.dwID));
@@ -1255,9 +1255,9 @@ namespace ukive {
             } else if (input.dwFlags & TOUCHEVENTF_UP) {
                 //DLOG(Log::INFO) << "TOUCH UP";
 
-                DCHECK(!has_down_up);
+                ubassert(!has_down_up);
                 auto it = prev_ti_.find(input.dwID);
-                DCHECK(it != prev_ti_.end());
+                ubassert(it != prev_ti_.end());
                 has_down_up = true;
                 ev.setEvent(InputEvent::EVT_UP);
                 ev.setCurTouchId(utl::num_cast<int>(input.dwID));
@@ -1265,7 +1265,7 @@ namespace ukive {
             } else if (input.dwFlags & TOUCHEVENTF_MOVE) {
                 if (!has_down_up && !has_move) {
                     auto it = prev_ti_.find(input.dwID);
-                    DCHECK(it != prev_ti_.end());
+                    ubassert(it != prev_ti_.end());
                     if (input.x != it->second.x || input.y != it->second.y) {
                         has_move = true;
                         ev.setEvent(InputEvent::EVT_MOVE);
@@ -2452,7 +2452,7 @@ namespace ukive {
             if (settings->PowerSetting == GUID_CONSOLE_DISPLAY_STATE ||
                 settings->PowerSetting == GUID_MONITOR_POWER_ON)
             {
-                DCHECK(settings->DataLength == 4);
+                ubassert(settings->DataLength == 4);
                 auto value = *reinterpret_cast<DWORD*>(settings->Data);
                 LOG(Log::INFO) << "Power settings: Monitor[" << value << "]";
 
@@ -2670,7 +2670,7 @@ namespace ukive {
 
         // Apply Blur Behind
         HRESULT hr = ::DwmEnableBlurBehindWindow(hWnd_, &bb);
-        DCHECK(SUCCEEDED(hr));
+        ubassert(SUCCEEDED(hr));
     }
 
     void WindowImplWin::setBlurBehindOnWin7(bool enabled) {
@@ -2684,7 +2684,7 @@ namespace ukive {
 
         // Apply Blur Behind
         HRESULT hr = ::DwmEnableBlurBehindWindow(hWnd_, &bb);
-        DCHECK(SUCCEEDED(hr));
+        ubassert(SUCCEEDED(hr));
     }
 
     void WindowImplWin::setBlurBehindOnWin10(bool enabled) {
@@ -2709,7 +2709,7 @@ namespace ukive {
         data.cbData = sizeof(accent);
 
         BOOL result = win::UDSetWindowCompositionAttribute(hWnd_, &data);
-        DCHECK(result != 0);
+        ubassert(result != 0);
     }
 
     void WindowImplWin::setTranslucent(bool trans_enabled) {

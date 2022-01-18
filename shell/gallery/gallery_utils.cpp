@@ -15,7 +15,7 @@
 namespace shell {
 
     bool isImageExtension(const std::u16string_view& ext) {
-        auto lower_ext = utl::toASCIILower(ext);
+        auto lower_ext = utl::tolatl(ext);
         if (lower_ext == u".png" ||
             lower_ext == u".jpg" ||
             lower_ext == u".jpeg" ||

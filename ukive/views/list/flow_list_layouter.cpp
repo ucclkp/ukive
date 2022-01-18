@@ -137,7 +137,7 @@ namespace ukive {
             }
 
             auto item = columns_[col].getItem(indices[col]);
-            DCHECK(item);
+            ubassert(item);
 
             int width = item->item_view->getDeterminedSize().width + item->getHoriMargins();
             int height = item->item_view->getDeterminedSize().height + item->getVertMargins();
@@ -220,7 +220,7 @@ namespace ukive {
                 continue;
             }
 
-            DCHECK(found_view);
+            ubassert(found_view);
 
             int child_max_width = columns_[col].getWidth();
             auto new_item = parent_->makeNewItem(cur_data_pos, cur_index);
@@ -283,7 +283,7 @@ namespace ukive {
                 continue;
             }
 
-            DCHECK(found_view);
+            ubassert(found_view);
 
             int child_max_width = columns_[col].getWidth();
             auto new_item = parent_->makeNewItem(cur_data_pos, cur_index + 1);
@@ -412,7 +412,7 @@ namespace ukive {
                 record.is_null = false;
                 record.cur_row = item->data_pos / col_count_;
                 record.cur_offset = bounds.top - item->getMgdTop();
-                //DCHECK(record.cur_offset >= 0);
+                //ubassert(record.cur_offset >= 0);
             }
             cur_records_[i] = record;
         }

@@ -252,21 +252,6 @@ namespace shell {
                 ukive::Color(), &tc);
         }
 
-        math::MatrixT<double, 5, 5> mat {
-            2, 1, 3, 4, 5,
-            1, 1, 1, 10, 7,
-            4, 8, 9, 5, 1,
-            9, 7, 1, 6, 4,
-            1, 5, 3, 7, 4,
-        };
-        auto r = mat.det();
-        auto a = mat.cofactor(3, 3);
-
-        math::MatrixT<double, 5, 5> inv_mat;
-        mat.inverse(&inv_mat);
-
-        auto res = mat* inv_mat;
-
         return v;
     }
 

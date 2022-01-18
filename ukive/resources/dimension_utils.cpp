@@ -8,7 +8,7 @@
 
 #include "utils/convert.h"
 #include "utils/log.h"
-#include "utils/string_utils.h"
+#include "utils/string_utils.hpp"
 
 #include "ukive/views/view.h"
 #include "ukive/window/context.h"
@@ -26,13 +26,13 @@ namespace ukive {
     bool resolveDimension(
         const Context& c, const std::string_view& dm, int* out)
     {
-        if (utl::ascii::endWith(dm, "dp", false)) {
+        if (utl::endWith(dm, "dp", false)) {
             int val = 0;
             if (utl::stringToNumber(dm.substr(0, dm.length() - 2), &val)) {
                 *out = c.dp2pxi(val);
                 return true;
             }
-        } else if (utl::ascii::endWith(dm, "px", false)) {
+        } else if (utl::endWith(dm, "px", false)) {
             int val = 0;
             if (utl::stringToNumber(dm.substr(0, dm.length() - 2), &val)) {
                 *out = val;
@@ -51,13 +51,13 @@ namespace ukive {
     bool resolveDimension(
         const Context& c, const std::string_view& dm, float* out)
     {
-        if (utl::ascii::endWith(dm, "dp", false)) {
+        if (utl::endWith(dm, "dp", false)) {
             float val = 0;
             if (utl::stringToNumber(dm.substr(0, dm.length() - 2), &val)) {
                 *out = c.dp2px(val);
                 return true;
             }
-        } else if (utl::ascii::endWith(dm, "px", false)) {
+        } else if (utl::endWith(dm, "px", false)) {
             float val = 0;
             if (utl::stringToNumber(dm.substr(0, dm.length() - 2), &val)) {
                 *out = val;
@@ -76,13 +76,13 @@ namespace ukive {
     bool resolveDimensionRaw(
         const std::string_view& dm, dim* out)
     {
-        if (utl::ascii::endWith(dm, "dp", false)) {
+        if (utl::endWith(dm, "dp", false)) {
             float val = 0;
             if (utl::stringToNumber(dm.substr(0, dm.length() - 2), &val)) {
                 out->set_dp(val);
                 return true;
             }
-        } else if (utl::ascii::endWith(dm, "px", false)) {
+        } else if (utl::endWith(dm, "px", false)) {
             float val = 0;
             if (utl::stringToNumber(dm.substr(0, dm.length() - 2), &val)) {
                 out->set_px(val);
@@ -163,10 +163,10 @@ namespace ukive {
     {
         auto it = attrs.find(key);
         if (it != attrs.end()) {
-            if (utl::toASCIILower(it->second) == "true") {
+            if (utl::tolatl(it->second) == "true") {
                 return true;
             }
-            if (utl::toASCIILower(it->second) == "false") {
+            if (utl::tolatl(it->second) == "false") {
                 return false;
             }
             LOG(Log::WARNING) << "Cannot resolve bool attr " << key
@@ -190,10 +190,10 @@ namespace ukive {
     {
         auto padding_str = resolveAttrString(attrs, key, {});
         if (!padding_str.empty()) {
-            auto paddings = utl::ascii::split(padding_str, ",");
+            auto paddings = utl::split(padding_str, ",");
             if (paddings.size() > 0) {
                 auto padding_start = paddings[0];
-                utl::ascii::trim(&padding_start);
+                utl::trim(&padding_start);
                 if (resolveDimension(c, padding_start, &padding->start)) {
                     if (paddings.size() == 1) {
                         padding->top = padding->start;
@@ -204,17 +204,17 @@ namespace ukive {
             }
             if (paddings.size() > 1) {
                 auto padding_top = paddings[1];
-                utl::ascii::trim(&padding_top);
+                utl::trim(&padding_top);
                 resolveDimension(c, padding_top, &padding->top);
             }
             if (paddings.size() > 2) {
                 auto padding_end = paddings[2];
-                utl::ascii::trim(&padding_end);
+                utl::trim(&padding_end);
                 resolveDimension(c, padding_end, &padding->end);
             }
             if (paddings.size() > 3) {
                 auto padding_bottom = paddings[3];
-                utl::ascii::trim(&padding_bottom);
+                utl::trim(&padding_bottom);
                 resolveDimension(c, padding_bottom, &padding->bottom);
             }
             return true;
@@ -227,10 +227,10 @@ namespace ukive {
     {
         auto margin_str = resolveAttrString(attrs, key, {});
         if (!margin_str.empty()) {
-            auto margins = utl::ascii::split(margin_str, ",");
+            auto margins = utl::split(margin_str, ",");
             if (margins.size() > 0) {
                 auto margin_start = margins[0];
-                utl::ascii::trim(&margin_start);
+                utl::trim(&margin_start);
                 if (resolveDimension(c, margin_start, &margin->start)) {
                     if (margins.size() == 1) {
                         margin->top = margin->start;
@@ -241,17 +241,17 @@ namespace ukive {
             }
             if (margins.size() > 1) {
                 auto margin_top = margins[1];
-                utl::ascii::trim(&margin_top);
+                utl::trim(&margin_top);
                 resolveDimension(c, margin_top, &margin->top);
             }
             if (margins.size() > 2) {
                 auto margin_end = margins[2];
-                utl::ascii::trim(&margin_end);
+                utl::trim(&margin_end);
                 resolveDimension(c, margin_end, &margin->end);
             }
             if (margins.size() > 3) {
                 auto margin_bottom = margins[3];
-                utl::ascii::trim(&margin_bottom);
+                utl::trim(&margin_bottom);
                 resolveDimension(c, margin_bottom, &margin->bottom);
             }
             return true;
@@ -262,7 +262,7 @@ namespace ukive {
     void resolveAttrLayoutSize(
         const Context& c, AttrsRef attrs, Size* size)
     {
-        auto width_attr = utl::toASCIILower(resolveAttrString(
+        auto width_attr = utl::tolatl(resolveAttrString(
             attrs, necro::kAttrLayoutWidth, necro::kAttrValLayoutAuto));
 
         if (!resolveDimension(c, width_attr, &size->width)) {
@@ -281,7 +281,7 @@ namespace ukive {
             }
         }
 
-        auto height_attr = utl::toASCIILower(resolveAttrString(
+        auto height_attr = utl::tolatl(resolveAttrString(
             attrs, necro::kAttrLayoutHeight, necro::kAttrValLayoutAuto));
 
         if (!resolveDimension(c, height_attr, &size->height)) {

@@ -21,11 +21,11 @@ namespace ukive {
             return;
         }
 
-        DCHECK(!element->isAttachedToWindow());
+        ubassert(!element->isAttachedToWindow());
         list_.push_back(std::shared_ptr<Element>(element));
 
         if (isAttachedToWindow() && !element->isAttachedToWindow()) {
-            DCHECK(getWindow());
+            ubassert(getWindow());
             element->notifyAttachedToWindow(getWindow());
         }
     }
@@ -67,14 +67,14 @@ namespace ukive {
 
     void MultiElement::onAttachedToWindow(Window* w) {
         for (auto& e : list_) {
-            DCHECK(!e->isAttachedToWindow());
+            ubassert(!e->isAttachedToWindow());
             e->notifyAttachedToWindow(w);
         }
     }
 
     void MultiElement::onDetachedFromWindow() {
         for (auto& e : list_) {
-            DCHECK(e->isAttachedToWindow());
+            ubassert(e->isAttachedToWindow());
             e->notifyDetachedFromWindow();
         }
     }

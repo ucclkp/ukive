@@ -7,6 +7,7 @@
 #include "copy_processor.h"
 
 #include "utils/log.h"
+#include "utils/string_utils.hpp"
 
 
 namespace necro {
@@ -25,8 +26,7 @@ namespace necro {
         for (const auto& f : dst_files_) {
             fs::remove(f.path(), ec);
             if (ec) {
-                LOG(Log::ERR) << "Cannot access file: " << f.path().u8string()
-                    << " " << ec.message();
+                jour_e("Cannot access file: %s %s", f.path(), ec.message());
             }
         }
 
@@ -46,8 +46,7 @@ namespace necro {
         std::error_code ec;
         bool is_exist = fs::exists(path, ec);
         if (ec) {
-            LOG(Log::ERR) << "Cannot access file: " << path.u8string()
-                << " " << ec.message();
+            jour_e("Cannot access file: %s %s", path, ec.message());
             return;
         }
 
@@ -57,16 +56,14 @@ namespace necro {
 
         auto dir_it = fs::directory_iterator(path, ec);
         if (ec) {
-            LOG(Log::ERR) << "Cannot access file: " << path.u8string()
-                << " " << ec.message();
+            jour_e("Cannot access file: %s %s", path, ec.message());
             return;
         }
 
         for (auto& f : dir_it) {
             bool is_dir = f.is_directory(ec);
             if (ec) {
-                LOG(Log::ERR) << "Cannot access file: " << f.path().u8string()
-                    << " " << ec.message();
+                jour_e("Cannot access file: %s %s", f.path(), ec.message());
                 continue;
             }
 
@@ -82,16 +79,14 @@ namespace necro {
         std::error_code ec;
         auto dir_it = fs::directory_iterator(path, ec);
         if (ec) {
-            LOG(Log::ERR) << "Cannot access file: " << path.u8string()
-                << " " << ec.message();
+            jour_e("Cannot access file: %s %s", path, ec.message());
             return;
         }
 
         for (auto& f : dir_it) {
             bool is_dir = f.is_directory(ec);
             if (ec) {
-                LOG(Log::ERR) << "Cannot access file: " << f.path().u8string()
-                    << " " << ec.message();
+                jour_e("Cannot access file: %s %s", f.path(), ec.message());
                 continue;
             }
 

@@ -23,7 +23,7 @@
 namespace shell {
 
     LodGenerator::LodGenerator(float edgeLength, int maxLevel) {
-        DCHECK(edgeLength > 0 && maxLevel >= 1);
+        ubassert(edgeLength > 0 && maxLevel >= 1);
 
         coe_rough_ = 2.f;
         coe_distance_ = 30.f;

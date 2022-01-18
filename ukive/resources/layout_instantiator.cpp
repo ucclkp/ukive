@@ -11,8 +11,7 @@
 #include "utils/convert.h"
 #include "utils/log.h"
 #include "utils/xml/xml_parser.h"
-#include "utils/files/file_utils.h"
-#include "utils/string_utils.h"
+#include "utils/string_utils.hpp"
 
 #include "ukive/views/layout/layout_view.h"
 
@@ -102,20 +101,20 @@ namespace ukive {
 
         std::ifstream reader(xml_file_path, std::ios::binary);
         if (!reader) {
-            DCHECK(false);
+            ubassert(false);
             return nullptr;
         }
 
         utl::XMLParser parser;
         std::shared_ptr<utl::XMLParser::Element> root;
         if (!parser.parse(reader, &root)) {
-            DCHECK(false);
+            ubassert(false);
             return nullptr;
         }
 
         View* root_view = nullptr;
         if (!traverseTree(root, &root_view)) {
-            DCHECK(false);
+            ubassert(false);
             return nullptr;
         }
 
@@ -123,7 +122,7 @@ namespace ukive {
     }
 
     bool LayoutInstantiator::fetchLayoutFileName(int layout_id, std::filesystem::path* file_name) {
-        DCHECK(file_name != nullptr);
+        ubassert(file_name != nullptr);
 
         if (!has_read_lim_) {
             has_read_lim_ = true;
@@ -135,7 +134,7 @@ namespace ukive {
 
             std::ifstream id_file_reader(lm_file_path, std::ios::in | std::ios::binary);
             if (!id_file_reader) {
-                DCHECK(false);
+                ubassert(false);
                 return false;
             }
 
@@ -146,7 +145,7 @@ namespace ukive {
             for (;;) {
                 id_file_reader.read(&buf, 1);
                 if (id_file_reader.bad()) {
-                    DCHECK(false);
+                    ubassert(false);
                     return false;
                 }
                 if (id_file_reader.eof()) {
@@ -174,14 +173,14 @@ namespace ukive {
                     continue;
                 }
 
-                auto pair = utl::ascii::split(line, "=");
+                auto pair = utl::split(line, "=");
                 if (pair.size() != 2) {
                     continue;
                 }
 
                 uint32_t id;
                 if (!utl::stringToNumber(pair[0], &id)) {
-                    DCHECK(false);
+                    ubassert(false);
                     return false;
                 }
 
@@ -199,7 +198,7 @@ namespace ukive {
     }
 
     bool LayoutInstantiator::traverseTree(const ElementPtr& element, View** parent) {
-        DCHECK(parent != nullptr);
+        ubassert(parent != nullptr);
 
         if (!element) {
             return false;

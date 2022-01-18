@@ -46,9 +46,9 @@ namespace ukive {
     {
         auto ori = resolveAttrString(
             attrs, necro::kAttrSeqLayoutViewOri, necro::kAttrValSeqLayoutViewOriVert);
-        if (utl::toASCIILower(ori) == necro::kAttrValSeqLayoutViewOriVert) {
+        if (utl::tolatl(ori) == necro::kAttrValSeqLayoutViewOriVert) {
             orientation_ = VERTICAL;
-        } else if (utl::toASCIILower(ori) == necro::kAttrValSeqLayoutViewOriHori) {
+        } else if (utl::tolatl(ori) == necro::kAttrValSeqLayoutViewOriHori) {
             orientation_ = HORIZONTAL;
         }
     }

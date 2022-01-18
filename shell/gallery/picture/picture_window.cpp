@@ -108,7 +108,7 @@ namespace shell {
         }
 
         for (const auto& ext : allowed_exts_) {
-            auto dot_ext = utl::toASCIILower(ext);
+            auto dot_ext = utl::tolatl(ext);
             if (!ukive::RegManager::hasProgIdInExt(std::wstring(dot_ext.begin(), dot_ext.end()), kProgID)) {
                 return false;
             }
@@ -127,7 +127,7 @@ namespace shell {
         }
 
         for (const auto& ext : allowed_exts_) {
-            auto dot_ext = utl::toASCIILower(ext);
+            auto dot_ext = utl::tolatl(ext);
             if (!ukive::RegManager::hasProgIdInExt(std::wstring(dot_ext.begin(), dot_ext.end()), kProgID)) {
                 if (!ukive::RegManager::associateExtName(std::wstring(dot_ext.begin(), dot_ext.end()), kProgID)) {
                     return false;
@@ -139,7 +139,7 @@ namespace shell {
 
     bool PictureWindow::unassociateExts() {
         for (const auto& ext : allowed_exts_) {
-            auto dot_ext = utl::toASCIILower(ext);
+            auto dot_ext = utl::tolatl(ext);
             if (ukive::RegManager::hasProgIdInExt(std::wstring(dot_ext.begin(), dot_ext.end()), kProgID)) {
                 if (!ukive::RegManager::unassociateExtName(std::wstring(dot_ext.begin(), dot_ext.end()), kProgID)) {
                     return false;

@@ -6,7 +6,7 @@
 
 #include "text_breaker.h"
 
-#include "utils/unicode.h"
+#include "utils/unicode_conv.h"
 
 
 namespace ukive {

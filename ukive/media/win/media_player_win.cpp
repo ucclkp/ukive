@@ -11,7 +11,7 @@
 
 #include "utils/log.h"
 #include "utils/message/message.h"
-#include "utils/scope_utils.h"
+#include "utils/scope_utils.hpp"
 
 #include "ukive/app/application.h"
 #include "ukive/graphics/graphic_device_manager.h"

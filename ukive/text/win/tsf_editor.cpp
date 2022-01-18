@@ -225,7 +225,7 @@ namespace ukive {
 
         auto length = input_conn_->getTextLength();
         if (acpTestStart < 0 || acpTestStart > length || acpTestEnd < 0 || acpTestEnd > length) {
-            DCHECK(false);
+            ubassert(false);
             return E_INVALIDARG;
         }
 
@@ -247,12 +247,12 @@ namespace ukive {
         }
 
         if (!hasReadOnlyLock()) {
-            DCHECK(false);
+            ubassert(false);
             return TS_E_NOLOCK;
         }
 
         if (!input_conn_->getSelection(ulIndex, ulCount, pSelection, pcFetched)) {
-            DCHECK(false);
+            ubassert(false);
             return TS_E_NOSELECTION;
         }
 
@@ -271,12 +271,12 @@ namespace ukive {
             return E_INVALIDARG;
         }
         if (!hasReadWriteLock()) {
-            DCHECK(false);
+            ubassert(false);
             return TS_E_NOLOCK;
         }
 
         if (!input_conn_->setSelection(ulCount, pSelection)) {
-            DCHECK(false);
+            ubassert(false);
             return E_FAIL;
         }
 
@@ -292,13 +292,13 @@ namespace ukive {
             return E_INVALIDARG;
         }
         if (!hasReadOnlyLock()) {
-            DCHECK(false);
+            ubassert(false);
             return TS_E_NOLOCK;
         }
 
         long length = input_conn_->getTextLength();
         if (acpStart < 0 || acpStart > length || acpEnd < -1 || acpEnd > length) {
-            DCHECK(false);
+            ubassert(false);
             return TF_E_INVALIDPOS;
         }
 
@@ -343,18 +343,18 @@ namespace ukive {
         }
 
         if (input_conn_->isReadOnly()) {
-            DCHECK(false);
+            ubassert(false);
             return TS_E_READONLY;
         }
 
         long length = input_conn_->getTextLength();
         if (acpStart < 0 || acpStart > length || acpEnd < 0 || acpEnd > length) {
-            DCHECK(false);
+            ubassert(false);
             return TS_E_INVALIDPOS;
         }
 
         if (!hasReadWriteLock()) {
-            DCHECK(false);
+            ubassert(false);
             return TS_E_NOLOCK;
         }
 
@@ -495,18 +495,18 @@ namespace ukive {
         }
 
         if ((cur_lock_type_ & TS_LF_READ) != TS_LF_READ) {
-            DCHECK(false);
+            ubassert(false);
             return TS_E_NOLOCK;
         }
 
         long length = input_conn_->getTextLength();
         if (acpStart < 0 || acpStart > length || acpEnd < 0 || acpEnd > length) {
-            //DCHECK(false);
+            //ubassert(false);
             return TS_E_INVALIDPOS;
         }
 
         if (!input_conn_->getTextBound(acpStart, acpEnd, prc, pfClipped)) {
-            DCHECK(false);
+            ubassert(false);
             return TS_E_NOLAYOUT;
         }
 
@@ -546,7 +546,7 @@ namespace ukive {
 
         auto window = input_conn_->getWindow();
         if (!window) {
-            DCHECK(false);
+            ubassert(false);
             return E_FAIL;
         }
 
@@ -569,7 +569,7 @@ namespace ukive {
         }
 
         if (!hasReadWriteLock()) {
-            DCHECK(false);
+            ubassert(false);
             return TS_E_NOLOCK;
         }
 

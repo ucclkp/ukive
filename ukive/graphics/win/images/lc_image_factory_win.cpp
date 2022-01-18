@@ -61,7 +61,7 @@ namespace ukive {
         case ImageContainer::BMP:
             return GUID_ContainerFormatBmp;
         default:
-            DCHECK(false);
+            ubassert(false);
             return GUID_ContainerFormatPng;
         }
     }
@@ -96,7 +96,7 @@ namespace ukive {
         int width, int height, const ImageOptions& options)
     {
         if (width <= 0 || height <= 0) {
-            DCHECK(false);
+            ubassert(false);
             return nullptr;
         }
 
@@ -107,7 +107,7 @@ namespace ukive {
             width, height, format,
             WICBitmapCacheOnDemand, &bmp);
         if (FAILED(hr)) {
-            DCHECK(false);
+            ubassert(false);
             return nullptr;
         }
 
@@ -130,11 +130,11 @@ namespace ukive {
         uint8_t* pixel_data, size_t size, size_t stride,
         const ImageOptions& options)
     {
-        DCHECK(size <= std::numeric_limits<UINT>::max());
-        DCHECK(stride <= std::numeric_limits<UINT>::max());
+        ubassert(size <= std::numeric_limits<UINT>::max());
+        ubassert(stride <= std::numeric_limits<UINT>::max());
 
         if (width <= 0 || height <= 0) {
-            DCHECK(false);
+            ubassert(false);
             return nullptr;
         }
 
@@ -146,7 +146,7 @@ namespace ukive {
             UINT(stride), UINT(size), pixel_data,
             &bmp);
         if (FAILED(hr)) {
-            DCHECK(false);
+            ubassert(false);
             return nullptr;
         }
 
@@ -247,7 +247,7 @@ namespace ukive {
             byte_count > std::numeric_limits<UINT>::max() ||
             stride > std::numeric_limits<UINT>::max())
         {
-            DCHECK(false);
+            ubassert(false);
             return false;
         }
 
@@ -493,13 +493,13 @@ namespace ukive {
         ComPtr<IWICStream> stream;
         HRESULT hr = wic_factory_->CreateStream(&stream);
         if (FAILED(hr)) {
-            DCHECK(false);
+            ubassert(false);
             return {};
         }
 
         hr = stream->InitializeFromMemory(buffer, utl::num_cast<DWORD>(size));
         if (FAILED(hr)) {
-            DCHECK(false);
+            ubassert(false);
             return {};
         }
 
@@ -507,7 +507,7 @@ namespace ukive {
         hr = wic_factory_->CreateDecoderFromStream(
             stream.get(), nullptr, WICDecodeMetadataCacheOnDemand, &decoder);
         if (FAILED(hr)) {
-            DCHECK(false);
+            ubassert(false);
             return {};
         }
         return decoder;
@@ -520,7 +520,7 @@ namespace ukive {
         ComPtr<IWICFormatConverter> converter;
         HRESULT hr = wic_factory_->CreateFormatConverter(&converter);
         if (FAILED(hr)) {
-            DCHECK(false);
+            ubassert(false);
             return {};
         }
 
@@ -536,7 +536,7 @@ namespace ukive {
         );
 
         if (FAILED(hr)) {
-            DCHECK(false);
+            ubassert(false);
             return {};
         }
 
@@ -549,14 +549,14 @@ namespace ukive {
         UINT frame_count = 0;
         HRESULT hr = decoder->GetFrameCount(&frame_count);
         if (FAILED(hr) || frame_count < 1) {
-            DCHECK(false);
+            ubassert(false);
             return {};
         }
 
         GUID img_format;
         hr = decoder->GetContainerFormat(&img_format);
         if (FAILED(hr)) {
-            DCHECK(false);
+            ubassert(false);
             return {};
         }
 
@@ -585,7 +585,7 @@ namespace ukive {
             ComPtr<IWICBitmapFrameDecode> frame_decoder;
             hr = decoder->GetFrame(i, &frame_decoder);
             if (FAILED(hr)) {
-                DCHECK(false);
+                ubassert(false);
                 return {};
             }
 

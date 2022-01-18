@@ -82,7 +82,7 @@ namespace ukive {
             }
 
             auto item = column_.getItem(index);
-            DCHECK(item);
+            ubassert(item);
 
             int width = item->item_view->getDeterminedSize().width + item->getHoriMargins();
             int height = item->item_view->getDeterminedSize().height + item->getVertMargins();

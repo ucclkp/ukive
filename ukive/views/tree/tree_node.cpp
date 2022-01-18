@@ -29,7 +29,7 @@ namespace ukive {
         is_expanded_ = expanded;
 
         if (is_expanded_) {
-            DCHECK(edc_ == 0);
+            ubassert(edc_ == 0);
             for (auto node : children_) {
                 edc_ += node->edc_ + 1;
             }
@@ -167,7 +167,7 @@ namespace ukive {
             return;
         }
 
-        DCHECK(edc_ >= dec + children_.size());
+        ubassert(edc_ >= dec + children_.size());
 
         edc_ -= dec;
         if (parent_) {
@@ -183,7 +183,7 @@ namespace ukive {
     }
 
     void TreeNode::subLevel(size_t dec) {
-        DCHECK(level_ >= dec);
+        ubassert(level_ >= dec);
 
         level_ -= dec;
         for (auto node : children_) {
@@ -205,7 +205,7 @@ namespace ukive {
 
             if (pos < cur + node->edc_) {
                 auto target = node->getExpandedDescendantAt(pos, cur);
-                DCHECK(target);
+                ubassert(target);
                 return target;
             }
 

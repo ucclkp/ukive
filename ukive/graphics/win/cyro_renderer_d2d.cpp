@@ -88,13 +88,13 @@ namespace ukive {
 
         HRESULT hr = rt_->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &solid_brush_);
         if (FAILED(hr)) {
-            DCHECK(false);
+            ubassert(false);
             return false;
         }
 
         hr = rt_->CreateBitmapBrush(nullptr, &bitmap_brush_);
         if (FAILED(hr)) {
-            DCHECK(false);
+            ubassert(false);
             return false;
         }
 
@@ -163,7 +163,7 @@ namespace ukive {
         ComPtr<ID2D1Bitmap> d2d_bmp;
         HRESULT hr = rt_->CreateBitmap(D2D1::SizeU(width, height), prop, &d2d_bmp);
         if (FAILED(hr)) {
-            DCHECK(false);
+            ubassert(false);
             return nullptr;
         }
 
@@ -174,14 +174,14 @@ namespace ukive {
         int width, int height,
         const uint8_t* pixel_data, size_t size, size_t stride, const ImageOptions& options)
     {
-        DCHECK(stride <= std::numeric_limits<UINT32>::max());
+        ubassert(stride <= std::numeric_limits<UINT32>::max());
 
         auto prop = mapBitmapProps(options);
 
         ComPtr<ID2D1Bitmap> d2d_bmp;
         HRESULT hr = rt_->CreateBitmap(D2D1::SizeU(width, height), pixel_data, UINT32(stride), prop, &d2d_bmp);
         if (FAILED(hr)) {
-            DCHECK(false);
+            ubassert(false);
             return nullptr;
         }
 
