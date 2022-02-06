@@ -8,10 +8,10 @@
 
 #include <cassert>
 
-#include "utils/stl_utils.h"
 #include "utils/stream_utils.h"
 
 #include "ukive/graphics/colors/icc/icc_constants.h"
+#include "ukive/graphics/colors/icc/icc_types.h"
 #include "ukive/graphics/colors/icc/types/icc_type_curve.h"
 #include "ukive/graphics/colors/icc/types/icc_type_lut8.h"
 #include "ukive/graphics/colors/icc/types/icc_type_lut16.h"
@@ -19,6 +19,7 @@
 #include "ukive/graphics/colors/icc/types/icc_type_multi_loc_unicode.h"
 #include "ukive/graphics/colors/icc/types/icc_type_multi_proc_elements.h"
 #include "ukive/graphics/colors/icc/types/icc_type_param_curve.h"
+#include "ukive/graphics/colors/icc/types/icc_type_s15f16_array.h"
 #include "ukive/graphics/colors/icc/types/icc_type_text_desc.h"
 #include "ukive/graphics/colors/icc/types/icc_type_xyz.h"
 
@@ -41,54 +42,44 @@ namespace icc {
     ICCParser::ICCParser() {}
 
     ICCParser::~ICCParser() {
-        utl::STLDeleteElements(&types_);
+        for (auto& t : tags_) {
+            delete t.type;
+        }
     }
 
-    bool ICCParser::parse(std::istream& s) {
+    bool ICCParser::parseHeader(std::istream& s) {
+        for (auto& t : tags_) {
+            delete t.type;
+        }
+        tags_.clear();
+
         if (!parserHeader(s)) {
             return false;
         }
         if (!parseTagTable(s)) {
             return false;
         }
+
         return true;
     }
 
-    const ICCType* ICCParser::parseTagData(std::istream& s, uint32_t tag_sign) {
+    int ICCParser::obtainTagData(std::istream& s, uint32_t tag_sign, const ICCType** type) {
         auto tag = getTagElement(tag_sign);
         if (!tag) {
-            return nullptr;
+            return ICCRC_NOT_FOUND;
         }
 
         if (tag->type) {
-            return tag->type;
+            *type = tag->type;
+            return ICCRC_OK;
         }
 
-        SEEKG_STREAM(tag->data_offset);
-
-        uint32_t type_sign;
-        READ_STREAM_BE(type_sign, 4);
-
-        tag->type_signature = type_sign;
-
-        switch (type_sign) {
-            TYPE_PARSER(kTypeCurve,      CurveType);
-            TYPE_PARSER(kTypeLut16,      Lut16Type);
-            TYPE_PARSER(kTypeLut8,       Lut8Type);
-            TYPE_PARSER(kTypeLutAToB,    LutABType);
-            TYPE_PARSER(kTypeLutBToA,    LutABType);
-            TYPE_PARSER(kTypeMultLocUnicode, MultiLocUnicodeType);
-            TYPE_PARSER(kTypeParamCurve, ParamCurveType);
-            TYPE_PARSER(kTypeTextDesc,   TextDescType);
-            TYPE_PARSER(kTypeXYZ,        XYZType);
-            TYPE_PARSER(kTypeMultProcElem,   MultiProcElementsType);
-
-        default:
-            assert(false);
-            break;
+        if (!parseTagData(s, tag)) {
+            return ICCRC_PARSING_FAILED;
         }
 
-        return tag->type;
+        *type = tag->type;
+        return ICCRC_OK;
     }
 
     bool ICCParser::parserHeader(std::istream& s) {
@@ -153,6 +144,35 @@ namespace icc {
         }
 
         return true;
+    }
+
+    bool ICCParser::parseTagData(std::istream& s, TagElement* tag) {
+        SEEKG_STREAM(tag->data_offset);
+
+        uint32_t type_sign;
+        READ_STREAM_BE(type_sign, 4);
+
+        tag->type_signature = type_sign;
+
+        switch (type_sign) {
+            TYPE_PARSER(kTypeCurve, CurveType);
+            TYPE_PARSER(kTypeLut16, Lut16Type);
+            TYPE_PARSER(kTypeLut8, Lut8Type);
+            TYPE_PARSER(kTypeLutAToB, LutABType);
+            TYPE_PARSER(kTypeLutBToA, LutABType);
+            TYPE_PARSER(kTypeMultLocUnicode, MultiLocUnicodeType);
+            TYPE_PARSER(kTypeParamCurve, ParamCurveType);
+            TYPE_PARSER(kTypeTextDesc, TextDescType);
+            TYPE_PARSER(kTypeXYZ, XYZType);
+            TYPE_PARSER(kTypeMultProcElem, MultiProcElementsType);
+            TYPE_PARSER(kTypeS15F16Array, S15F16ArrayType);
+
+        default:
+            assert(false);
+            break;
+        }
+
+        return !!tag->type;
     }
 
     ICCParser::TagElement* ICCParser::getTagElement(uint32_t tag_sign) {

@@ -228,7 +228,10 @@
     <ClInclude Include="graphics\3d\vector.hpp" />
     <ClInclude Include="graphics\canvas.h" />
     <ClInclude Include="graphics\colors\color.h" />
-    <ClInclude Include="graphics\colors\color_management_module.h" />
+    <ClInclude Include="graphics\colors\icc\icc_profile.h" />
+    <ClInclude Include="graphics\colors\icc\icc_types.h" />
+    <ClInclude Include="graphics\colors\icc\types\icc_type_s15f16_array.h" />
+    <ClInclude Include="graphics\colors\ucmm.h" />
     <ClInclude Include="graphics\colors\color_manager.h" />
     <ClInclude Include="graphics\colors\icc\icc_constants.h" />
     <ClInclude Include="graphics\colors\icc\icc_parser.h" />
@@ -510,7 +513,9 @@
     <ClCompile Include="graphics\3d\scene.cpp" />
     <ClCompile Include="graphics\canvas.cpp" />
     <ClCompile Include="graphics\colors\color.cpp" />
-    <ClCompile Include="graphics\colors\color_management_module.cpp" />
+    <ClCompile Include="graphics\colors\icc\icc_profile.cpp" />
+    <ClCompile Include="graphics\colors\icc\types\icc_type_s15f16_array.cpp" />
+    <ClCompile Include="graphics\colors\ucmm.cpp" />
     <ClCompile Include="graphics\colors\color_manager.cpp" />
     <ClCompile Include="graphics\colors\icc\icc_parser.cpp" />
     <ClCompile Include="graphics\colors\icc\types\icc_type.cpp" />

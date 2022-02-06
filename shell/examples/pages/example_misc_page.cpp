@@ -39,7 +39,7 @@
 #include "utils/math/algebra/dynamic_optimization.hpp"
 
 #include "ukive/graphics/colors/color_manager.h"
-#include "ukive/graphics/colors/color_management_module.h"
+#include "ukive/graphics/colors/ucmm.h"
 #include "utils/math/algebra/matrix.hpp"
 
 #define BEZIER_BASE_VELOCITY  20000
@@ -245,15 +245,24 @@ namespace shell {
         test_button_ = findView<ukive::Button>(v, Res::Id::bt_misc_button);
         test_button_->setOnClickListener(this);
 
+        ukive::Color dst;
+        std::unique_ptr<ukive::ColorManager> cm(ukive::ColorManager::create());
+        cm->convertColor(ukive::Color(0.25f, 0.89f, 0.47f), &dst);
+
         std::u16string icc_path;
         if (ukive::ColorManager::getDefaultProfile(&icc_path))
         {
+            ukive::icc::ICCProfile pf;
+            pf.load(icc_path);
+
             ukive::Color tc;
-            ukive::ColorManagementModule cmm;
-            cmm.convertColor(
-                icc_path,
-                ukive::ColorManagementModule::Intent::Perceptual,
-                ukive::Color(), &tc);
+            ukive::UCMM cmm;
+            cmm.sRGBToTarget(
+                ukive::UCMM::Intent::Perceptual,
+                ukive::Color(0.25f, 0.89f, 0.47f),
+                pf, &tc);
+
+            int sdg = 0;
         }
 
         return v;

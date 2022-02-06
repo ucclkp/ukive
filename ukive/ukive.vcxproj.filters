@@ -667,13 +667,19 @@
     <ClCompile Include="graphics\colors\icc\types\icc_type_param_curve.cpp">
       <Filter>graphics\colors\icc\types</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\colors\color_management_module.cpp">
+    <ClCompile Include="graphics\colors\ucmm.cpp">
       <Filter>graphics\colors</Filter>
     </ClCompile>
     <ClCompile Include="graphics\colors\icc\types\icc_type_lut_ab.cpp">
       <Filter>graphics\colors\icc\types</Filter>
     </ClCompile>
     <ClCompile Include="graphics\colors\icc\types\icc_type_multi_proc_elements.cpp">
+      <Filter>graphics\colors\icc\types</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\colors\icc\icc_profile.cpp">
+      <Filter>graphics\colors\icc</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\colors\icc\types\icc_type_s15f16_array.cpp">
       <Filter>graphics\colors\icc\types</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1515,13 +1521,22 @@
     <ClInclude Include="graphics\colors\icc\types\icc_type_param_curve.h">
       <Filter>graphics\colors\icc\types</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\colors\color_management_module.h">
+    <ClInclude Include="graphics\colors\ucmm.h">
       <Filter>graphics\colors</Filter>
     </ClInclude>
     <ClInclude Include="graphics\colors\icc\types\icc_type_lut_ab.h">
       <Filter>graphics\colors\icc\types</Filter>
     </ClInclude>
     <ClInclude Include="graphics\colors\icc\types\icc_type_multi_proc_elements.h">
+      <Filter>graphics\colors\icc\types</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\colors\icc\icc_types.h">
+      <Filter>graphics\colors\icc</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\colors\icc\icc_profile.h">
+      <Filter>graphics\colors\icc</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\colors\icc\types\icc_type_s15f16_array.h">
       <Filter>graphics\colors\icc\types</Filter>
     </ClInclude>
   </ItemGroup>

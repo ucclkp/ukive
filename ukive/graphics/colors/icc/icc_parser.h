@@ -53,21 +53,22 @@ namespace icc {
         ICCParser();
         ~ICCParser();
 
-        bool parse(std::istream& s);
-        const ICCType* parseTagData(std::istream& s, uint32_t tag_sign);
+        bool parseHeader(std::istream& s);
+        int obtainTagData(
+            std::istream& s, uint32_t tag_sign, const ICCType** type);
 
         const ProfileHeader& getHeader() const { return header_; }
 
     private:
         bool parserHeader(std::istream& s);
         bool parseTagTable(std::istream& s);
+        bool parseTagData(std::istream& s, TagElement* tag);
         TagElement* getTagElement(uint32_t tag_sign);
 
         static size_t getTagIndex(uint32_t tag_sign);
 
         ProfileHeader header_;
         std::vector<TagElement> tags_;
-        std::vector<ICCType*> types_;
     };
 
 }

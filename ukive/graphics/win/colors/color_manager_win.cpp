@@ -22,7 +22,7 @@ namespace win {
         lcs.lcsVersion = 0x400;
         lcs.lcsSize = sizeof(LOGCOLORSPACEW);
         lcs.lcsCSType = LCS_sRGB;
-        lcs.lcsIntent = LCS_GM_GRAPHICS;
+        lcs.lcsIntent = LCS_GM_IMAGES;
         std::memset(&lcs.lcsEndpoints, 0, sizeof(lcs.lcsEndpoints));
         lcs.lcsGammaRed = 0;
         lcs.lcsGammaGreen = 0;
@@ -64,6 +64,10 @@ namespace win {
 
         auto display = Display::fromPrimary();
         if (!static_cast<DisplayWin*>(display.get())->getICMProfilePath(&display_icm)) {
+            return nullptr;
+        }
+
+        if (!getDefaultProfile(&display_icm)) {
             return nullptr;
         }
 
