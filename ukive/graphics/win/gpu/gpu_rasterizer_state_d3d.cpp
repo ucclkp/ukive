@@ -8,6 +8,7 @@
 
 
 namespace ukive {
+namespace win {
 
     GPURasterizerStateD3D::GPURasterizerStateD3D(
         const ComPtr<ID3D11RasterizerState>& rs)
@@ -21,4 +22,5 @@ namespace ukive {
         return rs_.get();
     }
 
+}
 }

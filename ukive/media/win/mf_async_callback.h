@@ -13,6 +13,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class MFAsyncCallback : public IMFAsyncCallback {
     public:
@@ -41,6 +42,7 @@ namespace ukive {
         bool is_finished_ = false;
     };
 
+}
 }
 
 #endif  // UKIVE_MEDIA_WIN_MF_ASYNC_CALLBACK_H_

@@ -14,6 +14,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class GPUTexture1DD3D : public GPUTexture {
     public:
@@ -59,6 +60,7 @@ namespace ukive {
         ComPtr<ID3D11Texture3D> t3d_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_GPU_GPU_TEXTURE_D3D_H_

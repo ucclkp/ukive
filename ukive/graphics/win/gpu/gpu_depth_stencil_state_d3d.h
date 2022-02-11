@@ -14,10 +14,11 @@
 
 
 namespace ukive {
+namespace win {
 
     class GPUDepthStencilStateD3D : public GPUDepthStencilState {
     public:
-        GPUDepthStencilStateD3D(const ComPtr<ID3D11DepthStencilState>& dss);
+        explicit GPUDepthStencilStateD3D(const ComPtr<ID3D11DepthStencilState>& dss);
 
         void setNative(const ComPtr<ID3D11DepthStencilState>& dss);
         ID3D11DepthStencilState* getNative() const;
@@ -26,6 +27,7 @@ namespace ukive {
         ComPtr<ID3D11DepthStencilState> dss_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_GPU_GPU_DEPTH_STENCIL_STATE_D3D_H_

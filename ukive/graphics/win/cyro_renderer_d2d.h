@@ -16,6 +16,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class CyroRendererD2D : public CyroRenderer {
     public:
@@ -96,6 +97,7 @@ namespace ukive {
         CyroBuffer* buffer_ = nullptr;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_CYRO_RENDERER_D2D_H_

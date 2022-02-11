@@ -8,6 +8,7 @@
 
 
 namespace ukive {
+namespace win {
 
     // GPUTexture1DD3D
     GPUTexture1DD3D::GPUTexture1DD3D(const ComPtr<ID3D11Texture1D>& t, const Desc& desc)
@@ -47,4 +48,5 @@ namespace ukive {
         return t3d_;
     }
 
+}
 }

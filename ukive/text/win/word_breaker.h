@@ -20,6 +20,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class WordStoreSink;
 
@@ -123,6 +124,7 @@ namespace ukive {
             REFIID riid, void **ppvObject) override;
     };
 
+}
 }
 
 #endif  // UKIVE_TEXT_WORD_BREAKER_H_

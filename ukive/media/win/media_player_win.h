@@ -23,9 +23,12 @@
 namespace ukive {
 
     class Window;
+    class ImageFrame;
+
+namespace win {
+
     class MFAsyncCallback;
     class MFVideoPresenterActivate;
-    class ImageFrame;
 
     class MediaPlayerWin :
         public MediaPlayer,
@@ -122,6 +125,7 @@ namespace ukive {
         State state_ = State::Idle;
     };
 
+}
 }
 
 #endif  // UKIVE_MEDIA_WIN_MEDIA_PLAYER_WIN_H_

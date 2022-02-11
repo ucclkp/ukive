@@ -7,13 +7,14 @@
 #include "ukive/window/win/window_class_manager.h"
 
 #include "utils/log.h"
-#include "utils/convert.h"
+#include "utils/strings/string_utils.hpp"
 
 #include "ukive/app/application.h"
 #include "ukive/window/win/window_impl_win.h"
 
 
 namespace ukive {
+namespace win {
 
     std::unique_ptr<WindowClassManager> WindowClassManager::instance_;
     const wchar_t* WindowClassManager::kWindowClassName = L"Ukive_WindowClass_";
@@ -79,4 +80,5 @@ namespace ukive {
         return ::RegisterClassEx(&wcex);
     }
 
+}
 }

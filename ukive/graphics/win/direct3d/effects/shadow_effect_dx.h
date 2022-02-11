@@ -18,6 +18,9 @@
 namespace ukive {
 
     class Canvas;
+
+namespace win {
+
     class OffscreenBufferWin;
 
     class ShadowEffectDX : public ShadowEffect {
@@ -103,6 +106,7 @@ namespace ukive {
         std::shared_ptr<ImageFrame> cache_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_DIRECT3D_EFFECTS_SHADOW_EFFECT_DX_H_

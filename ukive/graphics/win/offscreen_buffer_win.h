@@ -16,6 +16,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class OffscreenBufferWin : public OffscreenBuffer
     {
@@ -51,6 +52,7 @@ namespace ukive {
         std::unique_ptr<CyroRenderTargetD2D> rt_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_OFFSCREEN_BUFFER_H_

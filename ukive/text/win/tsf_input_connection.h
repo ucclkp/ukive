@@ -18,9 +18,12 @@
 namespace ukive {
 
     class Window;
+    class TextInputClient;
+
+namespace win {
+
     class TsfEditor;
     class TsfManager;
-    class TextInputClient;
 
     class TsfInputConnection : public InputMethodConnection {
     public:
@@ -83,6 +86,7 @@ namespace ukive {
         bool is_editor_pushed_;
     };
 
+}
 }
 
 #endif  // UKIVE_TEXT_WIN_TSF_INPUT_CONNECTION_H_

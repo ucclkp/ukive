@@ -19,7 +19,7 @@ namespace ukive {
     // static
     VSyncProvider* VSyncProvider::create() {
 #ifdef OS_WINDOWS
-        return new VSyncProviderWin();
+        return new win::VSyncProviderWin();
 #endif
     }
 

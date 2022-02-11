@@ -6,10 +6,11 @@
 
 #include "word_breaker.h"
 
-#include "utils/number.hpp"
+#include "utils/numbers.hpp"
 
 
 namespace ukive {
+namespace win {
 
     std::vector<std::shared_ptr<WordBreaker::LanguageInfo>>
         WordBreaker::sLangInfoList;
@@ -391,4 +392,5 @@ namespace ukive {
         return S_OK;
     }
 
+}
 }

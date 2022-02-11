@@ -12,6 +12,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class CyroRenderTargetD2D : public CyroRenderTarget {
     public:
@@ -28,6 +29,7 @@ namespace ukive {
         ComPtr<ID2D1RenderTarget> rt_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_CYRO_RENDER_TARGET_D2D_H_

@@ -8,13 +8,12 @@
 
 #include <fstream>
 
+#include "utils/endian.hpp"
 #include "utils/log.h"
+#include "utils/numbers.hpp"
+#include "utils/strings/string_utils.hpp"
 #include "utils/xml/xml_parser.h"
 #include "utils/xml/xml_writer.h"
-#include "utils/convert.h"
-#include "utils/endian.hpp"
-#include "utils/number.hpp"
-#include "utils/string_utils.hpp"
 
 #include "necro/layout_constants.h"
 
@@ -34,7 +33,7 @@ namespace necro {
         std::error_code ec;
         std::vector<fs::directory_entry> xml_files;
         for (auto& f : fs::directory_iterator(res_dir, ec)) {
-            if (!f.is_directory(ec) && utl::tolatl(f.path().extension().u16string()) == u".xml") {
+            if (!f.is_directory(ec) && utl::isLitEqual(f.path().extension().u16string(), u".xml")) {
                 xml_files.push_back(f);
             }
         }
@@ -85,7 +84,7 @@ namespace necro {
         if (!*changed) {
             std::vector<fs::directory_entry> out_xml_files;
             for (auto& f : fs::directory_iterator(out_dir, ec)) {
-                if (!f.is_directory(ec) && utl::tolatl(f.path().extension().u16string()) == u".xml") {
+                if (!f.is_directory(ec) && utl::isLitEqual(f.path().extension().u16string(), u".xml")) {
                     out_xml_files.push_back(f);
                 }
             }

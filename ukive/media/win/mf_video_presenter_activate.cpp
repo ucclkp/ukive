@@ -10,6 +10,7 @@
 
 
 namespace ukive {
+namespace win {
 
     MFVideoPresenterActivate::MFVideoPresenterActivate()
         : ref_count_(1) {}
@@ -236,4 +237,5 @@ namespace ukive {
         return S_OK;
     }
 
+}
 }

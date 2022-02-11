@@ -17,6 +17,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class WindowImplWin;
 
@@ -59,6 +60,7 @@ namespace ukive {
         ComPtr<IDXGIAdapter1> cur_adapter_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_DISPLAY_WIN_H_

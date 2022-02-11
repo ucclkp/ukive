@@ -8,6 +8,7 @@
 
 
 namespace ukive {
+namespace win {
 
     DWTextDrawingEffect::DWTextDrawingEffect()
         : ref_count_(1) {
@@ -49,4 +50,5 @@ namespace ukive {
         return S_OK;
     }
 
+}
 }

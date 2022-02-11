@@ -19,6 +19,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class LcImageFrameWin : public LcImageFrame {
     public:
@@ -54,6 +55,7 @@ namespace ukive {
         ComPtr<IWICImagingFactory> wic_factory_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_IMAGE_LC_IMAGE_FRAME_WIN_H_

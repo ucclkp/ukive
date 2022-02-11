@@ -68,6 +68,7 @@ namespace ukive {
 }
 
 namespace ukive {
+namespace win {
 
     DirectXManager::DirectXManager() {}
     DirectXManager::~DirectXManager() {}
@@ -397,4 +398,5 @@ namespace ukive {
         return render_target;
     }
 
+}
 }

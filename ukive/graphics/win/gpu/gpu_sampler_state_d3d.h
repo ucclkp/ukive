@@ -14,6 +14,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class GPUSamplerStateD3D : public GPUSamplerState {
     public:
@@ -26,6 +27,7 @@ namespace ukive {
         ComPtr<ID3D11SamplerState> ss_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_GPU_GPU_SAMPLER_STATE_D3D_H_

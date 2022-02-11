@@ -6,8 +6,7 @@
 
 #include "example_tree_page.h"
 
-#include "utils/convert.h"
-#include "utils/int_conv.hpp"
+#include "utils/strings/int_conv.hpp"
 
 #include "ukive/views/layout/restraint_layout.h"
 #include "ukive/views/layout_info/restraint_layout_info.h"

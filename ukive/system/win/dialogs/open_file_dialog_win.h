@@ -11,6 +11,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class OpenFileDialogWin : public OpenFileDialog {
     public:
@@ -28,6 +29,7 @@ namespace ukive {
         std::vector<std::pair<std::u16string, std::u16string>> exts_;
     };
 
+}
 }
 
 #endif  // UKIVE_SYSTEM_WIN_DIALOGS_OPEN_FILE_DIALOG_WIN_H_

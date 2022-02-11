@@ -12,6 +12,7 @@
 
 
 namespace ukive {
+namespace win {
 
     DXGI_FORMAT mapFormat(GPUDataFormat format) {
         switch (format) {
@@ -263,4 +264,5 @@ namespace ukive {
         return D3D11_SRV_DIMENSION_UNKNOWN;
     }
 
+}
 }

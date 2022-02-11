@@ -14,6 +14,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class GPUDeviceD3D : public GPUDevice {
     public:
@@ -47,6 +48,7 @@ namespace ukive {
         ComPtr<ID3D11Device> d3d_device_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_GPU_GPU_DEVICE_D3D_H_

@@ -18,7 +18,7 @@ namespace ukive {
     // static
     OpenFileDialog* OpenFileDialog::create() {
 #ifdef OS_WINDOWS
-        return new OpenFileDialogWin();
+        return new win::OpenFileDialogWin();
 #endif
     }
 

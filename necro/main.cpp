@@ -7,9 +7,9 @@
 #include <fstream>
 #include <filesystem>
 
-#include "utils/log.h"
-#include "utils/string_utils.hpp"
 #include "utils/command_line.h"
+#include "utils/log.h"
+#include "utils/strings/string_utils.hpp"
 
 #include "necro/copy_processor.h"
 #include "necro/layout_processor.h"

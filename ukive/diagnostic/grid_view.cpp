@@ -8,8 +8,7 @@
 
 #include <cmath>
 
-#include "utils/convert.h"
-#include "utils/int_conv.hpp"
+#include "utils/strings/int_conv.hpp"
 #include "utils/weak_bind.hpp"
 
 #include "ukive/event/input_event.h"

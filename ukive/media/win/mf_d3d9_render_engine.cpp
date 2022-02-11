@@ -15,6 +15,7 @@
 
 
 namespace ukive {
+namespace win {
 
     const int OFFSCREEN_SURFACE_COUNT = 3;
 
@@ -98,7 +99,7 @@ namespace ukive {
     }
 
     void MFD3D9RenderEngine::setRenderCallback(MFRenderCallback* cb) {
-        win::CritSecGuard guard(crit_sec_);
+        CritSecGuard guard(crit_sec_);
         render_callback_ = cb;
     }
 
@@ -106,7 +107,7 @@ namespace ukive {
         ubassert(::IsWindow(window));
         ubassert(window != window_);
 
-        win::CritSecGuard guard(crit_sec_);
+        CritSecGuard guard(crit_sec_);
 
         window_ = window;
         updateDestinationRect();
@@ -123,7 +124,7 @@ namespace ukive {
             return;
         }
 
-        win::CritSecGuard guard(crit_sec_);
+        CritSecGuard guard(crit_sec_);
 
         dest_rect_ = rect;
         updateDestinationRect();
@@ -140,7 +141,7 @@ namespace ukive {
             return MF_E_UNEXPECTED;
         }
 
-        win::CritSecGuard guard(crit_sec_);
+        CritSecGuard guard(crit_sec_);
 
         destroyResources();
 
@@ -225,7 +226,7 @@ namespace ukive {
     }
 
     HRESULT MFD3D9RenderEngine::checkDeviceState(DevState* state) {
-        win::CritSecGuard guard(crit_sec_);
+        CritSecGuard guard(crit_sec_);
 
         HRESULT hr = device_->CheckDeviceState(window_);
         switch (hr) {
@@ -343,7 +344,7 @@ namespace ukive {
     }
 
     HRESULT MFD3D9RenderEngine::createD3D9Device() {
-        win::CritSecGuard guard(crit_sec_);
+        CritSecGuard guard(crit_sec_);
 
         if (!d3d9_ || !device_mgr_) {
             return MF_E_NOT_INITIALIZED;
@@ -450,4 +451,5 @@ namespace ukive {
         return false;
     }
 
+}
 }

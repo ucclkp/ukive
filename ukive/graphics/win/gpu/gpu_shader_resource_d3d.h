@@ -14,6 +14,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class GPUShaderResourceD3D : public GPUShaderResource {
     public:
@@ -27,6 +28,7 @@ namespace ukive {
         ComPtr<ID3D11ShaderResourceView> srv_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_GPU_GPU_SHADER_RESOURCE_D3D_H_

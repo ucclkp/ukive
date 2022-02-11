@@ -544,9 +544,6 @@
     <ClCompile Include="views\list\list_item_event_router.cpp">
       <Filter>views\list</Filter>
     </ClCompile>
-    <ClCompile Include="system\win\critical_section.cpp">
-      <Filter>system\win</Filter>
-    </ClCompile>
     <ClCompile Include="views\media_view.cpp">
       <Filter>views</Filter>
     </ClCompile>
@@ -1383,7 +1380,7 @@
     <ClInclude Include="views\list\list_item_event_router.h">
       <Filter>views\list</Filter>
     </ClInclude>
-    <ClInclude Include="system\win\critical_section.h">
+    <ClInclude Include="system\win\critical_section.hpp">
       <Filter>system\win</Filter>
     </ClInclude>
     <ClInclude Include="views\media_view.h">
@@ -1532,6 +1529,9 @@
     </ClInclude>
     <ClInclude Include="graphics\colors\icc\types\icc_type_multi_proc_elements.h">
       <Filter>graphics\colors\icc\types</Filter>
+    </ClInclude>
+    <ClInclude Include="system\win\com_pptr.hpp">
+      <Filter>system\win</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -40,6 +40,7 @@
 
 
 namespace ukive {
+namespace win {
 
     // static
     unsigned int MediaPlayerWin::startup_counter_ = 0;
@@ -685,4 +686,5 @@ namespace ukive {
         return S_OK;
     }
 
+}
 }

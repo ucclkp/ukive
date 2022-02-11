@@ -16,6 +16,7 @@
 
 
 namespace ukive {
+namespace win {
 
     ImageFrame* CyroRenderTargetD2D::createSharedImageFrame(
         GPUTexture* texture, const ImageOptions& options)
@@ -65,4 +66,5 @@ namespace ukive {
         return rt_;
     }
 
+}
 }

@@ -16,6 +16,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class ColorManagerWin : public ColorManager {
     public:
@@ -30,6 +31,7 @@ namespace ukive {
         HPROFILE getDisplayProfile();
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_COLORS_COLOR_MANAGER_WIN_H_

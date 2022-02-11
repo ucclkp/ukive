@@ -16,6 +16,7 @@
 
 
 namespace ukive {
+namespace win {
 
     TsfEditor::TsfEditor(TsViewCookie tvc)
         : ref_count_(1),
@@ -652,4 +653,5 @@ namespace ukive {
         return S_OK;
     }
 
+}
 }

@@ -14,6 +14,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class GPUInputLayoutD3D : public GPUInputLayout {
     public:
@@ -26,6 +27,7 @@ namespace ukive {
         ComPtr<ID3D11InputLayout> d3d_il_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_GPU_GPU_INPUT_LAYOUT_D3D_H_

@@ -12,6 +12,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class PathWin : public Path {
     public:
@@ -32,6 +33,7 @@ namespace ukive {
         ComPtr<ID2D1GeometrySink> sink_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_PATH_WIN_H_

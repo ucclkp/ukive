@@ -10,10 +10,11 @@
 #include <mfidl.h>
 
 #include "ukive/media/win/mf_common.h"
-#include "ukive/system/win/critical_section.h"
+#include "ukive/system/win/critical_section.hpp"
 
 
 namespace ukive {
+namespace win {
 
     class MFSampleScheduler {
     public:
@@ -46,7 +47,7 @@ namespace ukive {
         static DWORD WINAPI scheduleThreadProc(LPVOID param);
         DWORD scheduleThreadProcPrivate();
 
-        win::CritSec list_lock_;
+        CritSec list_lock_;
         SampleList scheduled_samples_;
         ComPtr<IMFClock> clock_;
         Callback* callback_ = nullptr;
@@ -62,6 +63,7 @@ namespace ukive {
         MFTIME last_sample_time_ = 0;
     };
 
+}
 }
 
 #endif  // UKIVE_MEDIA_WIN_MF_SAMPLE_SCHEDULER_H_

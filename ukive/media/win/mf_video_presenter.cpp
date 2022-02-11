@@ -51,6 +51,7 @@ namespace {
 }
 
 namespace ukive {
+namespace win {
 
     MFVideoPresenter::MFVideoPresenter()
         : ref_count_(1),
@@ -103,7 +104,7 @@ namespace ukive {
     }
 
     void MFVideoPresenter::setDisplaySize(const Size& size) {
-        win::CritSecGuard guard(obj_lock_);
+        CritSecGuard guard(obj_lock_);
 
         if (display_size_ != size) {
             display_size_ = size;
@@ -121,7 +122,7 @@ namespace ukive {
     }
 
     STDMETHODIMP MFVideoPresenter::OnClockStart(MFTIME hnsSystemTime, LONGLONG llClockStartOffset) {
-        win::CritSecGuard guard(obj_lock_);
+        CritSecGuard guard(obj_lock_);
 
         if (render_state_ == RenderState::Shutdown) {
             return MF_E_SHUTDOWN;
@@ -147,7 +148,7 @@ namespace ukive {
     }
 
     STDMETHODIMP MFVideoPresenter::OnClockStop(MFTIME hnsSystemTime) {
-        win::CritSecGuard guard(obj_lock_);
+        CritSecGuard guard(obj_lock_);
 
         if (render_state_ == RenderState::Shutdown) {
             return MF_E_SHUTDOWN;
@@ -168,7 +169,7 @@ namespace ukive {
     }
 
     STDMETHODIMP MFVideoPresenter::OnClockPause(MFTIME hnsSystemTime) {
-        win::CritSecGuard guard(obj_lock_);
+        CritSecGuard guard(obj_lock_);
 
         if (render_state_ == RenderState::Shutdown) {
             return MF_E_SHUTDOWN;
@@ -179,7 +180,7 @@ namespace ukive {
     }
 
     STDMETHODIMP MFVideoPresenter::OnClockRestart(MFTIME hnsSystemTime) {
-        win::CritSecGuard guard(obj_lock_);
+        CritSecGuard guard(obj_lock_);
 
         if (render_state_ == RenderState::Shutdown) {
             return MF_E_SHUTDOWN;
@@ -199,7 +200,7 @@ namespace ukive {
     }
 
     STDMETHODIMP MFVideoPresenter::OnClockSetRate(MFTIME hnsSystemTime, float flRate) {
-        win::CritSecGuard guard(obj_lock_);
+        CritSecGuard guard(obj_lock_);
 
         if (render_state_ == RenderState::Shutdown) {
             return MF_E_SHUTDOWN;
@@ -216,7 +217,7 @@ namespace ukive {
     }
 
     STDMETHODIMP MFVideoPresenter::ProcessMessage(MFVP_MESSAGE_TYPE eMessage, ULONG_PTR ulParam) {
-        win::CritSecGuard guard(obj_lock_);
+        CritSecGuard guard(obj_lock_);
 
         if (render_state_ == RenderState::Shutdown) {
             return MF_E_SHUTDOWN;
@@ -272,7 +273,7 @@ namespace ukive {
 
         *ppMediaType = nullptr;
 
-        win::CritSecGuard csg(obj_lock_);
+        CritSecGuard csg(obj_lock_);
 
         if (render_state_ == RenderState::Shutdown) {
             return MF_E_SHUTDOWN;
@@ -309,7 +310,7 @@ namespace ukive {
             return E_POINTER;
         }
 
-        win::CritSecGuard csg(obj_lock_);
+        CritSecGuard csg(obj_lock_);
 
         if (isActive()) {
             return MF_E_INVALIDREQUEST;
@@ -353,7 +354,7 @@ namespace ukive {
 
     STDMETHODIMP MFVideoPresenter::ReleaseServicePointers() {
         {
-            win::CritSecGuard csg(obj_lock_);
+            CritSecGuard csg(obj_lock_);
             render_state_ = RenderState::Shutdown;
         }
 
@@ -391,7 +392,7 @@ namespace ukive {
     }
 
     STDMETHODIMP MFVideoPresenter::SetVideoPosition(const MFVideoNormalizedRect* pnrcSource, const LPRECT prcDest) {
-        win::CritSecGuard csg(obj_lock_);
+        CritSecGuard csg(obj_lock_);
 
         if (!pnrcSource && !prcDest) {
             return E_POINTER;
@@ -447,7 +448,7 @@ namespace ukive {
     }
 
     STDMETHODIMP MFVideoPresenter::GetVideoPosition(MFVideoNormalizedRect* pnrcSource, LPRECT prcDest) {
-        win::CritSecGuard csg(obj_lock_);
+        CritSecGuard csg(obj_lock_);
 
         if (!pnrcSource || !prcDest) {
             return E_POINTER;
@@ -473,7 +474,7 @@ namespace ukive {
     }
 
     STDMETHODIMP MFVideoPresenter::SetVideoWindow(HWND hwndVideo) {
-        win::CritSecGuard csg(obj_lock_);
+        CritSecGuard csg(obj_lock_);
 
         if (!::IsWindow(hwndVideo)) {
             return E_INVALIDARG;
@@ -491,7 +492,7 @@ namespace ukive {
     }
 
     STDMETHODIMP MFVideoPresenter::GetVideoWindow(HWND* phwndVideo) {
-        win::CritSecGuard csg(obj_lock_);
+        CritSecGuard csg(obj_lock_);
 
         if (!phwndVideo) {
             return E_POINTER;
@@ -502,7 +503,7 @@ namespace ukive {
     }
 
     STDMETHODIMP MFVideoPresenter::RepaintVideo() {
-        win::CritSecGuard csg(obj_lock_);
+        CritSecGuard csg(obj_lock_);
 
         if (render_state_ == RenderState::Shutdown) {
             return MF_E_SHUTDOWN;
@@ -1537,4 +1538,5 @@ namespace ukive {
         return hr;
     }
 
+}
 }

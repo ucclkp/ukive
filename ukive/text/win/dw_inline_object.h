@@ -14,6 +14,8 @@ namespace ukive {
 
     class TextInlineObject;
 
+namespace win {
+
     class DECLSPEC_UUID("89E38A14-5021-4B3E-BE77-2B9AEFF52A6D") DWInlineObject
         : public IDWriteInlineObject
     {
@@ -47,6 +49,7 @@ namespace ukive {
         TextInlineObject* callback_ = nullptr;
     };
 
+}
 }
 
 #endif  // UKIVE_TEXT_WIN_DW_INLINE_OBJECT_H_

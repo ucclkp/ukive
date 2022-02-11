@@ -19,6 +19,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class ImageFrameWin : public ImageFrame {
     public:
@@ -48,6 +49,7 @@ namespace ukive {
         ComPtr<ID2D1Bitmap> native_bitmap_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_IMAGE_IMAGE_FRAME_WIN_H_

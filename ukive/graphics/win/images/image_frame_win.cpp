@@ -6,10 +6,11 @@
 
 #include "ukive/graphics/win/images/image_frame_win.h"
 
-#include "utils/number.hpp"
+#include "utils/numbers.hpp"
 
 
 namespace ukive {
+namespace win {
 
     ImageFrameWin::ImageFrameWin(
         const ComPtr<ID2D1Bitmap>& bmp,
@@ -50,4 +51,5 @@ namespace ukive {
         return native_bitmap_;
     }
 
+}
 }

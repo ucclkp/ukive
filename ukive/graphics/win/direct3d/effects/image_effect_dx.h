@@ -19,6 +19,8 @@ namespace ukive {
 
     class Canvas;
 
+namespace win {
+
     class ImageEffectDX : public ImageEffect {
     public:
         explicit ImageEffectDX(Context context);
@@ -89,6 +91,7 @@ namespace ukive {
         std::shared_ptr<ImageFrame> cache_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_DIRECT3D_EFFECTS_IMAGE_EFFECT_DX_H_

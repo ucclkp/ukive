@@ -14,6 +14,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class GPUContextD3D : public GPUContext {
     public:
@@ -69,6 +70,7 @@ namespace ukive {
         ComPtr<ID3D11DeviceContext> d3d_context_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_GPU_GPU_CONTEXT_D3D_H_

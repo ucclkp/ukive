@@ -15,6 +15,7 @@
 
 
 namespace ukive {
+namespace win {
 
     VSyncProviderWin::VSyncProviderWin()
         : is_finished_(false),
@@ -128,4 +129,5 @@ namespace ukive {
         }
     }
 
+}
 }

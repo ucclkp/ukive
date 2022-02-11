@@ -6,12 +6,13 @@
 
 #include "color_manager_win.h"
 
-#include "utils/number.hpp"
+#include "utils/numbers.hpp"
 
 #include "ukive/graphics/win/display_win.h"
 
 
 namespace ukive {
+namespace win {
 
     ColorManagerWin::ColorManagerWin() {}
 
@@ -129,4 +130,5 @@ namespace ukive {
         return true;
     }
 
+}
 }

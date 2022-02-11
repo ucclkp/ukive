@@ -10,7 +10,7 @@
 #include <cmath>
 #include <typeinfo>
 
-#include "utils/convert.h"
+#include "utils/strings/string_utils.hpp"
 
 #include "ukive/resources/dimension_utils.h"
 #include "ukive/views/layout_info/sequence_layout_info.h"
@@ -46,9 +46,9 @@ namespace ukive {
     {
         auto ori = resolveAttrString(
             attrs, necro::kAttrSeqLayoutViewOri, necro::kAttrValSeqLayoutViewOriVert);
-        if (utl::tolatl(ori) == necro::kAttrValSeqLayoutViewOriVert) {
+        if (utl::isLitEqual(ori, necro::kAttrValSeqLayoutViewOriVert)) {
             orientation_ = VERTICAL;
-        } else if (utl::tolatl(ori) == necro::kAttrValSeqLayoutViewOriHori) {
+        } else if (utl::isLitEqual(ori, necro::kAttrValSeqLayoutViewOriHori)) {
             orientation_ = HORIZONTAL;
         }
     }

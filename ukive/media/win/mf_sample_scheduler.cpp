@@ -36,6 +36,7 @@ namespace {
 }
 
 namespace ukive {
+namespace win {
 
     MFSampleScheduler::MFSampleScheduler() {
     }
@@ -156,7 +157,7 @@ namespace ukive {
         for (;;) {
             ComPtr<IMFSample> sample;
             {
-                win::CritSecGuard guard(list_lock_);
+                CritSecGuard guard(list_lock_);
                 if (scheduled_samples_.empty()) {
                     break;
                 }
@@ -294,4 +295,5 @@ namespace ukive {
         return SUCCEEDED(hr) ? 0 : 1;
     }
 
+}
 }

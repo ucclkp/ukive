@@ -14,6 +14,7 @@
 
 
 namespace ukive {
+namespace win {
 
     DisplayManagerWin::DisplayManagerWin() {}
 
@@ -282,4 +283,5 @@ namespace ukive {
         return {};
     }
 
+}
 }

@@ -19,7 +19,7 @@ namespace ukive {
 
     InputMethodManager* InputMethodManager::create() {
 #ifdef OS_WINDOWS
-        return new TsfManager();
+        return new win::TsfManager();
 #elif defined OS_MAC
         return new IMMMac();
 #endif

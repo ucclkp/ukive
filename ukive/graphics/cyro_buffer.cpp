@@ -30,9 +30,9 @@ namespace ukive {
     WindowBuffer* WindowBuffer::create(Window* w) {
 #ifdef OS_WINDOWS
         if (IsWindows8OrGreater()) {
-            return new WindowBufferWin(static_cast<WindowImplWin*>(w->getImpl()));
+            return new win::WindowBufferWin(static_cast<win::WindowImplWin*>(w->getImpl()));
         }
-        return new WindowBufferWin7(static_cast<WindowImplWin*>(w->getImpl()));
+        return new win::WindowBufferWin7(static_cast<win::WindowImplWin*>(w->getImpl()));
 #elif defined OS_MAC
         return new WindowBufferMac(w);
 #endif
@@ -40,7 +40,7 @@ namespace ukive {
 
     OffscreenBuffer* OffscreenBuffer::create() {
 #ifdef OS_WINDOWS
-        return new OffscreenBufferWin();
+        return new win::OffscreenBufferWin();
 #elif defined OS_MAC
         return new OffscreenBufferMac();
 #endif

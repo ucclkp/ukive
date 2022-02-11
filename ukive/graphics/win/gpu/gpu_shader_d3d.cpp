@@ -8,6 +8,7 @@
 
 
 namespace ukive {
+namespace win {
 
     // GPUVertexShaderD3D
     GPUVertexShaderD3D::GPUVertexShaderD3D(
@@ -36,4 +37,5 @@ namespace ukive {
         return ps_.get();
     }
 
+}
 }

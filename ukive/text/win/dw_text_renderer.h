@@ -12,6 +12,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class TextRenderer : public IDWriteTextRenderer {
     public:
@@ -79,6 +80,7 @@ namespace ukive {
         Color def_strikethrough_color_;
     };
 
+}
 }
 
 #endif  // UKIVE_TEXT_WIN_DW_TEXT_RENDER_H_

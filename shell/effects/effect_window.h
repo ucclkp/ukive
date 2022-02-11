@@ -55,7 +55,7 @@ namespace shell {
         ukive::ImageFrame* image_img_ = nullptr;
         std::shared_ptr<ukive::ImageFrame> content_img_;
         std::unique_ptr<ukive::ShadowEffect> shadow_effect_;
-        std::unique_ptr<ukive::ImageEffectDX> image_effect_;
+        std::unique_ptr<ukive::win::ImageEffectDX> image_effect_;
     };
 
 }

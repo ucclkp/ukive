@@ -14,6 +14,7 @@
 
 
 namespace ukive {
+namespace win {
 
     int NativeNonClientFrame::onNcCreate(WindowImplWin* w, bool* handled) {
         *handled = false;
@@ -195,4 +196,5 @@ namespace ukive {
         return ext_sp_when_max_;
     }
 
+}
 }

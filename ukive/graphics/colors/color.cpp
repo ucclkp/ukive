@@ -6,8 +6,8 @@
 
 #include "color.h"
 
-#include "utils/convert.h"
 #include "utils/log.h"
+#include "utils/strings/int_conv.hpp"
 
 
 namespace ukive {
@@ -27,9 +27,9 @@ namespace ukive {
 
         if (color.length() == 7) {
             int r, g, b;
-            if (!utl::hexStringToNumber(color.substr(1, 2), &r) ||
-                !utl::hexStringToNumber(color.substr(3, 2), &g) ||
-                !utl::hexStringToNumber(color.substr(5, 2), &b))
+            if (!utl::stoi(color.substr(1, 2), &r, 16) ||
+                !utl::stoi(color.substr(3, 2), &g, 16) ||
+                !utl::stoi(color.substr(5, 2), &b, 16))
             {
                 LOG(Log::ERR) << "Unknown color: " << color;
                 return Red500;
@@ -40,10 +40,10 @@ namespace ukive {
 
         if (color.length() == 9) {
             int a, r, g, b;
-            if (!utl::hexStringToNumber(color.substr(1, 2), &a) ||
-                !utl::hexStringToNumber(color.substr(3, 2), &r) ||
-                !utl::hexStringToNumber(color.substr(5, 2), &g) ||
-                !utl::hexStringToNumber(color.substr(7, 2), &b))
+            if (!utl::stoi(color.substr(1, 2), &a, 16) ||
+                !utl::stoi(color.substr(3, 2), &r, 16) ||
+                !utl::stoi(color.substr(5, 2), &g, 16) ||
+                !utl::stoi(color.substr(7, 2), &b, 16))
             {
                 LOG(Log::ERR) << "Unknown color: " << color;
                 return Red500;

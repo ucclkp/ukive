@@ -11,15 +11,16 @@
 
 
 namespace ukive {
+namespace win {
 
-    template <class T>
+    template <class Ty>
     class ComPtr {
     public:
         ComPtr()
-            :ptr_(nullptr) {}
+            : ptr_(nullptr) {}
 
-        explicit ComPtr(T* real)
-            :ptr_(real) {}
+        explicit ComPtr(Ty* real)
+            : ptr_(real) {}
 
         ComPtr(const ComPtr& rhs) {
             if (rhs.ptr_) {
@@ -50,7 +51,7 @@ namespace ukive {
             return *this;
         }
 
-        ComPtr& operator=(T* real) {
+        ComPtr& operator=(Ty* real) {
             if (real == ptr_) {
                 return *this;
             }
@@ -63,11 +64,11 @@ namespace ukive {
             return *this;
         }
 
-        T* operator->() const {
+        Ty* operator->() const {
             return ptr_;
         }
 
-        T** operator&() {
+        Ty** operator&() {
             return &ptr_;
         }
 
@@ -75,7 +76,11 @@ namespace ukive {
             return ptr_ == nullptr;
         }
 
-        bool operator==(const ComPtr<T>& rhs) const {
+        bool operator==(Ty* rhs) const {
+            return ptr_ == rhs;
+        }
+
+        bool operator==(const ComPtr<Ty>& rhs) const {
             return ptr_ == rhs.ptr_;
         }
 
@@ -83,7 +88,11 @@ namespace ukive {
             return ptr_ != nullptr;
         }
 
-        bool operator!=(const ComPtr<T>& rhs) const {
+        bool operator!=(Ty* rhs) const {
+            return ptr_ != rhs;
+        }
+
+        bool operator!=(const ComPtr<Ty>& rhs) const {
             return ptr_ != rhs.ptr_;
         }
 
@@ -91,7 +100,7 @@ namespace ukive {
             return ptr_ != nullptr;
         }
 
-        T* get() const {
+        Ty* get() const {
             return ptr_;
         }
 
@@ -102,7 +111,7 @@ namespace ukive {
             return ComPtr<Ct>(casted);
         }
 
-        T* detach() {
+        Ty* detach() {
             auto tmp = ptr_;
             ptr_ = nullptr;
             return tmp;
@@ -116,9 +125,10 @@ namespace ukive {
         }
 
     private:
-        T* ptr_;
+        Ty* ptr_;
     };
 
+}
 }
 
 #endif  // UKIVE_SYSTEM_WIN_COMPTR_HPP_

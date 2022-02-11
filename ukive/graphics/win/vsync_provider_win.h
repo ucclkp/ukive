@@ -17,6 +17,7 @@
 
 
 namespace ukive {
+namespace win {
 
     /**
      * Windows 上的垂直同步信号提供器。
@@ -59,6 +60,7 @@ namespace ukive {
         std::atomic_bool pm_opened_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_VSYNC_PROVIDER_WIN_H_

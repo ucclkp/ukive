@@ -21,7 +21,7 @@ namespace ukive {
     // static
     DisplayManager* DisplayManager::create() {
 #ifdef OS_WINDOWS
-        return new DisplayManagerWin();
+        return new win::DisplayManagerWin();
 #elif defined OS_MAC
         return new DisplayManagerMac();
 #endif

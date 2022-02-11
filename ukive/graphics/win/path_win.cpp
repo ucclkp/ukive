@@ -12,6 +12,7 @@
 
 
 namespace ukive {
+namespace win {
 
     PathWin::PathWin() {}
 
@@ -78,4 +79,5 @@ namespace ukive {
                 D2D1::Point2F(p1.x, p1.y), D2D1::Point2F(p2.x, p2.y)));
     }
 
+}
 }

@@ -11,6 +11,7 @@
 
 
 namespace ukive {
+namespace win {
 
     /**
      * Windows 7 专用的去除非客户区的方案。
@@ -55,6 +56,7 @@ namespace ukive {
         WindowImplWin* window_;
     };
 
+}
 }
 
 #endif  // UKIVE_WINDOW_WIN_FRAME_CUSTOM_NON_CLIENT_FRAME_WIN7_H_

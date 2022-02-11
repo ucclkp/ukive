@@ -14,6 +14,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class TsfSink;
     class TsfEditor;
@@ -81,6 +82,7 @@ namespace ukive {
         ITfCompositionView* composition_view_;
     };
 
+}
 }
 
 #endif  // UKIVE_TEXT_WIN_TSF_MANAGER_H_

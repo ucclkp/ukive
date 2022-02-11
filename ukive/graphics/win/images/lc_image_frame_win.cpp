@@ -6,11 +6,12 @@
 
 #include "ukive/graphics/win/images/lc_image_frame_win.h"
 
-#include "utils/number.hpp"
 #include "utils/log.h"
+#include "utils/numbers.hpp"
 
 
 namespace ukive {
+namespace win {
 
     LcImageFrameWin::LcImageFrameWin(
         const ComPtr<IWICImagingFactory>& factory,
@@ -143,4 +144,5 @@ namespace ukive {
         return native_src_;
     }
 
+}
 }

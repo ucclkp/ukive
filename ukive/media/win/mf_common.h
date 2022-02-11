@@ -15,7 +15,7 @@
 #include <mfidl.h>
 
 
-using SampleList = std::list<ukive::ComPtr<IMFSample>>;
+using SampleList = std::list<ukive::win::ComPtr<IMFSample>>;
 
 // {0315FF06-7CC7-4930-A0F0-D3678BDA4192}
 static const GUID MFSampleSwapChain =

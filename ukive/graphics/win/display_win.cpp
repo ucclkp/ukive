@@ -29,6 +29,7 @@ namespace {
 }
 
 namespace ukive {
+namespace win {
 
     // static
     Display::DisplayPtr DisplayWin::fromWindowImpl(const WindowImplWin* win) {
@@ -350,4 +351,5 @@ namespace ukive {
         return false;
     }
 
+}
 }

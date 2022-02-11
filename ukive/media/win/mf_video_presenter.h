@@ -14,10 +14,11 @@
 #include "ukive/media/win/mf_sample_recycler.h"
 #include "ukive/media/win/mf_sample_scheduler.h"
 #include "ukive/system/win/com_ptr.hpp"
-#include "ukive/system/win/critical_section.h"
+#include "ukive/system/win/critical_section.hpp"
 
 
 namespace ukive {
+namespace win {
 
     class MFRenderCallback;
     class MFD3D9RenderEngine;
@@ -155,7 +156,7 @@ namespace ukive {
         static HRESULT setMixerSourceRect(IMFTransform* mixer, const MFVideoNormalizedRect& src);
 
         volatile ULONG ref_count_;
-        win::CritSec obj_lock_;
+        CritSec obj_lock_;
         RenderState render_state_ = RenderState::Shutdown;
         FrameStep frame_step_;
         MFVideoNormalizedRect src_rect_;
@@ -180,6 +181,7 @@ namespace ukive {
         IMFMediaType* media_type_ = nullptr;
     };
 
+}
 }
 
 #endif  // UKIVE_MEDIA_WIN_MF_VIDEO_PRESENTER_H_

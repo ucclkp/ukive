@@ -9,20 +9,22 @@
 #include <algorithm>
 #include <typeinfo>
 
-#include "utils/convert.h"
 #include "utils/log.h"
-#include "utils/string_utils.hpp"
+#include "utils/strings/int_conv.hpp"
+#include "utils/strings/string_utils.hpp"
 
+#include "ukive/resources/dimension_utils.h"
 #include "ukive/views/layout_info/restraint_layout_info.h"
 #include "ukive/window/window.h"
-#include "ukive/resources/dimension_utils.h"
 
 #include "necro/layout_constants.h"
+
 
 namespace ukive {
 
     bool resolveEdge(const std::string& sh_edge_str, RestraintLayoutInfo::Edge* edge) {
-        auto edge_str = utl::tolatl(sh_edge_str);
+        auto edge_str = sh_edge_str;
+        utl::tolatl(&edge_str);
         if (edge_str == necro::kAttrValRestraintLayoutHEStart) {
             *edge = RestraintLayoutInfo::Edge::START;
         } else if (edge_str == necro::kAttrValRestraintLayoutHEEnd) {
@@ -62,7 +64,7 @@ namespace ukive {
                 int id = -1;
                 auto param = params[0];
                 utl::trim(&param);
-                utl::stringToNumber(param, &id);
+                utl::stoi(param, &id);
                 if (id != -1) {
                     auto edge = RestraintLayoutInfo::Edge::START;
                     if (params.size() > 1) {
@@ -83,7 +85,7 @@ namespace ukive {
                 int id = -1;
                 auto param = params[0];
                 utl::trim(&param);
-                utl::stringToNumber(param, &id);
+                utl::stoi(param, &id);
                 if (id != -1) {
                     auto edge = RestraintLayoutInfo::Edge::END;
                     if (params.size() > 1) {
@@ -104,7 +106,7 @@ namespace ukive {
                 int id = -1;
                 auto param = params[0];
                 utl::trim(&param);
-                utl::stringToNumber(param, &id);
+                utl::stoi(param, &id);
                 if (id != -1) {
                     auto edge = RestraintLayoutInfo::Edge::TOP;
                     if (params.size() > 1) {
@@ -125,7 +127,7 @@ namespace ukive {
                 int id = -1;
                 auto param = params[0];
                 utl::trim(&param);
-                utl::stringToNumber(param, &id);
+                utl::stoi(param, &id);
                 if (id != -1) {
                     auto edge = RestraintLayoutInfo::Edge::BOTTOM;
                     if (params.size() > 1) {

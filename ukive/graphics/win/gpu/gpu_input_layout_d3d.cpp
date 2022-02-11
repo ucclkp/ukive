@@ -8,6 +8,7 @@
 
 
 namespace ukive {
+namespace win {
 
     GPUInputLayoutD3D::GPUInputLayoutD3D(const ComPtr<ID3D11InputLayout>& il)
         : d3d_il_(il) {}
@@ -20,4 +21,5 @@ namespace ukive {
         return d3d_il_.get();
     }
 
+}
 }

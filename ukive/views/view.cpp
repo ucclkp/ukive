@@ -8,9 +8,8 @@
 
 #include <cmath>
 
-#include "utils/convert.h"
 #include "utils/log.h"
-#include "utils/string_utils.hpp"
+#include "utils/strings/int_conv.hpp"
 #include "utils/time_utils.h"
 #include "utils/weak_bind.hpp"
 
@@ -61,7 +60,7 @@ namespace ukive {
         bool has_id = false;
         auto it = attrs.find(necro::kAttrViewId);
         if (it != attrs.end()) {
-            if (!utl::stringToNumber(it->second, &id_)) {
+            if (!utl::stoi(it->second, &id_)) {
                 LOG(Log::WARNING) << "Cannot convert View id: " << it->second;
             } else {
                 has_id = true;

@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "utils/log.h"
-#include "utils/number.hpp"
+#include "utils/numbers.hpp"
 
 #include "ukive/graphics/win/gpu/gpu_buffer_d3d.h"
 #include "ukive/graphics/win/gpu/gpu_input_layout_d3d.h"
@@ -25,6 +25,7 @@
 
 
 namespace ukive {
+namespace win {
 
     GPUDeviceD3D::GPUDeviceD3D(const ComPtr<ID3D11Device>& dev)
         : d3d_device_(dev) {}
@@ -442,4 +443,5 @@ namespace ukive {
         return d3d_device_;
     }
 
+}
 }

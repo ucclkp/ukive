@@ -16,6 +16,8 @@ namespace ukive {
 
     class TextCustomDrawing;
 
+namespace win {
+
     class DECLSPEC_UUID("06C2F086-4818-4DF9-880D-FF7C9F796AFA") DWTextDrawingEffect
         : public IUnknown
     {
@@ -42,6 +44,7 @@ namespace ukive {
         ULONG ref_count_;
     };
 
+}
 }
 
 #endif  // UKIVE_TEXT_WIN_DW_TEXT_DRAWING_EFFECT_H_

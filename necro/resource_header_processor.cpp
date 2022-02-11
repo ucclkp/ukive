@@ -8,9 +8,8 @@
 
 #include <fstream>
 
-#include "utils/convert.h"
 #include "utils/log.h"
-#include "utils/string_utils.hpp"
+#include "utils/strings/string_utils.hpp"
 
 
 namespace necro {
@@ -43,7 +42,8 @@ namespace necro {
             jour_e("Failed to make dir: %s", path.parent_path());
             return false;
         }
-        auto name_macro = utl::tolatu(path.filename().u16string());
+        auto name_macro = path.filename().u16string();
+        utl::tolatu(&name_macro);
         if (name_macro.empty()) {
             jour_e("Invalid out file name: %s", path);
             return false;

@@ -11,12 +11,13 @@
 
 #include "ukive/media/win/mf_common.h"
 #include "ukive/system/win/com_ptr.hpp"
-#include "ukive/system/win/critical_section.h"
+#include "ukive/system/win/critical_section.hpp"
 
 #include <mfidl.h>
 
 
 namespace ukive {
+namespace win {
 
     class MFSampleRecycler {
     public:
@@ -31,11 +32,12 @@ namespace ukive {
         bool isPending();
 
     private:
-        win::CritSec crit_sec_;
+        CritSec crit_sec_;
         SampleList samples_;
         uint32_t pending_ = 0;
     };
 
+}
 }
 
 #endif  // UKIVE_MEDIA_WIN_MF_SAMPLE_RECYCLER_H_

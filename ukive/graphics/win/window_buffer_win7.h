@@ -15,6 +15,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class WindowImplWin;
 
@@ -57,6 +58,7 @@ namespace ukive {
         ComPtr<IDXGISwapChain> swapchain_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_WINDOW_BUFFER_WIN7_H_

@@ -20,7 +20,7 @@ namespace ukive {
     // static
     LcImageFactory* LcImageFactory::create() {
 #ifdef OS_WINDOWS
-        return new LcImageFactoryWin();
+        return new win::LcImageFactoryWin();
 #elif defined OS_MAC
         return new LcImageFactoryMac();
 #endif

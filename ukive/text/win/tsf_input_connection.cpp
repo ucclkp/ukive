@@ -7,8 +7,7 @@
 #include "tsf_input_connection.h"
 
 #include "utils/log.h"
-#include "utils/convert.h"
-#include "utils/number.hpp"
+#include "utils/numbers.hpp"
 
 #include "ukive/app/application.h"
 #include "ukive/text/win/tsf_editor.h"
@@ -18,6 +17,7 @@
 
 
 namespace ukive {
+namespace win {
 
     TsfInputConnection::TsfInputConnection(TextInputClient* tic)
         : client_(tic),
@@ -370,4 +370,5 @@ namespace ukive {
         return client_->getTICHostWindow();
     }
 
+}
 }

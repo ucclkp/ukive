@@ -13,6 +13,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class MFVideoPresenter;
     class MFRenderCallback;
@@ -81,6 +82,7 @@ namespace ukive {
         MFRenderCallback* render_callback_ = nullptr;
     };
 
+}
 }
 
 #endif  // UKIVE_MEDIA_WIN_MF_VIDEO_PRESENTER_ACTIVATE_H_

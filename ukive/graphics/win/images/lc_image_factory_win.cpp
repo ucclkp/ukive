@@ -11,8 +11,8 @@
 #include <VersionHelpers.h>
 
 #include "utils/log.h"
-#include "utils/convert.h"
-#include "utils/number.hpp"
+#include "utils/numbers.hpp"
+#include "utils/strings/string_utils.hpp"
 
 #include "ukive/graphics/images/lc_image.h"
 #include "ukive/graphics/win/colors/color_manager_win.h"
@@ -69,6 +69,7 @@ namespace ukive {
 }
 
 namespace ukive {
+namespace win {
 
     LcImageFactoryWin::LcImageFactoryWin()
     {}
@@ -773,4 +774,5 @@ namespace ukive {
         return transform.cast<IWICBitmapSource>();
     }
 
+}
 }

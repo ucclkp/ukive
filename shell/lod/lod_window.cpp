@@ -8,10 +8,10 @@
 
 #include <sstream>
 
-#include "utils/convert.h"
-#include "utils/int_conv.hpp"
+#include "utils/strings/int_conv.hpp"
+#include "utils/strings/string_utils.hpp"
+#include "utils/strings/usprintf.h"
 #include "utils/time_utils.h"
-#include "utils/usprintf.h"
 
 #include "ukive/app/application.h"
 #include "ukive/graphics/colors/color.h"

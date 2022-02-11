@@ -16,6 +16,7 @@
 
 
 namespace ukive {
+namespace win {
 
     WindowBufferWin7::WindowBufferWin7(WindowImplWin* w)
         : window_(w),
@@ -324,4 +325,5 @@ namespace ukive {
         return true;
     }
 
+}
 }

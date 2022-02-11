@@ -7,7 +7,6 @@
 #include "copy_processor.h"
 
 #include "utils/log.h"
-#include "utils/string_utils.hpp"
 
 
 namespace necro {

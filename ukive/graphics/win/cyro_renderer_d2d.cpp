@@ -65,6 +65,7 @@ namespace ukive {
 }
 
 namespace ukive {
+namespace win {
 
     CyroRendererD2D::CyroRendererD2D()
         : opacity_(1.f) {
@@ -554,4 +555,5 @@ namespace ukive {
         rt_->DrawGlyphRun(D2D1::Point2F(x, y), glyph_run, solid_brush_.get(), measuring_mode);
     }
 
+}
 }

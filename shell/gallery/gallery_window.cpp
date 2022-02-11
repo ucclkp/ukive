@@ -9,8 +9,8 @@
 #include <algorithm>
 
 #include "utils/files/file_utils.h"
-#include "utils/number.hpp"
-#include "utils/string_utils.hpp"
+#include "utils/numbers.hpp"
+#include "utils/strings/string_utils.hpp"
 
 #include "ukive/app/application.h"
 #include "ukive/elements/ripple_element.h"

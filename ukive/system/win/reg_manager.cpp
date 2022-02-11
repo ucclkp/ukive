@@ -11,8 +11,7 @@
 #include <ShlObj.h>
 
 #include "utils/log.h"
-#include "utils/convert.h"
-#include "utils/number.hpp"
+#include "utils/numbers.hpp"
 
 
 namespace ukive {

@@ -19,7 +19,7 @@ namespace ukive {
 
     WindowNative* WindowNative::create(WindowNativeDelegate* w) {
 #ifdef OS_WINDOWS
-        return new WindowImplWin(w);
+        return new win::WindowImplWin(w);
 #elif defined OS_MAC
         return new WindowImplMac(w);
 #endif

@@ -17,6 +17,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class TsfInputConnection;
 
@@ -121,6 +122,7 @@ namespace ukive {
         TsViewCookie view_cookie_;
     };
 
+}
 }
 
 #endif  // UKIVE_TEXT_WIN_TSF_EDITOR_H_

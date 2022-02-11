@@ -6,9 +6,10 @@
 
 #include "ukive/resources/dimension_utils.h"
 
-#include "utils/convert.h"
 #include "utils/log.h"
-#include "utils/string_utils.hpp"
+#include "utils/strings/float_conv.h"
+#include "utils/strings/int_conv.hpp"
+#include "utils/strings/string_utils.hpp"
 
 #include "ukive/views/view.h"
 #include "ukive/window/context.h"
@@ -28,19 +29,19 @@ namespace ukive {
     {
         if (utl::endWith(dm, "dp", false)) {
             int val = 0;
-            if (utl::stringToNumber(dm.substr(0, dm.length() - 2), &val)) {
+            if (utl::stoi(dm.substr(0, dm.length() - 2), &val)) {
                 *out = c.dp2pxi(val);
                 return true;
             }
         } else if (utl::endWith(dm, "px", false)) {
             int val = 0;
-            if (utl::stringToNumber(dm.substr(0, dm.length() - 2), &val)) {
+            if (utl::stoi(dm.substr(0, dm.length() - 2), &val)) {
                 *out = val;
                 return true;
             }
         } else {
             int val = 0;
-            if (utl::stringToNumber(dm, &val)) {
+            if (utl::stoi(dm, &val)) {
                 *out = c.dp2pxi(val);
                 return true;
             }
@@ -53,19 +54,19 @@ namespace ukive {
     {
         if (utl::endWith(dm, "dp", false)) {
             float val = 0;
-            if (utl::stringToNumber(dm.substr(0, dm.length() - 2), &val)) {
+            if (utl::stof(dm.substr(0, dm.length() - 2), &val) == utl::UCR_OK) {
                 *out = c.dp2px(val);
                 return true;
             }
         } else if (utl::endWith(dm, "px", false)) {
             float val = 0;
-            if (utl::stringToNumber(dm.substr(0, dm.length() - 2), &val)) {
+            if (utl::stof(dm.substr(0, dm.length() - 2), &val) == utl::UCR_OK) {
                 *out = val;
                 return true;
             }
         } else {
             float val = 0;
-            if (utl::stringToNumber(dm, &val)) {
+            if (utl::stof(dm, &val) == utl::UCR_OK) {
                 *out = c.dp2px(val);
                 return true;
             }
@@ -78,19 +79,19 @@ namespace ukive {
     {
         if (utl::endWith(dm, "dp", false)) {
             float val = 0;
-            if (utl::stringToNumber(dm.substr(0, dm.length() - 2), &val)) {
+            if (utl::stof(dm.substr(0, dm.length() - 2), &val) == utl::UCR_OK) {
                 out->set_dp(val);
                 return true;
             }
         } else if (utl::endWith(dm, "px", false)) {
             float val = 0;
-            if (utl::stringToNumber(dm.substr(0, dm.length() - 2), &val)) {
+            if (utl::stof(dm.substr(0, dm.length() - 2), &val) == utl::UCR_OK) {
                 out->set_px(val);
                 return true;
             }
         } else {
             float val = 0;
-            if (utl::stringToNumber(dm, &val)) {
+            if (utl::stof(dm, &val) == utl::UCR_OK) {
                 out->set_dp(val);
                 return true;
             }
@@ -104,7 +105,7 @@ namespace ukive {
         auto it = attrs.find(key);
         if (it != attrs.end()) {
             int val = 0;
-            if (utl::stringToNumber(it->second, &val)) {
+            if (utl::stoi(it->second, &val)) {
                 return val;
             }
             LOG(Log::WARNING) << "Cannot resolve int attr " << key
@@ -119,7 +120,7 @@ namespace ukive {
         auto it = attrs.find(key);
         if (it != attrs.end()) {
             float val = 0;
-            if (utl::stringToNumber(it->second, &val)) {
+            if (utl::stof(it->second, &val) == utl::UCR_OK) {
                 return val;
             }
             LOG(Log::WARNING) << "Cannot resolve float attr " << key
@@ -163,10 +164,10 @@ namespace ukive {
     {
         auto it = attrs.find(key);
         if (it != attrs.end()) {
-            if (utl::tolatl(it->second) == "true") {
+            if (utl::isLitEqual(it->second, "true")) {
                 return true;
             }
-            if (utl::tolatl(it->second) == "false") {
+            if (utl::isLitEqual(it->second, "false")) {
                 return false;
             }
             LOG(Log::WARNING) << "Cannot resolve bool attr " << key
@@ -262,8 +263,9 @@ namespace ukive {
     void resolveAttrLayoutSize(
         const Context& c, AttrsRef attrs, Size* size)
     {
-        auto width_attr = utl::tolatl(resolveAttrString(
-            attrs, necro::kAttrLayoutWidth, necro::kAttrValLayoutAuto));
+        auto width_attr = resolveAttrString(
+            attrs, necro::kAttrLayoutWidth, necro::kAttrValLayoutAuto);
+        utl::tolatl(&width_attr);
 
         if (!resolveDimension(c, width_attr, &size->width)) {
             if (width_attr == necro::kAttrValLayoutAuto) {
@@ -281,8 +283,9 @@ namespace ukive {
             }
         }
 
-        auto height_attr = utl::tolatl(resolveAttrString(
-            attrs, necro::kAttrLayoutHeight, necro::kAttrValLayoutAuto));
+        auto height_attr = resolveAttrString(
+            attrs, necro::kAttrLayoutHeight, necro::kAttrValLayoutAuto);
+        utl::tolatl(&height_attr);
 
         if (!resolveDimension(c, height_attr, &size->height)) {
             if (height_attr == necro::kAttrValLayoutAuto) {

@@ -6,8 +6,6 @@
 
 #include "example_window.h"
 
-#include "utils/convert.h"
-
 #include "ukive/views/button.h"
 #include "ukive/views/image_view.h"
 #include "ukive/elements/color_element.h"

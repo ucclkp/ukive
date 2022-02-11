@@ -17,6 +17,7 @@
 
 
 namespace ukive {
+namespace win {
 
     CustomNonClientFrameWin7::CustomNonClientFrameWin7()
         : window_(nullptr) {}
@@ -321,4 +322,5 @@ namespace ukive {
         return ext_sp_when_max_;
     }
 
+}
 }

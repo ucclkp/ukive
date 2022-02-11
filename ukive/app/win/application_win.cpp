@@ -8,7 +8,6 @@
 
 #include <Windows.h>
 
-#include "utils/convert.h"
 #include "utils/log.h"
 
 
@@ -56,11 +55,7 @@ namespace ukive {
         unsigned int line,
         uintptr_t reserved)
     {
-        LOG(Log::ERR) << "ERROR: Invalid parameter: "
-            << utl::UTF16ToUTF8(std::u16string_view(reinterpret_cast<const char16_t*>(expression))) << " "
-            << utl::UTF16ToUTF8(std::u16string_view(reinterpret_cast<const char16_t*>(function))) << " "
-            << utl::UTF16ToUTF8(std::u16string_view(reinterpret_cast<const char16_t*>(file))) << " "
-            << std::to_string(line);
+        jour_e("ERROR: Invalid parameter: %s %s %s %d", expression, function, file, line);
         abort();
     }
 

@@ -21,6 +21,7 @@
 
 
 namespace ukive {
+namespace win {
 
     ImageEffectDX::ImageEffectDX(Context context)
         : width_(0),
@@ -463,4 +464,5 @@ namespace ukive {
         return true;
     }
 
+}
 }

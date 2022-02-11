@@ -8,6 +8,7 @@
 
 
 namespace ukive {
+namespace win {
 
     GPURenderTargetD3D::GPURenderTargetD3D(const ComPtr<ID3D11RenderTargetView>& rtv)
         : rtv_(rtv) {}
@@ -24,4 +25,5 @@ namespace ukive {
         return rtv_.get();
     }
 
+}
 }

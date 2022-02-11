@@ -30,6 +30,7 @@ namespace {
 }
 
 namespace ukive {
+namespace win {
 
     ShadowEffectDX::ShadowEffectDX(Context context)
         : width_(0),
@@ -530,4 +531,5 @@ namespace ukive {
         }
         return true;
     }
+}
 }

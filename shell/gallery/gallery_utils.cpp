@@ -6,7 +6,7 @@
 
 #include "shell/gallery/gallery_utils.h"
 
-#include "utils/convert.h"
+#include "utils/strings/string_utils.hpp"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -15,12 +15,11 @@
 namespace shell {
 
     bool isImageExtension(const std::u16string_view& ext) {
-        auto lower_ext = utl::tolatl(ext);
-        if (lower_ext == u".png" ||
-            lower_ext == u".jpg" ||
-            lower_ext == u".jpeg" ||
-            lower_ext == u".bmp" ||
-            lower_ext == u".gif")
+        if (utl::isLitEqual(ext, u".png") ||
+            utl::isLitEqual(ext, u".jpg") ||
+            utl::isLitEqual(ext, u".jpeg") ||
+            utl::isLitEqual(ext, u".bmp") ||
+            utl::isLitEqual(ext, u".gif"))
         {
             return true;
         }
@@ -28,11 +27,12 @@ namespace shell {
     }
 
     int compareLingString(const std::u16string& str1, const std::u16string& str2) {
+        std::wstring wstr1(str1.begin(), str1.end());
+        std::wstring wstr2(str2.begin(), str2.end());
+
         return ::CompareStringW(
-            LOCALE_USER_DEFAULT,
-            SORT_DIGITSASNUMBERS,
-            reinterpret_cast<PCNZWCH>(str1.c_str()), -1,
-            reinterpret_cast<PCNZWCH>(str2.c_str()), -1);
+            LOCALE_USER_DEFAULT, SORT_DIGITSASNUMBERS,
+            wstr1.c_str(), -1, wstr2.c_str(), -1);
     }
 
 }

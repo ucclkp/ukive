@@ -20,9 +20,12 @@
 
 namespace ukive {
 
+    class ImageOptions;
+
+namespace win {
+
     class GPUDeviceD3D;
     class GPUContextD3D;
-    class ImageOptions;
 
     class DirectXManager : public GraphicDeviceManager {
     public:
@@ -77,6 +80,7 @@ namespace ukive {
         std::unique_ptr<GPUContextD3D> gpu_context_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_GRAPHIC_DEVICE_MANAGER_H_

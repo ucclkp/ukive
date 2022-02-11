@@ -8,6 +8,7 @@
 
 
 namespace ukive {
+namespace win {
 
     GPUShaderResourceD3D::GPUShaderResourceD3D(
         const ComPtr<ID3D11ShaderResourceView>& srv)
@@ -21,4 +22,5 @@ namespace ukive {
         return srv_.get();
     }
 
+}
 }

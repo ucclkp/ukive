@@ -20,7 +20,7 @@ namespace ukive {
     // static
     CyroRenderer* CyroRenderer::create() {
 #ifdef OS_WINDOWS
-        return new CyroRendererD2D();
+        return new win::CyroRendererD2D();
 #elif defined OS_MAC
         return new CyroRendererMac();
 #endif

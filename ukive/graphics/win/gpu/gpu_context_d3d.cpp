@@ -22,6 +22,7 @@
 
 
 namespace ukive {
+namespace win {
 
     GPUContextD3D::GPUContextD3D(const ComPtr<ID3D11DeviceContext>& ctx)
         : d3d_context_(ctx) {}
@@ -263,4 +264,5 @@ namespace ukive {
         return d3d_context_;
     }
 
+}
 }

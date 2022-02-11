@@ -7,7 +7,7 @@
 #include "ukive/graphics/win/window_buffer_win.h"
 
 #include "utils/log.h"
-#include "utils/number.hpp"
+#include "utils/numbers.hpp"
 
 #include "ukive/app/application.h"
 #include "ukive/system/win/win10_version.h"
@@ -18,6 +18,7 @@
 
 
 namespace ukive {
+namespace win {
 
     WindowBufferWin::WindowBufferWin(WindowImplWin* w)
         : window_(w),
@@ -333,4 +334,5 @@ namespace ukive {
         return GRet::Succeeded;
     }
 
+}
 }

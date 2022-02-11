@@ -39,8 +39,11 @@ namespace ukive {
 
     class Color;
     class InputEvent;
-    class NonClientFrame;
     class WindowNativeDelegate;
+
+namespace win {
+
+    class NonClientFrame;
 
     class WindowImplWin :
         public WindowNative
@@ -280,6 +283,7 @@ namespace ukive {
         std::shared_ptr<Display> display_;
     };
 
+}
 }
 
 #endif  // UKIVE_WINDOW_WIN_WINDOW_IMPL_H_

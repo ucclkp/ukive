@@ -8,12 +8,10 @@
 
 #include <fstream>
 
-#include "utils/convert.h"
 #include "utils/log.h"
+#include "utils/strings/int_conv.hpp"
+#include "utils/strings/string_utils.hpp"
 #include "utils/xml/xml_parser.h"
-#include "utils/string_utils.hpp"
-
-#include "ukive/views/layout/layout_view.h"
 
 #include "ukive/app/application.h"
 #include "ukive/diagnostic/grid_view.h"
@@ -30,6 +28,7 @@
 #include "ukive/views/seek_bar.h"
 #include "ukive/views/switch_view.h"
 #include "ukive/views/list/list_view.h"
+#include "ukive/views/layout/layout_view.h"
 #include "ukive/views/layout/title_bar_layout.h"
 #include "ukive/views/layout/simple_layout.h"
 #include "ukive/views/layout/sequence_layout.h"
@@ -179,7 +178,7 @@ namespace ukive {
                 }
 
                 uint32_t id;
-                if (!utl::stringToNumber(pair[0], &id)) {
+                if (!utl::stoi(pair[0], &id)) {
                     ubassert(false);
                     return false;
                 }

@@ -8,27 +8,28 @@
 
 
 namespace ukive {
+namespace win {
 
     MFSampleRecycler::MFSampleRecycler() {}
 
     MFSampleRecycler::~MFSampleRecycler() {}
 
     void MFSampleRecycler::recycleSample(const ComPtr<IMFSample>& sample) {
-        win::CritSecGuard guard(crit_sec_);
+        CritSecGuard guard(crit_sec_);
 
         samples_.push_back(sample);
         --pending_;
     }
 
     void MFSampleRecycler::recycleSamples(SampleList& samples) {
-        win::CritSecGuard guard(crit_sec_);
+        CritSecGuard guard(crit_sec_);
 
         samples_ = samples;
         samples.clear();
     }
 
     ComPtr<IMFSample> MFSampleRecycler::reuseSample() {
-        win::CritSecGuard guard(crit_sec_);
+        CritSecGuard guard(crit_sec_);
 
         if (samples_.empty()) {
             return {};
@@ -43,15 +44,16 @@ namespace ukive {
     }
 
     void MFSampleRecycler::clear() {
-        win::CritSecGuard guard(crit_sec_);
+        CritSecGuard guard(crit_sec_);
 
         samples_.clear();
         pending_ = 0;
     }
 
     bool MFSampleRecycler::isPending() {
-        win::CritSecGuard guard(crit_sec_);
+        CritSecGuard guard(crit_sec_);
         return pending_ > 0;
     }
 
+}
 }

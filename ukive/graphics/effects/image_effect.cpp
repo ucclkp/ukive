@@ -22,7 +22,7 @@ namespace ukive {
     // static
     ImageEffect* ImageEffect::create(Context context) {
 #ifdef OS_WINDOWS
-        return new ImageEffectDX(context);
+        return new win::ImageEffectDX(context);
 #elif defined OS_MAC
         return new ShadowEffectMac();
 #endif

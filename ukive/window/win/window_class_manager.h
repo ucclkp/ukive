@@ -16,6 +16,7 @@
 
 
 namespace ukive {
+namespace win {
 
     struct ClassInfo {
         int style;
@@ -56,6 +57,7 @@ namespace ukive {
         std::vector<RegisteredClass> class_list_;
     };
 
+}
 }
 
 #endif  // UKIVE_WINDOW_WIN_WINDOW_CLASS_MANAGER_H_

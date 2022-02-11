@@ -14,6 +14,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class GPUDepthStencilD3D : public GPUDepthStencil {
     public:
@@ -26,6 +27,7 @@ namespace ukive {
         ComPtr<ID3D11DepthStencilView> dsv_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_GPU_GPU_DEPTH_STENCIL_D3D_H_

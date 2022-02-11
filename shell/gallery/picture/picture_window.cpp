@@ -6,9 +6,9 @@
 
 #include "shell/gallery/picture/picture_window.h"
 
-#include "utils/convert.h"
 #include "utils/log.h"
 #include "utils/files/file_utils.h"
+#include "utils/strings/string_utils.hpp"
 
 #include "ukive/app/application.h"
 #include "ukive/views/button.h"
@@ -108,8 +108,9 @@ namespace shell {
         }
 
         for (const auto& ext : allowed_exts_) {
-            auto dot_ext = utl::tolatl(ext);
-            if (!ukive::RegManager::hasProgIdInExt(std::wstring(dot_ext.begin(), dot_ext.end()), kProgID)) {
+            std::wstring dot_ext(ext.begin(), ext.end());
+            utl::tolatl(&dot_ext);
+            if (!ukive::RegManager::hasProgIdInExt(dot_ext, kProgID)) {
                 return false;
             }
         }
@@ -127,9 +128,10 @@ namespace shell {
         }
 
         for (const auto& ext : allowed_exts_) {
-            auto dot_ext = utl::tolatl(ext);
-            if (!ukive::RegManager::hasProgIdInExt(std::wstring(dot_ext.begin(), dot_ext.end()), kProgID)) {
-                if (!ukive::RegManager::associateExtName(std::wstring(dot_ext.begin(), dot_ext.end()), kProgID)) {
+            std::wstring dot_ext(ext.begin(), ext.end());
+            utl::tolatl(&dot_ext);
+            if (!ukive::RegManager::hasProgIdInExt(dot_ext, kProgID)) {
+                if (!ukive::RegManager::associateExtName(dot_ext, kProgID)) {
                     return false;
                 }
             }
@@ -139,9 +141,10 @@ namespace shell {
 
     bool PictureWindow::unassociateExts() {
         for (const auto& ext : allowed_exts_) {
-            auto dot_ext = utl::tolatl(ext);
-            if (ukive::RegManager::hasProgIdInExt(std::wstring(dot_ext.begin(), dot_ext.end()), kProgID)) {
-                if (!ukive::RegManager::unassociateExtName(std::wstring(dot_ext.begin(), dot_ext.end()), kProgID)) {
+            std::wstring dot_ext(ext.begin(), ext.end());
+            utl::tolatl(&dot_ext);
+            if (ukive::RegManager::hasProgIdInExt(dot_ext, kProgID)) {
+                if (!ukive::RegManager::unassociateExtName(dot_ext, kProgID)) {
                     return false;
                 }
             }

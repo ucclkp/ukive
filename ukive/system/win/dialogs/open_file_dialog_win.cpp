@@ -16,6 +16,7 @@
 
 
 namespace ukive {
+namespace win {
 
     OpenFileDialogWin::OpenFileDialogWin() {}
 
@@ -50,7 +51,7 @@ namespace ukive {
             pfd->SetFileTypes(UINT(exts_raw.size()), exts_raw.data());
         }
 
-        auto pump = static_cast<utl::MessagePumpUIWin*>(utl::MessagePump::getCurrent());
+        auto pump = static_cast<utl::win::MessagePumpUIWin*>(utl::MessagePump::getCurrent());
 
         auto hwnd = static_cast<WindowImplWin*>(parent->getImpl())->getHandle();
         pump->setInDialogModalLoop(true);
@@ -104,4 +105,5 @@ namespace ukive {
         return sel_files_;
     }
 
+}
 }

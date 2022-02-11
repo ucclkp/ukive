@@ -12,6 +12,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class CustomNonClientFrame : public NonClientFrame {
     public:
@@ -53,6 +54,7 @@ namespace ukive {
         WindowImplWin* window_;
     };
 
+}
 }
 
 #endif  // UKIVE_WINDOW_WIN_FRAME_CUSTOM_NON_CLIENT_FRAME_H_

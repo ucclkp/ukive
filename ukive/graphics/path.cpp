@@ -19,7 +19,7 @@ namespace ukive {
 
     Path* Path::create() {
 #ifdef OS_WINDOWS
-        return new PathWin();
+        return new win::PathWin();
 #elif defined OS_MAC
         return new PathMac();
 #endif

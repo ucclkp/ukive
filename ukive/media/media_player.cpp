@@ -18,7 +18,7 @@ namespace ukive {
     // static
     MediaPlayer* MediaPlayer::create() {
 #ifdef OS_WINDOWS
-        return new MediaPlayerWin();
+        return new win::MediaPlayerWin();
 #endif
     }
 

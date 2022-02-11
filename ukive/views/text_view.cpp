@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <cmath>
 
-#include "utils/convert.h"
+#include "utils/strings/string_utils.hpp"
 
 #include "ukive/text/span/inline_object_span.h"
 #include "ukive/text/span/interactable_span.h"

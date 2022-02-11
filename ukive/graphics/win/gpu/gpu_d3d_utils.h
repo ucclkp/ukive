@@ -19,6 +19,7 @@
 
 
 namespace ukive {
+namespace win {
 
     DXGI_FORMAT mapFormat(GPUDataFormat format);
     D3D_PRIMITIVE_TOPOLOGY mapTopology(GPUContext::Topology t);
@@ -38,6 +39,7 @@ namespace ukive {
     D3D11_DSV_DIMENSION mapDSVDeminsion(GPUDepthStencil::DSVDimension dim);
     D3D11_SRV_DIMENSION mapSRVDeminsion(GPUShaderResource::SRVDimension dim);
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_GPU_GPU_D3D_UTILS_H_

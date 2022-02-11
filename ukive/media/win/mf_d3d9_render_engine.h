@@ -15,10 +15,11 @@
 #include "ukive/media/win/mf_common.h"
 #include "ukive/media/win/mf_sample_scheduler.h"
 #include "ukive/system/win/com_ptr.hpp"
-#include "ukive/system/win/critical_section.h"
+#include "ukive/system/win/critical_section.hpp"
 
 
 namespace ukive {
+namespace win {
 
     class MFRenderCallback {
     public:
@@ -86,6 +87,7 @@ namespace ukive {
         MFRenderCallback* render_callback_ = nullptr;
     };
 
+}
 }
 
 #endif  // UKIVE_MEDIA_WIN_MF_D3D9_RENDER_ENGINE_H_

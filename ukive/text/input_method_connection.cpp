@@ -19,7 +19,7 @@ namespace ukive {
 
     InputMethodConnection* InputMethodConnection::create(TextInputClient* tic) {
 #ifdef OS_WINDOWS
-        return new TsfInputConnection(tic);
+        return new win::TsfInputConnection(tic);
 #elif defined OS_MAC
         return new InputConnectionMac(tic);
 #endif

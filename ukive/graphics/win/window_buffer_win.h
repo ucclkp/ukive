@@ -18,6 +18,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class WindowImplWin;
 
@@ -62,6 +63,7 @@ namespace ukive {
         ComPtr<IDCompositionVisual> dcomp_visual_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_WINDOW_BUFFER_WIN_H_

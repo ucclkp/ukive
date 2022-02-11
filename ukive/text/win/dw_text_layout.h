@@ -16,6 +16,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class TextRenderer;
     class DWTextDrawingEffect;
@@ -76,6 +77,7 @@ namespace ukive {
         ComPtr<IDWriteTextLayout> text_layout_;
     };
 
+}
 }
 
 #endif  // UKIVE_TEXT_WIN_DW_TEXT_LAYOUT_H_

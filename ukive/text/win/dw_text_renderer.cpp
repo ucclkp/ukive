@@ -18,6 +18,7 @@
 
 
 namespace ukive {
+namespace win {
 
     TextRenderer::TextRenderer()
         : ref_count_(1),
@@ -307,4 +308,5 @@ namespace ukive {
         return S_OK;
     }
 
+}
 }

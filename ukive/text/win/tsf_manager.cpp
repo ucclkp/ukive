@@ -10,6 +10,7 @@
 
 
 namespace ukive {
+namespace win {
 
     TsfManager::TsfManager()
         : client_id_(0),
@@ -305,4 +306,5 @@ namespace ukive {
         return S_OK;
     }
 
+}
 }

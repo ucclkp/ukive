@@ -7,7 +7,7 @@
 #include "ukive/graphics/win/offscreen_buffer_win.h"
 
 #include "utils/log.h"
-#include "utils/number.hpp"
+#include "utils/numbers.hpp"
 
 #include "ukive/app/application.h"
 #include "ukive/graphics/images/image_options.h"
@@ -18,6 +18,7 @@
 
 
 namespace ukive {
+namespace win {
 
     OffscreenBufferWin::OffscreenBufferWin()
         : width_(0), height_(0),
@@ -177,4 +178,5 @@ namespace ukive {
         return true;
     }
 
+}
 }

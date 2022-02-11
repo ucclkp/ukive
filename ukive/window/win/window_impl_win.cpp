@@ -15,9 +15,8 @@
 #include <VersionHelpers.h>
 
 #include "utils/log.h"
-#include "utils/convert.h"
 #include "utils/message/win/message_pump_ui_win.h"
-#include "utils/number.hpp"
+#include "utils/numbers.hpp"
 #include "utils/time_utils.h"
 
 #include "ukive/app/application.h"
@@ -50,6 +49,7 @@
 
 
 namespace ukive {
+namespace win {
 
     const int kDefaultX = 0;
     const int kDefaultY = 0;
@@ -1109,7 +1109,7 @@ namespace ukive {
             return false;
         }
 
-        auto pump = static_cast<utl::MessagePumpUIWin*>(
+        auto pump = static_cast<utl::win::MessagePumpUIWin*>(
             utl::MessagePump::getCurrent());
 
         POINT pos;
@@ -2175,7 +2175,7 @@ namespace ukive {
              * “注入”到内部的消息循环中。
              */
             *handled = true;
-            auto pump = static_cast<utl::MessagePumpUIWin*>(
+            auto pump = static_cast<utl::win::MessagePumpUIWin*>(
                 utl::MessagePump::getCurrent());
 
             pump->setInSizeModalLoop(true);
@@ -2200,7 +2200,7 @@ namespace ukive {
 
             // 参见上方 SC_SIZE 里的注释
             *handled = true;
-            auto pump = static_cast<utl::MessagePumpUIWin*>(
+            auto pump = static_cast<utl::win::MessagePumpUIWin*>(
                 utl::MessagePump::getCurrent());
 
             pump->setInMoveModalLoop(true);
@@ -2774,4 +2774,5 @@ namespace ukive {
             SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
     }
 
+}
 }

@@ -19,7 +19,7 @@ namespace ukive {
 
     TextLayout* TextLayout::create() {
 #ifdef OS_WINDOWS
-        return new DWTextLayout();
+        return new win::DWTextLayout();
 #elif defined OS_MAC
         return new TextLayoutMac();
 #endif

@@ -14,6 +14,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class WindowImplWin;
 
@@ -50,6 +51,7 @@ namespace ukive {
         virtual LRESULT onGetMinMaxInfo(WPARAM wParam, LPARAM lParam, bool* handled) = 0;
     };
 
+}
 }
 
 #endif  // UKIVE_WINDOW_WIN_FRAME_NON_CLIENT_FRAME_H_

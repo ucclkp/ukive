@@ -8,6 +8,7 @@
 
 
 namespace ukive {
+namespace win {
 
     GPUDepthStencilD3D::GPUDepthStencilD3D(
         const ComPtr<ID3D11DepthStencilView>& dsv)
@@ -21,4 +22,5 @@ namespace ukive {
         return dsv_.get();
     }
 
+}
 }

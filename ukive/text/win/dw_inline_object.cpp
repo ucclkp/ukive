@@ -12,6 +12,7 @@
 
 
 namespace ukive {
+namespace win {
 
     DWInlineObject::DWInlineObject()
         : ref_count_(1) {}
@@ -117,4 +118,5 @@ namespace ukive {
         return S_OK;
     }
 
+}
 }

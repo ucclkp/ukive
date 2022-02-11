@@ -20,7 +20,7 @@ namespace ukive {
     // static
     ColorManager* ColorManager::create() {
 #ifdef OS_WINDOWS
-        return new ColorManagerWin();
+        return new win::ColorManagerWin();
 #elif defined OS_MAC
 #endif
     }

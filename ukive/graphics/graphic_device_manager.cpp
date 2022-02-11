@@ -22,7 +22,7 @@ namespace ukive {
 
     GraphicDeviceManager* GraphicDeviceManager::create() {
 #ifdef OS_WINDOWS
-        return new DirectXManager();
+        return new win::DirectXManager();
 #elif defined OS_MAC
         return new GraphicDeviceManagerMac();
 #endif

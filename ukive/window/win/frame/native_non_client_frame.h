@@ -15,6 +15,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class NativeNonClientFrame : public NonClientFrame {
     public:
@@ -54,6 +55,7 @@ namespace ukive {
         WindowImplWin* window_ = nullptr;
     };
 
+}
 }
 
 #endif  // UKIVE_WINDOW_WIN_FRAME_NATIVE_NON_CLIENT_FRAME_H_

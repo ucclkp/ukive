@@ -14,6 +14,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class GPUBufferD3D : public GPUBuffer {
     public:
@@ -28,6 +29,7 @@ namespace ukive {
         ComPtr<ID3D11Buffer> d3d_buffer_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_GPU_GPU_BUFFER_D3D_H_

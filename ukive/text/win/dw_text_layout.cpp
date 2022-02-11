@@ -7,8 +7,7 @@
 #include "ukive/text/win/dw_text_layout.h"
 
 #include "utils/log.h"
-#include "utils/convert.h"
-#include "utils/number.hpp"
+#include "utils/numbers.hpp"
 
 #include "ukive/app/application.h"
 #include "ukive/graphics/win/directx_manager.h"
@@ -55,6 +54,7 @@ namespace ukive {
 }
 
 namespace ukive {
+namespace win {
 
     DWTextLayout::DWTextLayout() {
         text_renderer_ = new TextRenderer();
@@ -430,4 +430,5 @@ namespace ukive {
         return max_height;
     }
 
+}
 }

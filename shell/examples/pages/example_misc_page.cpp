@@ -6,7 +6,7 @@
 
 #include "example_misc_page.h"
 
-#include "utils/convert.h"
+#include "utils/strings/string_utils.hpp"
 
 #include "ukive/app/application.h"
 #include "ukive/graphics/canvas.h"
@@ -73,6 +73,8 @@ namespace {
     }
 
     void fillChartView3(ukive::ChartView* v) {
+        using namespace utl;
+
         const size_t M = 18;
         const size_t N = 10;
 
@@ -102,6 +104,8 @@ namespace {
     }
 
     void fillChartView4(ukive::ChartView* v) {
+        using namespace utl;
+
         const size_t M = 5;
         const size_t N = 10;
 
@@ -242,7 +246,7 @@ namespace shell {
         test_button_->setOnClickListener(this);
 
         std::wstring icc_path;
-        if (ukive::ColorManagerWin::getDefaultProfile(&icc_path))
+        if (ukive::win::ColorManagerWin::getDefaultProfile(&icc_path))
         {
             ukive::Color tc;
             ukive::ColorManagementModule cmm;

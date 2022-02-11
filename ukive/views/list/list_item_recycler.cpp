@@ -6,7 +6,6 @@
 
 #include "list_item_recycler.h"
 
-#include "utils/number.hpp"
 #include "utils/log.h"
 #include "utils/stl_utils.h"
 

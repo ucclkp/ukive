@@ -13,6 +13,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class WindowImplWin;
 
@@ -68,6 +69,7 @@ namespace ukive {
         HWND cur_source_ = nullptr;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_DISPLAY_MANAGER_WIN_H_

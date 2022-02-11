@@ -9,8 +9,8 @@
 #include <algorithm>
 #include <filesystem>
 
-#include "utils/convert.h"
-#include "utils/number.hpp"
+#include "utils/numbers.hpp"
+#include "utils/strings/string_utils.hpp"
 
 #include "ukive/graphics/images/image_frame.h"
 #include "ukive/graphics/images/image_options.h"
@@ -97,9 +97,8 @@ namespace shell {
     }
 
     bool SlideImageView::checkFileExt(const std::u16string& ext) {
-        auto lower_ext = utl::tolatl(ext);
         for (const auto& allowed_ext : exts_) {
-            if (lower_ext == allowed_ext) {
+            if (utl::isLitEqual(ext, allowed_ext)) {
                 return true;
             }
         }

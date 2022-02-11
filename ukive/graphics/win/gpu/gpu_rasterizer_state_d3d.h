@@ -14,6 +14,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class GPURasterizerStateD3D : public GPURasterizerState {
     public:
@@ -26,6 +27,7 @@ namespace ukive {
         ComPtr<ID3D11RasterizerState> rs_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_GPU_GPU_RASTERIZER_STATE_D3D_H_

@@ -14,6 +14,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class GPURenderTargetD3D : public GPURenderTarget {
     public:
@@ -28,6 +29,7 @@ namespace ukive {
         ComPtr<ID3D11RenderTargetView> rtv_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_GPU_GPU_RENDER_TARGET_D3D_H_

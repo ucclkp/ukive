@@ -14,6 +14,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class GPUVertexShaderD3D : public GPUShader {
     public:
@@ -38,6 +39,7 @@ namespace ukive {
         ComPtr<ID3D11PixelShader> ps_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_WIN_GPU_GPU_SHADER_D3D_H_

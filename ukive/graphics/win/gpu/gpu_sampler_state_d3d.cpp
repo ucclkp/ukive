@@ -8,6 +8,7 @@
 
 
 namespace ukive {
+namespace win {
 
     GPUSamplerStateD3D::GPUSamplerStateD3D(
         const ComPtr<ID3D11SamplerState>& ss)
@@ -21,4 +22,5 @@ namespace ukive {
         return ss_.get();
     }
 
+}
 }
