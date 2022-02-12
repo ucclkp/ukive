@@ -870,9 +870,6 @@
     <ClInclude Include="text\win\dw_text_renderer.h">
       <Filter>text\win</Filter>
     </ClInclude>
-    <ClInclude Include="system\win\com_ptr.hpp">
-      <Filter>system\win</Filter>
-    </ClInclude>
     <ClInclude Include="system\win\dynamic_windows_api.h">
       <Filter>system\win</Filter>
     </ClInclude>
@@ -1380,9 +1377,6 @@
     <ClInclude Include="views\list\list_item_event_router.h">
       <Filter>views\list</Filter>
     </ClInclude>
-    <ClInclude Include="system\win\critical_section.hpp">
-      <Filter>system\win</Filter>
-    </ClInclude>
     <ClInclude Include="views\media_view.h">
       <Filter>views</Filter>
     </ClInclude>
@@ -1529,9 +1523,6 @@
     </ClInclude>
     <ClInclude Include="graphics\colors\icc\types\icc_type_multi_proc_elements.h">
       <Filter>graphics\colors\icc\types</Filter>
-    </ClInclude>
-    <ClInclude Include="system\win\com_pptr.hpp">
-      <Filter>system\win</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

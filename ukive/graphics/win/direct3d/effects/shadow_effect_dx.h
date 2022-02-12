@@ -56,9 +56,9 @@ namespace win {
         };
 
         bool createTexture(
-            ComPtr<ID3D11Texture2D>& tex,
-            ComPtr<ID3D11RenderTargetView>& rtv,
-            ComPtr<ID3D11ShaderResourceView>& srv);
+            utl::win::ComPtr<ID3D11Texture2D>& tex,
+            utl::win::ComPtr<ID3D11RenderTargetView>& rtv,
+            utl::win::ComPtr<ID3D11ShaderResourceView>& srv);
         bool createKernelTexture();
         bool setSize(int width, int height, bool hdr);
         void render();
@@ -77,30 +77,30 @@ namespace win {
         ukv3d::Matrix4x4F view_matrix_;
         ukv3d::Matrix4x4F ortho_matrix_;
 
-        ComPtr<ID3D11RenderTargetView> bg_rtv_;
-        ComPtr<ID3D11ShaderResourceView> bg_srv_;
+        utl::win::ComPtr<ID3D11RenderTargetView> bg_rtv_;
+        utl::win::ComPtr<ID3D11ShaderResourceView> bg_srv_;
 
-        ComPtr<ID3D11Texture2D> kernel_tex2d_;
-        ComPtr<ID3D11ShaderResourceView> kernel_srv_;
+        utl::win::ComPtr<ID3D11Texture2D> kernel_tex2d_;
+        utl::win::ComPtr<ID3D11ShaderResourceView> kernel_srv_;
 
-        ComPtr<ID3D11Texture2D> shadow1_tex2d_;
-        ComPtr<ID3D11RenderTargetView> shadow1_rtv_;
-        ComPtr<ID3D11ShaderResourceView> shadow1_srv_;
+        utl::win::ComPtr<ID3D11Texture2D> shadow1_tex2d_;
+        utl::win::ComPtr<ID3D11RenderTargetView> shadow1_rtv_;
+        utl::win::ComPtr<ID3D11ShaderResourceView> shadow1_srv_;
 
-        ComPtr<ID3D11Texture2D> shadow2_tex2d_;
-        ComPtr<ID3D11RenderTargetView> shadow2_rtv_;
-        ComPtr<ID3D11ShaderResourceView> shadow2_srv_;
+        utl::win::ComPtr<ID3D11Texture2D> shadow2_tex2d_;
+        utl::win::ComPtr<ID3D11RenderTargetView> shadow2_rtv_;
+        utl::win::ComPtr<ID3D11ShaderResourceView> shadow2_srv_;
 
-        ComPtr<ID3D11Buffer> vert_buffer_;
-        ComPtr<ID3D11Buffer> index_buffer_;
-        ComPtr<ID3D11Buffer> const_buffer_;
-        ComPtr<ID3D11InputLayout> input_layout_;
-        ComPtr<ID3D11PixelShader> vert_ps_;
-        ComPtr<ID3D11PixelShader> hori_ps_;
-        ComPtr<ID3D11VertexShader> vs_;
+        utl::win::ComPtr<ID3D11Buffer> vert_buffer_;
+        utl::win::ComPtr<ID3D11Buffer> index_buffer_;
+        utl::win::ComPtr<ID3D11Buffer> const_buffer_;
+        utl::win::ComPtr<ID3D11InputLayout> input_layout_;
+        utl::win::ComPtr<ID3D11PixelShader> vert_ps_;
+        utl::win::ComPtr<ID3D11PixelShader> hori_ps_;
+        utl::win::ComPtr<ID3D11VertexShader> vs_;
 
         D3D11_VIEWPORT viewport_;
-        ComPtr<ID3D11RasterizerState> rasterizer_state_;
+        utl::win::ComPtr<ID3D11RasterizerState> rasterizer_state_;
 
         Context context_;
         std::shared_ptr<ImageFrame> cache_;

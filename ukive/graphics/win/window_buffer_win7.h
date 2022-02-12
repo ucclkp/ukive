@@ -55,7 +55,7 @@ namespace win {
         ImageOptions img_options_;
         WindowImplWin* window_ = nullptr;
         std::unique_ptr<CyroRenderTargetD2D> rt_;
-        ComPtr<IDXGISwapChain> swapchain_;
+        utl::win::ComPtr<IDXGISwapChain> swapchain_;
     };
 
 }

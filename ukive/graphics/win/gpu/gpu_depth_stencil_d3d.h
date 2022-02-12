@@ -7,8 +7,9 @@
 #ifndef UKIVE_GRAPHICS_WIN_GPU_GPU_DEPTH_STENCIL_D3D_H_
 #define UKIVE_GRAPHICS_WIN_GPU_GPU_DEPTH_STENCIL_D3D_H_
 
+#include "utils/memory/win/com_ptr.hpp"
+
 #include "ukive/graphics/gpu/gpu_depth_stencil.h"
-#include "ukive/system/win/com_ptr.hpp"
 
 #include <d3d11.h>
 
@@ -18,13 +19,13 @@ namespace win {
 
     class GPUDepthStencilD3D : public GPUDepthStencil {
     public:
-        explicit GPUDepthStencilD3D(const ComPtr<ID3D11DepthStencilView>& dsv);
+        explicit GPUDepthStencilD3D(const utl::win::ComPtr<ID3D11DepthStencilView>& dsv);
 
-        void setNative(const ComPtr<ID3D11DepthStencilView>& dsv);
+        void setNative(const utl::win::ComPtr<ID3D11DepthStencilView>& dsv);
         ID3D11DepthStencilView* getNative() const;
 
     private:
-        ComPtr<ID3D11DepthStencilView> dsv_;
+        utl::win::ComPtr<ID3D11DepthStencilView> dsv_;
     };
 
 }

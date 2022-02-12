@@ -7,8 +7,9 @@
 #ifndef UKIVE_GRAPHICS_WIN_IMAGE_LC_IMAGE_FRAME_WIN_H_
 #define UKIVE_GRAPHICS_WIN_IMAGE_LC_IMAGE_FRAME_WIN_H_
 
+#include "utils/memory/win/com_ptr.hpp"
+
 #include "ukive/graphics/images/lc_image_frame.h"
-#include "ukive/system/win/com_ptr.hpp"
 
 #include <wincodec.h>
 
@@ -24,11 +25,11 @@ namespace win {
     class LcImageFrameWin : public LcImageFrame {
     public:
         LcImageFrameWin(
-            const ComPtr<IWICImagingFactory>& factory,
-            const ComPtr<IWICBitmapSource>& source);
+            const utl::win::ComPtr<IWICImagingFactory>& factory,
+            const utl::win::ComPtr<IWICBitmapSource>& source);
         LcImageFrameWin(
-            const ComPtr<IWICImagingFactory>& factory,
-            const ComPtr<IWICBitmap>& bitmap);
+            const utl::win::ComPtr<IWICImagingFactory>& factory,
+            const utl::win::ComPtr<IWICBitmap>& bitmap);
 
         bool createIfNecessary();
 
@@ -43,16 +44,16 @@ namespace win {
         uint8_t* lockPixels() override;
         void unlockPixels() override;
 
-        ComPtr<IWICBitmap> getNative() const;
-        ComPtr<IWICBitmapSource> getNativeSrc() const;
+        utl::win::ComPtr<IWICBitmap> getNative() const;
+        utl::win::ComPtr<IWICBitmapSource> getNativeSrc() const;
 
     private:
         float dpi_x_ = 0;
         float dpi_y_ = 0;
-        ComPtr<IWICBitmap> native_bitmap_;
-        ComPtr<IWICBitmapLock> lock_;
-        ComPtr<IWICBitmapSource> native_src_;
-        ComPtr<IWICImagingFactory> wic_factory_;
+        utl::win::ComPtr<IWICBitmap> native_bitmap_;
+        utl::win::ComPtr<IWICBitmapLock> lock_;
+        utl::win::ComPtr<IWICBitmapSource> native_src_;
+        utl::win::ComPtr<IWICImagingFactory> wic_factory_;
     };
 
 }

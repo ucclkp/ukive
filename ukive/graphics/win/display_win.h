@@ -7,8 +7,9 @@
 #ifndef UKIVE_GRAPHICS_WIN_DISPLAY_WIN_H_
 #define UKIVE_GRAPHICS_WIN_DISPLAY_WIN_H_
 
+#include "utils/memory/win/com_ptr.hpp"
+
 #include "ukive/graphics/display.h"
-#include "ukive/system/win/com_ptr.hpp"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -55,9 +56,9 @@ namespace win {
         HMONITOR monitor_;
         DEVMODEW monitor_mode_;
         MONITORINFOEXW monitor_info_;
-        ComPtr<IDXGIOutput> cur_output_;
-        ComPtr<IDXGIOutput6> cur_output6_;
-        ComPtr<IDXGIAdapter1> cur_adapter_;
+        utl::win::ComPtr<IDXGIOutput> cur_output_;
+        utl::win::ComPtr<IDXGIOutput6> cur_output6_;
+        utl::win::ComPtr<IDXGIAdapter1> cur_adapter_;
     };
 
 }

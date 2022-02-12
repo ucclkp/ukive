@@ -12,12 +12,11 @@
 #include "utils/message/cycler.h"
 
 #include "ukive/media/media_player.h"
+#include "ukive/media/win/mf_d3d9_render_engine.h"
 
 #include <d2d1.h>
 #include <d3d11.h>
 #include <mfidl.h>
-
-#include "ukive/media/win/mf_d3d9_render_engine.h"
 
 
 namespace ukive {
@@ -116,9 +115,9 @@ namespace win {
 
         HWND hwnd_ = nullptr;
         Window* window_ = nullptr;
-        ComPtr<IMFSample> video_sample_;
-        ComPtr<ID2D1Bitmap> video_bitmap_;
-        ComPtr<ID3D11Texture2D> video_texture_;
+        utl::win::ComPtr<IMFSample> video_sample_;
+        utl::win::ComPtr<ID2D1Bitmap> video_bitmap_;
+        utl::win::ComPtr<ID3D11Texture2D> video_texture_;
         MediaPlayerCallback* callback_ = nullptr;
 
         utl::Cycler cycler_;

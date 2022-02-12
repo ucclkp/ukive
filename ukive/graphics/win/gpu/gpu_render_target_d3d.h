@@ -7,8 +7,9 @@
 #ifndef UKIVE_GRAPHICS_WIN_GPU_GPU_RENDER_TARGET_D3D_H_
 #define UKIVE_GRAPHICS_WIN_GPU_GPU_RENDER_TARGET_D3D_H_
 
+#include "utils/memory/win/com_ptr.hpp"
+
 #include "ukive/graphics/gpu/gpu_render_target.h"
-#include "ukive/system/win/com_ptr.hpp"
 
 #include <d3d11.h>
 
@@ -18,15 +19,15 @@ namespace win {
 
     class GPURenderTargetD3D : public GPURenderTarget {
     public:
-        explicit GPURenderTargetD3D(const ComPtr<ID3D11RenderTargetView>& rtv);
+        explicit GPURenderTargetD3D(const utl::win::ComPtr<ID3D11RenderTargetView>& rtv);
 
         Native getOpaque() const override;
 
-        void setNative(const ComPtr<ID3D11RenderTargetView>& rtv);
+        void setNative(const utl::win::ComPtr<ID3D11RenderTargetView>& rtv);
         ID3D11RenderTargetView* getNative() const;
 
     private:
-        ComPtr<ID3D11RenderTargetView> rtv_;
+        utl::win::ComPtr<ID3D11RenderTargetView> rtv_;
     };
 
 }

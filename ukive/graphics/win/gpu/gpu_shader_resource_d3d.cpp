@@ -11,10 +11,10 @@ namespace ukive {
 namespace win {
 
     GPUShaderResourceD3D::GPUShaderResourceD3D(
-        const ComPtr<ID3D11ShaderResourceView>& srv)
+        const utl::win::ComPtr<ID3D11ShaderResourceView>& srv)
         : srv_(srv) {}
 
-    void GPUShaderResourceD3D::setNative(const ComPtr<ID3D11ShaderResourceView>& srv) {
+    void GPUShaderResourceD3D::setNative(const utl::win::ComPtr<ID3D11ShaderResourceView>& srv) {
         srv_ = srv;
     }
 

@@ -209,7 +209,7 @@ namespace win {
             }
         }
 
-        ComPtr<IDXGIFactory2> parent;
+        utl::win::ComPtr<IDXGIFactory2> parent;
         hr = swapchain_->GetParent(__uuidof(IDXGIFactory2), reinterpret_cast<void**>(&parent));
         if (FAILED(hr)) {
             LOG(Log::FATAL) << "Failed to get SwapChain parent: " << hr;
@@ -222,7 +222,7 @@ namespace win {
             return false;
         }
 
-        ComPtr<IDXGISurface> back_buffer;
+        utl::win::ComPtr<IDXGISurface> back_buffer;
         hr = swapchain_->GetBuffer(0, __uuidof(IDXGISurface), reinterpret_cast<LPVOID*>(&back_buffer));
         if (FAILED(hr)) {
             LOG(Log::FATAL) << "Failed to query DXGI surface: " << hr;
@@ -317,7 +317,7 @@ namespace win {
             return GRet::Failed;
         }
 
-        ComPtr<IDXGISurface> back_buffer;
+        utl::win::ComPtr<IDXGISurface> back_buffer;
         hr = swapchain_->GetBuffer(0, __uuidof(IDXGISurface), reinterpret_cast<LPVOID*>(&back_buffer));
         if (FAILED(hr)) {
             LOG(Log::FATAL) << "Failed to query DXGI surface: " << hr;

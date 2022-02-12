@@ -9,7 +9,8 @@
 
 #include <msctf.h>
 
-#include "ukive/system/win/com_ptr.hpp"
+#include "utils/memory/win/com_ptr.hpp"
+
 #include "ukive/text/input_method_manager.h"
 
 
@@ -31,7 +32,7 @@ namespace win {
         bool updateIMEStatus() override;
 
         TfClientId getClientId() const;
-        ComPtr<ITfThreadMgr> getThreadManager() const;
+        utl::win::ComPtr<ITfThreadMgr> getThreadManager() const;
 
         HRESULT setupSinks();
         HRESULT releaseSinks();
@@ -39,17 +40,17 @@ namespace win {
     private:
         // https://docs.microsoft.com/zh-cn/windows/win32/tsf/predefined-compartments
         HRESULT setupCompartmentSinks(
-            const ComPtr<ITfCompartment>& open_mode,
-            const ComPtr<ITfCompartment>& conv_mode);
+            const utl::win::ComPtr<ITfCompartment>& open_mode,
+            const utl::win::ComPtr<ITfCompartment>& conv_mode);
         HRESULT releaseCompartmentSinks();
         HRESULT getCompartments(
-            ComPtr<ITfCompartmentMgr>& cm,
-            ComPtr<ITfCompartment>& open_mode,
-            ComPtr<ITfCompartment>& conv_mode);
+            utl::win::ComPtr<ITfCompartmentMgr>& cm,
+            utl::win::ComPtr<ITfCompartment>& open_mode,
+            utl::win::ComPtr<ITfCompartment>& conv_mode);
 
         TfClientId client_id_;
-        ComPtr<TsfSink> sink_;
-        ComPtr<ITfThreadMgr> thread_mgr_;
+        utl::win::ComPtr<TsfSink> sink_;
+        utl::win::ComPtr<ITfThreadMgr> thread_mgr_;
 
         DWORD alpn_sink_cookie_;
         DWORD open_mode_sink_cookie_;

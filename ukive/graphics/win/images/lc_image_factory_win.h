@@ -9,9 +9,10 @@
 
 #include <wincodec.h>
 
+#include "utils/memory/win/com_ptr.hpp"
+
 #include "ukive/graphics/images/image_data.h"
 #include "ukive/graphics/images/lc_image_factory.h"
-#include "ukive/system/win/com_ptr.hpp"
 
 
 namespace ukive {
@@ -54,19 +55,19 @@ namespace win {
         void getFrameMetadata(
             IWICBitmapFrameDecode* decoder, GifImageFrData* data);
 
-        ComPtr<IWICBitmapDecoder> createDecoder(const std::u16string& file_name);
-        ComPtr<IWICBitmapDecoder> createDecoder(uint8_t* buffer, size_t size);
-        ComPtr<IWICBitmapSource> convertPixelFormat(
+        utl::win::ComPtr<IWICBitmapDecoder> createDecoder(const std::u16string& file_name);
+        utl::win::ComPtr<IWICBitmapDecoder> createDecoder(uint8_t* buffer, size_t size);
+        utl::win::ComPtr<IWICBitmapSource> convertPixelFormat(
             IWICBitmapSource* frame, const ImageOptions& options);
 
         LcImage processDecoder(
             IWICBitmapDecoder* decoder, const ImageOptions& options);
 
         bool exploreColorProfile(IWICBitmapFrameDecode* frame);
-        ComPtr<IWICBitmapSource> convertGamut(
+        utl::win::ComPtr<IWICBitmapSource> convertGamut(
             IWICBitmapFrameDecode* src, IWICColorContext* dst_cc);
 
-        ComPtr<IWICImagingFactory> wic_factory_;
+        utl::win::ComPtr<IWICImagingFactory> wic_factory_;
     };
 
 }

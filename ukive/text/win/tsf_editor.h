@@ -13,7 +13,7 @@
 #include <memory>
 #include <queue>
 
-#include "ukive/system/win/com_ptr.hpp"
+#include "utils/memory/win/com_ptr.hpp"
 
 
 namespace ukive {
@@ -101,8 +101,8 @@ namespace win {
 
     private:
         struct SinkRecord {
-            ComPtr<IUnknown> punk_id;
-            ComPtr<ITextStoreACPSink> sink;
+            utl::win::ComPtr<IUnknown> punk_id;
+            utl::win::ComPtr<ITextStoreACPSink> sink;
             DWORD mask;
         };
 

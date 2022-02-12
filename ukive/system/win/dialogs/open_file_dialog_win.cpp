@@ -8,9 +8,9 @@
 
 #include <ShlObj.h>
 
+#include "utils/memory/win/com_ptr.hpp"
 #include "utils/message/win/message_pump_ui_win.h"
 
-#include "ukive/system/win/com_ptr.hpp"
 #include "ukive/window/win/window_impl_win.h"
 #include "ukive/window/window.h"
 
@@ -21,7 +21,7 @@ namespace win {
     OpenFileDialogWin::OpenFileDialogWin() {}
 
     int OpenFileDialogWin::show(Window* parent, uint32_t flags) {
-        ComPtr<IFileOpenDialog> pfd;
+        utl::win::ComPtr<IFileOpenDialog> pfd;
         HRESULT hr = ::CoCreateInstance(
             CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pfd));
         if (FAILED(hr)) {
@@ -64,7 +64,7 @@ namespace win {
             return -1;
         }
 
-        ComPtr<IShellItemArray> item_array;
+        utl::win::ComPtr<IShellItemArray> item_array;
         hr = pfd->GetResults(&item_array);
         if (FAILED(hr)) {
             return -1;
@@ -79,7 +79,7 @@ namespace win {
         sel_files_.clear();
 
         for (DWORD i = 0; i < count; ++i) {
-            ComPtr<IShellItem> item;
+            utl::win::ComPtr<IShellItem> item;
             if (SUCCEEDED(item_array->GetItemAt(i, &item))) {
                 LPWSTR path;
                 if (SUCCEEDED(item->GetDisplayName(SIGDN_FILESYSPATH, &path))) {

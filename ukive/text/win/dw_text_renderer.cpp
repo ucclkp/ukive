@@ -64,7 +64,7 @@ namespace win {
         auto renderer = static_cast<CyroRendererD2D*>(canvas->getRenderer());
 
         if (clientDrawingEffect) {
-            ComPtr<DWTextDrawingEffect> drawing_effect;
+            utl::win::ComPtr<DWTextDrawingEffect> drawing_effect;
             HRESULT hr = clientDrawingEffect->QueryInterface(&drawing_effect);
             if (SUCCEEDED(hr)) {
                 if (drawing_effect->custom_drawing_enabled &&
@@ -118,7 +118,7 @@ namespace win {
             underline->width, underline->thickness);
 
         if (clientDrawingEffect) {
-            ComPtr<DWTextDrawingEffect> drawing_effect;
+            utl::win::ComPtr<DWTextDrawingEffect> drawing_effect;
             HRESULT hr = clientDrawingEffect->QueryInterface(&drawing_effect);
             if (SUCCEEDED(hr)) {
                 if (drawing_effect->alter_underline_color) {
@@ -163,7 +163,7 @@ namespace win {
             strikethrough->width, strikethrough->thickness);
 
         if (clientDrawingEffect) {
-            ComPtr<DWTextDrawingEffect> drawing_effect;
+            utl::win::ComPtr<DWTextDrawingEffect> drawing_effect;
             HRESULT hr = clientDrawingEffect->QueryInterface(&drawing_effect);
             if (SUCCEEDED(hr)) {
                 if (drawing_effect->alter_strikethrough_color) {

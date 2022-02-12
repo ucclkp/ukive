@@ -9,8 +9,6 @@
 #include "utils/log.h"
 #include "utils/scope_utils.hpp"
 
-#include "ukive/system/win/com_ptr.hpp"
-
 #include <d3d9.h>
 #include <evcode.h>
 #include <intsafe.h>
@@ -104,7 +102,7 @@ namespace win {
     }
 
     void MFVideoPresenter::setDisplaySize(const Size& size) {
-        CritSecGuard guard(obj_lock_);
+        utl::win::CritSecGuard guard(obj_lock_);
 
         if (display_size_ != size) {
             display_size_ = size;
@@ -122,7 +120,7 @@ namespace win {
     }
 
     STDMETHODIMP MFVideoPresenter::OnClockStart(MFTIME hnsSystemTime, LONGLONG llClockStartOffset) {
-        CritSecGuard guard(obj_lock_);
+        utl::win::CritSecGuard guard(obj_lock_);
 
         if (render_state_ == RenderState::Shutdown) {
             return MF_E_SHUTDOWN;
@@ -148,7 +146,7 @@ namespace win {
     }
 
     STDMETHODIMP MFVideoPresenter::OnClockStop(MFTIME hnsSystemTime) {
-        CritSecGuard guard(obj_lock_);
+        utl::win::CritSecGuard guard(obj_lock_);
 
         if (render_state_ == RenderState::Shutdown) {
             return MF_E_SHUTDOWN;
@@ -169,7 +167,7 @@ namespace win {
     }
 
     STDMETHODIMP MFVideoPresenter::OnClockPause(MFTIME hnsSystemTime) {
-        CritSecGuard guard(obj_lock_);
+        utl::win::CritSecGuard guard(obj_lock_);
 
         if (render_state_ == RenderState::Shutdown) {
             return MF_E_SHUTDOWN;
@@ -180,7 +178,7 @@ namespace win {
     }
 
     STDMETHODIMP MFVideoPresenter::OnClockRestart(MFTIME hnsSystemTime) {
-        CritSecGuard guard(obj_lock_);
+        utl::win::CritSecGuard guard(obj_lock_);
 
         if (render_state_ == RenderState::Shutdown) {
             return MF_E_SHUTDOWN;
@@ -200,7 +198,7 @@ namespace win {
     }
 
     STDMETHODIMP MFVideoPresenter::OnClockSetRate(MFTIME hnsSystemTime, float flRate) {
-        CritSecGuard guard(obj_lock_);
+        utl::win::CritSecGuard guard(obj_lock_);
 
         if (render_state_ == RenderState::Shutdown) {
             return MF_E_SHUTDOWN;
@@ -217,7 +215,7 @@ namespace win {
     }
 
     STDMETHODIMP MFVideoPresenter::ProcessMessage(MFVP_MESSAGE_TYPE eMessage, ULONG_PTR ulParam) {
-        CritSecGuard guard(obj_lock_);
+        utl::win::CritSecGuard guard(obj_lock_);
 
         if (render_state_ == RenderState::Shutdown) {
             return MF_E_SHUTDOWN;
@@ -273,7 +271,7 @@ namespace win {
 
         *ppMediaType = nullptr;
 
-        CritSecGuard csg(obj_lock_);
+        utl::win::CritSecGuard csg(obj_lock_);
 
         if (render_state_ == RenderState::Shutdown) {
             return MF_E_SHUTDOWN;
@@ -310,7 +308,7 @@ namespace win {
             return E_POINTER;
         }
 
-        CritSecGuard csg(obj_lock_);
+        utl::win::CritSecGuard csg(obj_lock_);
 
         if (isActive()) {
             return MF_E_INVALIDREQUEST;
@@ -354,7 +352,7 @@ namespace win {
 
     STDMETHODIMP MFVideoPresenter::ReleaseServicePointers() {
         {
-            CritSecGuard csg(obj_lock_);
+            utl::win::CritSecGuard csg(obj_lock_);
             render_state_ = RenderState::Shutdown;
         }
 
@@ -392,7 +390,7 @@ namespace win {
     }
 
     STDMETHODIMP MFVideoPresenter::SetVideoPosition(const MFVideoNormalizedRect* pnrcSource, const LPRECT prcDest) {
-        CritSecGuard csg(obj_lock_);
+        utl::win::CritSecGuard csg(obj_lock_);
 
         if (!pnrcSource && !prcDest) {
             return E_POINTER;
@@ -448,7 +446,7 @@ namespace win {
     }
 
     STDMETHODIMP MFVideoPresenter::GetVideoPosition(MFVideoNormalizedRect* pnrcSource, LPRECT prcDest) {
-        CritSecGuard csg(obj_lock_);
+        utl::win::CritSecGuard csg(obj_lock_);
 
         if (!pnrcSource || !prcDest) {
             return E_POINTER;
@@ -474,7 +472,7 @@ namespace win {
     }
 
     STDMETHODIMP MFVideoPresenter::SetVideoWindow(HWND hwndVideo) {
-        CritSecGuard csg(obj_lock_);
+        utl::win::CritSecGuard csg(obj_lock_);
 
         if (!::IsWindow(hwndVideo)) {
             return E_INVALIDARG;
@@ -492,7 +490,7 @@ namespace win {
     }
 
     STDMETHODIMP MFVideoPresenter::GetVideoWindow(HWND* phwndVideo) {
-        CritSecGuard csg(obj_lock_);
+        utl::win::CritSecGuard csg(obj_lock_);
 
         if (!phwndVideo) {
             return E_POINTER;
@@ -503,7 +501,7 @@ namespace win {
     }
 
     STDMETHODIMP MFVideoPresenter::RepaintVideo() {
-        CritSecGuard csg(obj_lock_);
+        utl::win::CritSecGuard csg(obj_lock_);
 
         if (render_state_ == RenderState::Shutdown) {
             return MF_E_SHUTDOWN;
@@ -637,7 +635,7 @@ namespace win {
 
     HRESULT MFVideoPresenter::configMixer(IMFTransform* mixer) {
         HRESULT hr;
-        ComPtr<IMFVideoDeviceID> device_id;
+        utl::win::ComPtr<IMFVideoDeviceID> device_id;
         hr = mixer->QueryInterface(&device_id);
         if (FAILED(hr)) {
             return hr;
@@ -664,7 +662,7 @@ namespace win {
         ZeroMemory(&display_area, sizeof(MFVideoArea));
 
         HRESULT hr;
-        ComPtr<IMFMediaType> optimal;
+        utl::win::ComPtr<IMFMediaType> optimal;
         hr = ::MFCreateMediaType(&optimal);
         if (FAILED(hr)) {
             return hr;
@@ -1134,7 +1132,7 @@ namespace win {
         data_buf.dwStatus = 0;
 
         HRESULT hr = mixer_->ProcessOutput(0, 1, &data_buf, &status);
-        auto db_events = ComPtr(data_buf.pEvents);
+        auto db_events = utl::win::ComPtr(data_buf.pEvents);
         if (FAILED(hr)) {
             sample_recycler_.recycleSample(sample);
             if (hr == MF_E_TRANSFORM_TYPE_NOT_SET) {
@@ -1178,7 +1176,7 @@ namespace win {
         return hr;
     }
 
-    HRESULT MFVideoPresenter::deliverSample(const ComPtr<IMFSample>& sample, bool repaint) {
+    HRESULT MFVideoPresenter::deliverSample(const utl::win::ComPtr<IMFSample>& sample, bool repaint) {
         ubassert(sample);
         bool present_now = render_state_ != RenderState::Started || isScrubbing() || repaint;
 
@@ -1202,7 +1200,7 @@ namespace win {
     }
 
     HRESULT MFVideoPresenter::trackSample(IMFSample* sample) {
-        ComPtr<IMFTrackedSample> tracked;
+        utl::win::ComPtr<IMFTrackedSample> tracked;
         HRESULT hr = sample->QueryInterface(&tracked);
         if (FAILED(hr)) {
             return hr;
@@ -1269,7 +1267,7 @@ namespace win {
         return hr;
     }
 
-    HRESULT MFVideoPresenter::deliverFrameStepSample(const ComPtr<IMFSample>& sample) {
+    HRESULT MFVideoPresenter::deliverFrameStepSample(const utl::win::ComPtr<IMFSample>& sample) {
         HRESULT hr = S_OK;
         if (isScrubbing() && clock_ && isSampleTimePassed(clock_.get(), sample.get())) {
 
@@ -1289,7 +1287,7 @@ namespace win {
                     return hr;
                 }
 
-                ComPtr<IUnknown> unknown;
+                utl::win::ComPtr<IUnknown> unknown;
                 hr = sample->QueryInterface(&unknown);
                 if (FAILED(hr)) {
                     return hr;
@@ -1355,9 +1353,9 @@ namespace win {
 
     HRESULT MFVideoPresenter::onSampleFree(IMFAsyncResult* result) {
         HRESULT hr;
-        ComPtr<IUnknown> object;
-        ComPtr<IMFSample> sample;
-        ComPtr<IUnknown> unknown;
+        utl::win::ComPtr<IUnknown> object;
+        utl::win::ComPtr<IMFSample> sample;
+        utl::win::ComPtr<IUnknown> unknown;
 
         ESC_FROM_SCOPE {
             if (FAILED(hr)) {
@@ -1450,7 +1448,7 @@ namespace win {
             return E_POINTER;
         }
 
-        ComPtr<IMFDesiredSample> desired;
+        utl::win::ComPtr<IMFDesiredSample> desired;
         HRESULT hr = sample->QueryInterface(&desired);
         if (SUCCEEDED(hr)) {
             desired->SetDesiredSampleTimeAndDuration(sample_time, duration);
@@ -1467,10 +1465,10 @@ namespace win {
 
         UINT32 counter = ::MFGetAttributeUINT32(sample, MFSampleCounter, UINT32(-1));
 
-        ComPtr<IUnknown> unknown;
+        utl::win::ComPtr<IUnknown> unknown;
         sample->GetUnknown(MFSampleSwapChain, IID_PPV_ARGS(&unknown));
 
-        ComPtr<IMFDesiredSample> desired;
+        utl::win::ComPtr<IMFDesiredSample> desired;
         HRESULT hr = sample->QueryInterface(&desired);
         if (SUCCEEDED(hr)) {
             desired->Clear();
@@ -1524,7 +1522,7 @@ namespace win {
             return E_POINTER;
         }
 
-        ComPtr<IMFAttributes> attrs;
+        utl::win::ComPtr<IMFAttributes> attrs;
         HRESULT hr = mixer->GetAttributes(&attrs);
         if (FAILED(hr)) {
             return hr;

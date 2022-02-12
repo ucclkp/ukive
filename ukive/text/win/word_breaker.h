@@ -16,7 +16,7 @@
 #include <string>
 #include <vector>
 
-#include "ukive/system/win/com_ptr.hpp"
+#include "utils/memory/win/com_ptr.hpp"
 
 
 namespace ukive {
@@ -58,8 +58,8 @@ namespace win {
 
         bool mIsReady;
         std::size_t mLangInfoIndex;
-        ComPtr<IWordBreaker> mWordBreaker;
-        ComPtr<WordStoreSink> mWordStoreSink;
+        utl::win::ComPtr<IWordBreaker> mWordBreaker;
+        utl::win::ComPtr<WordStoreSink> mWordStoreSink;
 
         bool loadWordBreaker(std::size_t index);
 

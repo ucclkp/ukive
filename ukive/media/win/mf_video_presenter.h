@@ -9,12 +9,13 @@
 
 #include <evr.h>
 
+#include "utils/memory/win/com_ptr.hpp"
+#include "utils/sync/win/critical_section.hpp"
+
 #include "ukive/graphics/rect.hpp"
 #include "ukive/media/win/mf_common.h"
 #include "ukive/media/win/mf_sample_recycler.h"
 #include "ukive/media/win/mf_sample_scheduler.h"
-#include "ukive/system/win/com_ptr.hpp"
-#include "ukive/system/win/critical_section.hpp"
 
 
 namespace ukive {
@@ -135,13 +136,13 @@ namespace win {
 
         void processOutputLoop();
         HRESULT processOutput();
-        HRESULT deliverSample(const ComPtr<IMFSample>& sample, bool repaint);
+        HRESULT deliverSample(const utl::win::ComPtr<IMFSample>& sample, bool repaint);
         HRESULT trackSample(IMFSample* sample);
         void destroyResources();
 
         HRESULT prepareFrameStep(DWORD steps);
         HRESULT startFrameStep();
-        HRESULT deliverFrameStepSample(const ComPtr<IMFSample>& sample);
+        HRESULT deliverFrameStepSample(const utl::win::ComPtr<IMFSample>& sample);
         HRESULT completeFrameStep(IMFSample* sample);
         HRESULT cancelFrameStep();
 
@@ -156,7 +157,7 @@ namespace win {
         static HRESULT setMixerSourceRect(IMFTransform* mixer, const MFVideoNormalizedRect& src);
 
         volatile ULONG ref_count_;
-        CritSec obj_lock_;
+        utl::win::CritSec obj_lock_;
         RenderState render_state_ = RenderState::Shutdown;
         FrameStep frame_step_;
         MFVideoNormalizedRect src_rect_;
@@ -175,7 +176,7 @@ namespace win {
         MFD3D9RenderEngine* render_engine_ = nullptr;
 
         IMediaEventSink* media_event_sink_ = nullptr;
-        ComPtr<IMFClock> clock_;
+        utl::win::ComPtr<IMFClock> clock_;
         IMFTransform* mixer_ = nullptr;
         IMFVideoDeviceID* video_device_id_ = nullptr;
         IMFMediaType* media_type_ = nullptr;

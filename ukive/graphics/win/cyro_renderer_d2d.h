@@ -86,12 +86,12 @@ namespace win {
         float opacity_;
         Matrix2x3F matrix_;
 
-        ComPtr<ID2D1RenderTarget> rt_;
-        ComPtr<ID2D1SolidColorBrush> solid_brush_;
-        ComPtr<ID2D1BitmapBrush> bitmap_brush_;
+        utl::win::ComPtr<ID2D1RenderTarget> rt_;
+        utl::win::ComPtr<ID2D1SolidColorBrush> solid_brush_;
+        utl::win::ComPtr<ID2D1BitmapBrush> bitmap_brush_;
 
         std::stack<float> opacity_stack_;
-        std::stack<ComPtr<ID2D1DrawingStateBlock>> drawing_state_stack_;
+        std::stack<utl::win::ComPtr<ID2D1DrawingStateBlock>> drawing_state_stack_;
 
         bool owned_buffer_ = false;
         CyroBuffer* buffer_ = nullptr;

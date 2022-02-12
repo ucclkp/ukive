@@ -7,8 +7,9 @@
 #ifndef UKIVE_GRAPHICS_WIN_GPU_GPU_BUFFER_D3D_H_
 #define UKIVE_GRAPHICS_WIN_GPU_GPU_BUFFER_D3D_H_
 
+#include "utils/memory/win/com_ptr.hpp"
+
 #include "ukive/graphics/gpu/gpu_buffer.h"
-#include "ukive/system/win/com_ptr.hpp"
 
 #include <d3d11.h>
 
@@ -18,7 +19,7 @@ namespace win {
 
     class GPUBufferD3D : public GPUBuffer {
     public:
-        GPUBufferD3D(const ComPtr<ID3D11Buffer>& buffer, const Desc& desc);
+        GPUBufferD3D(const utl::win::ComPtr<ID3D11Buffer>& buffer, const Desc& desc);
 
         const Desc& getDesc() const override;
 
@@ -26,7 +27,7 @@ namespace win {
 
     private:
         Desc desc_;
-        ComPtr<ID3D11Buffer> d3d_buffer_;
+        utl::win::ComPtr<ID3D11Buffer> d3d_buffer_;
     };
 
 }

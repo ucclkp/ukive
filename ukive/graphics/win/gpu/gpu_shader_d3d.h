@@ -7,8 +7,9 @@
 #ifndef UKIVE_GRAPHICS_WIN_GPU_GPU_SHADER_D3D_H_
 #define UKIVE_GRAPHICS_WIN_GPU_GPU_SHADER_D3D_H_
 
+#include "utils/memory/win/com_ptr.hpp"
+
 #include "ukive/graphics/gpu/gpu_shader.h"
-#include "ukive/system/win/com_ptr.hpp"
 
 #include <d3d11.h>
 
@@ -18,25 +19,25 @@ namespace win {
 
     class GPUVertexShaderD3D : public GPUShader {
     public:
-        explicit GPUVertexShaderD3D(const ComPtr<ID3D11VertexShader>& vs);
+        explicit GPUVertexShaderD3D(const utl::win::ComPtr<ID3D11VertexShader>& vs);
 
-        void setNative(const ComPtr<ID3D11VertexShader>& vs);
+        void setNative(const utl::win::ComPtr<ID3D11VertexShader>& vs);
         ID3D11VertexShader* getNative() const;
 
     private:
-        ComPtr<ID3D11VertexShader> vs_;
+        utl::win::ComPtr<ID3D11VertexShader> vs_;
     };
 
 
     class GPUPixelShaderD3D : public GPUShader {
     public:
-        explicit GPUPixelShaderD3D(const ComPtr<ID3D11PixelShader>& ps);
+        explicit GPUPixelShaderD3D(const utl::win::ComPtr<ID3D11PixelShader>& ps);
 
-        void setNative(const ComPtr<ID3D11PixelShader>& ps);
+        void setNative(const utl::win::ComPtr<ID3D11PixelShader>& ps);
         ID3D11PixelShader* getNative() const;
 
     private:
-        ComPtr<ID3D11PixelShader> ps_;
+        utl::win::ComPtr<ID3D11PixelShader> ps_;
     };
 
 }

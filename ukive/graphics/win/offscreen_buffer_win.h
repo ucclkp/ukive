@@ -41,14 +41,14 @@ namespace win {
         CyroRenderTarget* getRT() const override;
         const ImageOptions& getImageOptions() const override;
 
-        ComPtr<ID3D11Texture2D> getTexture() const;
+        utl::win::ComPtr<ID3D11Texture2D> getTexture() const;
 
     private:
         bool createHardwareBRT(int width, int height);
 
         int width_, height_;
         ImageOptions img_options_;
-        ComPtr<ID3D11Texture2D> d3d_tex2d_;
+        utl::win::ComPtr<ID3D11Texture2D> d3d_tex2d_;
         std::unique_ptr<CyroRenderTargetD2D> rt_;
     };
 

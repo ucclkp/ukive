@@ -12,10 +12,10 @@ namespace win {
 
     // GPUVertexShaderD3D
     GPUVertexShaderD3D::GPUVertexShaderD3D(
-        const ComPtr<ID3D11VertexShader>& vs)
+        const utl::win::ComPtr<ID3D11VertexShader>& vs)
         : vs_(vs) {}
 
-    void GPUVertexShaderD3D::setNative(const ComPtr<ID3D11VertexShader>& vs) {
+    void GPUVertexShaderD3D::setNative(const utl::win::ComPtr<ID3D11VertexShader>& vs) {
         vs_ = vs;
     }
 
@@ -26,10 +26,10 @@ namespace win {
 
     // GPUPixelShaderD3D
     GPUPixelShaderD3D::GPUPixelShaderD3D(
-        const ComPtr<ID3D11PixelShader>& ps)
+        const utl::win::ComPtr<ID3D11PixelShader>& ps)
         : ps_(ps) {}
 
-    void GPUPixelShaderD3D::setNative(const ComPtr<ID3D11PixelShader>& ps) {
+    void GPUPixelShaderD3D::setNative(const utl::win::ComPtr<ID3D11PixelShader>& ps) {
         ps_ = ps;
     }
 

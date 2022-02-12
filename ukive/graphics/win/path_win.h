@@ -29,8 +29,8 @@ namespace win {
         ID2D1PathGeometry* getNative() const { return path_geo_.get(); }
 
     private:
-        ComPtr<ID2D1PathGeometry> path_geo_;
-        ComPtr<ID2D1GeometrySink> sink_;
+        utl::win::ComPtr<ID2D1PathGeometry> path_geo_;
+        utl::win::ComPtr<ID2D1GeometrySink> sink_;
     };
 
 }

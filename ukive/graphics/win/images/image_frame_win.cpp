@@ -13,19 +13,19 @@ namespace ukive {
 namespace win {
 
     ImageFrameWin::ImageFrameWin(
-        const ComPtr<ID2D1Bitmap>& bmp,
-        const ComPtr<ID2D1RenderTarget>& rt,
-        const ComPtr<IWICBitmapSource>& src)
+        const utl::win::ComPtr<ID2D1Bitmap>& bmp,
+        const utl::win::ComPtr<ID2D1RenderTarget>& rt,
+        const utl::win::ComPtr<IWICBitmapSource>& src)
         : wic_src_(src),
           native_bitmap_(bmp)
     {
     }
 
     ImageFrameWin::ImageFrameWin(
-        const ComPtr<ID2D1Bitmap>& bmp,
-        const ComPtr<ID2D1RenderTarget>& rt,
-        const ComPtr<ID3D11DeviceContext>& ctx,
-        const ComPtr<ID3D11Texture2D>& src)
+        const utl::win::ComPtr<ID2D1Bitmap>& bmp,
+        const utl::win::ComPtr<ID2D1RenderTarget>& rt,
+        const utl::win::ComPtr<ID3D11DeviceContext>& ctx,
+        const utl::win::ComPtr<ID3D11Texture2D>& src)
         : d3d_src_(src),
           native_bitmap_(bmp)
     {
@@ -47,7 +47,7 @@ namespace win {
             utl::num_cast<SizeU::type>(size.height));
     }
 
-    ComPtr<ID2D1Bitmap> ImageFrameWin::getNative() const {
+    utl::win::ComPtr<ID2D1Bitmap> ImageFrameWin::getNative() const {
         return native_bitmap_;
     }
 

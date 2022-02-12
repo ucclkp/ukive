@@ -14,26 +14,26 @@ namespace ukive {
 namespace win {
 
     LcImageFrameWin::LcImageFrameWin(
-        const ComPtr<IWICImagingFactory>& factory,
-        const ComPtr<IWICBitmapSource>& source)
+        const utl::win::ComPtr<IWICImagingFactory>& factory,
+        const utl::win::ComPtr<IWICBitmapSource>& source)
         : native_src_(source),
           wic_factory_(factory)
     {
-        assert(source);
-        assert(factory);
-        getDpi(&dpi_x_, &dpi_y_);
+        ubassert(source);
+        ubassert(factory);
+        LcImageFrameWin::getDpi(&dpi_x_, &dpi_y_);
     }
 
     LcImageFrameWin::LcImageFrameWin(
-        const ComPtr<IWICImagingFactory>& factory,
-        const ComPtr<IWICBitmap>& bitmap)
+        const utl::win::ComPtr<IWICImagingFactory>& factory,
+        const utl::win::ComPtr<IWICBitmap>& bitmap)
         : native_bitmap_(bitmap),
           native_src_(bitmap.cast<IWICBitmapSource>()),
           wic_factory_(factory)
     {
-        assert(bitmap);
-        assert(factory);
-        getDpi(&dpi_x_, &dpi_y_);
+        ubassert(bitmap);
+        ubassert(factory);
+        LcImageFrameWin::getDpi(&dpi_x_, &dpi_y_);
     }
 
     bool LcImageFrameWin::createIfNecessary() {
@@ -44,12 +44,12 @@ namespace win {
         HRESULT hr = wic_factory_->CreateBitmapFromSource(
             native_src_.get(), WICBitmapCacheOnDemand, &native_bitmap_);
         if (FAILED(hr)) {
-            assert(false);
+            ubassert(false);
             return false;
         }
 
         hr = native_bitmap_->SetResolution(dpi_x_, dpi_y_);
-        assert(SUCCEEDED(hr));
+        ubassert(SUCCEEDED(hr));
 
         return true;
     }
@@ -61,7 +61,7 @@ namespace win {
 
             if (native_bitmap_) {
                 HRESULT hr = native_bitmap_->SetResolution(dpi_x, dpi_y);
-                assert(SUCCEEDED(hr));
+                ubassert(SUCCEEDED(hr));
             }
         }
     }
@@ -70,7 +70,7 @@ namespace win {
         double dx, dy;
         HRESULT hr = native_src_->GetResolution(&dx, &dy);
         if (FAILED(hr)) {
-            assert(false);
+            ubassert(false);
             dx = USER_DEFAULT_SCREEN_DPI;
             dy = USER_DEFAULT_SCREEN_DPI;
         }
@@ -88,7 +88,7 @@ namespace win {
     SizeU LcImageFrameWin::getPixelSize() const {
         UINT width = 0, height = 0;
         HRESULT hr = native_src_->GetSize(&width, &height);
-        assert(SUCCEEDED(hr));
+        ubassert(SUCCEEDED(hr));
         return SizeU(
             utl::num_cast<SizeU::type>(width),
             utl::num_cast<SizeU::type>(height));
@@ -136,11 +136,11 @@ namespace win {
         lock_.reset();
     }
 
-    ComPtr<IWICBitmap> LcImageFrameWin::getNative() const {
+    utl::win::ComPtr<IWICBitmap> LcImageFrameWin::getNative() const {
         return native_bitmap_;
     }
 
-    ComPtr<IWICBitmapSource> LcImageFrameWin::getNativeSrc() const {
+    utl::win::ComPtr<IWICBitmapSource> LcImageFrameWin::getNativeSrc() const {
         return native_src_;
     }
 

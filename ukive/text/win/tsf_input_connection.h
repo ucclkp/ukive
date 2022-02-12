@@ -11,7 +11,8 @@
 
 #include <msctf.h>
 
-#include "ukive/system/win/com_ptr.hpp"
+#include "utils/memory/win/com_ptr.hpp"
+
 #include "ukive/text/input_method_connection.h"
 
 
@@ -78,9 +79,9 @@ namespace win {
 
         TsfEditor* tsf_editor_;
         TfEditCookie editor_cookie_;
-        ComPtr<ITfContext> editor_context_;
-        ComPtr<ITfDocumentMgr> doc_mgr_;
-        ComPtr<ITfContextOwnerCompositionServices> comp_service_;
+        utl::win::ComPtr<ITfContext> editor_context_;
+        utl::win::ComPtr<ITfDocumentMgr> doc_mgr_;
+        utl::win::ComPtr<ITfContextOwnerCompositionServices> comp_service_;
 
         bool is_initialized_;
         bool is_editor_pushed_;

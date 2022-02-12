@@ -364,11 +364,8 @@
     <ClInclude Include="system\ipc\pipe_server.h" />
     <ClInclude Include="system\theme_info.h" />
     <ClInclude Include="system\ui_utils.h" />
-    <ClInclude Include="system\win\com_pptr.hpp" />
-    <ClInclude Include="system\win\com_ptr.hpp" />
     <ClInclude Include="system\win\dialogs\open_file_dialog_win.h" />
     <ClInclude Include="system\win\dynamic_windows_api.h" />
-    <ClInclude Include="system\win\critical_section.hpp" />
     <ClInclude Include="system\win\ipc\pipe_client_win.h" />
     <ClInclude Include="system\win\ipc\pipe_server_win.h" />
     <ClInclude Include="system\win\reg_manager.h" />

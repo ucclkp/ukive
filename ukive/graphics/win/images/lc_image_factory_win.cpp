@@ -103,7 +103,7 @@ namespace win {
 
         auto format = mapPixelFormat(options);
 
-        ComPtr<IWICBitmap> bmp;
+        utl::win::ComPtr<IWICBitmap> bmp;
         HRESULT hr = wic_factory_->CreateBitmap(
             width, height, format,
             WICBitmapCacheOnDemand, &bmp);
@@ -141,7 +141,7 @@ namespace win {
 
         auto format = mapPixelFormat(options);
 
-        ComPtr<IWICBitmap> bmp;
+        utl::win::ComPtr<IWICBitmap> bmp;
         HRESULT hr = wic_factory_->CreateBitmapFromMemory(
             width, height, format,
             UINT(stride), UINT(size), pixel_data,
@@ -195,7 +195,7 @@ namespace win {
         }
 
         bool succeeded = false;
-        ComPtr<IShellItemImageFactory> factory;
+        utl::win::ComPtr<IShellItemImageFactory> factory;
         HRESULT hr = ::SHCreateItemFromParsingName(
             reinterpret_cast<PCWSTR>(file_name.c_str()), nullptr, IID_PPV_ARGS(&factory));
         if (SUCCEEDED(hr)) {
@@ -252,7 +252,7 @@ namespace win {
             return false;
         }
 
-        ComPtr<IWICStream> stream;
+        utl::win::ComPtr<IWICStream> stream;
         HRESULT hr = wic_factory_->CreateStream(&stream);
         if (FAILED(hr)) {
             return false;
@@ -263,7 +263,7 @@ namespace win {
             return false;
         }
 
-        ComPtr<IWICBitmapEncoder> encoder;
+        utl::win::ComPtr<IWICBitmapEncoder> encoder;
         hr = wic_factory_->CreateEncoder(mapImageContainer(container), nullptr, &encoder);
         if (FAILED(hr)) {
             return false;
@@ -274,7 +274,7 @@ namespace win {
             return false;
         }
 
-        ComPtr<IWICBitmapFrameEncode> frame;
+        utl::win::ComPtr<IWICBitmapFrameEncode> frame;
         hr = encoder->CreateNewFrame(&frame, nullptr);
         if (FAILED(hr)) {
             return false;
@@ -323,7 +323,7 @@ namespace win {
     }
 
     void LcImageFactoryWin::getGlobalMetadata(IWICBitmapDecoder* decoder, GifImageData* data) {
-        ComPtr<IWICMetadataQueryReader> reader;
+        utl::win::ComPtr<IWICMetadataQueryReader> reader;
         HRESULT hr = decoder->GetMetadataQueryReader(&reader);
         if (SUCCEEDED(hr)) {
             PROPVARIANT prop_var;
@@ -346,7 +346,7 @@ namespace win {
                 hr = reader->GetMetadataByName(L"/logscrdesc/BackgroundColorIndex", &prop_var);
                 if (SUCCEEDED(hr) && prop_var.vt == VT_UI1) {
                     UINT bg_index = prop_var.bVal;
-                    ComPtr<IWICPalette> palette;
+                    utl::win::ComPtr<IWICPalette> palette;
                     hr = wic_factory_->CreatePalette(&palette);
                     if (SUCCEEDED(hr)) {
                         hr = decoder->CopyPalette(palette.get());
@@ -406,7 +406,7 @@ namespace win {
     }
 
     void LcImageFactoryWin::getFrameMetadata(IWICBitmapFrameDecode* decoder, GifImageFrData* data) {
-        ComPtr<IWICMetadataQueryReader> reader;
+        utl::win::ComPtr<IWICMetadataQueryReader> reader;
         HRESULT hr = decoder->GetMetadataQueryReader(&reader);
         if (SUCCEEDED(hr)) {
             PROPVARIANT prop_var;
@@ -471,12 +471,12 @@ namespace win {
         }
     }
 
-    ComPtr<IWICBitmapDecoder> LcImageFactoryWin::createDecoder(const std::u16string& file_name) {
+    utl::win::ComPtr<IWICBitmapDecoder> LcImageFactoryWin::createDecoder(const std::u16string& file_name) {
         /*
          * 这里，某些图片使用 WICDecodeMetadataCacheOnLoad 解码时会报错，
          * 可能是 WIC 对属性的要求较为严格所致，使用 WICDecodeMetadataCacheOnDemand 即可。
          */
-        ComPtr<IWICBitmapDecoder> decoder;
+        utl::win::ComPtr<IWICBitmapDecoder> decoder;
         HRESULT hr = wic_factory_->CreateDecoderFromFilename(
             reinterpret_cast<LPCWSTR>(file_name.c_str()),
             nullptr,
@@ -490,8 +490,8 @@ namespace win {
         return decoder;
     }
 
-    ComPtr<IWICBitmapDecoder> LcImageFactoryWin::createDecoder(uint8_t* buffer, size_t size) {
-        ComPtr<IWICStream> stream;
+    utl::win::ComPtr<IWICBitmapDecoder> LcImageFactoryWin::createDecoder(uint8_t* buffer, size_t size) {
+        utl::win::ComPtr<IWICStream> stream;
         HRESULT hr = wic_factory_->CreateStream(&stream);
         if (FAILED(hr)) {
             ubassert(false);
@@ -504,7 +504,7 @@ namespace win {
             return {};
         }
 
-        ComPtr<IWICBitmapDecoder> decoder;
+        utl::win::ComPtr<IWICBitmapDecoder> decoder;
         hr = wic_factory_->CreateDecoderFromStream(
             stream.get(), nullptr, WICDecodeMetadataCacheOnDemand, &decoder);
         if (FAILED(hr)) {
@@ -514,11 +514,11 @@ namespace win {
         return decoder;
     }
 
-    ComPtr<IWICBitmapSource> LcImageFactoryWin::convertPixelFormat(
+    utl::win::ComPtr<IWICBitmapSource> LcImageFactoryWin::convertPixelFormat(
         IWICBitmapSource* frame, const ImageOptions& options)
     {
         // Format convert the frame to 32bppPBGRA
-        ComPtr<IWICFormatConverter> converter;
+        utl::win::ComPtr<IWICFormatConverter> converter;
         HRESULT hr = wic_factory_->CreateFormatConverter(&converter);
         if (FAILED(hr)) {
             ubassert(false);
@@ -568,7 +568,7 @@ namespace win {
             image.setData(data);
         }
 
-        ComPtr<IWICColorContext> dst_cc;
+        utl::win::ComPtr<IWICColorContext> dst_cc;
         hr = wic_factory_->CreateColorContext(&dst_cc);
         if (SUCCEEDED(hr)) {
             std::wstring display_icm;
@@ -583,7 +583,7 @@ namespace win {
         }
 
         for (UINT i = 0; i < frame_count; ++i) {
-            ComPtr<IWICBitmapFrameDecode> frame_decoder;
+            utl::win::ComPtr<IWICBitmapFrameDecode> frame_decoder;
             hr = decoder->GetFrame(i, &frame_decoder);
             if (FAILED(hr)) {
                 ubassert(false);
@@ -592,7 +592,7 @@ namespace win {
 
             //exploreColorProfile(frame_decoder.get());
 
-            ComPtr<IWICBitmapSource> source;
+            utl::win::ComPtr<IWICBitmapSource> source;
             source = convertGamut(frame_decoder.get(), dst_cc.get());
             if (!source) {
                 source = frame_decoder.cast<IWICBitmapSource>();
@@ -722,14 +722,14 @@ namespace win {
         return true;
     }
 
-    ComPtr<IWICBitmapSource> LcImageFactoryWin::convertGamut(
+    utl::win::ComPtr<IWICBitmapSource> LcImageFactoryWin::convertGamut(
         IWICBitmapFrameDecode* src, IWICColorContext* dst_cc)
     {
         if (!src || !dst_cc) {
             return {};
         }
 
-        ComPtr<IWICColorTransform> transform;
+        utl::win::ComPtr<IWICColorTransform> transform;
         HRESULT hr = wic_factory_->CreateColorTransformer(&transform);
         if (FAILED(hr)) {
             return {};
@@ -741,7 +741,7 @@ namespace win {
             return {};
         }
 
-        ComPtr<IWICColorContext> src_cc;
+        utl::win::ComPtr<IWICColorContext> src_cc;
         hr = wic_factory_->CreateColorContext(&src_cc);
         if (FAILED(hr)) {
             return {};

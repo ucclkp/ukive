@@ -60,7 +60,7 @@ namespace win {
         rate_ = rate;
     }
 
-    HRESULT MFSampleScheduler::start(const ComPtr<IMFClock>& clock) {
+    HRESULT MFSampleScheduler::start(const utl::win::ComPtr<IMFClock>& clock) {
         if (schedule_thread_) {
             return E_UNEXPECTED;
         }
@@ -123,7 +123,7 @@ namespace win {
         //timeEndPeriod(1);
     }
 
-    HRESULT MFSampleScheduler::scheduleSample(const ComPtr<IMFSample>& sample, bool present_now) {
+    HRESULT MFSampleScheduler::scheduleSample(const utl::win::ComPtr<IMFSample>& sample, bool present_now) {
         if (!callback_) {
             return MF_E_NOT_INITIALIZED;
         }
@@ -155,9 +155,9 @@ namespace win {
         HRESULT hr = S_OK;
         LONG wait = 0;
         for (;;) {
-            ComPtr<IMFSample> sample;
+            utl::win::ComPtr<IMFSample> sample;
             {
-                CritSecGuard guard(list_lock_);
+                utl::win::CritSecGuard guard(list_lock_);
                 if (scheduled_samples_.empty()) {
                     break;
                 }
@@ -178,7 +178,7 @@ namespace win {
         return hr;
     }
 
-    HRESULT MFSampleScheduler::processSample(const ComPtr<IMFSample>& sample, LONG* next_sleep) {
+    HRESULT MFSampleScheduler::processSample(const utl::win::ComPtr<IMFSample>& sample, LONG* next_sleep) {
         HRESULT hr = S_OK;
         LONGLONG presentation_time = 0;
         LONGLONG time_now = 0;

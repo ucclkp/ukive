@@ -146,7 +146,7 @@ namespace win {
             return nullptr;
         }
 
-        ComPtr<ID2D1Bitmap> d2d_bmp;
+        utl::win::ComPtr<ID2D1Bitmap> d2d_bmp;
         HRESULT hr = rt_->CreateBitmapFromWicBitmap(native_src.get(), &props, &d2d_bmp);
         if (FAILED(hr)) {
             assert(false);
@@ -161,7 +161,7 @@ namespace win {
     {
         auto prop = mapBitmapProps(options);
 
-        ComPtr<ID2D1Bitmap> d2d_bmp;
+        utl::win::ComPtr<ID2D1Bitmap> d2d_bmp;
         HRESULT hr = rt_->CreateBitmap(D2D1::SizeU(width, height), prop, &d2d_bmp);
         if (FAILED(hr)) {
             ubassert(false);
@@ -179,7 +179,7 @@ namespace win {
 
         auto prop = mapBitmapProps(options);
 
-        ComPtr<ID2D1Bitmap> d2d_bmp;
+        utl::win::ComPtr<ID2D1Bitmap> d2d_bmp;
         HRESULT hr = rt_->CreateBitmap(D2D1::SizeU(width, height), pixel_data, UINT32(stride), prop, &d2d_bmp);
         if (FAILED(hr)) {
             ubassert(false);
@@ -228,10 +228,10 @@ namespace win {
     }
 
     void CyroRendererD2D::save() {
-        ComPtr<ID2D1Factory> factory;
+        utl::win::ComPtr<ID2D1Factory> factory;
         rt_->GetFactory(&factory);
 
-        ComPtr<ID2D1DrawingStateBlock> drawingStateBlock;
+        utl::win::ComPtr<ID2D1DrawingStateBlock> drawingStateBlock;
         factory->CreateDrawingStateBlock(&drawingStateBlock);
         rt_->SaveDrawingState(drawingStateBlock.get());
 

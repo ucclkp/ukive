@@ -10,14 +10,14 @@
 namespace ukive {
 namespace win {
 
-    GPURenderTargetD3D::GPURenderTargetD3D(const ComPtr<ID3D11RenderTargetView>& rtv)
+    GPURenderTargetD3D::GPURenderTargetD3D(const utl::win::ComPtr<ID3D11RenderTargetView>& rtv)
         : rtv_(rtv) {}
 
     GPURenderTarget::Native GPURenderTargetD3D::getOpaque() const {
         return reinterpret_cast<Native>(rtv_.get());
     }
 
-    void GPURenderTargetD3D::setNative(const ComPtr<ID3D11RenderTargetView>& rtv) {
+    void GPURenderTargetD3D::setNative(const utl::win::ComPtr<ID3D11RenderTargetView>& rtv) {
         rtv_ = rtv;
     }
 

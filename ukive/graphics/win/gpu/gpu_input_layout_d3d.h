@@ -7,8 +7,9 @@
 #ifndef UKIVE_GRAPHICS_WIN_GPU_GPU_INPUT_LAYOUT_D3D_H_
 #define UKIVE_GRAPHICS_WIN_GPU_GPU_INPUT_LAYOUT_D3D_H_
 
+#include "utils/memory/win/com_ptr.hpp"
+
 #include "ukive/graphics/gpu/gpu_input_layout.h"
-#include "ukive/system/win/com_ptr.hpp"
 
 #include <d3d11.h>
 
@@ -18,13 +19,13 @@ namespace win {
 
     class GPUInputLayoutD3D : public GPUInputLayout {
     public:
-        explicit GPUInputLayoutD3D(const ComPtr<ID3D11InputLayout>& il);
+        explicit GPUInputLayoutD3D(const utl::win::ComPtr<ID3D11InputLayout>& il);
 
-        void setNative(const ComPtr<ID3D11InputLayout>& il);
+        void setNative(const utl::win::ComPtr<ID3D11InputLayout>& il);
         ID3D11InputLayout* getNative() const;
 
     private:
-        ComPtr<ID3D11InputLayout> d3d_il_;
+        utl::win::ComPtr<ID3D11InputLayout> d3d_il_;
     };
 
 }

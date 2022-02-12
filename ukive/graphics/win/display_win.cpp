@@ -9,7 +9,6 @@
 #include "utils/log.h"
 
 #include "ukive/app/application.h"
-#include "ukive/system/win/com_ptr.hpp"
 #include "ukive/system/win/dynamic_windows_api.h"
 #include "ukive/window/win/window_impl_win.h"
 #include "ukive/window/window_dpi_utils.h"
@@ -291,7 +290,7 @@ namespace win {
     }
 
     bool DisplayWin::queryDXGIInfo(HMONITOR monitor) {
-        ComPtr<IDXGIFactory1> dxgi_factory;
+        utl::win::ComPtr<IDXGIFactory1> dxgi_factory;
         HRESULT hr = ::CreateDXGIFactory(
             __uuidof(IDXGIFactory),
             reinterpret_cast<void**>(&dxgi_factory));
@@ -302,7 +301,7 @@ namespace win {
 
         UINT adapter_index = 0;
         for (;;) {
-            ComPtr<IDXGIAdapter1> adapter;
+            utl::win::ComPtr<IDXGIAdapter1> adapter;
             hr = dxgi_factory->EnumAdapters1(adapter_index, &adapter);
             if (FAILED(hr)) {
                 break;
@@ -310,7 +309,7 @@ namespace win {
 
             UINT output_index = 0;
             for (;;) {
-                ComPtr<IDXGIOutput> output;
+                utl::win::ComPtr<IDXGIOutput> output;
                 hr = adapter->EnumOutputs(output_index, &output);
                 if (FAILED(hr)) {
                     break;

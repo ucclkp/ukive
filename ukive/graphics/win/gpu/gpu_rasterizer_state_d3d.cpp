@@ -11,10 +11,10 @@ namespace ukive {
 namespace win {
 
     GPURasterizerStateD3D::GPURasterizerStateD3D(
-        const ComPtr<ID3D11RasterizerState>& rs)
+        const utl::win::ComPtr<ID3D11RasterizerState>& rs)
         : rs_(rs) {}
 
-    void GPURasterizerStateD3D::setNative(const ComPtr<ID3D11RasterizerState>& rs) {
+    void GPURasterizerStateD3D::setNative(const utl::win::ComPtr<ID3D11RasterizerState>& rs) {
         rs_ = rs;
     }
 

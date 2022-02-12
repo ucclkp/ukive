@@ -11,10 +11,10 @@ namespace ukive {
 namespace win {
 
     GPUDepthStencilStateD3D::GPUDepthStencilStateD3D(
-        const ComPtr<ID3D11DepthStencilState>& dss)
+        const utl::win::ComPtr<ID3D11DepthStencilState>& dss)
         : dss_(dss) {}
 
-    void GPUDepthStencilStateD3D::setNative(const ComPtr<ID3D11DepthStencilState>& dss) {
+    void GPUDepthStencilStateD3D::setNative(const utl::win::ComPtr<ID3D11DepthStencilState>& dss) {
         dss_ = dss;
     }
 

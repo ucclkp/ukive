@@ -22,11 +22,11 @@ namespace win {
             GPUTexture* texture, const ImageOptions& options) override;
         void destroy() override;
 
-        void setNative(const ComPtr<ID2D1RenderTarget>& rt);
-        ComPtr<ID2D1RenderTarget> getNative() const;
+        void setNative(const utl::win::ComPtr<ID2D1RenderTarget>& rt);
+        utl::win::ComPtr<ID2D1RenderTarget> getNative() const;
 
     private:
-        ComPtr<ID2D1RenderTarget> rt_;
+        utl::win::ComPtr<ID2D1RenderTarget> rt_;
     };
 
 }

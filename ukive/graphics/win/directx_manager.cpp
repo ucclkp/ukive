@@ -104,7 +104,7 @@ namespace win {
     }
 
     void DirectXManager::enumSystemFonts() {
-        ComPtr<IDWriteFontCollection> collection;
+        utl::win::ComPtr<IDWriteFontCollection> collection;
         HRESULT hr = dwrite_factory_->GetSystemFontCollection(&collection);
         if (FAILED(hr)) {
             return;
@@ -112,13 +112,13 @@ namespace win {
 
         auto count = collection->GetFontFamilyCount();
         for (UINT32 i = 0; i < count; ++i) {
-            ComPtr<IDWriteFontFamily> family;
+            utl::win::ComPtr<IDWriteFontFamily> family;
             hr = collection->GetFontFamily(i, &family);
             if (FAILED(hr)) {
                 continue;
             }
 
-            ComPtr<IDWriteLocalizedStrings> strings;
+            utl::win::ComPtr<IDWriteLocalizedStrings> strings;
             hr = family->GetFamilyNames(&strings);
             if (FAILED(hr)) {
                 continue;
@@ -224,32 +224,32 @@ namespace win {
         dxgi_device_.reset();
     }
 
-    ComPtr<ID2D1Factory> DirectXManager::getD2DFactory() const {
+    utl::win::ComPtr<ID2D1Factory> DirectXManager::getD2DFactory() const {
         return d2d_factory_;
     }
 
-    ComPtr<IDWriteFactory> DirectXManager::getDWriteFactory() const {
+    utl::win::ComPtr<IDWriteFactory> DirectXManager::getDWriteFactory() const {
         return dwrite_factory_;
     }
 
-    ComPtr<IDXGIFactory1> DirectXManager::getDXGIFactory() const {
+    utl::win::ComPtr<IDXGIFactory1> DirectXManager::getDXGIFactory() const {
         return dxgi_factory_;
     }
 
-    ComPtr<IDXGIDevice> DirectXManager::getDXGIDevice() const {
+    utl::win::ComPtr<IDXGIDevice> DirectXManager::getDXGIDevice() const {
         return dxgi_device_;
     }
 
-    ComPtr<ID3D11Device> DirectXManager::getD3DDevice() const {
+    utl::win::ComPtr<ID3D11Device> DirectXManager::getD3DDevice() const {
         return d3d_device_;
     }
 
-    ComPtr<ID3D11DeviceContext> DirectXManager::getD3DDeviceContext() const {
+    utl::win::ComPtr<ID3D11DeviceContext> DirectXManager::getD3DDeviceContext() const {
         return d3d_devicecontext_;
     }
 
-    ComPtr<ID2D1RenderTarget> DirectXManager::createWICRenderTarget(IWICBitmap* wic_bitmap) {
-        ComPtr<ID2D1RenderTarget> render_target;
+    utl::win::ComPtr<ID2D1RenderTarget> DirectXManager::createWICRenderTarget(IWICBitmap* wic_bitmap) {
+        utl::win::ComPtr<ID2D1RenderTarget> render_target;
         auto d2d_factory = getD2DFactory();
         if (!d2d_factory) {
             return {};
@@ -268,8 +268,8 @@ namespace win {
         return render_target;
     }
 
-    ComPtr<ID2D1DCRenderTarget> DirectXManager::createDCRenderTarget(const ImageOptions& options) {
-        ComPtr<ID2D1DCRenderTarget> render_target;
+    utl::win::ComPtr<ID2D1DCRenderTarget> DirectXManager::createDCRenderTarget(const ImageOptions& options) {
+        utl::win::ComPtr<ID2D1DCRenderTarget> render_target;
         auto d2d_factory = getD2DFactory();
         if (!d2d_factory) {
             return {};
@@ -290,7 +290,7 @@ namespace win {
         return render_target;
     }
 
-    ComPtr<ID3D11Texture2D> DirectXManager::createTexture2D(
+    utl::win::ComPtr<ID3D11Texture2D> DirectXManager::createTexture2D(
         UINT width, UINT height, bool shader_res, bool hdr, bool gdi_compat)
     {
         D3D11_TEXTURE2D_DESC tex_desc = { 0 };
@@ -304,7 +304,7 @@ namespace win {
         tex_desc.SampleDesc.Quality = 0;
         tex_desc.MiscFlags = gdi_compat ? D3D11_RESOURCE_MISC_GDI_COMPATIBLE : 0;
 
-        ComPtr<ID3D11Texture2D> tex;
+        utl::win::ComPtr<ID3D11Texture2D> tex;
         HRESULT hr = d3d_device_->CreateTexture2D(&tex_desc, nullptr, &tex);
         if (FAILED(hr)) {
             if (hr != DXGI_ERROR_DEVICE_REMOVED &&
@@ -317,7 +317,7 @@ namespace win {
         return tex;
     }
 
-    ComPtr<ID3D11Texture2D> DirectXManager::createTexture2D(IWICBitmap* wic_bmp) {
+    utl::win::ComPtr<ID3D11Texture2D> DirectXManager::createTexture2D(IWICBitmap* wic_bmp) {
         UINT width, height;
         HRESULT hr = wic_bmp->GetSize(&width, &height);
         if (FAILED(hr)) {
@@ -336,7 +336,7 @@ namespace win {
         tex_desc.MiscFlags = 0;
 
         WICRect lock_rect = { 0, 0, INT(width), INT(height) };
-        ComPtr<IWICBitmapLock> lock;
+        utl::win::ComPtr<IWICBitmapLock> lock;
         hr = wic_bmp->Lock(&lock_rect, WICBitmapLockRead, &lock);
         if (FAILED(hr)) {
             return {};
@@ -360,7 +360,7 @@ namespace win {
         tex_data.SysMemSlicePitch = 0;
         tex_data.pSysMem = buf;
 
-        ComPtr<ID3D11Texture2D> tex;
+        utl::win::ComPtr<ID3D11Texture2D> tex;
         hr = d3d_device_->CreateTexture2D(&tex_desc, &tex_data, &tex);
         if (FAILED(hr)) {
             if (hr != DXGI_ERROR_DEVICE_REMOVED &&
@@ -374,10 +374,10 @@ namespace win {
         return tex;
     }
 
-    ComPtr<ID2D1RenderTarget> DirectXManager::createDXGIRenderTarget(
+    utl::win::ComPtr<ID2D1RenderTarget> DirectXManager::createDXGIRenderTarget(
         IDXGISurface* surface, bool gdi_compat, const ImageOptions& options)
     {
-        ComPtr<ID2D1RenderTarget> render_target;
+        utl::win::ComPtr<ID2D1RenderTarget> render_target;
         auto d2d_factory = getD2DFactory();
         if (!d2d_factory) {
             return {};

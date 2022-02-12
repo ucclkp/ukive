@@ -24,7 +24,7 @@
 namespace ukive {
 namespace win {
 
-    GPUContextD3D::GPUContextD3D(const ComPtr<ID3D11DeviceContext>& ctx)
+    GPUContextD3D::GPUContextD3D(const utl::win::ComPtr<ID3D11DeviceContext>& ctx)
         : d3d_context_(ctx) {}
 
     void GPUContextD3D::setVertexBuffers(
@@ -260,7 +260,7 @@ namespace win {
         d3d_context_->Unmap(res, 0);
     }
 
-    ComPtr<ID3D11DeviceContext> GPUContextD3D::getNative() const {
+    utl::win::ComPtr<ID3D11DeviceContext> GPUContextD3D::getNative() const {
         return d3d_context_;
     }
 

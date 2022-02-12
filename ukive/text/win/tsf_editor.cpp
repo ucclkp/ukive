@@ -88,7 +88,7 @@ namespace win {
 
 
     STDMETHODIMP TsfEditor::AdviseSink(REFIID riid, IUnknown* punk, DWORD dwMask) {
-        ComPtr<IUnknown> punk_id;
+        utl::win::ComPtr<IUnknown> punk_id;
 
         // Determine if the sink interface exists.
         // Get the pointer to the IUnknown interface and check if the IUnknown

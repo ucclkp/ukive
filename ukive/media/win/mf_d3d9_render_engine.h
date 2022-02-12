@@ -11,11 +11,12 @@
 #include <dxva2api.h>
 #include <mfidl.h>
 
+#include "utils/memory/win/com_ptr.hpp"
+#include "utils/sync/win/critical_section.hpp"
+
 #include "ukive/graphics/rect.hpp"
 #include "ukive/media/win/mf_common.h"
 #include "ukive/media/win/mf_sample_scheduler.h"
-#include "ukive/system/win/com_ptr.hpp"
-#include "ukive/system/win/critical_section.hpp"
 
 
 namespace ukive {
@@ -74,16 +75,16 @@ namespace win {
         UINT dev_reset_token_ = 0;
         Rect dest_rect_;
         D3DDISPLAYMODE display_mode_;
-        win::CritSec crit_sec_;
+        utl::win::CritSec crit_sec_;
         HWND window_ = nullptr;
 
         IDirect3D9Ex* d3d9_ = nullptr;
         IDirect3DDevice9Ex* device_ = nullptr;
         IDirect3DDeviceManager9* device_mgr_ = nullptr;
-        ComPtr<IDirect3DSurface9> surface_;
+        utl::win::ComPtr<IDirect3DSurface9> surface_;
 
         HANDLE shared_handle_ = nullptr;
-        ComPtr<IDirect3DTexture9> interop_texture_;
+        utl::win::ComPtr<IDirect3DTexture9> interop_texture_;
         MFRenderCallback* render_callback_ = nullptr;
     };
 

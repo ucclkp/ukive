@@ -11,7 +11,8 @@
 
 #include <dwrite.h>
 
-#include "ukive/system/win/com_ptr.hpp"
+#include "utils/memory/win/com_ptr.hpp"
+
 #include "ukive/text/text_layout.h"
 
 
@@ -72,9 +73,9 @@ namespace win {
         float line_spacing_ = 0;
         LineSpacing line_spacing_method_ = LineSpacing::DEFAULT;
 
-        ComPtr<TextRenderer> text_renderer_;
-        ComPtr<IDWriteTextFormat> text_format_;
-        ComPtr<IDWriteTextLayout> text_layout_;
+        utl::win::ComPtr<TextRenderer> text_renderer_;
+        utl::win::ComPtr<IDWriteTextFormat> text_format_;
+        utl::win::ComPtr<IDWriteTextLayout> text_layout_;
     };
 
 }

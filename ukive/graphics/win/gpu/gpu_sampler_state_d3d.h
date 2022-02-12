@@ -7,8 +7,9 @@
 #ifndef UKIVE_GRAPHICS_WIN_GPU_GPU_SAMPLER_STATE_D3D_H_
 #define UKIVE_GRAPHICS_WIN_GPU_GPU_SAMPLER_STATE_D3D_H_
 
+#include "utils/memory/win/com_ptr.hpp"
+
 #include "ukive/graphics/gpu/gpu_sampler_state.h"
-#include "ukive/system/win/com_ptr.hpp"
 
 #include <d3d11.h>
 
@@ -18,13 +19,13 @@ namespace win {
 
     class GPUSamplerStateD3D : public GPUSamplerState {
     public:
-        explicit GPUSamplerStateD3D(const ComPtr<ID3D11SamplerState>& ss);
+        explicit GPUSamplerStateD3D(const utl::win::ComPtr<ID3D11SamplerState>& ss);
 
-        void setNative(const ComPtr<ID3D11SamplerState>& ss);
+        void setNative(const utl::win::ComPtr<ID3D11SamplerState>& ss);
         ID3D11SamplerState* getNative() const;
 
     private:
-        ComPtr<ID3D11SamplerState> ss_;
+        utl::win::ComPtr<ID3D11SamplerState> ss_;
     };
 
 }

@@ -7,8 +7,9 @@
 #ifndef UKIVE_GRAPHICS_WIN_GPU_GPU_DEVICE_D3D_H_
 #define UKIVE_GRAPHICS_WIN_GPU_GPU_DEVICE_D3D_H_
 
+#include "utils/memory/win/com_ptr.hpp"
+
 #include "ukive/graphics/gpu/gpu_device.h"
-#include "ukive/system/win/com_ptr.hpp"
 
 #include <d3d11.h>
 
@@ -18,7 +19,7 @@ namespace win {
 
     class GPUDeviceD3D : public GPUDevice {
     public:
-        explicit GPUDeviceD3D(const ComPtr<ID3D11Device>& dev);
+        explicit GPUDeviceD3D(const utl::win::ComPtr<ID3D11Device>& dev);
 
         GPUBuffer* createBuffer(
             const GPUBuffer::Desc* desc, const GPUBuffer::ResourceData* data) override;
@@ -40,12 +41,12 @@ namespace win {
         GPUShader* createVertexShader(const void* shader_bc, size_t size) override;
         GPUShader* createPixelShader(const void* shader_bc, size_t size) override;
 
-        ComPtr<ID3D11Device> getNative() const;
+        utl::win::ComPtr<ID3D11Device> getNative() const;
 
     private:
         ID3D11Resource* convertResource(GPUResource* res) const;
 
-        ComPtr<ID3D11Device> d3d_device_;
+        utl::win::ComPtr<ID3D11Device> d3d_device_;
     };
 
 }

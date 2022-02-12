@@ -11,7 +11,7 @@ namespace ukive {
 namespace win {
 
     GPUBufferD3D::GPUBufferD3D(
-        const ComPtr<ID3D11Buffer>& buffer, const Desc& desc)
+        const utl::win::ComPtr<ID3D11Buffer>& buffer, const Desc& desc)
         : desc_(desc), d3d_buffer_(buffer) {}
 
     const GPUBuffer::Desc& GPUBufferD3D::getDesc() const {

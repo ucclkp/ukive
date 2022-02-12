@@ -11,10 +11,10 @@ namespace ukive {
 namespace win {
 
     GPUSamplerStateD3D::GPUSamplerStateD3D(
-        const ComPtr<ID3D11SamplerState>& ss)
+        const utl::win::ComPtr<ID3D11SamplerState>& ss)
         : ss_(ss) {}
 
-    void GPUSamplerStateD3D::setNative(const ComPtr<ID3D11SamplerState>& ss) {
+    void GPUSamplerStateD3D::setNative(const utl::win::ComPtr<ID3D11SamplerState>& ss) {
         ss_ = ss;
     }
 

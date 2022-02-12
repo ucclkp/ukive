@@ -99,7 +99,7 @@ namespace win {
     }
 
     void MFD3D9RenderEngine::setRenderCallback(MFRenderCallback* cb) {
-        CritSecGuard guard(crit_sec_);
+        utl::win::CritSecGuard guard(crit_sec_);
         render_callback_ = cb;
     }
 
@@ -107,7 +107,7 @@ namespace win {
         ubassert(::IsWindow(window));
         ubassert(window != window_);
 
-        CritSecGuard guard(crit_sec_);
+        utl::win::CritSecGuard guard(crit_sec_);
 
         window_ = window;
         updateDestinationRect();
@@ -124,7 +124,7 @@ namespace win {
             return;
         }
 
-        CritSecGuard guard(crit_sec_);
+        utl::win::CritSecGuard guard(crit_sec_);
 
         dest_rect_ = rect;
         updateDestinationRect();
@@ -141,7 +141,7 @@ namespace win {
             return MF_E_UNEXPECTED;
         }
 
-        CritSecGuard guard(crit_sec_);
+        utl::win::CritSecGuard guard(crit_sec_);
 
         destroyResources();
 
@@ -177,13 +177,13 @@ namespace win {
         pp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
 
         for (int i = 0; i < OFFSCREEN_SURFACE_COUNT; ++i) {
-            ComPtr<IDirect3DSwapChain9> swapchain;
+            utl::win::ComPtr<IDirect3DSwapChain9> swapchain;
             hr = device_->CreateAdditionalSwapChain(&pp, &swapchain);
             if (FAILED(hr)) {
                 return hr;
             }
 
-            ComPtr<IMFSample> sample;
+            utl::win::ComPtr<IMFSample> sample;
             hr = createD3D9Sample(swapchain.get(), &sample);
             if (FAILED(hr)) {
                 return hr;
@@ -226,7 +226,7 @@ namespace win {
     }
 
     HRESULT MFD3D9RenderEngine::checkDeviceState(DevState* state) {
-        CritSecGuard guard(crit_sec_);
+        utl::win::CritSecGuard guard(crit_sec_);
 
         HRESULT hr = device_->CheckDeviceState(window_);
         switch (hr) {
@@ -261,8 +261,8 @@ namespace win {
 
     HRESULT MFD3D9RenderEngine::presentSample(IMFSample* sample, LONGLONG target) {
         HRESULT hr = S_OK;
-        ComPtr<IMFMediaBuffer> buffer;
-        ComPtr<IDirect3DSurface9> surface;
+        utl::win::ComPtr<IMFMediaBuffer> buffer;
+        utl::win::ComPtr<IDirect3DSurface9> surface;
         if (sample) {
             hr = sample->GetBufferByIndex(0, &buffer);
             if (FAILED(hr)) {
@@ -281,7 +281,7 @@ namespace win {
             // https://docs.microsoft.com/en-us/windows/win32/direct3darticles/surface-sharing-between-windows-graphics-apis
             // https://docs.microsoft.com/en-us/windows/win32/api/d3d9helper/nf-d3d9helper-idirect3ddevice9-stretchrect
             // https://docs.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11device-opensharedresource
-            ComPtr<IDirect3DSwapChain9> swapchain;
+            utl::win::ComPtr<IDirect3DSwapChain9> swapchain;
             hr = surface->GetContainer(IID_PPV_ARGS(&swapchain));
             if (FAILED(hr)) {
                 return hr;
@@ -295,7 +295,7 @@ namespace win {
 
             hr = swapchain->Present(nullptr, &dst_rect, nullptr, nullptr, 0);
             if (SUCCEEDED(hr)) {
-                ComPtr<IDirect3DSurface9> interop_surface;
+                utl::win::ComPtr<IDirect3DSurface9> interop_surface;
                 hr = interop_texture_->GetSurfaceLevel(0, &interop_surface);
                 if (SUCCEEDED(hr)) {
                     hr = device_->StretchRect(
@@ -344,7 +344,7 @@ namespace win {
     }
 
     HRESULT MFD3D9RenderEngine::createD3D9Device() {
-        CritSecGuard guard(crit_sec_);
+        utl::win::CritSecGuard guard(crit_sec_);
 
         if (!d3d9_ || !device_mgr_) {
             return MF_E_NOT_INITIALIZED;
@@ -383,7 +383,7 @@ namespace win {
             vp = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
         }
 
-        ComPtr<IDirect3DDevice9Ex> device;
+        utl::win::ComPtr<IDirect3DDevice9Ex> device;
         hr = d3d9_->CreateDeviceEx(
             adapter, D3DDEVTYPE_HAL, pp.hDeviceWindow,
             vp | D3DCREATE_NOWINDOWCHANGES | D3DCREATE_MULTITHREADED | D3DCREATE_FPU_PRESERVE,
@@ -411,7 +411,7 @@ namespace win {
     }
 
     HRESULT MFD3D9RenderEngine::createD3D9Sample(IDirect3DSwapChain9* swapchain, IMFSample** sample) {
-        ComPtr<IDirect3DSurface9> surface;
+        utl::win::ComPtr<IDirect3DSurface9> surface;
         HRESULT hr = swapchain->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &surface);
         if (FAILED(hr)) {
             return hr;
@@ -422,7 +422,7 @@ namespace win {
             return hr;
         }
 
-        ComPtr<IMFSample> result_sample;
+        utl::win::ComPtr<IMFSample> result_sample;
         hr = ::MFCreateVideoSampleFromSurface(surface.get(), &result_sample);
         if (FAILED(hr)) {
             return hr;

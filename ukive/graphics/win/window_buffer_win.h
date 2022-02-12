@@ -55,12 +55,12 @@ namespace win {
         bool use_composition_ = false;
         ImageOptions img_options_;
         WindowImplWin* window_ = nullptr;
-        ComPtr<IDXGISwapChain1> swapchain_;
+        utl::win::ComPtr<IDXGISwapChain1> swapchain_;
         std::unique_ptr<CyroRenderTargetD2D> rt_;
 
-        ComPtr<IDCompositionDevice> dcomp_dev_;
-        ComPtr<IDCompositionTarget> dcomp_target_;
-        ComPtr<IDCompositionVisual> dcomp_visual_;
+        utl::win::ComPtr<IDCompositionDevice> dcomp_dev_;
+        utl::win::ComPtr<IDCompositionTarget> dcomp_target_;
+        utl::win::ComPtr<IDCompositionVisual> dcomp_visual_;
     };
 
 }

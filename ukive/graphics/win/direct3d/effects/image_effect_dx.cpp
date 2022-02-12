@@ -173,7 +173,7 @@ namespace win {
             return false;
         }
 
-        ComPtr<ID2D1Bitmap> bitmap;
+        utl::win::ComPtr<ID2D1Bitmap> bitmap;
         HRESULT hr = rt->CreateSharedBitmap(
             __uuidof(IDXGISurface), dxgi_surface.get(), &bmp_prop, &bitmap);
         if (FAILED(hr)) {
@@ -436,9 +436,9 @@ namespace win {
     }
 
     bool ImageEffectDX::createTexture(
-        ComPtr<ID3D11Texture2D>& tex,
-        ComPtr<ID3D11RenderTargetView>& rtv,
-        ComPtr<ID3D11ShaderResourceView>& srv)
+        utl::win::ComPtr<ID3D11Texture2D>& tex,
+        utl::win::ComPtr<ID3D11RenderTargetView>& rtv,
+        utl::win::ComPtr<ID3D11ShaderResourceView>& srv)
     {
         tex = static_cast<DirectXManager*>(Application::getGraphicDeviceManager())->
             createTexture2D(width_, height_, true, is_hdr_enabled_, false);

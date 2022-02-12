@@ -54,9 +54,9 @@ namespace win {
             return false;
         }
 
-        ComPtr<ITfCompartmentMgr> cm;
-        ComPtr<ITfCompartment> open_mode;
-        ComPtr<ITfCompartment> conv_mode;
+        utl::win::ComPtr<ITfCompartmentMgr> cm;
+        utl::win::ComPtr<ITfCompartment> open_mode;
+        utl::win::ComPtr<ITfCompartment> conv_mode;
 
         if (SUCCEEDED(getCompartments(cm, open_mode, conv_mode))) {
             VARIANT valOpenMode;
@@ -93,15 +93,15 @@ namespace win {
         return client_id_;
     }
 
-    ComPtr<ITfThreadMgr> TsfManager::getThreadManager() const {
+    utl::win::ComPtr<ITfThreadMgr> TsfManager::getThreadManager() const {
         return thread_mgr_;
     }
 
     HRESULT TsfManager::setupCompartmentSinks(
-        const ComPtr<ITfCompartment>& open_mode, const ComPtr<ITfCompartment>& conv_mode)
+        const utl::win::ComPtr<ITfCompartment>& open_mode, const utl::win::ComPtr<ITfCompartment>& conv_mode)
     {
-        ComPtr<ITfSource> src_open_mode;
-        ComPtr<ITfSource> src_conv_mode;
+        utl::win::ComPtr<ITfSource> src_open_mode;
+        utl::win::ComPtr<ITfSource> src_conv_mode;
 
         if (!open_mode || !conv_mode) {
             return E_INVALIDARG;
@@ -137,13 +137,13 @@ namespace win {
     }
 
     HRESULT TsfManager::releaseCompartmentSinks() {
-        ComPtr<ITfCompartmentMgr> cm;
-        ComPtr<ITfCompartment> open_mode;
-        ComPtr<ITfCompartment> conv_mode;
+        utl::win::ComPtr<ITfCompartmentMgr> cm;
+        utl::win::ComPtr<ITfCompartment> open_mode;
+        utl::win::ComPtr<ITfCompartment> conv_mode;
 
         HRESULT hr = getCompartments(cm, open_mode, conv_mode);
 
-        ComPtr<ITfSource> srcOpenMode;
+        utl::win::ComPtr<ITfSource> srcOpenMode;
         if (SUCCEEDED(hr)) {
             hr = open_mode->QueryInterface(&srcOpenMode);
 
@@ -153,7 +153,7 @@ namespace win {
             }
         }
 
-        ComPtr<ITfSource> srcConvMode;
+        utl::win::ComPtr<ITfSource> srcConvMode;
         if (SUCCEEDED(hr)) {
             hr = conv_mode->QueryInterface(&srcConvMode);
 
@@ -167,13 +167,13 @@ namespace win {
     }
 
     HRESULT TsfManager::getCompartments(
-        ComPtr<ITfCompartmentMgr>& cm,
-        ComPtr<ITfCompartment>& open_mode,
-        ComPtr<ITfCompartment>& conv_mode)
+        utl::win::ComPtr<ITfCompartmentMgr>& cm,
+        utl::win::ComPtr<ITfCompartment>& open_mode,
+        utl::win::ComPtr<ITfCompartment>& conv_mode)
     {
-        ComPtr<ITfCompartmentMgr> _cm;
-        ComPtr<ITfCompartment> _open_mode;
-        ComPtr<ITfCompartment> _conv_mode;
+        utl::win::ComPtr<ITfCompartmentMgr> _cm;
+        utl::win::ComPtr<ITfCompartment> _open_mode;
+        utl::win::ComPtr<ITfCompartment> _conv_mode;
 
         HRESULT hr = thread_mgr_->QueryInterface(&_cm);
         if (FAILED(hr)) {
@@ -197,9 +197,9 @@ namespace win {
     HRESULT TsfManager::setupSinks() {
         HRESULT hr = E_FAIL;
 
-        ComPtr<ITfCompartmentMgr> cm;
-        ComPtr<ITfCompartment> open_mode;
-        ComPtr<ITfCompartment> conv_mode;
+        utl::win::ComPtr<ITfCompartmentMgr> cm;
+        utl::win::ComPtr<ITfCompartment> open_mode;
+        utl::win::ComPtr<ITfCompartment> conv_mode;
 
         sink_ = new TsfSink(this);
 
@@ -225,7 +225,7 @@ namespace win {
     }
 
     HRESULT TsfManager::releaseSinks() {
-        ComPtr<ITfSource> source;
+        utl::win::ComPtr<ITfSource> source;
         HRESULT hr = thread_mgr_->QueryInterface(&source);
         if (FAILED(hr)) {
             return hr;

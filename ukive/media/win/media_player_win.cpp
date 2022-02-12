@@ -20,7 +20,6 @@
 #include "ukive/window/win/window_impl_win.h"
 #include "ukive/media/win/mf_async_callback.h"
 #include "ukive/media/win/mf_video_presenter_activate.h"
-#include "ukive/system/win/com_ptr.hpp"
 #include "ukive/graphics/canvas.h"
 #include "ukive/graphics/cyro_buffer.h"
 #include "ukive/graphics/win/cyro_render_target_d2d.h"
@@ -233,7 +232,7 @@ namespace win {
         video_texture_.reset();
 
         if (video_sample_) {
-            ComPtr<IMFTrackedSample> track;
+            utl::win::ComPtr<IMFTrackedSample> track;
             HRESULT hr = video_sample_->QueryInterface(&track);
             if (SUCCEEDED(hr)) {
                 track->SetAllocator(nullptr, nullptr);
@@ -348,7 +347,7 @@ namespace win {
 
         HRESULT hr = device->getNative()->OpenSharedResource(shared, IID_PPV_ARGS(&video_texture_));
         if (SUCCEEDED(hr)) {
-            ComPtr<IDXGISurface> dxgi_surface;
+            utl::win::ComPtr<IDXGISurface> dxgi_surface;
             hr = video_texture_->QueryInterface(&dxgi_surface);
             if (FAILED(hr)) {
                 LOG(Log::WARNING) << "Failed to query DXGI surface: " << hr;
@@ -397,7 +396,7 @@ namespace win {
             cycler_.post(MSG_OPEN_FAILED);
         };
 
-        ComPtr<IMFByteStream> stream;
+        utl::win::ComPtr<IMFByteStream> stream;
         HRESULT hr = ::MFEndCreateFile(result, &stream);
         if (FAILED(hr)) {
             return hr;
@@ -439,13 +438,13 @@ namespace win {
             return hr;
         }
 
-        ComPtr<IMFPresentationDescriptor> desc;
+        utl::win::ComPtr<IMFPresentationDescriptor> desc;
         hr = media_source_->CreatePresentationDescriptor(&desc);
         if (FAILED(hr)) {
             return hr;
         }
 
-        ComPtr<IMFTopology> topology;
+        utl::win::ComPtr<IMFTopology> topology;
         hr = createPlaybackTopology(media_source_, desc.get(), hwnd_, &topology);
         if (FAILED(hr)) {
             return hr;
@@ -471,7 +470,7 @@ namespace win {
     }
 
     HRESULT MediaPlayerWin::onEventReceived(IMFAsyncResult* result) {
-        ComPtr<IMFMediaEvent> ev;
+        utl::win::ComPtr<IMFMediaEvent> ev;
         HRESULT hr = media_session_->EndGetEvent(result, &ev);
         if (FAILED(hr)) {
             return hr;
@@ -515,7 +514,7 @@ namespace win {
         IMFPresentationDescriptor* desc,
         HWND hwnd, IMFTopology** out_topology)
     {
-        ComPtr<IMFTopology> topology;
+        utl::win::ComPtr<IMFTopology> topology;
         HRESULT hr = ::MFCreateTopology(&topology);
         if (FAILED(hr)) {
             return hr;
@@ -545,7 +544,7 @@ namespace win {
         DWORD stream_index, HWND hwnd)
     {
         BOOL is_selected;
-        ComPtr<IMFStreamDescriptor> stream_desc;
+        utl::win::ComPtr<IMFStreamDescriptor> stream_desc;
         HRESULT hr = desc->GetStreamDescriptorByIndex(stream_index, &is_selected, &stream_desc);
         if (FAILED(hr)) {
             return hr;
@@ -555,19 +554,19 @@ namespace win {
             return S_OK;
         }
 
-        ComPtr<IMFActivate> sink_node;
+        utl::win::ComPtr<IMFActivate> sink_node;
         hr = createMediaSinkActivate(stream_desc.get(), hwnd, &sink_node);
         if (FAILED(hr)) {
             return hr;
         }
 
-        ComPtr<IMFTopologyNode> source_node;
+        utl::win::ComPtr<IMFTopologyNode> source_node;
         hr = addSourceNode(topology, source, desc, stream_desc.get(), &source_node);
         if (FAILED(hr)) {
             return hr;
         }
 
-        ComPtr<IMFTopologyNode> output_node;
+        utl::win::ComPtr<IMFTopologyNode> output_node;
         hr = addOutputNode(topology, sink_node.get(), 0, &output_node);
         if (FAILED(hr)) {
             return hr;
@@ -584,8 +583,8 @@ namespace win {
     HRESULT MediaPlayerWin::createMediaSinkActivate(
         IMFStreamDescriptor* desc, HWND hwnd, IMFActivate** out)
     {
-        ComPtr<IMFMediaTypeHandler> handler;
-        ComPtr<IMFActivate> activate;
+        utl::win::ComPtr<IMFMediaTypeHandler> handler;
+        utl::win::ComPtr<IMFActivate> activate;
 
         HRESULT hr = desc->GetMediaTypeHandler(&handler);
         if (FAILED(hr)) {
@@ -623,7 +622,7 @@ namespace win {
         IMFPresentationDescriptor* pd,
         IMFStreamDescriptor* sd, IMFTopologyNode** out_node)
     {
-        ComPtr<IMFTopologyNode> node;
+        utl::win::ComPtr<IMFTopologyNode> node;
         HRESULT hr = ::MFCreateTopologyNode(MF_TOPOLOGY_SOURCESTREAM_NODE, &node);
         if (FAILED(hr)) {
             return hr;
@@ -656,7 +655,7 @@ namespace win {
     HRESULT MediaPlayerWin::addOutputNode(
         IMFTopology* topology, IMFActivate* activate, DWORD id, IMFTopologyNode** out_node)
     {
-        ComPtr<IMFTopologyNode> node;
+        utl::win::ComPtr<IMFTopologyNode> node;
         HRESULT hr = ::MFCreateTopologyNode(MF_TOPOLOGY_OUTPUT_NODE, &node);
         if (FAILED(hr)) {
             return hr;

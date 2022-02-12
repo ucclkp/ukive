@@ -10,10 +10,10 @@
 namespace ukive {
 namespace win {
 
-    GPUInputLayoutD3D::GPUInputLayoutD3D(const ComPtr<ID3D11InputLayout>& il)
+    GPUInputLayoutD3D::GPUInputLayoutD3D(const utl::win::ComPtr<ID3D11InputLayout>& il)
         : d3d_il_(il) {}
 
-    void GPUInputLayoutD3D::setNative(const ComPtr<ID3D11InputLayout>& il) {
+    void GPUInputLayoutD3D::setNative(const utl::win::ComPtr<ID3D11InputLayout>& il) {
         d3d_il_ = il;
     }
 

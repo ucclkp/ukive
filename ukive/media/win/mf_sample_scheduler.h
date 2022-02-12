@@ -9,8 +9,10 @@
 
 #include <mfidl.h>
 
+#include "utils/memory/win/com_ptr.hpp"
+#include "utils/sync/win/critical_section.hpp"
+
 #include "ukive/media/win/mf_common.h"
-#include "ukive/system/win/critical_section.hpp"
 
 
 namespace ukive {
@@ -32,12 +34,12 @@ namespace win {
         void setFrameRate(const MFRatio& fps);
         void setClockRate(float rate);
 
-        HRESULT start(const ComPtr<IMFClock>& clock);
+        HRESULT start(const utl::win::ComPtr<IMFClock>& clock);
         void stop();
 
-        HRESULT scheduleSample(const ComPtr<IMFSample>& sample, bool present_now);
+        HRESULT scheduleSample(const utl::win::ComPtr<IMFSample>& sample, bool present_now);
         HRESULT processSamplesInQueue(LONG* next_sleep);
-        HRESULT processSample(const ComPtr<IMFSample>& sample, LONG* next_sleep);
+        HRESULT processSample(const utl::win::ComPtr<IMFSample>& sample, LONG* next_sleep);
         void flush();
 
         LONGLONG getLastSampleTime() const;
@@ -47,9 +49,9 @@ namespace win {
         static DWORD WINAPI scheduleThreadProc(LPVOID param);
         DWORD scheduleThreadProcPrivate();
 
-        CritSec list_lock_;
+        utl::win::CritSec list_lock_;
         SampleList scheduled_samples_;
-        ComPtr<IMFClock> clock_;
+        utl::win::ComPtr<IMFClock> clock_;
         Callback* callback_ = nullptr;
 
         DWORD thread_id_ = 0;

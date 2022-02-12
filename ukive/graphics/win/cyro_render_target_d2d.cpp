@@ -31,7 +31,7 @@ namespace win {
             return nullptr;
         }
 
-        ComPtr<IDXGISurface> dxgi_surface;
+        utl::win::ComPtr<IDXGISurface> dxgi_surface;
         HRESULT hr = res->QueryInterface(&dxgi_surface);
         if (FAILED(hr)) {
             LOG(Log::WARNING) << "Failed to query DXGI surface: " << hr;
@@ -40,7 +40,7 @@ namespace win {
 
         D2D1_BITMAP_PROPERTIES bmp_prop = mapBitmapProps(options);
 
-        ComPtr<ID2D1Bitmap> d2d_bmp;
+        utl::win::ComPtr<ID2D1Bitmap> d2d_bmp;
         hr = rt_->CreateSharedBitmap(
             __uuidof(IDXGISurface), dxgi_surface.get(), &bmp_prop, &d2d_bmp);
         if (FAILED(hr)) {
@@ -58,11 +58,11 @@ namespace win {
         rt_.reset();
     }
 
-    void CyroRenderTargetD2D::setNative(const ComPtr<ID2D1RenderTarget>& rt) {
+    void CyroRenderTargetD2D::setNative(const utl::win::ComPtr<ID2D1RenderTarget>& rt) {
         rt_ = rt;
     }
 
-    ComPtr<ID2D1RenderTarget> CyroRenderTargetD2D::getNative() const {
+    utl::win::ComPtr<ID2D1RenderTarget> CyroRenderTargetD2D::getNative() const {
         return rt_;
     }
 

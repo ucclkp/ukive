@@ -9,9 +9,10 @@
 
 #include <list>
 
+#include "utils/memory/win/com_ptr.hpp"
+#include "utils/sync/win/critical_section.hpp"
+
 #include "ukive/media/win/mf_common.h"
-#include "ukive/system/win/com_ptr.hpp"
-#include "ukive/system/win/critical_section.hpp"
 
 #include <mfidl.h>
 
@@ -24,15 +25,15 @@ namespace win {
         MFSampleRecycler();
         ~MFSampleRecycler();
 
-        void recycleSample(const ComPtr<IMFSample>& sample);
+        void recycleSample(const utl::win::ComPtr<IMFSample>& sample);
         void recycleSamples(SampleList& samples);
-        ComPtr<IMFSample> reuseSample();
+        utl::win::ComPtr<IMFSample> reuseSample();
         void clear();
 
         bool isPending();
 
     private:
-        CritSec crit_sec_;
+        utl::win::CritSec crit_sec_;
         SampleList samples_;
         uint32_t pending_ = 0;
     };

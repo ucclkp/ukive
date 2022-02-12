@@ -11,40 +11,40 @@ namespace ukive {
 namespace win {
 
     // GPUTexture1DD3D
-    GPUTexture1DD3D::GPUTexture1DD3D(const ComPtr<ID3D11Texture1D>& t, const Desc& desc)
+    GPUTexture1DD3D::GPUTexture1DD3D(const utl::win::ComPtr<ID3D11Texture1D>& t, const Desc& desc)
         : desc_(desc), t1d_(t) {}
 
     const GPUTexture::Desc& GPUTexture1DD3D::getDesc() const {
         return desc_;
     }
 
-    ComPtr<ID3D11Texture1D> GPUTexture1DD3D::getNative() const {
+    utl::win::ComPtr<ID3D11Texture1D> GPUTexture1DD3D::getNative() const {
         return t1d_;
     }
 
 
     // GPUTexture2DD3D
-    GPUTexture2DD3D::GPUTexture2DD3D(const ComPtr<ID3D11Texture2D>& t, const Desc& desc)
+    GPUTexture2DD3D::GPUTexture2DD3D(const utl::win::ComPtr<ID3D11Texture2D>& t, const Desc& desc)
         : desc_(desc), t2d_(t) {}
 
     const GPUTexture::Desc& GPUTexture2DD3D::getDesc() const {
         return desc_;
     }
 
-    ComPtr<ID3D11Texture2D> GPUTexture2DD3D::getNative() const {
+    utl::win::ComPtr<ID3D11Texture2D> GPUTexture2DD3D::getNative() const {
         return t2d_;
     }
 
 
     // GPUTexture3DD3D
-    GPUTexture3DD3D::GPUTexture3DD3D(const ComPtr<ID3D11Texture3D>& t, const Desc& desc)
+    GPUTexture3DD3D::GPUTexture3DD3D(const utl::win::ComPtr<ID3D11Texture3D>& t, const Desc& desc)
         : desc_(desc), t3d_(t) {}
 
     const GPUTexture::Desc& GPUTexture3DD3D::getDesc() const {
         return desc_;
     }
 
-    ComPtr<ID3D11Texture3D> GPUTexture3DD3D::getNative() const {
+    utl::win::ComPtr<ID3D11Texture3D> GPUTexture3DD3D::getNative() const {
         return t3d_;
     }
 

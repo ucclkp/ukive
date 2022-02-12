@@ -7,8 +7,9 @@
 #ifndef UKIVE_GRAPHICS_WIN_GPU_GPU_TEXTURE_D3D_H_
 #define UKIVE_GRAPHICS_WIN_GPU_GPU_TEXTURE_D3D_H_
 
+#include "utils/memory/win/com_ptr.hpp"
+
 #include "ukive/graphics/gpu/gpu_texture.h"
-#include "ukive/system/win/com_ptr.hpp"
 
 #include <d3d11.h>
 
@@ -19,45 +20,45 @@ namespace win {
     class GPUTexture1DD3D : public GPUTexture {
     public:
         explicit GPUTexture1DD3D(
-            const ComPtr<ID3D11Texture1D>& t, const Desc& desc);
+            const utl::win::ComPtr<ID3D11Texture1D>& t, const Desc& desc);
 
         const Desc& getDesc() const override;
 
-        ComPtr<ID3D11Texture1D> getNative() const;
+        utl::win::ComPtr<ID3D11Texture1D> getNative() const;
 
     private:
         Desc desc_;
-        ComPtr<ID3D11Texture1D> t1d_;
+        utl::win::ComPtr<ID3D11Texture1D> t1d_;
     };
 
 
     class GPUTexture2DD3D : public GPUTexture {
     public:
         explicit GPUTexture2DD3D(
-            const ComPtr<ID3D11Texture2D>& t, const Desc& desc);
+            const utl::win::ComPtr<ID3D11Texture2D>& t, const Desc& desc);
 
         const Desc& getDesc() const override;
 
-        ComPtr<ID3D11Texture2D> getNative() const;
+        utl::win::ComPtr<ID3D11Texture2D> getNative() const;
 
     private:
         Desc desc_;
-        ComPtr<ID3D11Texture2D> t2d_;
+        utl::win::ComPtr<ID3D11Texture2D> t2d_;
     };
 
 
     class GPUTexture3DD3D : public GPUTexture {
     public:
         explicit GPUTexture3DD3D(
-            const ComPtr<ID3D11Texture3D>& t, const Desc& desc);
+            const utl::win::ComPtr<ID3D11Texture3D>& t, const Desc& desc);
 
         const Desc& getDesc() const override;
 
-        ComPtr<ID3D11Texture3D> getNative() const;
+        utl::win::ComPtr<ID3D11Texture3D> getNative() const;
 
     private:
         Desc desc_;
-        ComPtr<ID3D11Texture3D> t3d_;
+        utl::win::ComPtr<ID3D11Texture3D> t3d_;
     };
 
 }

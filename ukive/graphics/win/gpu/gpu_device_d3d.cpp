@@ -27,7 +27,7 @@
 namespace ukive {
 namespace win {
 
-    GPUDeviceD3D::GPUDeviceD3D(const ComPtr<ID3D11Device>& dev)
+    GPUDeviceD3D::GPUDeviceD3D(const utl::win::ComPtr<ID3D11Device>& dev)
         : d3d_device_(dev) {}
 
     GPUBuffer* GPUDeviceD3D::createBuffer(
@@ -42,7 +42,7 @@ namespace win {
         vb_desc.StructureByteStride = desc->struct_byte_stride;
 
         HRESULT hr;
-        ComPtr<ID3D11Buffer> d3d_buffer;
+        utl::win::ComPtr<ID3D11Buffer> d3d_buffer;
         if (data) {
             D3D11_SUBRESOURCE_DATA vertex_data;
             vertex_data.pSysMem = data->sys_mem;
@@ -86,7 +86,7 @@ namespace win {
             layouts.push_back(std::move(layout));
         }
 
-        ComPtr<ID3D11InputLayout> d3d_layout;
+        utl::win::ComPtr<ID3D11InputLayout> d3d_layout;
         HRESULT hr = d3d_device_->CreateInputLayout(
             layouts.data(), utl::num_cast<UINT>(desc_count), shader_bc, size, &d3d_layout);
         if (FAILED(hr)) {
@@ -120,7 +120,7 @@ namespace win {
             tex_desc.Usage = desc->is_dynamic ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT;
             tex_desc.MiscFlags = 0;
 
-            ComPtr<ID3D11Texture1D> t;
+            utl::win::ComPtr<ID3D11Texture1D> t;
             HRESULT hr = d3d_device_->CreateTexture1D(&tex_desc, data ? &res_data : nullptr, &t);
             if (FAILED(hr)) {
                 return nullptr;
@@ -144,7 +144,7 @@ namespace win {
             tex_desc.CPUAccessFlags = 0;
             tex_desc.Usage = desc->is_dynamic ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT;
 
-            ComPtr<ID3D11Texture2D> t;
+            utl::win::ComPtr<ID3D11Texture2D> t;
             HRESULT hr = d3d_device_->CreateTexture2D(&tex_desc, data ? &res_data : nullptr, &t);
             if (FAILED(hr)) {
                 return nullptr;
@@ -166,7 +166,7 @@ namespace win {
             tex_desc.CPUAccessFlags = 0;
             tex_desc.Usage = desc->is_dynamic ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT;
 
-            ComPtr<ID3D11Texture3D> t;
+            utl::win::ComPtr<ID3D11Texture3D> t;
             HRESULT hr = d3d_device_->CreateTexture3D(&tex_desc, data ? &res_data : nullptr, &t);
             if (FAILED(hr)) {
                 return nullptr;
@@ -184,7 +184,7 @@ namespace win {
             return nullptr;
         }
 
-        ComPtr<ID3D11RenderTargetView> d3d_rt;
+        utl::win::ComPtr<ID3D11RenderTargetView> d3d_rt;
         HRESULT hr = d3d_device_->CreateRenderTargetView(d3d_res, nullptr, &d3d_rt);
         if (FAILED(hr)) {
             return nullptr;
@@ -234,7 +234,7 @@ namespace win {
             return nullptr;
         }
 
-        ComPtr<ID3D11DepthStencilView> d3d_dsv;
+        utl::win::ComPtr<ID3D11DepthStencilView> d3d_dsv;
         HRESULT hr = d3d_device_->CreateDepthStencilView(d3d_res, &dsv_desc, &d3d_dsv);
         if (FAILED(hr)) {
             return nullptr;
@@ -312,7 +312,7 @@ namespace win {
             return nullptr;
         }
 
-        ComPtr<ID3D11ShaderResourceView> d3d_srv;
+        utl::win::ComPtr<ID3D11ShaderResourceView> d3d_srv;
         HRESULT hr = d3d_device_->CreateShaderResourceView(d3d_res, &srv_desc, &d3d_srv);
         if (FAILED(hr)) {
             return nullptr;
@@ -340,7 +340,7 @@ namespace win {
         dds_desc.BackFace.StencilPassOp = mapStencilOp(desc->back_face.stencil_pass_op);
         dds_desc.BackFace.StencilFunc = mapComparisonFunc(desc->back_face.stencil_func);
 
-        ComPtr<ID3D11DepthStencilState> dds_state;
+        utl::win::ComPtr<ID3D11DepthStencilState> dds_state;
         HRESULT hr = d3d_device_->CreateDepthStencilState(&dds_desc, &dds_state);
         if (FAILED(hr)) {
             return nullptr;
@@ -362,7 +362,7 @@ namespace win {
         r_desc.MultisampleEnable = desc->multisample_enabled ? TRUE : FALSE;
         r_desc.AntialiasedLineEnable = desc->antialiased_line_enabled ? TRUE : FALSE;
 
-        ComPtr<ID3D11RasterizerState> rs;
+        utl::win::ComPtr<ID3D11RasterizerState> rs;
         HRESULT hr = d3d_device_->CreateRasterizerState(&r_desc, &rs);
         if (FAILED(hr)) {
             return nullptr;
@@ -384,7 +384,7 @@ namespace win {
         s_desc.MinLOD = desc->min_lod;
         s_desc.MaxLOD = desc->max_lod;
 
-        ComPtr<ID3D11SamplerState> ss;
+        utl::win::ComPtr<ID3D11SamplerState> ss;
         HRESULT hr = d3d_device_->CreateSamplerState(&s_desc, &ss);
         if (FAILED(hr)) {
             return nullptr;
@@ -394,7 +394,7 @@ namespace win {
     }
 
     GPUShader* GPUDeviceD3D::createVertexShader(const void* shader_bc, size_t size) {
-        ComPtr<ID3D11VertexShader> vs;
+        utl::win::ComPtr<ID3D11VertexShader> vs;
         HRESULT hr = d3d_device_->CreateVertexShader(shader_bc, size, nullptr, &vs);
         if (FAILED(hr)) {
             return nullptr;
@@ -404,7 +404,7 @@ namespace win {
     }
 
     GPUShader* GPUDeviceD3D::createPixelShader(const void* shader_bc, size_t size) {
-        ComPtr<ID3D11PixelShader> ps;
+        utl::win::ComPtr<ID3D11PixelShader> ps;
         HRESULT hr = d3d_device_->CreatePixelShader(shader_bc, size, nullptr, &ps);
         if (FAILED(hr)) {
             return nullptr;
@@ -439,7 +439,7 @@ namespace win {
         return d3d_res;
     }
 
-    ComPtr<ID3D11Device> GPUDeviceD3D::getNative() const {
+    utl::win::ComPtr<ID3D11Device> GPUDeviceD3D::getNative() const {
         return d3d_device_;
     }
 

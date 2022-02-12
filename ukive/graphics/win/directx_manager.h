@@ -14,8 +14,9 @@
 #include <d3d11.h>
 #include <dxgi.h>
 
+#include "utils/memory/win/com_ptr.hpp"
+
 #include "ukive/graphics/graphic_device_manager.h"
-#include "ukive/system/win/com_ptr.hpp"
 
 
 namespace ukive {
@@ -43,21 +44,21 @@ namespace win {
 
         bool isAdapterChanged() const;
 
-        ComPtr<ID2D1Factory> getD2DFactory() const;
-        ComPtr<IDWriteFactory> getDWriteFactory() const;
-        ComPtr<IDXGIFactory1> getDXGIFactory() const;
+        utl::win::ComPtr<ID2D1Factory> getD2DFactory() const;
+        utl::win::ComPtr<IDWriteFactory> getDWriteFactory() const;
+        utl::win::ComPtr<IDXGIFactory1> getDXGIFactory() const;
 
-        ComPtr<IDXGIDevice> getDXGIDevice() const;
-        ComPtr<ID3D11Device> getD3DDevice() const;
-        ComPtr<ID3D11DeviceContext> getD3DDeviceContext() const;
+        utl::win::ComPtr<IDXGIDevice> getDXGIDevice() const;
+        utl::win::ComPtr<ID3D11Device> getD3DDevice() const;
+        utl::win::ComPtr<ID3D11DeviceContext> getD3DDeviceContext() const;
 
-        ComPtr<ID2D1RenderTarget> createWICRenderTarget(IWICBitmap* wic_bitmap);
-        ComPtr<ID2D1DCRenderTarget> createDCRenderTarget(const ImageOptions& options);
+        utl::win::ComPtr<ID2D1RenderTarget> createWICRenderTarget(IWICBitmap* wic_bitmap);
+        utl::win::ComPtr<ID2D1DCRenderTarget> createDCRenderTarget(const ImageOptions& options);
 
-        ComPtr<ID3D11Texture2D> createTexture2D(
+        utl::win::ComPtr<ID3D11Texture2D> createTexture2D(
             UINT width, UINT height, bool shader_res, bool hdr, bool gdi_compat);
-        ComPtr<ID3D11Texture2D> createTexture2D(IWICBitmap* wic_bmp);
-        ComPtr<ID2D1RenderTarget> createDXGIRenderTarget(
+        utl::win::ComPtr<ID3D11Texture2D> createTexture2D(IWICBitmap* wic_bmp);
+        utl::win::ComPtr<ID2D1RenderTarget> createDXGIRenderTarget(
             IDXGISurface* surface, bool gdi_compat, const ImageOptions& options);
 
     private:
@@ -67,14 +68,14 @@ namespace win {
         bool initDevice();
         void shutdownDevice();
 
-        ComPtr<ID2D1Factory> d2d_factory_;
-        ComPtr<IDWriteFactory> dwrite_factory_;
-        ComPtr<IDXGIFactory1> dxgi_factory_;
+        utl::win::ComPtr<ID2D1Factory> d2d_factory_;
+        utl::win::ComPtr<IDWriteFactory> dwrite_factory_;
+        utl::win::ComPtr<IDXGIFactory1> dxgi_factory_;
 
-        ComPtr<ID3D11Device> d3d_device_;
-        ComPtr<ID3D11DeviceContext> d3d_devicecontext_;
+        utl::win::ComPtr<ID3D11Device> d3d_device_;
+        utl::win::ComPtr<ID3D11DeviceContext> d3d_devicecontext_;
 
-        ComPtr<IDXGIDevice> dxgi_device_;
+        utl::win::ComPtr<IDXGIDevice> dxgi_device_;
 
         std::unique_ptr<GPUDeviceD3D> gpu_device_;
         std::unique_ptr<GPUContextD3D> gpu_context_;

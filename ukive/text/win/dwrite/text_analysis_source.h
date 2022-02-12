@@ -9,7 +9,7 @@
 
 #include <dwrite.h>
 
-#include "ukive/system/win/com_ptr.hpp"
+#include "utils/memory/win/com_ptr.hpp"
 
 
 namespace ukive {

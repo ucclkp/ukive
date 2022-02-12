@@ -7,8 +7,9 @@
 #ifndef UKIVE_GRAPHICS_WIN_GPU_GPU_CONTEXT_D3D_H_
 #define UKIVE_GRAPHICS_WIN_GPU_GPU_CONTEXT_D3D_H_
 
+#include "utils/memory/win/com_ptr.hpp"
+
 #include "ukive/graphics/gpu/gpu_context.h"
-#include "ukive/system/win/com_ptr.hpp"
 
 #include <d3d11.h>
 
@@ -18,7 +19,7 @@ namespace win {
 
     class GPUContextD3D : public GPUContext {
     public:
-        explicit GPUContextD3D(const ComPtr<ID3D11DeviceContext>& ctx);
+        explicit GPUContextD3D(const utl::win::ComPtr<ID3D11DeviceContext>& ctx);
 
         void setVertexBuffers(
             uint32_t start_slot, uint32_t num, const GPUBuffer* buffers,
@@ -64,10 +65,10 @@ namespace win {
         void* lock(GPUResource* resource) override;
         void unlock(GPUResource* resource) override;
 
-        ComPtr<ID3D11DeviceContext> getNative() const;
+        utl::win::ComPtr<ID3D11DeviceContext> getNative() const;
 
     private:
-        ComPtr<ID3D11DeviceContext> d3d_context_;
+        utl::win::ComPtr<ID3D11DeviceContext> d3d_context_;
     };
 
 }

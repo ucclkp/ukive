@@ -92,7 +92,7 @@ namespace win {
     ImageFrame* OffscreenBufferWin::onExtractImage(const ImageOptions& options) {
         D2D1_BITMAP_PROPERTIES bmp_prop = mapBitmapProps(options);
 
-        ComPtr<ID2D1Bitmap> bitmap;
+        utl::win::ComPtr<ID2D1Bitmap> bitmap;
         HRESULT hr = rt_->getNative()->CreateSharedBitmap(
             __uuidof(IDXGISurface), d3d_tex2d_.cast<IDXGISurface>().get(), &bmp_prop, &bitmap);
         if (FAILED(hr)) {
@@ -139,7 +139,7 @@ namespace win {
         return img_options_;
     }
 
-    ComPtr<ID3D11Texture2D> OffscreenBufferWin::getTexture() const {
+    utl::win::ComPtr<ID3D11Texture2D> OffscreenBufferWin::getTexture() const {
         return d3d_tex2d_;
     }
 
