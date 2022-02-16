@@ -32,7 +32,7 @@ namespace ukive {
         media_player_->close();
     }
 
-    void MediaView::setMediaFile(const std::u16string& file_path) {
+    void MediaView::setMediaFile(const std::u16string_view& file_path) {
         file_path_ = file_path;
     }
 
@@ -96,7 +96,7 @@ namespace ukive {
     }
 
     void MediaView::onAttachedToWindow(Window* w) {
-        //media_player_->openFile(uR"(D:\Test\test.mp4)", w);
+        //media_player_->openFile(uR"(G:\Test\test.mp4)", w);
     }
 
     void MediaView::onDetachFromWindow() {

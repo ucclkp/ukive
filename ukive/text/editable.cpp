@@ -14,7 +14,7 @@
 
 namespace ukive {
 
-    Editable::Editable(const std::u16string& text)
+    Editable::Editable(const std::u16string_view& text)
         : text_(text),
           sel_beg_(0),
           sel_end_(0) {
@@ -74,11 +74,11 @@ namespace ukive {
         return text_.length();
     }
 
-    void Editable::append(const std::u16string& text, Reason r) {
+    void Editable::append(const std::u16string_view& text, Reason r) {
         insert(text, length(), r);
     }
 
-    void Editable::insert(const std::u16string& text, size_t position, Reason r) {
+    void Editable::insert(const std::u16string_view& text, size_t position, Reason r) {
         if (!text.empty()) {
             text_.insert(position, text);
             notifyTextChanged(position, position, position + text.length(), r);
@@ -91,7 +91,7 @@ namespace ukive {
         }
     }
 
-    void Editable::replace(const std::u16string& text, size_t start, size_t length, Reason r) {
+    void Editable::replace(const std::u16string_view& text, size_t start, size_t length, Reason r) {
         text_.replace(start, length, text);
         notifyTextChanged(start, start + length, start + text.length(), r);
     }
@@ -118,7 +118,7 @@ namespace ukive {
         }
     }
 
-    void Editable::replace(const std::u16string& find, const std::u16string& rep, Reason r) {
+    void Editable::replace(const std::u16string_view& find, const std::u16string_view& rep, Reason r) {
         auto first = text_.find(find);
         if (first != std::u16string::npos) {
             text_.replace(first, find.length(), rep);
@@ -129,7 +129,7 @@ namespace ukive {
         }
     }
 
-    void Editable::insert(const std::u16string& text, Reason r) {
+    void Editable::insert(const std::u16string_view& text, Reason r) {
         auto old_start = sel_beg_;
         auto old_end = sel_end_;
 
@@ -153,7 +153,7 @@ namespace ukive {
         replace({}, r);
     }
 
-    void Editable::replace(const std::u16string& text, Reason r) {
+    void Editable::replace(const std::u16string_view& text, Reason r) {
         auto old_start = sel_beg_;
         auto old_end = sel_end_;
 

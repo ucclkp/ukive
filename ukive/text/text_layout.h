@@ -94,12 +94,12 @@ namespace ukive {
         virtual ~TextLayout() = default;
 
         virtual bool make(
-            const std::u16string& text,
-            const std::u16string& font_name,
+            const std::u16string_view& text,
+            const std::u16string_view& font_name,
             float font_size,
             FontStyle style,
             FontWeight weight,
-            const std::u16string& locale_name) = 0;
+            const std::u16string_view& locale_name) = 0;
         virtual void destroy() = 0;
 
         virtual void setMaxWidth(float max_width) = 0;

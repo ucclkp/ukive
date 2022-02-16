@@ -116,7 +116,7 @@ namespace ukive {
         impl_->center();
     }
 
-    void Window::setTitle(const std::u16string& title) {
+    void Window::setTitle(const std::u16string_view& title) {
         impl_->setTitle(title);
     }
 

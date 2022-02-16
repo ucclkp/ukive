@@ -151,7 +151,7 @@ namespace shell {
             img = ukive::ImageFrame::create(
                 list_view_->getWindow(),
                 thumb.width, thumb.height,
-                reinterpret_cast<const uint8_t*>(thumb.data.data()),
+                thumb.data.data(),
                 thumb.data.size(), thumb.width * 4, thumb.options);
         }
 

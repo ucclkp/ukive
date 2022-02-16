@@ -27,12 +27,12 @@ namespace win {
         DWTextLayout();
 
         bool make(
-            const std::u16string& text,
-            const std::u16string& font_name,
+            const std::u16string_view& text,
+            const std::u16string_view& font_name,
             float font_size,
             FontStyle style,
             FontWeight weight,
-            const std::u16string& locale_name) override;
+            const std::u16string_view& locale_name) override;
         void destroy() override;
 
         void setMaxWidth(float max_width) override;

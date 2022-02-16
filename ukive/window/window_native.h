@@ -49,7 +49,7 @@ namespace ukive {
         virtual void doDraw(const DirtyRegion& region) = 0;
         virtual void doLayout() = 0;
 
-        virtual void setTitle(const std::u16string& title) = 0;
+        virtual void setTitle(const std::u16string_view& title) = 0;
         virtual void setBounds(int x, int y, int width, int height) = 0;
         virtual void setCurrentCursor(Cursor cursor) = 0;
         virtual void setTranslucentType(TranslucentType type) = 0;

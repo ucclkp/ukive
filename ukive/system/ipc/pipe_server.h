@@ -18,7 +18,7 @@ namespace ukive {
 
         virtual ~PipeServer() = default;
 
-        virtual bool create(const std::u16string& name) = 0;
+        virtual bool create(const std::u16string_view& name) = 0;
         virtual bool wait() = 0;
         virtual bool read(std::string* buf) = 0;
         virtual bool write(const std::string_view& buf) = 0;

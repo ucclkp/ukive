@@ -41,8 +41,8 @@ namespace win {
         void setCallback(MediaPlayerCallback* cb) override;
         void setDisplaySize(const Size& size) override;
 
-        bool openUrl(const std::u16string& url, Window* w) override;
-        bool openFile(const std::u16string& file_name, Window* w) override;
+        bool openUrl(const std::u16string_view& url, Window* w) override;
+        bool openFile(const std::u16string_view& file_name, Window* w) override;
 
         bool start(bool current, int64_t position) override;
         bool pause() override;

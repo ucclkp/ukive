@@ -18,7 +18,7 @@ namespace ukive {
 
         virtual ~PipeClient() = default;
 
-        virtual bool connect(const std::u16string& name) = 0;
+        virtual bool connect(const std::u16string_view& name) = 0;
         virtual void disconnect() = 0;
         virtual bool read(std::string* buf) = 0;
         virtual bool write(const std::string_view& buf) = 0;

@@ -15,6 +15,7 @@
 #include "ukive/graphics/colors/color.h"
 #include "ukive/text/text_custom_drawing.h"
 #include "ukive/text/win/dw_text_drawing_effect.h"
+#include "ukive/window/window_dpi_utils.h"
 
 
 namespace ukive {
@@ -241,7 +242,15 @@ namespace win {
 
         auto canvas = static_cast<Canvas*>(clientDrawingContext);
         auto rt = static_cast<CyroRenderTargetD2D*>(canvas->getBuffer()->getRT())->getNative();
-        rt->GetTransform(reinterpret_cast<D2D1_MATRIX_3X2_F*>(transform));
+
+        D2D1_MATRIX_3X2_F m;
+        rt->GetTransform(&m);
+        transform->m11 = m.m11;
+        transform->m12 = m.m12;
+        transform->m21 = m.m21;
+        transform->m22 = m.m22;
+        transform->dx = m.dx;
+        transform->dy = m.dy;
         return S_OK;
     }
 
@@ -268,7 +277,7 @@ namespace win {
         auto rt = static_cast<CyroRenderTargetD2D*>(canvas->getBuffer()->getRT())->getNative();
 
         rt->GetDpi(&x, &yUnused);
-        *pixelsPerDip = x / USER_DEFAULT_SCREEN_DPI;
+        *pixelsPerDip = x / kDefaultDpi;
 
         return S_OK;
     }
@@ -298,7 +307,7 @@ namespace win {
         } else if (__uuidof(IDWritePixelSnapping) == riid) {
             *ppvObject = static_cast<IDWritePixelSnapping*>(this);
         } else if (__uuidof(IUnknown) == riid) {
-            *ppvObject = reinterpret_cast<IUnknown*>(this);
+            *ppvObject = static_cast<IUnknown*>(this);
         } else {
             *ppvObject = nullptr;
             return E_NOINTERFACE;

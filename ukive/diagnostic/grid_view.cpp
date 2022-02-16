@@ -116,7 +116,7 @@ namespace ukive {
 
     void GridView::addPoint(
         double col, double row, int radius, const Color& color,
-        const std::u16string& text, const Color& text_color)
+        const std::u16string_view& text, const Color& text_color)
     {
         PointInfo info{ col, row, radius, color, nullptr, text_color };
 

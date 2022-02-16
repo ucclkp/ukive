@@ -45,14 +45,14 @@ namespace ukive {
         bool isEditable() const;
         bool isSelectable() const;
 
-        void setText(const std::u16string& text);
+        void setText(const std::u16string_view& text);
         void setTextSize(int size);
         void setTextColor(const Color& color);
         void setTextAlignment(TextLayout::Alignment alignment);
         void setParagraphAlignment(TextLayout::Alignment alignment);
         void setTextStyle(TextLayout::FontStyle style);
         void setTextWeight(TextLayout::FontWeight weight);
-        void setFontFamilyName(const std::u16string& font);
+        void setFontFamilyName(const std::u16string_view& font);
         void setLineSpacing(TextLayout::LineSpacing method, float spacing);
 
         const std::u16string& getText() const;

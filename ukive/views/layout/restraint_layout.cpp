@@ -930,7 +930,7 @@ namespace ukive {
         int child_top = top + getPadding().top;
         if (rli->hasTop() && rli->top_handle_id != getId()) {
             auto target = getChildById(rli->top_handle_id);
-            auto target_li = reinterpret_cast<RestraintLayoutInfo*>(target->getExtraLayoutInfo());
+            auto target_li = static_cast<RestraintLayoutInfo*>(target->getExtraLayoutInfo());
 
             if (!target_li->is_vert_layouted) {
                 layoutChildVertical(target, target_li, top, bottom);

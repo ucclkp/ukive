@@ -61,35 +61,39 @@ namespace win {
     }
 
     bool DWTextLayout::make(
-        const std::u16string& text,
-        const std::u16string& font_name,
+        const std::u16string_view& text,
+        const std::u16string_view& font_name,
         float font_size,
         FontStyle style,
         FontWeight weight,
-        const std::u16string& locale_name)
+        const std::u16string_view& locale_name)
     {
         auto dwrite_factory = static_cast<DirectXManager*>(Application::getGraphicDeviceManager())->
             getDWriteFactory();
 
+        std::wstring w_fn(font_name.begin(), font_name.end());
+        std::wstring w_ln(locale_name.begin(), locale_name.end());
+        std::wstring w_text(text.begin(), text.end());
+
         text_format_.reset();
         HRESULT hr = dwrite_factory->CreateTextFormat(
-            reinterpret_cast<const WCHAR*>(font_name.c_str()), nullptr,
+            w_fn.c_str(), nullptr,
             mapFontWeight(weight),
             mapFontStyle(style),
             DWRITE_FONT_STRETCH_NORMAL,
             font_size,
-            reinterpret_cast<const WCHAR*>(locale_name.c_str()),
+            w_ln.c_str(),
             &text_format_);
         if (FAILED(hr)) {
             LOG(Log::WARNING) << "Failed to create text format: " << hr;
             return false;
         }
 
-        length_ = utl::num_cast<uint32_t>(text.length());
+        length_ = utl::num_cast<uint32_t>(w_text.length());
 
         text_layout_.reset();
         hr = dwrite_factory->CreateTextLayout(
-            reinterpret_cast<const WCHAR*>(text.c_str()), length_,
+            w_text.c_str(), length_,
             text_format_.get(), 0, 0, &text_layout_);
         if (FAILED(hr)) {
             LOG(Log::WARNING) << "Failed to create text layout: " << hr;
@@ -136,8 +140,8 @@ namespace win {
             ubassert(SUCCEEDED(hr));
         }
         if (!attrs.name.empty()) {
-            hr = text_layout_->SetFontFamilyName(
-                reinterpret_cast<const WCHAR*>(attrs.name.c_str()), makeTextRange(range));
+            std::wstring w_attr(attrs.name.begin(), attrs.name.end());
+            hr = text_layout_->SetFontFamilyName(w_attr.c_str(), makeTextRange(range));
             ubassert(SUCCEEDED(hr));
         }
 

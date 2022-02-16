@@ -104,8 +104,11 @@ namespace win {
 
         std::u16string icon_name, small_icon_name;
         if (delegate_->onGetWindowIconName(&icon_name, &small_icon_name)) {
-            info.icon = ::LoadIcon(nullptr, reinterpret_cast<LPCWSTR>(icon_name.c_str()));
-            info.icon_small = ::LoadIcon(nullptr, reinterpret_cast<LPCWSTR>(small_icon_name.c_str()));
+            std::wstring w_in(icon_name.begin(), icon_name.end());
+            std::wstring w_sin(small_icon_name.begin(), small_icon_name.end());
+
+            info.icon = ::LoadIcon(nullptr, w_in.c_str());
+            info.icon_small = ::LoadIcon(nullptr, w_sin.c_str());
         } else {
             info.icon = info.icon_small = ::LoadIcon(nullptr, IDI_WINLOGO);
         }
@@ -176,7 +179,7 @@ namespace win {
             context.setAutoScale(1);
         }
 
-        context.setDefaultDpi(USER_DEFAULT_SCREEN_DPI);
+        context.setDefaultDpi(kDefaultDpi);
 
         is_created_ = true;
         delegate_->onCreated();
@@ -340,7 +343,7 @@ namespace win {
         delegate_->onDraw(dirty_region);
     }
 
-    void WindowImplWin::setTitle(const std::u16string& title) {
+    void WindowImplWin::setTitle(const std::u16string_view& title) {
         title_ = std::wstring(title.begin(), title.end());
         if (::IsWindow(hWnd_)) {
             ::SetWindowText(hWnd_, title_.c_str());
@@ -716,7 +719,7 @@ namespace win {
         if (::IsWindow(hWnd_) && is_win10_1607_or_above) {
             UINT dpi = win::UDGetDpiForWindow(hWnd_);
             if (dpi > 0) {
-                return utl::num_cast<float>(dpi) / USER_DEFAULT_SCREEN_DPI;
+                return utl::num_cast<float>(dpi) / kDefaultDpi;
             }
         }
 
@@ -1335,10 +1338,10 @@ namespace win {
         context.setChanged(Context::DPI_CHANGED);
         if (Application::getOptions().is_auto_dpi_scale) {
             context.setScale(1);
-            context.setAutoScale(float(dpi_x) / USER_DEFAULT_SCREEN_DPI);
+            context.setAutoScale(float(dpi_x) / kDefaultDpi);
         } else {
             context.setAutoScale(1);
-            context.setScale(float(dpi_x) / USER_DEFAULT_SCREEN_DPI);
+            context.setScale(float(dpi_x) / kDefaultDpi);
         }
         delegate_->onUpdateContext();
 
@@ -2002,7 +2005,7 @@ namespace win {
 
     LRESULT WindowImplWin::onSetText(WPARAM wParam, LPARAM lParam, bool* handled) {
         auto text = reinterpret_cast<wchar_t*>(lParam);
-        delegate_->onSetText(std::u16string(reinterpret_cast<char16_t*>(text)));
+        delegate_->onSetText(std::u16string(text, text + std::char_traits<wchar_t>::length(text)));
         return 0;
     }
 

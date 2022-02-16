@@ -39,10 +39,10 @@ namespace ukive {
             int width, int height, const ImageOptions& options);
         ImageFrame* createImage(
             int width, int height,
-            const uint8_t* pixel_data, size_t size, size_t stride);
+            const void* pixel_data, size_t size, size_t stride);
         ImageFrame* createImage(
             int width, int height,
-            const uint8_t* pixel_data, size_t size, size_t stride,
+            const void* pixel_data, size_t size, size_t stride,
             const ImageOptions& options);
 
         void setOpacity(float opacity);

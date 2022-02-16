@@ -210,7 +210,7 @@ namespace win {
         }
 
         utl::win::ComPtr<IDXGIFactory2> parent;
-        hr = swapchain_->GetParent(__uuidof(IDXGIFactory2), reinterpret_cast<void**>(&parent));
+        hr = swapchain_->GetParent(IID_PPV_ARGS(&parent));
         if (FAILED(hr)) {
             LOG(Log::FATAL) << "Failed to get SwapChain parent: " << hr;
             return false;
@@ -223,7 +223,7 @@ namespace win {
         }
 
         utl::win::ComPtr<IDXGISurface> back_buffer;
-        hr = swapchain_->GetBuffer(0, __uuidof(IDXGISurface), reinterpret_cast<LPVOID*>(&back_buffer));
+        hr = swapchain_->GetBuffer(0, IID_PPV_ARGS(&back_buffer));
         if (FAILED(hr)) {
             LOG(Log::FATAL) << "Failed to query DXGI surface: " << hr;
             return false;
@@ -246,9 +246,7 @@ namespace win {
         auto gdm = static_cast<DirectXManager*>(Application::getGraphicDeviceManager());
 
         HRESULT hr = win::UDDCompositionCreateDevice(
-            gdm->getDXGIDevice().get(),
-            __uuidof(IDCompositionDevice),
-            reinterpret_cast<void**>(&dcomp_dev_));
+            gdm->getDXGIDevice().get(), IID_PPV_ARGS(&dcomp_dev_));
         if (FAILED(hr)) {
             LOG(Log::FATAL) << "Failed to create DComposition device: " << hr;
             return false;
@@ -318,7 +316,7 @@ namespace win {
         }
 
         utl::win::ComPtr<IDXGISurface> back_buffer;
-        hr = swapchain_->GetBuffer(0, __uuidof(IDXGISurface), reinterpret_cast<LPVOID*>(&back_buffer));
+        hr = swapchain_->GetBuffer(0, IID_PPV_ARGS(&back_buffer));
         if (FAILED(hr)) {
             LOG(Log::FATAL) << "Failed to query DXGI surface: " << hr;
             return GRet::Failed;

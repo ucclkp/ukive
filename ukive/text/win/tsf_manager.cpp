@@ -24,9 +24,9 @@ namespace win {
     bool TsfManager::initialization() {
         HRESULT hr = ::CoCreateInstance(
             CLSID_TF_ThreadMgr,
-            nullptr, CLSCTX_INPROC_SERVER,
-            __uuidof(ITfThreadMgr),
-            reinterpret_cast<void**>(&thread_mgr_));
+            nullptr,
+            CLSCTX_INPROC_SERVER,
+            IID_PPV_ARGS(&thread_mgr_));
         if (FAILED(hr)) {
             DLOG(Log::ERR) << "Failed to create thread mgr: " << hr;
             return false;
@@ -292,7 +292,7 @@ namespace win {
         }
 
         if (IsEqualIID(riid, IID_IUnknown)) {
-            *ppvObj = reinterpret_cast<IUnknown*>(this);
+            *ppvObj = static_cast<IUnknown*>(static_cast<ITfInputProcessorProfileActivationSink*>(this));
         } else if (IsEqualIID(riid, __uuidof(ITfInputProcessorProfileActivationSink))) {
             *ppvObj = static_cast<ITfInputProcessorProfileActivationSink*>(this);
         } else if (IsEqualIID(riid, __uuidof(ITfCompartmentEventSink))) {

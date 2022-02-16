@@ -71,7 +71,7 @@ namespace win {
         }
 
         if (IsEqualIID(riid, IID_IUnknown)) {
-            *ppvObject = reinterpret_cast<IUnknown*>(this);
+            *ppvObject = static_cast<IUnknown*>(this);
         } else if (IsEqualIID(riid, __uuidof(IMFAsyncCallback))) {
             *ppvObject = static_cast<IMFAsyncCallback*>(this);
         } else {

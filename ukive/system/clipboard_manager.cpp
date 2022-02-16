@@ -23,18 +23,19 @@ namespace ukive {
     ClipboardManager::~ClipboardManager() {
     }
 
-
-    void ClipboardManager::saveToClipboard(std::u16string text) {
+    void ClipboardManager::saveToClipboard(const std::u16string_view& text) {
 #ifdef OS_WINDOWS
         if (::OpenClipboard(nullptr)) {
             ::EmptyClipboard();
 
-            std::size_t space = (text.length() + 1) * sizeof(wchar_t);
+            size_t space = (text.length() + 1) * sizeof(wchar_t);
 
             HANDLE hHandle = ::GlobalAlloc(GMEM_FIXED, space);
             wchar_t* pData = static_cast<wchar_t*>(::GlobalLock(hHandle));
 
-            text._Copy_s(reinterpret_cast<char16_t*>(pData), text.length(), text.length());
+            for (size_t i = 0; i < text.length(); ++i) {
+                pData[i] = text[i];
+            }
             pData[text.length()] = L'\0';
 
             ::SetClipboardData(CF_UNICODETEXT, hHandle);
@@ -53,7 +54,7 @@ namespace ukive {
             if (hMem != nullptr) {
                 wchar_t* lpStr = static_cast<wchar_t*>(::GlobalLock(hMem));
                 if (lpStr != nullptr) {
-                    content = std::u16string(reinterpret_cast<char16_t*>(lpStr));
+                    content = std::u16string(lpStr, lpStr + std::char_traits<wchar_t>::length(lpStr));
                     ::GlobalUnlock(hMem);
                 }
             }

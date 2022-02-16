@@ -87,7 +87,7 @@ namespace win {
         vp_activate_->setDisplaySize(size);
     }
 
-    bool MediaPlayerWin::openUrl(const std::u16string& url, Window* w) {
+    bool MediaPlayerWin::openUrl(const std::u16string_view& url, Window* w) {
         if (state_ != State::Idle) {
             return false;
         }
@@ -119,9 +119,9 @@ namespace win {
         create_callback_ = new MFAsyncCallback(
             std::bind(&MediaPlayerWin::onCreateMediaSourceComplete, this, std::placeholders::_1));
 
+        std::wstring w_url(url.begin(), url.end());
         hr = source_resolver_->BeginCreateObjectFromURL(
-            reinterpret_cast<const wchar_t*>(url.c_str()),
-            MF_RESOLUTION_MEDIASOURCE, nullptr, &cancel_msc_cookie_, create_callback_, nullptr);
+            w_url.c_str(), MF_RESOLUTION_MEDIASOURCE, nullptr, &cancel_msc_cookie_, create_callback_, nullptr);
         if (FAILED(hr)) {
             LOG(Log::ERR) << "Failed to create media source: " << hr;
             return hr;
@@ -130,7 +130,7 @@ namespace win {
         return true;
     }
 
-    bool MediaPlayerWin::openFile(const std::u16string& file_name, Window* w) {
+    bool MediaPlayerWin::openFile(const std::u16string_view& file_name, Window* w) {
         if (state_ != State::Idle) {
             return false;
         }
@@ -162,11 +162,12 @@ namespace win {
         rf_callback_ = new MFAsyncCallback(
             std::bind(&MediaPlayerWin::onReadFileComplete, this, std::placeholders::_1));
 
+        std::wstring w_fn(file_name.begin(), file_name.end());
         hr = ::MFBeginCreateFile(
             MF_ACCESSMODE_READ,
             MF_OPENMODE_FAIL_IF_NOT_EXIST,
             MF_FILEFLAGS_NONE,
-            reinterpret_cast<const wchar_t*>(file_name.c_str()),
+            w_fn.c_str(),
             rf_callback_, nullptr, &cancel_rf_cookie_);
         if (FAILED(hr)) {
             LOG(Log::ERR) << "Failed to open media file: " << hr;

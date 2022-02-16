@@ -19,7 +19,7 @@ namespace ukive {
     public:
         MenuItemImpl(Context c, int menu_id, int32_t order);
 
-        void setItemTitle(const std::u16string& title) override;
+        void setItemTitle(const std::u16string_view& title) override;
         void setItemVisible(bool visible) override;
         void setItemEnabled(bool enable) override;
 

@@ -21,7 +21,7 @@ namespace ukive {
         PipeServerWin();
         ~PipeServerWin();
 
-        bool create(const std::u16string& name) override;
+        bool create(const std::u16string_view& name) override;
         bool wait() override;
         bool read(std::string* buf) override;
         bool write(const std::string_view& buf) override;

@@ -16,7 +16,7 @@ namespace ukive {
     public:
         virtual ~MenuItem() = default;
 
-        virtual void setItemTitle(const std::u16string& title) = 0;
+        virtual void setItemTitle(const std::u16string_view& title) = 0;
         virtual void setItemVisible(bool visible) = 0;
         virtual void setItemEnabled(bool enable) = 0;
 

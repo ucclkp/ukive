@@ -19,6 +19,8 @@ namespace ukive {
         virtual ~ColorManager() = default;
 
         virtual bool convertColor(const Color& src, Color* dst) = 0;
+
+        static bool getDefaultProfile(std::u16string* path);
     };
 
 }

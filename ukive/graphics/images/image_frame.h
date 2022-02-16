@@ -26,18 +26,18 @@ namespace ukive {
             Window *win, int width, int height, const ImageOptions& options);
         static ImageFrame* create(
             Window *win, int width, int height,
-            const uint8_t* pixel_data, size_t size, size_t stride);
+            const void* pixel_data, size_t size, size_t stride);
         static ImageFrame* create(
             Window *win, int width, int height,
-            const uint8_t* pixel_data, size_t size, size_t stride,
+            const void* pixel_data, size_t size, size_t stride,
             const ImageOptions& options);
 
         static ImageFrame* decodeFile(
-            Window *win, const std::u16string& file_name);
+            Window *win, const std::u16string_view& file_name);
         static ImageFrame* decodeFile(
-            Window *win, const std::u16string& file_name, const ImageOptions& options);
+            Window *win, const std::u16string_view& file_name, const ImageOptions& options);
         static ImageFrame* decodeThumbnail(
-            Window *win, const std::u16string& file_name, int width, int height);
+            Window *win, const std::u16string_view& file_name, int width, int height);
 
         virtual ~ImageFrame() = default;
 

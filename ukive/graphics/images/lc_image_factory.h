@@ -30,25 +30,25 @@ namespace ukive {
             int width, int height, const ImageOptions& options) = 0;
         virtual LcImageFrame* create(
             int width, int height,
-            uint8_t* pixel_data, size_t size, size_t stride,
+            void* pixel_data, size_t size, size_t stride,
             const ImageOptions& options) = 0;
 
         virtual LcImage decodeFile(
-            const std::u16string& file_name, const ImageOptions& options) = 0;
+            const std::u16string_view& file_name, const ImageOptions& options) = 0;
         virtual LcImage decodeMemory(
-            uint8_t* buffer, size_t size, const ImageOptions& options) = 0;
+            void* buffer, size_t size, const ImageOptions& options) = 0;
 
         virtual bool getThumbnail(
-            const std::u16string& file_name,
+            const std::u16string_view& file_name,
             int frame_width, int frame_height,
             std::string* out, int* real_w, int* real_h, ImageOptions* options) = 0;
 
         virtual bool saveToFile(
             int width, int height,
-            uint8_t* data, size_t byte_count, size_t stride,
+            void* data, size_t byte_count, size_t stride,
             ImageContainer container,
             const ImageOptions& options,
-            const std::u16string& file_name) = 0;
+            const std::u16string_view& file_name) = 0;
     };
 
 }

@@ -22,13 +22,14 @@ namespace ukive {
 
     class LcImageFrame {
     public:
-        static LcImageFrame* create(int width, int height, const ImageOptions& options);
+        static LcImageFrame* create(
+            int width, int height, const ImageOptions& options);
         static bool saveToFile(
             int width, int height,
-            uint8_t* data, size_t byte_count, size_t stride,
+            void* data, size_t byte_count, size_t stride,
             ImageContainer container,
             const ImageOptions& options,
-            const std::u16string& file_name);
+            const std::u16string_view& file_name);
 
         LcImageFrame();
         virtual ~LcImageFrame();
@@ -43,8 +44,8 @@ namespace ukive {
         virtual SizeU getPixelSize() const = 0;
 
         virtual bool copyPixels(
-            size_t stride, uint8_t* pixels, size_t buf_size) = 0;
-        virtual uint8_t* lockPixels() = 0;
+            size_t stride, void* pixels, size_t buf_size) = 0;
+        virtual void* lockPixels() = 0;
         virtual void unlockPixels() = 0;
 
     private:

@@ -22,9 +22,9 @@ namespace shell {
     ExampleListItem::ExampleListItem(ukive::View* v)
         : ListItem(v)
     {
-        title_label = reinterpret_cast<ukive::TextView*>(v->findView(ID_TITLE));
-        summary_label = reinterpret_cast<ukive::TextView*>(v->findView(ID_SUMMARY));
-        avatar_image = reinterpret_cast<ukive::ImageView*>(v->findView(ID_AVATAR));
+        title_label = static_cast<ukive::TextView*>(v->findView(ID_TITLE));
+        summary_label = static_cast<ukive::TextView*>(v->findView(ID_SUMMARY));
+        avatar_image = static_cast<ukive::ImageView*>(v->findView(ID_AVATAR));
     }
 
     ukive::ListItem* ExampleListSource::onCreateListItem(
@@ -79,7 +79,7 @@ namespace shell {
         ukive::ListItem* item)
     {
         auto& data = data_list_.at(item->data_pos);
-        ExampleListItem* example_list_item = reinterpret_cast<ExampleListItem*>(item);
+        ExampleListItem* example_list_item = static_cast<ExampleListItem*>(item);
 
         std::u16string str(data.title);
         str.append(u" ").append(utl::itos16(item->data_pos));

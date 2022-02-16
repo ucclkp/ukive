@@ -61,7 +61,7 @@ namespace necro {
     }
 
     void ResourceHeaderProcessor::generateOutput(
-        const std::string& name_macro,
+        const std::string_view& name_macro,
         const IdMap& view_id_map, const IdMap& layout_id_map, std::string* out)
     {
         ubassert(out != nullptr && out->empty());

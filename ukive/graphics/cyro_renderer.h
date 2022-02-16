@@ -42,7 +42,7 @@ namespace ukive {
             int width, int height, const ImageOptions& options) = 0;
         virtual ImageFrame* createImage(
             int width, int height,
-            const uint8_t* pixel_data, size_t size, size_t stride,
+            const void* pixel_data, size_t size, size_t stride,
             const ImageOptions& options) = 0;
 
         virtual void setOpacity(float opacity) = 0;
@@ -81,8 +81,8 @@ namespace ukive {
             float width, float height, const ImageFrame* mask, const ImageFrame* content) = 0;
 
         virtual void drawText(
-            const std::u16string& text,
-            const std::u16string& font_name, float font_size,
+            const std::u16string_view& text,
+            const std::u16string_view& font_name, float font_size,
             const RectF& rect, const Paint& paint) = 0;
         virtual void drawTextLayout(
             float x, float y,

@@ -30,7 +30,9 @@ namespace ukive {
 
         virtual int show(Window* parent, uint32_t flags) = 0;
 
-        virtual void addType(std::u16string types, std::u16string desc) = 0;
+        virtual void addType(
+            const std::u16string_view& types,
+            const std::u16string_view& desc) = 0;
         virtual void clearTypes() = 0;
 
         virtual const std::vector<std::u16string>& getSelectedFiles() const = 0;

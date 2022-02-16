@@ -59,7 +59,7 @@ namespace ukive {
 
     ImageFrame* Canvas::createImage(
         int width, int height,
-        const uint8_t* pixel_data, size_t size, size_t stride)
+        const void* pixel_data, size_t size, size_t stride)
     {
         if (!renderer_ ||
             width <= 0 || height <= 0 ||
@@ -73,7 +73,7 @@ namespace ukive {
 
     ImageFrame* Canvas::createImage(
         int width, int height,
-        const uint8_t* pixel_data, size_t size, size_t stride,
+        const void* pixel_data, size_t size, size_t stride,
         const ImageOptions& options)
     {
         if (!renderer_ ||

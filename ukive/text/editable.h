@@ -50,20 +50,20 @@ namespace ukive {
                 Span* span, SpanChange action, Reason r) = 0;
         };
 
-        explicit Editable(const std::u16string& text);
+        explicit Editable(const std::u16string_view& text);
         ~Editable();
 
         size_t length() const;
 
-        void append(const std::u16string& text, Reason r = API);
-        void insert(const std::u16string& text, size_t position, Reason r = API);
+        void append(const std::u16string_view& text, Reason r = API);
+        void insert(const std::u16string_view& text, size_t position, Reason r = API);
         void remove(size_t start, size_t length, Reason r = API);
-        void replace(const std::u16string& text, size_t start, size_t length, Reason r = API);
+        void replace(const std::u16string_view& text, size_t start, size_t length, Reason r = API);
         void clear(Reason r = API);
-        void replace(const std::u16string& find, const std::u16string& rep, Reason r = API);
-        void insert(const std::u16string& text, Reason r = API);
+        void replace(const std::u16string_view& find, const std::u16string_view& rep, Reason r = API);
+        void insert(const std::u16string_view& text, Reason r = API);
         void remove(Reason r = API);
-        void replace(const std::u16string& text, Reason r = API);
+        void replace(const std::u16string_view& text, Reason r = API);
         void setSelection(size_t selection, Reason r = API);
         void setSelection(size_t start, size_t end, Reason r = API);
         void addSpan(Span* span, Reason r = API);

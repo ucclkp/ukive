@@ -564,7 +564,7 @@ namespace win {
         }
 
         if (IsEqualIID(riid, IID_IUnknown)) {
-            *ppvObject = reinterpret_cast<IUnknown*>(this);
+            *ppvObject = static_cast<IUnknown*>(static_cast<IMFVideoPresenter*>(this));
         } else if (IsEqualIID(riid, __uuidof(IMFClockStateSink))) {
             *ppvObject = static_cast<IMFClockStateSink*>(this);
         } else if (IsEqualIID(riid, __uuidof(IMFVideoPresenter))) {
@@ -811,11 +811,16 @@ namespace win {
 
         MFRatio input_par;
         {
+            UINT32 numerator, denominator;
             hr = ::MFGetAttributeRatio(
-                proposed, MF_MT_PIXEL_ASPECT_RATIO,
-                reinterpret_cast<UINT32*>(&input_par.Numerator),
-                reinterpret_cast<UINT32*>(&input_par.Denominator));
-            if (FAILED(hr)) {
+                proposed,
+                MF_MT_PIXEL_ASPECT_RATIO,
+                &numerator,
+                &denominator);
+            if (SUCCEEDED(hr)) {
+                input_par.Numerator = numerator;
+                input_par.Denominator = denominator;
+            } else {
                 input_par.Numerator = 1;
                 input_par.Denominator = 1;
             }
@@ -875,11 +880,15 @@ namespace win {
         sample_recycler_.recycleSamples(sample_list);
 
         MFRatio fps;
+        UINT32 numerator, denominator;
         hr = ::MFGetAttributeRatio(
-            media_type, MF_MT_FRAME_RATE,
-            reinterpret_cast<UINT32*>(&fps.Numerator),
-            reinterpret_cast<UINT32*>(&fps.Denominator));
-        if (SUCCEEDED(hr) && fps.Numerator != 0 && fps.Denominator != 0) {
+            media_type,
+            MF_MT_FRAME_RATE,
+            &numerator,
+            &denominator);
+        if (SUCCEEDED(hr) && numerator != 0 && denominator != 0) {
+            fps.Numerator = numerator;
+            fps.Denominator = denominator;
             scheduler_.setFrameRate(fps);
         } else {
             // 默认值
@@ -1376,7 +1385,7 @@ namespace win {
         }
 
         if (frame_step_.state == FrameStepState::Scheduled) {
-            hr = sample->QueryInterface(_uuidof(IMFSample), reinterpret_cast<void**>(&unknown));
+            hr = sample->QueryInterface(_uuidof(IMFSample), IID_PPV_ARGS_Helper(&unknown));
             if (FAILED(hr)) {
                 return hr;
             }

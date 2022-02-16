@@ -43,9 +43,7 @@ namespace win {
 
         std::vector<COMDLG_FILTERSPEC> exts_raw;
         for (const auto& ext : exts_) {
-            exts_raw.push_back(
-                { reinterpret_cast<const wchar_t*>(ext.second.c_str()),
-                reinterpret_cast<const wchar_t*>(ext.first.c_str()) });
+            exts_raw.push_back({ ext.second.c_str(), ext.first.c_str() });
         }
         if (!exts_.empty()) {
             pfd->SetFileTypes(UINT(exts_raw.size()), exts_raw.data());
@@ -83,7 +81,7 @@ namespace win {
             if (SUCCEEDED(item_array->GetItemAt(i, &item))) {
                 LPWSTR path;
                 if (SUCCEEDED(item->GetDisplayName(SIGDN_FILESYSPATH, &path))) {
-                    std::u16string file_path(reinterpret_cast<char16_t*>(path));
+                    std::u16string file_path(path, path + std::char_traits<WCHAR>::length(path));
                     ::CoTaskMemFree(path);
                     sel_files_.push_back(std::move(file_path));
                 }
@@ -93,8 +91,12 @@ namespace win {
         return 1;
     }
 
-    void OpenFileDialogWin::addType(std::u16string types, std::u16string desc) {
-        exts_.push_back({ std::move(types), std::move(desc) });
+    void OpenFileDialogWin::addType(const std::u16string_view& types, const std::u16string_view& desc) {
+        exts_.push_back(
+            {
+                std::wstring(types.begin(), types.end()),
+                std::wstring(desc.begin(), desc.end())
+            });
     }
 
     void OpenFileDialogWin::clearTypes() {

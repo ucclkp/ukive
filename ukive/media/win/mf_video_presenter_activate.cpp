@@ -223,7 +223,7 @@ namespace win {
         }
 
         if (IsEqualIID(riid, IID_IUnknown)) {
-            *ppvObject = reinterpret_cast<IUnknown*>(this);
+            *ppvObject = static_cast<IUnknown*>(this);
         } else if (IsEqualIID(riid, __uuidof(IMFAttributes))) {
             *ppvObject = static_cast<IMFAttributes*>(this);
         } else if (IsEqualIID(riid, __uuidof(IMFActivate))) {

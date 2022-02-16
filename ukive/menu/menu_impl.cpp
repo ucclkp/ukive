@@ -36,7 +36,7 @@ namespace ukive {
         return callback_;
     }
 
-    MenuItem* MenuImpl::addItem(int id, int order, const std::u16string& title) {
+    MenuItem* MenuImpl::addItem(int id, int order, const std::u16string_view& title) {
         auto item = new MenuItemImpl(getContext(), id, order);
         item->setItemTitle(title);
 

@@ -155,18 +155,22 @@ namespace win {
             return false;
         }
 
+        utl::win::ComPtr<IUnknown> unk;
         hr = ::DWriteCreateFactory(
             DWRITE_FACTORY_TYPE_SHARED,
-            __uuidof(IDWriteFactory),
-            reinterpret_cast<IUnknown**>(&dwrite_factory_));
+            __uuidof(IDWriteFactory), &unk);
         if (FAILED(hr)) {
             LOG(Log::ERR) << "Failed to create dwrite factory.";
             return false;
         }
 
-        hr = ::CreateDXGIFactory(
-            __uuidof(IDXGIFactory),
-            reinterpret_cast<void**>(&dxgi_factory_));
+        dwrite_factory_ = unk.cast<IDWriteFactory>();
+        if (!dwrite_factory_) {
+            LOG(Log::ERR) << "Failed to create dwrite factory.";
+            return false;
+        }
+
+        hr = ::CreateDXGIFactory1(IID_PPV_ARGS(&dxgi_factory_));
         if (FAILED(hr)) {
             LOG(Log::ERR) << "Failed to create dxgi factory.";
             return false;

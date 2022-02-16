@@ -40,8 +40,8 @@ namespace ukive {
         virtual void setCallback(MediaPlayerCallback* cb) = 0;
         virtual void setDisplaySize(const Size& size) = 0;
 
-        virtual bool openUrl(const std::u16string& url, Window* w) = 0;
-        virtual bool openFile(const std::u16string& file_name, Window* w) = 0;
+        virtual bool openUrl(const std::u16string_view& url, Window* w) = 0;
+        virtual bool openFile(const std::u16string_view& file_name, Window* w) = 0;
 
         virtual bool start(bool current, int64_t position) = 0;
         virtual bool pause() = 0;

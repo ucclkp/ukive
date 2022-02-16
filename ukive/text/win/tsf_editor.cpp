@@ -95,7 +95,7 @@ namespace win {
         // pointer is the same as a pointer to an existing sink.
         // If the sink exists, update the existing sink with the
         // dwMask parameters passed to this method.
-        HRESULT hr = QueryInterface(IID_IUnknown, reinterpret_cast<LPVOID*>(&punk_id));
+        HRESULT hr = QueryInterface(IID_PPV_ARGS(&punk_id));
         if (FAILED(hr)) {
             return E_INVALIDARG;
         }
@@ -119,7 +119,7 @@ namespace win {
             if (!punk) {
                 return E_INVALIDARG;
             }
-            punk->QueryInterface(IID_ITextStoreACPSink, reinterpret_cast<LPVOID*>(&sink_record_.sink));
+            punk->QueryInterface(IID_PPV_ARGS(&sink_record_.sink));
             sink_record_.punk_id = punk_id;
             sink_record_.mask = dwMask;
 
@@ -297,7 +297,7 @@ namespace win {
             return TS_E_NOLOCK;
         }
 
-        long length = input_conn_->getTextLength();
+        auto length = input_conn_->getTextLength();
         if (acpStart < 0 || acpStart > length || acpEnd < -1 || acpEnd > length) {
             ubassert(false);
             return TF_E_INVALIDPOS;
@@ -639,7 +639,7 @@ namespace win {
         }
 
         if (IsEqualIID(riid, IID_IUnknown)) {
-            *ppvObj = reinterpret_cast<IUnknown*>(this);
+            *ppvObj = static_cast<IUnknown*>(static_cast<ITextStoreACP*>(this));
         } else if (IsEqualIID(riid, __uuidof(ITextStoreACP))) {
             *ppvObj = static_cast<ITextStoreACP*>(this);
         } else if (IsEqualIID(riid, __uuidof(ITfContextOwnerCompositionSink))) {

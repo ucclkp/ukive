@@ -19,7 +19,7 @@ namespace ukive {
     {}
 
     void GridNavigator::create(
-        const std::u16string& text,
+        const std::u16string_view& text,
         const Color& text_color,
         const Color& bg_color)
     {

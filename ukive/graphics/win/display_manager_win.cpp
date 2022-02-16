@@ -242,7 +242,7 @@ namespace win {
             source_info.header.size = sizeof(DISPLAYCONFIG_SOURCE_DEVICE_NAME);
             source_info.header.adapterId = path.sourceInfo.adapterId;
             source_info.header.id = path.sourceInfo.id;
-            ret = ::DisplayConfigGetDeviceInfo(reinterpret_cast<DISPLAYCONFIG_DEVICE_INFO_HEADER*>(&source_info));
+            ret = ::DisplayConfigGetDeviceInfo(&source_info.header);
             info.has_source_info = (ret == 0);
 
             auto& target_info = info.target_info;
@@ -251,7 +251,7 @@ namespace win {
             target_info.header.size = sizeof(DISPLAYCONFIG_TARGET_DEVICE_NAME);
             target_info.header.adapterId = path.targetInfo.adapterId;
             target_info.header.id = path.targetInfo.id;
-            ret = ::DisplayConfigGetDeviceInfo(reinterpret_cast<DISPLAYCONFIG_DEVICE_INFO_HEADER*>(&target_info));
+            ret = ::DisplayConfigGetDeviceInfo(&target_info.header);
             info.has_target_info = (ret == 0);
 
             auto& color_info = info.advanced_color_info;
@@ -260,7 +260,7 @@ namespace win {
             color_info.header.size = sizeof(DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO);
             color_info.header.adapterId = path.targetInfo.adapterId;
             color_info.header.id = path.targetInfo.id;
-            ret = ::DisplayConfigGetDeviceInfo(reinterpret_cast<DISPLAYCONFIG_DEVICE_INFO_HEADER*>(&color_info));
+            ret = ::DisplayConfigGetDeviceInfo(&color_info.header);
             info.has_advanced_color_info = (ret == 0);
 
             auto& sdr_info = info.sdr_white_level;
@@ -269,7 +269,7 @@ namespace win {
             sdr_info.header.size = sizeof(DISPLAYCONFIG_SDR_WHITE_LEVEL);
             sdr_info.header.adapterId = path.targetInfo.adapterId;
             sdr_info.header.id = path.targetInfo.id;
-            ret = ::DisplayConfigGetDeviceInfo(reinterpret_cast<DISPLAYCONFIG_DEVICE_INFO_HEADER*>(&sdr_info));
+            ret = ::DisplayConfigGetDeviceInfo(&sdr_info.header);
             info.has_sdr_white_level_info = (ret == 0);
         }
     }

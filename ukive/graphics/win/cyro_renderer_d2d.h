@@ -33,7 +33,7 @@ namespace win {
             int width, int height, const ImageOptions& options) override;
         ImageFrame* createImage(
             int width, int height,
-            const uint8_t* pixel_data, size_t size, size_t stride,
+            const void* pixel_data, size_t size, size_t stride,
             const ImageOptions& options) override;
 
         void setOpacity(float opacity) override;
@@ -69,8 +69,8 @@ namespace win {
             float width, float height, const ImageFrame* mask, const ImageFrame* content) override;
 
         void drawText(
-            const std::u16string& text,
-            const std::u16string& font_name, float font_size,
+            const std::u16string_view& text,
+            const std::u16string_view& font_name, float font_size,
             const RectF& rect, const Paint& paint) override;
         void drawTextLayout(
             float x, float y, TextLayout* layout, const Paint& paint) override;

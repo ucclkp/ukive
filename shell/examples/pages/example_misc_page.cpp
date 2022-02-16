@@ -38,7 +38,7 @@
 #include "utils/math/algebra/optimization.hpp"
 #include "utils/math/algebra/dynamic_optimization.hpp"
 
-#include "ukive/graphics/win/colors/color_manager_win.h"
+#include "ukive/graphics/colors/color_manager.h"
 #include "ukive/graphics/colors/color_management_module.h"
 #include "utils/math/algebra/matrix.hpp"
 
@@ -245,13 +245,13 @@ namespace shell {
         test_button_ = findView<ukive::Button>(v, Res::Id::bt_misc_button);
         test_button_->setOnClickListener(this);
 
-        std::wstring icc_path;
-        if (ukive::win::ColorManagerWin::getDefaultProfile(&icc_path))
+        std::u16string icc_path;
+        if (ukive::ColorManager::getDefaultProfile(&icc_path))
         {
             ukive::Color tc;
             ukive::ColorManagementModule cmm;
             cmm.convertColor(
-                utl::WideToUTF16(icc_path),
+                icc_path,
                 ukive::ColorManagementModule::Intent::Perceptual,
                 ukive::Color(), &tc);
         }

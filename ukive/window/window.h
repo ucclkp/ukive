@@ -65,7 +65,7 @@ namespace ukive {
         void close();
         void center();
 
-        void setTitle(const std::u16string& title);
+        void setTitle(const std::u16string_view& title);
         void setX(int x);
         void setY(int y);
         void setPosition(int x, int y);

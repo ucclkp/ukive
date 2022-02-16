@@ -19,7 +19,6 @@
 #include "ukive/views/list/linear_list_layouter.h"
 #include "ukive/views/list/list_view.h"
 #include "ukive/views/list/list_item.h"
-#include "ukive/views/text_view.h"
 #include "ukive/window/window.h"
 
 
@@ -77,8 +76,8 @@ namespace ukive {
         min_dropdown_width_ = getContext().dp2pxi(100);
     }
 
-    void ComboBox::addItem(const std::u16string& title) {
-        data_.push_back(title);
+    void ComboBox::addItem(const std::u16string_view& title) {
+        data_.push_back(std::u16string(title));
         notifyDataChanged();
     }
 
@@ -299,7 +298,7 @@ namespace ukive {
         LayoutView* parent, ListItemEventRouter* router, ListItem* item)
     {
         auto& data = data_.at(item->data_pos);
-        auto combo_item = reinterpret_cast<TextViewListItem*>(item);
+        auto combo_item = static_cast<TextViewListItem*>(item);
         combo_item->title_label->setText(data);
     }
 

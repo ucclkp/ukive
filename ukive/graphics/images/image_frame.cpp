@@ -36,7 +36,7 @@ namespace ukive {
     // static
     ImageFrame* ImageFrame::create(
         Window *win, int width, int height,
-        const uint8_t* pixel_data, size_t size, size_t stride)
+        const void* pixel_data, size_t size, size_t stride)
     {
         return win->getCanvas()->createImage(width, height, pixel_data, size, stride);
     }
@@ -44,7 +44,7 @@ namespace ukive {
     // static
     ImageFrame* ImageFrame::create(
         Window *win, int width, int height,
-        const uint8_t* pixel_data, size_t size, size_t stride,
+        const void* pixel_data, size_t size, size_t stride,
         const ImageOptions& options)
     {
         return win->getCanvas()->createImage(width, height, pixel_data, size, stride, options);
@@ -52,7 +52,7 @@ namespace ukive {
 
     // static
     ImageFrame* ImageFrame::decodeFile(
-        Window* win, const std::u16string& file_name)
+        Window* win, const std::u16string_view& file_name)
     {
         auto ic = Application::getImageLocFactory();
         auto img = ic->decodeFile(
@@ -66,7 +66,7 @@ namespace ukive {
 
     // static
     ImageFrame* ImageFrame::decodeFile(
-        Window* win, const std::u16string& file_name, const ImageOptions& options)
+        Window* win, const std::u16string_view& file_name, const ImageOptions& options)
     {
         auto ic = Application::getImageLocFactory();
         auto img = ic->decodeFile(file_name, options);
@@ -79,7 +79,7 @@ namespace ukive {
 
     // static
     ImageFrame* ImageFrame::decodeThumbnail(
-        Window *win, const std::u16string& file_name, int width, int height)
+        Window *win, const std::u16string_view& file_name, int width, int height)
     {
         auto ic = Application::getImageLocFactory();
 
@@ -91,8 +91,7 @@ namespace ukive {
         }
 
         return create(
-            win, real_w, real_h,
-            reinterpret_cast<const uint8_t*>(data.data()), data.size(), real_w*4, options);
+            win, real_w, real_h, data.data(), data.size(), real_w*4, options);
     }
 
 }

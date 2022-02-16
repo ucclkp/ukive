@@ -40,8 +40,8 @@ namespace win {
         SizeU getPixelSize() const override;
 
         bool copyPixels(
-            size_t stride, uint8_t* pixels, size_t buf_size) override;
-        uint8_t* lockPixels() override;
+            size_t stride, void* pixels, size_t buf_size) override;
+        void* lockPixels() override;
         void unlockPixels() override;
 
         utl::win::ComPtr<IWICBitmap> getNative() const;

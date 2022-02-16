@@ -15,6 +15,7 @@
 #include "ukive/views/list/list_item_event_router.h"
 #include "ukive/views/list/list_item.h"
 #include "ukive/views/list/list_view.h"
+#include "ukive/views/text_view.h"
 
 
 namespace ukive {
@@ -34,14 +35,14 @@ namespace ukive {
         ComboBox(Context c, AttrsRef attrs);
         ~ComboBox();
 
-        void addItem(const std::u16string& title);
+        void addItem(const std::u16string_view& title);
 
     protected:
         class TextViewListItem : public ListItem {
         public:
             explicit TextViewListItem(TextView* v)
-                : ListItem(reinterpret_cast<View*>(v)),
-                title_label(v) {}
+                : ListItem(v),
+                  title_label(v) {}
 
             TextView* title_label;
         };

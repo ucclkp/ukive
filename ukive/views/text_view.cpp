@@ -1161,7 +1161,7 @@ namespace ukive {
         return is_selectable_;
     }
 
-    void TextView::setText(const std::u16string& text) {
+    void TextView::setText(const std::u16string_view& text) {
         base_text_->replace(text, 0, base_text_->length());
         base_text_->setSelection(0);
     }
@@ -1233,7 +1233,7 @@ namespace ukive {
         requestDraw();
     }
 
-    void TextView::setFontFamilyName(const std::u16string& font) {
+    void TextView::setFontFamilyName(const std::u16string_view& font) {
         if (font_family_name_ == font) {
             return;
         }

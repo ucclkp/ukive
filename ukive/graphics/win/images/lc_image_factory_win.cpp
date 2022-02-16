@@ -128,7 +128,7 @@ namespace win {
 
     LcImageFrame* LcImageFactoryWin::create(
         int width, int height,
-        uint8_t* pixel_data, size_t size, size_t stride,
+        void* pixel_data, size_t size, size_t stride,
         const ImageOptions& options)
     {
         ubassert(size <= std::numeric_limits<UINT>::max());
@@ -144,7 +144,7 @@ namespace win {
         utl::win::ComPtr<IWICBitmap> bmp;
         HRESULT hr = wic_factory_->CreateBitmapFromMemory(
             width, height, format,
-            UINT(stride), UINT(size), pixel_data,
+            UINT(stride), UINT(size), static_cast<BYTE*>(pixel_data),
             &bmp);
         if (FAILED(hr)) {
             ubassert(false);
@@ -166,7 +166,7 @@ namespace win {
     }
 
     LcImage LcImageFactoryWin::decodeFile(
-        const std::u16string& file_name, const ImageOptions& options)
+        const std::u16string_view& file_name, const ImageOptions& options)
     {
         auto decoder = createDecoder(file_name);
         if (!decoder) {
@@ -176,7 +176,7 @@ namespace win {
     }
 
     LcImage LcImageFactoryWin::decodeMemory(
-        uint8_t* buffer, size_t size, const ImageOptions& options)
+        void* buffer, size_t size, const ImageOptions& options)
     {
         auto decoder = createDecoder(buffer, size);
         if (!decoder) {
@@ -186,7 +186,7 @@ namespace win {
     }
 
     bool LcImageFactoryWin::getThumbnail(
-        const std::u16string& file_name,
+        const std::u16string_view& file_name,
         int frame_width, int frame_height,
         std::string* out, int* real_w, int* real_h, ImageOptions* options)
     {
@@ -194,10 +194,11 @@ namespace win {
             return false;
         }
 
+        std::wstring wfn(file_name.begin(), file_name.end());
+
         bool succeeded = false;
         utl::win::ComPtr<IShellItemImageFactory> factory;
-        HRESULT hr = ::SHCreateItemFromParsingName(
-            reinterpret_cast<PCWSTR>(file_name.c_str()), nullptr, IID_PPV_ARGS(&factory));
+        HRESULT hr = ::SHCreateItemFromParsingName(wfn.c_str(), nullptr, IID_PPV_ARGS(&factory));
         if (SUCCEEDED(hr)) {
             HBITMAP hbmp;
             hr = factory->GetImage({ frame_width, frame_height }, SIIGBF_RESIZETOFIT, &hbmp);
@@ -238,10 +239,10 @@ namespace win {
 
     bool LcImageFactoryWin::saveToFile(
         int width, int height,
-        uint8_t* data, size_t byte_count, size_t stride,
+        void* data, size_t byte_count, size_t stride,
         ImageContainer container,
         const ImageOptions& options,
-        const std::u16string& file_name)
+        const std::u16string_view& file_name)
     {
         if (width <= 0 || height <= 0 ||
             !data || byte_count == 0 || stride == 0 ||
@@ -258,7 +259,8 @@ namespace win {
             return false;
         }
 
-        hr = stream->InitializeFromFilename(reinterpret_cast<LPCWSTR>(file_name.c_str()), GENERIC_WRITE);
+        std::wstring wfn(file_name.begin(), file_name.end());
+        hr = stream->InitializeFromFilename(wfn.c_str(), GENERIC_WRITE);
         if (FAILED(hr)) {
             return false;
         }
@@ -304,7 +306,7 @@ namespace win {
         }
 
         hr = frame->WritePixels(
-            height, UINT(stride), UINT(byte_count), data);
+            height, UINT(stride), UINT(byte_count), static_cast<BYTE*>(data));
         if (FAILED(hr)) {
             return false;
         }
@@ -471,14 +473,17 @@ namespace win {
         }
     }
 
-    utl::win::ComPtr<IWICBitmapDecoder> LcImageFactoryWin::createDecoder(const std::u16string& file_name) {
+    utl::win::ComPtr<IWICBitmapDecoder> LcImageFactoryWin::createDecoder(
+        const std::u16string_view& file_name)
+    {
         /*
          * 这里，某些图片使用 WICDecodeMetadataCacheOnLoad 解码时会报错，
          * 可能是 WIC 对属性的要求较为严格所致，使用 WICDecodeMetadataCacheOnDemand 即可。
          */
         utl::win::ComPtr<IWICBitmapDecoder> decoder;
+        std::wstring wfn(file_name.begin(), file_name.end());
         HRESULT hr = wic_factory_->CreateDecoderFromFilename(
-            reinterpret_cast<LPCWSTR>(file_name.c_str()),
+            wfn.c_str(),
             nullptr,
             GENERIC_READ,
             WICDecodeMetadataCacheOnDemand,
@@ -490,7 +495,7 @@ namespace win {
         return decoder;
     }
 
-    utl::win::ComPtr<IWICBitmapDecoder> LcImageFactoryWin::createDecoder(uint8_t* buffer, size_t size) {
+    utl::win::ComPtr<IWICBitmapDecoder> LcImageFactoryWin::createDecoder(void* buffer, size_t size) {
         utl::win::ComPtr<IWICStream> stream;
         HRESULT hr = wic_factory_->CreateStream(&stream);
         if (FAILED(hr)) {
@@ -498,7 +503,8 @@ namespace win {
             return {};
         }
 
-        hr = stream->InitializeFromMemory(buffer, utl::num_cast<DWORD>(size));
+        hr = stream->InitializeFromMemory(
+            static_cast<BYTE*>(buffer), utl::num_cast<DWORD>(size));
         if (FAILED(hr)) {
             ubassert(false);
             return {};

@@ -26,7 +26,7 @@ namespace ukive {
         void setCallback(MenuCallback* callback) override;
         MenuCallback* getCallback() const override;
 
-        MenuItem* addItem(int id, int order, const std::u16string& title) override;
+        MenuItem* addItem(int id, int order, const std::u16string_view& title) override;
         bool removeItem(int id) override;
         bool hasItem(int id) const override;
         MenuItem* findItem(int id) const override;

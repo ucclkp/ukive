@@ -14,7 +14,9 @@
 namespace ukive {
 
     // static
-    LcImageFrame* LcImageFrame::create(int width, int height, const ImageOptions& options) {
+    LcImageFrame* LcImageFrame::create(
+        int width, int height, const ImageOptions& options)
+    {
         auto ic = Application::getImageLocFactory();
         return ic->create(width, height, options);
     }
@@ -22,10 +24,10 @@ namespace ukive {
     // static
     bool LcImageFrame::saveToFile(
         int width, int height,
-        uint8_t* data, size_t byte_count, size_t stride,
+        void* data, size_t byte_count, size_t stride,
         ImageContainer container,
         const ImageOptions& options,
-        const std::u16string& file_name)
+        const std::u16string_view& file_name)
     {
         auto ic = Application::getImageLocFactory();
         return ic->saveToFile(

@@ -56,8 +56,7 @@ namespace win {
             return false;
         }
 
-        hr = editor_context_->QueryInterface(
-            IID_ITfContextOwnerCompositionServices, reinterpret_cast<void**>(&comp_service_));
+        hr = editor_context_->QueryInterface(IID_PPV_ARGS(&comp_service_));
         if (FAILED(hr)) {
             DLOG(Log::ERR) << "Create composition service failed: " << hr;
             return false;
@@ -247,42 +246,40 @@ namespace win {
 
     void TsfInputConnection::getText(LONG start, LONG end, ULONG maxLength, WCHAR* text, ULONG* length) {
         auto& u16_text = client_->getTICEditable()->getString();
+        auto u_start = utl::num_cast<ULONG>(start);
 
         if (end == -1) {
-            if (utl::num_cast<size_t>(start + maxLength) <= u16_text.length()) {
-                u16_text.copy(
-                    reinterpret_cast<char16_t*>(text),
-                    utl::num_cast<size_t>(maxLength),
-                    utl::num_cast<size_t>(start));
+            if (u_start + maxLength <= u16_text.length()) {
+                for (ULONG i = 0; i < maxLength; ++i) {
+                    text[i] = u16_text[i + u_start];
+                }
                 *length = maxLength;
             } else {
-                u16_text.copy(
-                    reinterpret_cast<char16_t*>(text),
-                    utl::num_cast<size_t>(u16_text.length() - start),
-                    utl::num_cast<size_t>(start));
-                *length = utl::num_cast<ULONG>(u16_text.length() - start);
+                auto len = utl::num_cast<ULONG>(u16_text.length() - start);
+                for (ULONG i = 0; i < len; ++i) {
+                    text[i] = u16_text[i + u_start];
+                }
+                *length = len;
             }
             return;
         }
 
-        if (end - start >= static_cast<LONG>(maxLength)) {
-            u16_text.copy(
-                reinterpret_cast<char16_t*>(text),
-                utl::num_cast<size_t>(maxLength),
-                utl::num_cast<size_t>(start));
+        auto cr = utl::num_cast<ULONG>(std::abs(end - start));
+        if (cr >= maxLength) {
+            for (ULONG i = 0; i < maxLength; ++i) {
+                text[i] = u16_text[i + u_start];
+            }
             *length = maxLength;
         } else {
-            u16_text.copy(
-                reinterpret_cast<char16_t*>(text),
-                utl::num_cast<size_t>(end - start),
-                utl::num_cast<size_t>(start));
-            *length = utl::num_cast<ULONG>(end - start);
+            for (ULONG i = 0; i < cr; ++i) {
+                text[i] = u16_text[i + u_start];
+            }
+            *length = cr;
         }
     }
 
     void TsfInputConnection::setText(LONG start, LONG end, const WCHAR* text, ULONG length) {
-        std::u16string u16_text(
-            reinterpret_cast<const char16_t*>(text), length);
+        std::u16string u16_text(text, text + length);
 
         if (start == end) {
             client_->getTICEditable()->insert(u16_text, start, Editable::Reason::USER_INPUT);

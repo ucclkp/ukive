@@ -38,7 +38,7 @@ namespace necro {
 
     private:
         void generateOutput(
-            const std::string& name_macro,
+            const std::string_view& name_macro,
             const IdMap& view_id_map, const IdMap& layout_id_map, std::string* out);
         std::string getIndent(uint32_t layer) const;
         std::string getLineBreak(uint32_t count = 1) const;

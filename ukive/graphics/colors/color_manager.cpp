@@ -25,5 +25,17 @@ namespace ukive {
 #endif
     }
 
+    // static
+    bool ColorManager::getDefaultProfile(std::u16string* path) {
+#ifdef OS_WINDOWS
+        std::wstring w_path;
+        bool ret = win::ColorManagerWin::getDefaultProfile(&w_path);
+        if (ret) {
+            path->assign(w_path.begin(), w_path.end());
+        }
+        return ret;
+#elif defined OS_MAC
+#endif
+    }
 
 }

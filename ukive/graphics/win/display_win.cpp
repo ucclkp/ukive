@@ -105,7 +105,9 @@ namespace win {
             return;
         }
 
-        *name = reinterpret_cast<char16_t*>(monitor_info_.szDevice);
+        name->assign(
+            monitor_info_.szDevice,
+            monitor_info_.szDevice + std::char_traits<WCHAR>::length(monitor_info_.szDevice));
     }
 
     void DisplayWin::getAdapterName(std::u16string* name) {
@@ -121,7 +123,9 @@ namespace win {
             return;
         }
 
-        *name = reinterpret_cast<char16_t*>(adapterDesc.Description);
+        name->assign(
+            adapterDesc.Description,
+            adapterDesc.Description + std::char_traits<WCHAR>::length(adapterDesc.Description));
     }
 
     Rect DisplayWin::getBounds() const {
@@ -197,12 +201,12 @@ namespace win {
 
         static bool is_win8_1_or_above = ::IsWindows8Point1OrGreater();
         if (is_win8_1_or_above) {
-            UINT dpi_x = USER_DEFAULT_SCREEN_DPI;
-            UINT dpi_y = USER_DEFAULT_SCREEN_DPI;
+            UINT dpi_x = kDefaultDpi;
+            UINT dpi_y = kDefaultDpi;
             HRESULT hr = win::UDGetDpiForMonitor(monitor_, MDT_EFFECTIVE_DPI, &dpi_x, &dpi_y);
             if (SUCCEEDED(hr)) {
-                *sx = float(dpi_x) / USER_DEFAULT_SCREEN_DPI;
-                *sy = float(dpi_y) / USER_DEFAULT_SCREEN_DPI;
+                *sx = float(dpi_x) / kDefaultDpi;
+                *sy = float(dpi_y) / kDefaultDpi;
                 return;
             }
         }
@@ -214,8 +218,8 @@ namespace win {
             return;
         }
 
-        *sx = float(::GetDeviceCaps(screen, LOGPIXELSX)) / USER_DEFAULT_SCREEN_DPI;
-        *sy = float(::GetDeviceCaps(screen, LOGPIXELSY)) / USER_DEFAULT_SCREEN_DPI;
+        *sx = float(::GetDeviceCaps(screen, LOGPIXELSX)) / kDefaultDpi;
+        *sy = float(::GetDeviceCaps(screen, LOGPIXELSY)) / kDefaultDpi;
         ::ReleaseDC(nullptr, screen);
     }
 
@@ -291,9 +295,7 @@ namespace win {
 
     bool DisplayWin::queryDXGIInfo(HMONITOR monitor) {
         utl::win::ComPtr<IDXGIFactory1> dxgi_factory;
-        HRESULT hr = ::CreateDXGIFactory(
-            __uuidof(IDXGIFactory),
-            reinterpret_cast<void**>(&dxgi_factory));
+        HRESULT hr = ::CreateDXGIFactory1(IID_PPV_ARGS(&dxgi_factory));
         if (FAILED(hr)) {
             LOG(Log::ERR) << "Failed to create dxgi factory: " << hr;
             return false;

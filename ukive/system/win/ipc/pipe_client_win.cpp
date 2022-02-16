@@ -20,12 +20,13 @@ namespace ukive {
         }
     }
 
-    bool PipeClientWin::connect(const std::u16string& name) {
+    bool PipeClientWin::connect(const std::u16string_view& name) {
         if (pipe_ != INVALID_HANDLE_VALUE) {
             return false;
         }
 
-        LPCWSTR pipe_name = reinterpret_cast<const wchar_t*>(name.c_str());
+        std::wstring w_name(name.begin(), name.end());
+        LPCWSTR pipe_name = w_name.c_str();
 
         for (;;) {
             pipe_ = ::CreateFile(

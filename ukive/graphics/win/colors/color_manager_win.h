@@ -24,8 +24,9 @@ namespace win {
 
         bool convertColor(const Color& src, Color* dst) override;
 
-        static bool getICMProfile(HDC hdc, std::wstring* path);
         static bool getDefaultProfile(std::wstring* path);
+
+        static bool getICMProfile(HDC hdc, std::wstring* path);
 
     private:
         HPROFILE getDisplayProfile();

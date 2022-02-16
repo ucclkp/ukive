@@ -32,7 +32,7 @@ namespace ukive {
     }
 
 
-    void MenuItemImpl::setItemTitle(const std::u16string& title) {
+    void MenuItemImpl::setItemTitle(const std::u16string_view& title) {
         setText(title);
     }
 

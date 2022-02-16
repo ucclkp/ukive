@@ -19,14 +19,16 @@ namespace win {
 
         int show(Window* parent, uint32_t flags) override;
 
-        void addType(std::u16string types, std::u16string desc) override;
+        void addType(
+            const std::u16string_view& types,
+            const std::u16string_view& desc) override;
         void clearTypes() override;
 
         const std::vector<std::u16string>& getSelectedFiles() const override;
 
     private:
         std::vector<std::u16string> sel_files_;
-        std::vector<std::pair<std::u16string, std::u16string>> exts_;
+        std::vector<std::pair<std::wstring, std::wstring>> exts_;
     };
 
 }

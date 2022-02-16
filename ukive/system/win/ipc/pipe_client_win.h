@@ -21,7 +21,7 @@ namespace ukive {
         PipeClientWin();
         ~PipeClientWin();
 
-        bool connect(const std::u16string& name) override;
+        bool connect(const std::u16string_view& name) override;
         void disconnect() override;
         bool read(std::string* buf) override;
         bool write(const std::string_view& buf) override;

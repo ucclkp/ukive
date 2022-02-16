@@ -15,7 +15,8 @@
 namespace ukive {
 
 #ifdef OS_WINDOWS
-    const int kDefaultDpi = 96;
+#include <WinUser.h>
+    const int kDefaultDpi = USER_DEFAULT_SCREEN_DPI;
 #elif defined OS_MAC
     const int kDefaultDpi = 72;
 #else

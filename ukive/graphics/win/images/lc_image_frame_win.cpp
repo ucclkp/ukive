@@ -9,6 +9,8 @@
 #include "utils/log.h"
 #include "utils/numbers.hpp"
 
+#include "ukive/window/window_dpi_utils.h"
+
 
 namespace ukive {
 namespace win {
@@ -71,8 +73,8 @@ namespace win {
         HRESULT hr = native_src_->GetResolution(&dx, &dy);
         if (FAILED(hr)) {
             ubassert(false);
-            dx = USER_DEFAULT_SCREEN_DPI;
-            dy = USER_DEFAULT_SCREEN_DPI;
+            dx = kDefaultDpi;
+            dy = kDefaultDpi;
         }
         *dpi_x = float(dx);
         *dpi_y = float(dy);
@@ -82,7 +84,9 @@ namespace win {
         float dpi_x, dpi_y;
         getDpi(&dpi_x, &dpi_y);
         auto size = getPixelSize();
-        return SizeF(size.width * dpi_x, size.height * dpi_y);
+        return SizeF(
+            size.width / (dpi_x / kDefaultDpi),
+            size.height / (dpi_y / kDefaultDpi));
     }
 
     SizeU LcImageFrameWin::getPixelSize() const {
@@ -95,12 +99,12 @@ namespace win {
     }
 
     bool LcImageFrameWin::copyPixels(
-        size_t stride, uint8_t* pixels, size_t buf_size)
+        size_t stride, void* pixels, size_t buf_size)
     {
         HRESULT hr = native_src_->CopyPixels(
             nullptr,
             utl::num_cast<UINT>(stride),
-            utl::num_cast<UINT>(buf_size), pixels);
+            utl::num_cast<UINT>(buf_size), static_cast<BYTE*>(pixels));
         if (FAILED(hr)) {
             return false;
         }
@@ -108,7 +112,7 @@ namespace win {
         return true;
     }
 
-    uint8_t* LcImageFrameWin::lockPixels() {
+    void* LcImageFrameWin::lockPixels() {
         if (!createIfNecessary()) {
             return nullptr;
         }

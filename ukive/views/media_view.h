@@ -23,7 +23,7 @@ namespace ukive {
         MediaView(Context c, AttrsRef attrs);
         ~MediaView();
 
-        void setMediaFile(const std::u16string& file_path);
+        void setMediaFile(const std::u16string_view& file_path);
 
     protected:
         Size onDetermineSize(const SizeInfo& info) override;

@@ -35,7 +35,7 @@ namespace ukive {
             double col, double row, int radius, const Color& color);
         void addPoint(
             double col, double row, int radius, const Color& color,
-            const std::u16string& text, const Color& text_color);
+            const std::u16string_view& text, const Color& text_color);
         void clearPoints();
 
         void addLine(

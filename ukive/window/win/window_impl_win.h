@@ -69,7 +69,7 @@ namespace win {
         void doLayout() override;
         void doDraw(const DirtyRegion& region) override;
 
-        void setTitle(const std::u16string& title) override;
+        void setTitle(const std::u16string_view& title) override;
         void setBounds(int x, int y, int width, int height) override;
         void setCurrentCursor(Cursor cursor) override;
         void setTranslucentType(TranslucentType type) override;
