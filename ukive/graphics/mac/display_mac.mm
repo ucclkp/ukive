@@ -6,16 +6,27 @@
 
 #include "display_mac.h"
 
+#include "ukive/app/application.h"
 #include "ukive/window/window.h"
 #include "ukive/window/mac/window_impl_mac.h"
-
-#import <Cocoa/Cocoa.h>
-#import "ukive/window/mac/uk_ns_window.h"
+#include "ukive/graphics/mac/display_manager_mac.h"
 
 
 namespace ukive {
+namespace mac {
 
-    DisplayMac::DisplayMac() {
+    // static
+    Display::DisplayPtr DisplayMac::fromWindowImpl(const WindowImplMac* win) {
+        return static_cast<mac::DisplayManagerMac*>(
+            Application::getDisplayManager())->fromWindowImpl(win);
+    }
+
+    DisplayMac::DisplayMac(bool valid, CGDirectDisplayID display_id)
+        : monitor_(display_id)
+    {
+        if (valid) {
+            queryDisplayInfo(display_id);
+        }
     }
 
     DisplayMac::~DisplayMac() {
@@ -24,59 +35,49 @@ namespace ukive {
         }
     }
 
-    bool DisplayMac::makePrimary() {
-        return queryDisplayInfo(CGMainDisplayID());
-    }
-
-    bool DisplayMac::makeFromPoint(const Point &p) {
-        uint32_t actual_count = 0;
-        CGDirectDisplayID display;
-        auto ret = CGGetDisplaysWithPoint(
-                               CGPointMake(p.x, p.y),
-                               1, &display, &actual_count);
-        if (ret != kCGErrorSuccess || actual_count != 1) {
-            return false;
-        }
-
-        return queryDisplayInfo(display);
-    }
-
-    bool DisplayMac::makeFromRect(const Rect &r) {
-        uint32_t actual_count = 0;
-        CGDirectDisplayID display;
-        auto ret = CGGetDisplaysWithRect(
-                                         CGRectMake(r.left, r.top, r.width(), r.height()),
-                                         1, &display, &actual_count);
-        if (ret != kCGErrorSuccess || actual_count != 1) {
-            return false;
-        }
-
-        return queryDisplayInfo(display);
-    }
-
-    bool DisplayMac::makeFromWindow(Window *w) {
-        if (!w) {
-            return false;
-        }
-
-        auto win = static_cast<WindowImplMac*>(w->getImpl());
-        if (!win) {
-            return false;
-        }
-
-        if (win->isCreated()) {
-            auto ns_win = win->getNSWindow();
-            auto dict = [[ns_win screen] deviceDescription];
-            NSNumber* screen_id = [dict objectForKey:@"NSScreenNumber"];
-            return queryDisplayInfo(screen_id.unsignedIntValue);
-        }
-
-        auto bounds = w->getBounds();
-        return makeFromRect(bounds);
+    bool DisplayMac::isValid() const {
+        return !is_empty_;
     }
 
     bool DisplayMac::isInHDRMode() const {
         return false;
+    }
+
+    bool DisplayMac::isSame(const Display* rhs) const {
+        if (!isValid() || !rhs->isValid()) {
+            return !isValid() && !rhs->isValid();
+        }
+
+        auto rhs_mac = static_cast<const DisplayMac*>(rhs);
+        if (monitor_ != rhs_mac->monitor_) {
+            return false;
+        }
+
+        if (CGDisplayModeGetPixelWidth(monitor_mode_) !=
+                CGDisplayModeGetPixelWidth(rhs_mac->monitor_mode_) ||
+            CGDisplayModeGetPixelHeight(monitor_mode_) !=
+                CGDisplayModeGetPixelHeight(rhs_mac->monitor_mode_) ||
+            CGDisplayModeGetIOFlags(monitor_mode_) !=
+                CGDisplayModeGetIOFlags(rhs_mac->monitor_mode_) ||
+            CGDisplayModeGetRefreshRate(monitor_mode_) !=
+                CGDisplayModeGetRefreshRate(rhs_mac->monitor_mode_))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    bool DisplayMac::isSameDisplay(const Display* rhs) const {
+        if (!isValid() || !rhs->isValid()) {
+            return !isValid() && !rhs->isValid();
+        }
+
+        auto rhs_mac = static_cast<const DisplayMac*>(rhs);
+        if (monitor_ != rhs_mac->monitor_) {
+            return false;
+        }
+        return true;
     }
 
     void DisplayMac::getName(std::u16string *name) {
@@ -144,4 +145,5 @@ namespace ukive {
         return true;
     }
 
+}
 }

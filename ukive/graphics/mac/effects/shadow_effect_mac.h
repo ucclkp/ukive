@@ -17,6 +17,7 @@ UTL_OBJC_CLASS(NSShadow);
 
 
 namespace ukive {
+namespace mac {
 
     class ShadowEffectMac : public ShadowEffect {
     public:
@@ -42,6 +43,7 @@ namespace ukive {
         std::shared_ptr<ImageFrame> content_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_MAC_EFFECTS_SHADOW_EFFECT_MAC_H_

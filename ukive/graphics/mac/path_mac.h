@@ -15,6 +15,7 @@ UTL_OBJC_CLASS(NSBezierPath);
 
 
 namespace ukive {
+namespace mac {
 
     class PathMac : public Path {
     public:
@@ -34,6 +35,7 @@ namespace ukive {
         NSBezierPath* path_ = nullptr;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_MAC_PATH_MAC_H_

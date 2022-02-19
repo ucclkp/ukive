@@ -21,7 +21,7 @@ namespace ukive {
 #ifdef OS_WINDOWS
         return new win::DWTextLayout();
 #elif defined OS_MAC
-        return new TextLayoutMac();
+        return new mac::TextLayoutMac();
 #endif
     }
 

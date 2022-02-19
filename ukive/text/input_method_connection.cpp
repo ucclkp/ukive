@@ -21,7 +21,7 @@ namespace ukive {
 #ifdef OS_WINDOWS
         return new win::TsfInputConnection(tic);
 #elif defined OS_MAC
-        return new InputConnectionMac(tic);
+        return new mac::InputConnectionMac(tic);
 #endif
     }
 

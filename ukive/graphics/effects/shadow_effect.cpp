@@ -24,7 +24,7 @@ namespace ukive {
 #ifdef OS_WINDOWS
         return new win::ShadowEffectDX(context);
 #elif defined OS_MAC
-        return new ShadowEffectMac();
+        return new mac::ShadowEffectMac();
 #endif
     }
 

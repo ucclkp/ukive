@@ -29,7 +29,7 @@ namespace win {
         static bool getICMProfile(HDC hdc, std::wstring* path);
 
     private:
-        HPROFILE getDisplayProfile();
+        static HPROFILE getDisplayProfile();
     };
 
 }

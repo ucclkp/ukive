@@ -14,6 +14,7 @@
 
 
 namespace ukive {
+namespace mac {
 
     bool LcImageFactoryMac::initialization() {
         return true;
@@ -30,7 +31,7 @@ namespace ukive {
 
     LcImageFrame* LcImageFactoryMac::create(
          int width, int height,
-         uint8_t *pixel_data, size_t size, size_t stride,
+         void* pixel_data, size_t size, size_t stride,
          const ImageOptions &options)
     {
         auto context = createCGContext(width, height, pixel_data, size, stride, options);
@@ -59,10 +60,11 @@ namespace ukive {
     }
 
     LcImage LcImageFactoryMac::decodeFile(
-        const std::u16string& file_name, const ImageOptions& options)
+        const std::u16string_view& file_name, const ImageOptions& options)
     {
+        std::basic_string<unichar> u_fn(file_name.begin(), file_name.end());
         auto name = [[NSString alloc] initWithCharacters:
-                     reinterpret_cast<const unichar*>(file_name.c_str()) length:file_name.length()];
+                     u_fn.c_str() length:u_fn.length()];
 
         auto data = CGDataProviderCreateWithFilename(name.UTF8String);
         auto source = CGImageSourceCreateWithDataProvider(data, nullptr);
@@ -76,7 +78,7 @@ namespace ukive {
     }
 
     LcImage LcImageFactoryMac::decodeMemory(
-        uint8_t* buffer, size_t size, const ImageOptions& options)
+        void* buffer, size_t size, const ImageOptions& options)
     {
         auto data = [NSData dataWithBytes:buffer length:size];
         CFDataRef cf_data = (CFDataRef)CFBridgingRetain(data);
@@ -90,18 +92,19 @@ namespace ukive {
     }
 
     bool LcImageFactoryMac::getThumbnail(
-        const std::u16string& file_name,
+        const std::u16string_view& file_name,
         int flame_width, int frame_height,
         std::string* out, int* real_w, int* real_h, ImageOptions* options)
     {
         return false;
     }
 
-    bool LcImageFactoryMac::saveToPNGFile(
+    bool LcImageFactoryMac::saveToFile(
         int width, int height,
-        uint8_t* data, size_t byte_count, size_t stride,
+        void* data, size_t byte_count, size_t stride,
+        ImageContainer container,
         const ImageOptions& options,
-        const std::u16string& file_name)
+        const std::u16string_view& file_name)
     {
         return false;
     }
@@ -137,7 +140,7 @@ namespace ukive {
 
     CGContextRef LcImageFactoryMac::createCGContext(
         int width, int height,
-        uint8_t *pixel_data, size_t size, size_t stride,
+        void* pixel_data, size_t size, size_t stride,
         const ImageOptions &options)
     {
         uint32_t info = mapCGBitmapContextInfo(options);
@@ -169,4 +172,5 @@ namespace ukive {
         return new_img;
     }
 
+}
 }

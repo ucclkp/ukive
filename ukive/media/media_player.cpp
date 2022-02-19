@@ -10,6 +10,8 @@
 
 #ifdef OS_WINDOWS
 #include "ukive/media/win/media_player_win.h"
+#elif defined OS_MAC
+#include "ukive/media/mac/media_player_mac.h"
 #endif
 
 
@@ -19,6 +21,8 @@ namespace ukive {
     MediaPlayer* MediaPlayer::create() {
 #ifdef OS_WINDOWS
         return new win::MediaPlayerWin();
+#elif defined OS_MAC
+        return new mac::MediaPlayerMac();
 #endif
     }
 

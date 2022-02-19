@@ -21,6 +21,8 @@ namespace ukive {
     class Color;
     class InputEvent;
 
+namespace mac {
+
     class WindowImplMac : public WindowNative {
     public:
         explicit WindowImplMac(WindowNativeDelegate* d);
@@ -42,7 +44,7 @@ namespace ukive {
         void doDraw(const DirtyRegion& region) override;
         void doLayout() override;
 
-        void setTitle(const std::u16string& title) override;
+        void setTitle(const std::u16string_view& title) override;
         void setBounds(int x, int y, int width, int height) override;
         void setCurrentCursor(Cursor cursor) override;
         void setTranslucentType(TranslucentType type) override;
@@ -125,6 +127,7 @@ namespace ukive {
         bool is_ignore_mouse_events_ = false;
     };
 
+}
 }
 
 #endif  // UKIVE_WINDOW_MAC_WINDOW_IMPL_MAC_H_

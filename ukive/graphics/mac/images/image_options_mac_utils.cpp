@@ -12,6 +12,7 @@
 
 
 namespace ukive {
+namespace mac {
 
     uint32_t mapCGBitmapContextInfo(const ImageOptions& options) {
         uint32_t info = kCGImageByteOrder32Little;
@@ -41,4 +42,5 @@ namespace ukive {
         return info;
     }
 
+}
 }

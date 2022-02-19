@@ -13,6 +13,7 @@
 
 
 namespace ukive {
+namespace mac {
 
     ShadowEffectMac::ShadowEffectMac() {}
 
@@ -86,4 +87,5 @@ namespace ukive {
         return radius_;
     }
 
+}
 }

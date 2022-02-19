@@ -11,6 +11,7 @@
 
 
 namespace ukive {
+namespace mac {
 
     class InputConnectionMac : public InputMethodConnection {
     public:
@@ -34,6 +35,7 @@ namespace ukive {
         void notifyTextSelectionChanged() override;
     };
 
+}
 }
 
 #endif  // UKIVE_TEXT_MAC_INPUT_CONNECTION_MAC_H_

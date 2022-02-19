@@ -7,6 +7,8 @@
 #ifndef UKIVE_GRAPHICS_SIZE_HPP_
 #define UKIVE_GRAPHICS_SIZE_HPP_
 
+#include <cstddef>
+
 
 namespace ukive {
 

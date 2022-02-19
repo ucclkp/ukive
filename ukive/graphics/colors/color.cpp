@@ -6,6 +6,8 @@
 
 #include "color.h"
 
+#include <cmath>
+
 #include "utils/log.h"
 #include "utils/strings/int_conv.hpp"
 

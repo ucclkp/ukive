@@ -21,7 +21,7 @@ namespace ukive {
 #ifdef OS_WINDOWS
         return new win::TsfManager();
 #elif defined OS_MAC
-        return new IMMMac();
+        return new mac::IMMMac();
 #endif
     }
 

@@ -23,7 +23,7 @@ namespace ukive {
 #ifdef OS_WINDOWS
         return new win::DisplayManagerWin();
 #elif defined OS_MAC
-        return new DisplayManagerMac();
+        return new mac::DisplayManagerMac();
 #endif
     }
 

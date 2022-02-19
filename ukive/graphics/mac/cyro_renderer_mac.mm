@@ -19,6 +19,7 @@
 
 
 namespace ukive {
+namespace mac {
 
     CyroRendererMac::CyroRendererMac() {}
 
@@ -76,7 +77,7 @@ namespace ukive {
 
     ImageFrame* CyroRendererMac::createImage(
         int width, int height,
-        const uint8_t *pixel_data, size_t size, size_t stride,
+        const void* pixel_data, size_t size, size_t stride,
         const ImageOptions& options)
     {
         NSBitmapFormat format = NSBitmapFormatAlphaFirst;
@@ -516,17 +517,19 @@ namespace ukive {
     }
 
     void CyroRendererMac::drawText(
-        const std::u16string &text,
-        const std::u16string &font_name, float font_size,
+        const std::u16string_view &text,
+        const std::u16string_view &font_name, float font_size,
         const RectF &rect, const Paint &paint)
     {
+        std::basic_string<unichar> u_fn(font_name.begin(), font_name.end());
         auto ns_font_name = [[NSString alloc] initWithCharacters:
-            reinterpret_cast<const unichar*>(font_name.c_str()) length:font_name.length()];
+            u_fn.c_str() length:u_fn.length()];
         auto ns_font = [NSFont fontWithName:ns_font_name size:font_size];
         [ns_font_name release];
 
+        std::basic_string<unichar> u_text(text.begin(), text.end());
         auto ns_str =[[NSString alloc] initWithCharacters:
-            reinterpret_cast<const unichar*>(text.c_str()) length:text.length()];
+            u_text.c_str() length:u_text.length()];
         auto ns_rect = NSMakeRect(rect.left, rect.top, rect.width(), rect.height());
 
         NSDictionary* ns_dict = nil;
@@ -556,4 +559,5 @@ namespace ukive {
         }
     }
 
+}
 }

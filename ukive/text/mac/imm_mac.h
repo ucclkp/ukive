@@ -11,6 +11,7 @@
 
 
 namespace ukive {
+namespace mac {
 
     class IMMMac : public InputMethodManager {
     public:
@@ -22,6 +23,7 @@ namespace ukive {
         bool updateIMEStatus() override;
     };
 
+}
 }
 
 #endif  // UKIVE_TEXT_MAC_IMM_MAC_H_

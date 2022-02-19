@@ -8,6 +8,7 @@
 
 
 namespace ukive {
+namespace mac {
 
     bool GraphicDeviceManagerMac::initialize() {
         return true;
@@ -29,4 +30,5 @@ namespace ukive {
         return nullptr;
     }
 
+}
 }

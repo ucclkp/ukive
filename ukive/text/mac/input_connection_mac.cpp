@@ -8,6 +8,7 @@
 
 
 namespace ukive {
+namespace mac {
 
     InputConnectionMac::InputConnectionMac(TextInputClient* tic) {}
 
@@ -55,4 +56,5 @@ namespace ukive {
 
     }
 
+}
 }

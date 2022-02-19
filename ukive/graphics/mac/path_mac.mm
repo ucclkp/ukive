@@ -10,6 +10,7 @@
 
 
 namespace ukive {
+namespace mac {
 
     bool PathMac::open() {
         path_ = [NSBezierPath bezierPath];
@@ -48,4 +49,5 @@ namespace ukive {
         return path_;
     }
 
+}
 }

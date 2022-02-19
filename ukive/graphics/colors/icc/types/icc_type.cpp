@@ -8,6 +8,8 @@
 
 #include <cassert>
 
+#include "utils/numbers.hpp"
+
 
 namespace ukive {
 namespace icc {
@@ -29,7 +31,7 @@ namespace icc {
         auto start_pos = s.tellg();
 
         if (onParse(s, size - 4)) {
-            if (!onCheckSize(s.tellg() - start_pos + 4, size)) {
+            if (!onCheckSize(utl::num_cast<uint32_t>(s.tellg() - start_pos + 4), size)) {
                 return false;
             }
             is_parsed_ = true;

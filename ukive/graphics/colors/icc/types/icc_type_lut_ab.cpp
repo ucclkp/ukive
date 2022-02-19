@@ -101,7 +101,7 @@ namespace icc {
                 return false;
             }
             READ_STREAM(gp_nums, in_num);
-            SKIP_BYTES(16Ui8 - in_num);
+            SKIP_BYTES(16u - in_num);
 
             uint8_t precision;
             READ_STREAM(precision, 1);

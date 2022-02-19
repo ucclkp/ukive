@@ -14,8 +14,11 @@ namespace ukive {
 
     class ImageOptions;
 
+namespace mac {
+
     uint32_t mapCGBitmapContextInfo(const ImageOptions& options);
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_MAC_IMAGES_IMAGE_OPTIONS_MAC_UTILS_H_

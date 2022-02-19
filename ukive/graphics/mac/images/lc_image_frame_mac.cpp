@@ -6,10 +6,13 @@
 
 #include "ukive/graphics/mac/images/lc_image_frame_mac.h"
 
-#include "utils/number.hpp"
+#include "utils/numbers.hpp"
+
+#include "ukive/window/window_dpi_utils.h"
 
 
 namespace ukive {
+namespace mac {
 
     LcImageFrameMac::LcImageFrameMac(CGImageRef img)
         : img_(img),
@@ -32,25 +35,45 @@ namespace ukive {
         *dpi_y = dpi_y_;
     }
 
-    Size LcImageFrameMac::getSize() const {
+    SizeF LcImageFrameMac::getSize() const {
+        if (img_) {
+            float dpi_x, dpi_y;
+            getDpi(&dpi_x, &dpi_y);
+
+            auto width = CGImageGetWidth(img_);
+            auto height = CGImageGetHeight(img_);
+            return SizeF(
+                width / (dpi_x / kDefaultDpi),
+                height / (dpi_y / kDefaultDpi));
+        }
+        return SizeF(0, 0);
+    }
+
+    SizeU LcImageFrameMac::getPixelSize() const {
         if (img_) {
             auto width = CGImageGetWidth(img_);
             auto height = CGImageGetHeight(img_);
-            return Size(utl::num_cast<int>(width), utl::num_cast<int>(height));
+            return SizeU(
+                utl::num_cast<unsigned int>(width),
+                utl::num_cast<unsigned int>(height));
         }
-        return Size(0, 0);
+        return SizeU(0, 0);
     }
 
-    bool LcImageFrameMac::getPixels(std::string *out, int *width, int *height) {
+    bool LcImageFrameMac::copyPixels(size_t stride, void* pixels, size_t buf_size) {
         return false;
     }
 
-    bool LcImageFrameMac::getBWPixels(std::string *out, int *width, int *height) {
-        return false;
+    void* LcImageFrameMac::lockPixels() {
+        return nullptr;
+    }
+
+    void LcImageFrameMac::unlockPixels() {
     }
 
     CGImageRef LcImageFrameMac::getNative() const {
         return img_;
     }
 
+}
 }

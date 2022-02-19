@@ -11,6 +11,7 @@
 
 
 namespace ukive {
+namespace mac {
 
     class GraphicDeviceManagerMac : public GraphicDeviceManager {
     public:
@@ -23,6 +24,7 @@ namespace ukive {
         GPUDevice * getGPUDevice() const override;
         GPUContext * getGPUContext() const override;
     };
+}
 }
 
 #endif  // UKIVE_GRAPHICS_MAC_GRAPHIC_DEVICE_MANAGER_MAC_H_

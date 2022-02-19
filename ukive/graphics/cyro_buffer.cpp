@@ -34,7 +34,7 @@ namespace ukive {
         }
         return new win::WindowBufferWin7(static_cast<win::WindowImplWin*>(w->getImpl()));
 #elif defined OS_MAC
-        return new WindowBufferMac(w);
+        return new mac::WindowBufferMac(w);
 #endif
     }
 
@@ -42,7 +42,7 @@ namespace ukive {
 #ifdef OS_WINDOWS
         return new win::OffscreenBufferWin();
 #elif defined OS_MAC
-        return new OffscreenBufferMac();
+        return new mac::OffscreenBufferMac();
 #endif
     }
 

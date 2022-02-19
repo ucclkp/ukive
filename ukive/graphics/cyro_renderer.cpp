@@ -22,7 +22,7 @@ namespace ukive {
 #ifdef OS_WINDOWS
         return new win::CyroRendererD2D();
 #elif defined OS_MAC
-        return new CyroRendererMac();
+        return new mac::CyroRendererMac();
 #endif
     }
 

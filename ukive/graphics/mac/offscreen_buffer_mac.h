@@ -18,6 +18,7 @@ UTL_OBJC_CLASS(NSGraphicsContext);
 
 
 namespace ukive {
+namespace mac {
 
     class OffscreenBufferMac : public OffscreenBuffer {
     public:
@@ -49,6 +50,7 @@ namespace ukive {
         ImageOptions img_options_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_MAC_OFFSCREEN_BUFFER_MAC_H_

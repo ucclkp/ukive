@@ -6,10 +6,13 @@
 
 #include "ukive/graphics/mac/images/image_frame_mac.h"
 
+#include "utils/numbers.hpp"
+
 #import <Cocoa/Cocoa.h>
 
 
 namespace ukive {
+namespace mac {
 
     ImageFrameMac::ImageFrameMac(NSBitmapImageRep* img, bool already_flipped, uint8_t* buf)
         : img_(img),
@@ -47,8 +50,10 @@ namespace ukive {
         return result;
     }
 
-    Size ImageFrameMac::getPixelSize() const {
-        return Size(int(img_.pixelsWide), int(img_.pixelsHigh));
+    SizeU ImageFrameMac::getPixelSize() const {
+        return SizeU(
+            utl::num_cast<unsigned int>(img_.pixelsWide),
+            utl::num_cast<unsigned int>(img_.pixelsHigh));
     }
 
     bool ImageFrameMac::alreadyFilpped() const {
@@ -59,4 +64,5 @@ namespace ukive {
         return img_;
     }
 
+}
 }

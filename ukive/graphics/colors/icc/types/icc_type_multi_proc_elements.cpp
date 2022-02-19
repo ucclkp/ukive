@@ -225,7 +225,7 @@ namespace icc {
             return false;
         }
         READ_STREAM(gp_nums, element->in_num);
-        SKIP_BYTES(16Ui8 - element->in_num);
+        SKIP_BYTES(16u - element->in_num);
 
         size_t element_size = element->out_num;
         for (uint8_t i = 0; i < element->in_num; ++i) {

@@ -21,7 +21,7 @@ namespace ukive {
 #ifdef OS_WINDOWS
         return new win::WindowImplWin(w);
 #elif defined OS_MAC
-        return new WindowImplMac(w);
+        return new mac::WindowImplMac(w);
 #endif
     }
 

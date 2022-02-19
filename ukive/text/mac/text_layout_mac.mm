@@ -9,26 +9,28 @@
 #include <algorithm>
 
 #include "ukive/graphics/canvas.h"
-#include "ukive/graphics/color.h"
+#include "ukive/graphics/colors/color.h"
 
 #import <Cocoa/Cocoa.h>
 #import "text_inline_cell.h"
 
 
 namespace ukive {
+namespace mac {
 
     TextLayoutMac::TextLayoutMac() {}
 
     bool TextLayoutMac::make(
-        const std::u16string &text,
-        const std::u16string &font_name,
+        const std::u16string_view &text,
+        const std::u16string_view &font_name,
         float font_size,
         TextLayout::FontStyle style,
         TextLayout::FontWeight weight,
-        const std::u16string &locale_name)
+        const std::u16string_view &locale_name)
     {
+        std::basic_string<unichar> u_text(text.begin(), text.end());
         auto ns_text = [[NSString alloc] initWithCharacters:
-            reinterpret_cast<const unichar*>(text.c_str()) length:text.length()];
+            u_text.c_str() length:u_text.length()];
 
         text_storage_ = [[NSTextStorage alloc] initWithString:ns_text];
         layout_mgr_ = [[NSLayoutManager alloc] init];
@@ -40,8 +42,9 @@ namespace ukive {
         [text_storage_ addLayoutManager:layout_mgr_];
         [layout_mgr_ release];
 
+        std::basic_string<unichar> u_fn(font_name.begin(), font_name.end());
         auto ns_font_name = [[NSString alloc] initWithCharacters:
-            reinterpret_cast<const unichar*>(font_name.c_str()) length:font_name.length()];
+            u_fn.c_str() length:u_fn.length()];
         auto ns_font = [NSFont fontWithName:ns_font_name size:font_size];
         [ns_font_name release];
 
@@ -134,8 +137,9 @@ namespace ukive {
 
         NSFont* font = nullptr;
         if (!attrs.name.empty()) {
+            std::basic_string<unichar> u_an(attrs.name.begin(), attrs.name.end());
             auto ns_font_name = [[NSString alloc] initWithCharacters:
-                reinterpret_cast<const unichar*>(attrs.name.c_str()) length:attrs.name.length()];
+                u_an.c_str() length:u_an.length()];
             font = [NSFont fontWithName:ns_font_name size:font_size];
             [ns_font_name release];
         }
@@ -545,4 +549,5 @@ namespace ukive {
         glyph_range_cached_ = true;
     }
 
+}
 }

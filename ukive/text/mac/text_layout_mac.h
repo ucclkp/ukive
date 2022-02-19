@@ -20,17 +20,19 @@ namespace ukive {
 
     class Color;
 
+namespace mac {
+
     class TextLayoutMac : public TextLayout {
     public:
         TextLayoutMac();
 
         bool make(
-            const std::u16string &text,
-            const std::u16string &font_name,
+            const std::u16string_view &text,
+            const std::u16string_view &font_name,
             float font_size,
             TextLayout::FontStyle style,
             TextLayout::FontWeight weight,
-            const std::u16string &locale_name) override;
+            const std::u16string_view &locale_name) override;
         void destroy() override;
 
         void setMaxWidth(float max_width) override;
@@ -78,6 +80,7 @@ namespace ukive {
         Alignment vert_align_ = Alignment::LEADING;
     };
 
+}
 }
 
 #endif  // UKIVE_TEXT_MAC_TEXT_LAYOUT_MAC_H_

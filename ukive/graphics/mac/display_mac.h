@@ -9,22 +9,27 @@
 
 #include "ukive/graphics/display.h"
 
+#include <string>
+
 #import <CoreGraphics/CoreGraphics.h>
 
 
 namespace ukive {
+namespace mac {
+
+    class WindowImplMac;
 
     class DisplayMac : public Display {
     public:
-        DisplayMac();
+        DisplayMac(bool valid, CGDirectDisplayID display_id);
         ~DisplayMac();
 
-        bool makePrimary() override;
-        bool makeFromPoint(const Point &p) override;
-        bool makeFromRect(const Rect &r) override;
-        bool makeFromWindow(Window *w) override;
+        static DisplayPtr fromWindowImpl(const WindowImplMac* win);
 
+        bool isValid() const override;
         bool isInHDRMode() const override;
+        bool isSame(const Display* rhs) const override;
+        bool isSameDisplay(const Display* rhs) const override;
 
         void getName(std::u16string *name) override;
         void getAdapterName(std::u16string *name) override;
@@ -43,6 +48,7 @@ namespace ukive {
         CGDisplayModeRef monitor_mode_ = nullptr;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_MAC_DISPLAY_MAC_H_

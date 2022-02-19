@@ -22,7 +22,7 @@ namespace ukive {
 #ifdef OS_WINDOWS
         return new win::LcImageFactoryWin();
 #elif defined OS_MAC
-        return new LcImageFactoryMac();
+        return new mac::LcImageFactoryMac();
 #endif
     }
 

@@ -4,8 +4,8 @@
 // This program is licensed under GPLv3 license that can be
 // found in the LICENSE file.
 
-#ifndef UKIVE_GRAPHICS_DISPLAY_MANAGER_WIN_H_
-#define UKIVE_GRAPHICS_DISPLAY_MANAGER_WIN_H_
+#ifndef UKIVE_GRAPHICS_WIN_DISPLAY_MANAGER_WIN_H_
+#define UKIVE_GRAPHICS_WIN_DISPLAY_MANAGER_WIN_H_
 
 #include "ukive/graphics/display_manager.h"
 
@@ -72,4 +72,4 @@ namespace win {
 }
 }
 
-#endif  // UKIVE_GRAPHICS_DISPLAY_MANAGER_WIN_H_
+#endif  // UKIVE_GRAPHICS_WIN_DISPLAY_MANAGER_WIN_H_

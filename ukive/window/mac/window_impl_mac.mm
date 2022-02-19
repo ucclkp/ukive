@@ -12,16 +12,18 @@
 
 #include "ukive/system/ui_utils.h"
 #include "ukive/graphics/dirty_region.h"
-#include "ukive/graphics/display.h"
+#include "ukive/graphics/mac/display_mac.h"
 #include "ukive/window/context.h"
 #include "ukive/window/window_listener.h"
 #include "ukive/window/window_native_delegate.h"
 
 #import "uk_ns_window.h"
 #import "uk_root_view.h"
+#import "uk_content_view.h"
 
 
 namespace ukive {
+namespace mac {
 
     const int kDefaultX = 0;
     const int kDefaultY = 0;
@@ -47,7 +49,7 @@ namespace ukive {
           is_showing_(false),
           close_method_(WINDOW_CLOSE_BY_BUTTON | WINDOW_CLOSE_BY_MENU)
     {
-        DCHECK(delegate_);
+        ubassert(delegate_);
     }
 
     WindowImplMac::~WindowImplMac() {}
@@ -94,15 +96,21 @@ namespace ukive {
 
         delegate_->onCreate();
 
+        auto content_view = [[UKContentView alloc] init];
+        [content_view setWindowImpl:this];
+        [content_view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+
         auto root_view = [[UKRootView alloc] init];
-        [root_view setWindowImpl:this];
+        [root_view addSubview:content_view];
+
         //[root_view setWantsLayer:YES];
         [native_ setContentView:root_view];
         // 这个好像没用。只能用 Tracking Area 了。
         //[native_ setAcceptsMouseMovedEvents:YES];
 
         [root_view release];
-        native_view_ = root_view;
+        [content_view release];
+        native_view_ = content_view;
 
         auto context = delegate_->onGetContext();
         context.setDefaultDpi(72);
@@ -270,7 +278,7 @@ namespace ukive {
     }
 
     void WindowImplMac::center() {
-        auto display_bounds = Display::primary()->getBounds();
+        auto display_bounds = DisplayMac::fromWindowImpl(this)->getBounds();
         x_ = display_bounds.left + std::round((display_bounds.width() - width_) / 2.f);
         y_ = display_bounds.top + std::round((display_bounds.height() - height_) / 2.f);
 
@@ -291,11 +299,13 @@ namespace ukive {
         if (native_view_) {
             if (!region.rect0.empty()) {
                 auto& rect = region.rect0;
-                [native_view_ displayRect:NSMakeRect(rect.left, rect.top, rect.width(), rect.height())];
+                [native_view_ setNeedsDisplayInRect:NSMakeRect(rect.left, rect.top, rect.width(), rect.height())];
+                LOG(Log::INFO) << "displayRect1: [" << rect.left << ", " << rect.top << ", " << rect.width() << ", " << rect.height() << "]";
             }
             if (!region.rect1.empty()) {
                 auto& rect = region.rect1;
                 [native_view_ displayRect:NSMakeRect(rect.left, rect.top, rect.width(), rect.height())];
+                LOG(Log::INFO) << "displayRect2: [" << rect.left << ", " << rect.top << ", " << rect.width() << ", " << rect.height() << "]";
             }
         }
     }
@@ -304,7 +314,7 @@ namespace ukive {
         delegate_->onLayout();
     }
 
-    void WindowImplMac::setTitle(const std::u16string& title) {
+    void WindowImplMac::setTitle(const std::u16string_view& title) {
         title_ = title;
         if (native_) {
             NSString* str = [[NSString alloc] initWithCharacters
@@ -578,4 +588,5 @@ namespace ukive {
         return val;
     }
 
+}
 }

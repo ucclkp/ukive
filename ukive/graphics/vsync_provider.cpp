@@ -11,6 +11,8 @@
 
 #ifdef OS_WINDOWS
 #include "ukive/graphics/win/vsync_provider_win.h"
+#elif defined OS_MAC
+#include "ukive/graphics/mac/vsync_provider_mac.h"
 #endif
 
 
@@ -20,6 +22,8 @@ namespace ukive {
     VSyncProvider* VSyncProvider::create() {
 #ifdef OS_WINDOWS
         return new win::VSyncProviderWin();
+#elif defined OS_MAC
+        return new mac::VSyncProviderMac();
 #endif
     }
 

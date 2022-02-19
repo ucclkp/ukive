@@ -15,6 +15,7 @@
 
 
 namespace ukive {
+namespace win {
 
     class PipeServerWin : public PipeServer {
     public:
@@ -39,6 +40,7 @@ namespace ukive {
         HANDLE pipe_;
     };
 
+}
 }
 
 #endif  // UKIVE_SYSTEM_WIN_IPC_PIPE_SERVER_WIN_H_

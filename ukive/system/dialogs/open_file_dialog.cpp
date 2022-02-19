@@ -10,6 +10,8 @@
 
 #ifdef OS_WINDOWS
 #include "ukive/system/win/dialogs/open_file_dialog_win.h"
+#elif defined OS_MAC
+#include "ukive/system/mac/dialogs/open_file_dialog_mac.h"
 #endif
 
 
@@ -19,6 +21,8 @@ namespace ukive {
     OpenFileDialog* OpenFileDialog::create() {
 #ifdef OS_WINDOWS
         return new win::OpenFileDialogWin();
+#elif defined OS_MAC
+        return new mac::OpenFileDialogMac();
 #endif
     }
 

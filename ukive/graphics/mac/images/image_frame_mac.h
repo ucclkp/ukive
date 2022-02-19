@@ -15,6 +15,7 @@ UTL_OBJC_CLASS(NSBitmapImageRep);
 
 
 namespace ukive {
+namespace mac {
 
     class ImageFrameMac : public ImageFrame {
     public:
@@ -25,7 +26,7 @@ namespace ukive {
 
         void getDpi(float *dpi_x, float *dpi_y) const override;
         SizeF getSize() const override;
-        Size getPixelSize() const override;
+        SizeU getPixelSize() const override;
 
         bool alreadyFilpped() const;
         NSBitmapImageRep* getNative() const;
@@ -36,6 +37,7 @@ namespace ukive {
         NSBitmapImageRep* img_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_MAC_IMAGES_IMAGE_FRAME_MAC_H_

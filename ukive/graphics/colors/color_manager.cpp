@@ -11,7 +11,7 @@
 #ifdef OS_WINDOWS
 #include "ukive/graphics/win/colors/color_manager_win.h"
 #elif defined OS_MAC
-#include "ukive/graphics/win/colors/color_manager_mac.h"
+#include "ukive/graphics/mac/colors/color_manager_mac.h"
 #endif
 
 
@@ -22,6 +22,7 @@ namespace ukive {
 #ifdef OS_WINDOWS
         return new win::ColorManagerWin();
 #elif defined OS_MAC
+        return new mac::ColorManagerMac();
 #endif
     }
 
@@ -35,6 +36,7 @@ namespace ukive {
         }
         return ret;
 #elif defined OS_MAC
+        return mac::ColorManagerMac::getDefaultProfile(path);
 #endif
     }
 

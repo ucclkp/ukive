@@ -7,13 +7,15 @@
 #import <Cocoa/Cocoa.h>
 
 namespace ukive {
+namespace mac {
     class WindowImplMac;
+}
 }
 
 
 @interface UKNSWindow : NSWindow<NSWindowDelegate>
 
-@property(assign) ukive::WindowImplMac* impl;
+@property(assign) ukive::mac::WindowImplMac* impl;
 
 - (instancetype)initWithContentRect:(NSRect)contentRect
                          styleMask:(NSWindowStyleMask)style

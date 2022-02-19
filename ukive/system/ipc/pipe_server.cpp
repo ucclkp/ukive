@@ -10,6 +10,8 @@
 
 #ifdef OS_WINDOWS
 #include "ukive/system/win/ipc/pipe_server_win.h"
+#elif defined OS_MAC
+#include "ukive/system/mac/ipc/pipe_server_mac.h"
 #endif
 
 
@@ -18,7 +20,9 @@ namespace ukive {
     // static
     PipeServer* PipeServer::create() {
 #ifdef OS_WINDOWS
-        return new PipeServerWin();
+        return new win::PipeServerWin();
+#elif defined OS_MAC
+        return new mac::PipeServerMac();
 #endif
     }
 

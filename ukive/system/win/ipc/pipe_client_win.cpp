@@ -10,6 +10,7 @@
 
 
 namespace ukive {
+namespace win {
 
     PipeClientWin::PipeClientWin()
         : pipe_(INVALID_HANDLE_VALUE) {}
@@ -130,4 +131,5 @@ namespace ukive {
         return true;
     }
 
+}
 }

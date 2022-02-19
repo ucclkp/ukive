@@ -12,7 +12,7 @@
 
 
 @interface UKNSWindow() {
-    ukive::WindowImplMac* impl;
+    ukive::mac::WindowImplMac* impl;
 }
 @end
 

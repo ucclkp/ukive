@@ -13,7 +13,7 @@
 #ifdef OS_WINDOWS
 #include "ukive/graphics/win/direct3d/effects/image_effect_dx.h"
 #elif defined OS_MAC
-#include "ukive/graphics/mac/effects/image_effect_mac.h"
+//#include "ukive/graphics/mac/effects/image_effect_mac.h"
 #endif
 
 
@@ -24,7 +24,7 @@ namespace ukive {
 #ifdef OS_WINDOWS
         return new win::ImageEffectDX(context);
 #elif defined OS_MAC
-        return new ShadowEffectMac();
+        return nullptr;
 #endif
     }
 

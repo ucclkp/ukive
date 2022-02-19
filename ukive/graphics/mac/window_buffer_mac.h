@@ -15,6 +15,8 @@ namespace ukive {
 
     class Window;
 
+namespace mac {
+
     class WindowBufferMac : public WindowBuffer {
     public:
         explicit WindowBufferMac(Window* w);
@@ -41,6 +43,7 @@ namespace ukive {
         ImageOptions img_options_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_MAC_WINDOW_BUFFER_MAC_H_

@@ -13,6 +13,7 @@
 
 
 namespace ukive {
+namespace mac {
 
     WindowBufferMac::WindowBufferMac(Window* w)
         : win_(w) {}
@@ -67,4 +68,5 @@ namespace ukive {
         return nullptr;
     }
 
+}
 }

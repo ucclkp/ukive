@@ -10,6 +10,7 @@
 
 
 namespace ukive {
+namespace win {
 
     PipeServerWin::PipeServerWin()
         : pipe_(INVALID_HANDLE_VALUE) {
@@ -132,4 +133,5 @@ namespace ukive {
         }
     }
 
+}
 }

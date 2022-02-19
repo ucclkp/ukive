@@ -13,6 +13,7 @@
 
 
 namespace ukive {
+namespace mac {
 
     class LcImageFrameMac : public LcImageFrame {
     public:
@@ -22,9 +23,12 @@ namespace ukive {
         void setDpi(float dpi_x, float dpi_y) override;
         void getDpi(float* dpi_x, float* dpi_y) const override;
 
-        Size getSize() const override;
-        bool getPixels(std::string *out, int *width, int *height) override;
-        bool getBWPixels(std::string *out, int *width, int *height) override;
+        SizeF getSize() const override;
+        SizeU getPixelSize() const override;
+
+        bool copyPixels(size_t stride, void* pixels, size_t buf_size) override;
+        void* lockPixels() override;
+        void unlockPixels() override;
 
         CGImageRef getNative() const;
 
@@ -34,6 +38,7 @@ namespace ukive {
         CGImageRef img_;
     };
 
+}
 }
 
 #endif  // UKIVE_GRAPHICS_MAC_IMAGES_LC_IMAGE_FRAME_MAC_H_

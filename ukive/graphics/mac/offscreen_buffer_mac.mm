@@ -16,6 +16,7 @@
 
 
 namespace ukive {
+namespace mac {
 
     OffscreenBufferMac::OffscreenBufferMac()
         : width_(0), height_(0) {
@@ -157,4 +158,5 @@ namespace ukive {
         return img_fr;
     }
 
+}
 }
