@@ -637,7 +637,7 @@ namespace win {
         non_client_frame_->getClientInsets(&rect, &bb);
         width -= (rect.left + rect.right);
 
-        return std::max(width, 0);
+        return (std::max)(width, 0);
     }
 
     int WindowImplWin::getClientHeight() const {
@@ -656,7 +656,7 @@ namespace win {
         non_client_frame_->getClientInsets(&rect, &bb);
         height -= (rect.top + rect.bottom);
 
-        return std::max(height, 0);
+        return (std::max)(height, 0);
     }
 
     int WindowImplWin::getContentWidth() const {
@@ -695,7 +695,7 @@ namespace win {
         RECT rect;
         ::GetClientRect(hWnd_, &rect);
         int width = rect.right - rect.left;
-        return std::max(width, 0);
+        return (std::max)(width, 0);
     }
 
     int WindowImplWin::getTextureHeight() const {
@@ -711,7 +711,7 @@ namespace win {
         non_client_frame_->getClientInsets(&rect, &bb);
         height -= bb;
 
-        return std::max(height, 0);
+        return (std::max)(height, 0);
     }
 
     float WindowImplWin::getUserScale() const {

@@ -44,7 +44,7 @@ namespace ukive {
             return Value(child_layout_size, DEFINED);
         }
 
-        int size = std::max(0, parent_val.val - inset);
+        int size = (std::max)(0, parent_val.val - inset);
         Value result(size, CONTENT);
 
         switch (parent_val.mode) {

@@ -54,7 +54,7 @@ namespace ukive {
         int final_w, final_h;
         switch (info.width.mode) {
         case SizeInfo::CONTENT:
-            final_w = std::min(info.width.val, size_ + getPadding().hori());
+            final_w = (std::min)(info.width.val, size_ + getPadding().hori());
             break;
 
         case SizeInfo::DEFINED:
@@ -69,7 +69,7 @@ namespace ukive {
 
         switch (info.height.mode) {
         case SizeInfo::CONTENT:
-            final_h = std::min(info.height.val, size_ + getPadding().vert());
+            final_h = (std::min)(info.height.val, size_ + getPadding().vert());
             break;
 
         case SizeInfo::DEFINED:
@@ -82,7 +82,7 @@ namespace ukive {
             break;
         }
 
-        int size = std::min(final_w, final_h);
+        int size = (std::min)(final_w, final_h);
         return Size(size, size);
     }
 

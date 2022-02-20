@@ -213,7 +213,7 @@ namespace ukive {
         int hori_margins = margin.hori();
 
         if (rli->hasHoriCouple()) {
-            int size = std::max(0,
+            int size = (std::max)(0,
                 parent_width.val - getPadding().hori() - hori_margins);
 
             // child 有固定的大小。
@@ -307,7 +307,7 @@ namespace ukive {
                             measured_target_width = target->getDeterminedSize().width;
                         }
 
-                        child_width.val = std::max(0, measured_target_width - hori_margins);
+                        child_width.val = (std::max)(0, measured_target_width - hori_margins);
 
                         if (layout_size.width == LS_FILL)
                         {
@@ -433,7 +433,7 @@ namespace ukive {
                                 child_li = target_li;
                             }
 
-                            child_width.val = std::max(0, parent_width.val - getPadding().hori()
+                            child_width.val = (std::max)(0, parent_width.val - getPadding().hori()
                                 - measured_start_margin - measured_end_margin);
 
                             if (layout_size.width == LS_FILL)
@@ -495,7 +495,7 @@ namespace ukive {
         int vert_margins = margin.vert();
 
         if (rli->hasVertCouple()) {
-            int size = std::max(0, parent_height.val - getPadding().vert() - vert_margins);
+            int size = (std::max)(0, parent_height.val - getPadding().vert() - vert_margins);
 
             // child 有固定的大小。
             if (layout_size.height >= 0 || !isAttended(child)) {
@@ -604,7 +604,7 @@ namespace ukive {
                             measured_target_height = target->getDeterminedSize().height;
                         }
 
-                        child_height.val = std::max(0, measured_target_height - vert_margins);
+                        child_height.val = (std::max)(0, measured_target_height - vert_margins);
 
                         if (layout_size.height == LS_FILL)
                         {
@@ -722,7 +722,7 @@ namespace ukive {
 
                             // TODO: 这里不应该用 parent_height，而应该使用最后遍历到的 view
                             // 作为边界来计算。此处假定最终绑定到 parent 边界。
-                            child_height.val = std::max(0, parent_height.val - getPadding().vert()
+                            child_height.val = (std::max)(0, parent_height.val - getPadding().vert()
                                 - measured_top_margin - measured_bottom_margin);
 
                             if (layout_size.height == LS_FILL) {
@@ -876,7 +876,7 @@ namespace ukive {
                     + (li->hasEnd() ? margin.end : 0);
             }
 
-            wrapped_width = std::max(wrapped_width, chain_width);
+            wrapped_width = (std::max)(wrapped_width, chain_width);
         }
 
         return wrapped_width;
@@ -898,7 +898,7 @@ namespace ukive {
                     + (li->hasTop() ? margin.top : 0)
                     + (li->hasBottom() ? margin.bottom : 0);
             }
-            wrapped_height = std::max(wrapped_height, chain_height);
+            wrapped_height = (std::max)(wrapped_height, chain_height);
         }
 
         return wrapped_height;
@@ -1101,7 +1101,7 @@ namespace ukive {
         switch (info.width.mode) {
         case SizeInfo::CONTENT:
             final_width = measureWrappedWidth() + getPadding().hori();
-            final_width = std::min(info.width.val, final_width);
+            final_width = (std::min)(info.width.val, final_width);
             break;
 
         case SizeInfo::DEFINED:
@@ -1117,7 +1117,7 @@ namespace ukive {
         switch (info.height.mode) {
         case SizeInfo::CONTENT:
             final_height = measureWrappedHeight() + getPadding().vert();
-            final_height = std::min(info.height.val, final_height);
+            final_height = (std::min)(info.height.val, final_height);
             break;
 
         case SizeInfo::DEFINED:

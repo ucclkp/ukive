@@ -349,7 +349,7 @@ namespace ukive {
 
         switch (info.width.mode) {
         case SizeInfo::CONTENT:
-            final_width = std::min(info.width.val, pref_width + padding_.hori());
+            final_width = (std::min)(info.width.val, pref_width + padding_.hori());
             break;
 
         case SizeInfo::DEFINED:
@@ -364,7 +364,7 @@ namespace ukive {
 
         switch (info.height.mode) {
         case SizeInfo::CONTENT:
-            final_height = std::min(info.height.val, pref_height + padding_.vert());
+            final_height = (std::min)(info.height.val, pref_height + padding_.vert());
             break;
 
         case SizeInfo::DEFINED:
@@ -683,10 +683,10 @@ namespace ukive {
         PointF lt, tr, rb, bl;
         matrix.transformRect(RectF(*bounds), &lt, &tr, &rb, &bl);
 
-        bounds->left = int(std::floor(std::min({ lt.x, tr.x, rb.x, bl.x })));
-        bounds->top = int(std::floor(std::min({ lt.y, tr.y, rb.y, bl.y })));
-        bounds->right = int(std::ceil(std::max({ lt.x, tr.x, rb.x, bl.x })));
-        bounds->bottom = int(std::ceil(std::max({ lt.y, tr.y, rb.y, bl.y })));
+        bounds->left = int(std::floor((std::min)({ lt.x, tr.x, rb.x, bl.x })));
+        bounds->top = int(std::floor((std::min)({ lt.y, tr.y, rb.y, bl.y })));
+        bounds->right = int(std::ceil((std::max)({ lt.x, tr.x, rb.x, bl.x })));
+        bounds->bottom = int(std::ceil((std::max)({ lt.y, tr.y, rb.y, bl.y })));
     }
 
     bool View::isEnabled() const {

@@ -149,7 +149,7 @@ namespace ukive {
 
         // 确保左侧一定可见
         if (x >= root.right) {
-            x = std::max(root.left, root.right - target_width);
+            x = (std::max)(root.left, root.right - target_width);
             *adj_gravity = GV_START;
         }
 
@@ -214,7 +214,7 @@ namespace ukive {
 
         // 确保顶部一定可见
         if (y >= root.bottom) {
-            y = std::max(root.top, root.bottom - target_height);
+            y = (std::max)(root.top, root.bottom - target_height);
             *adj_gravity = GV_TOP;
         }
 

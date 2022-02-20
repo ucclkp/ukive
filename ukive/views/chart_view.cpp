@@ -37,15 +37,15 @@ namespace ukive {
             return;
         }
 
-        double left = std::numeric_limits<double>::max();
+        double left = (std::numeric_limits<double>::max)();
         double right = std::numeric_limits<double>::lowest();
-        double top = std::numeric_limits<double>::max();
+        double top = (std::numeric_limits<double>::max)();
         double bottom = std::numeric_limits<double>::lowest();
         for (const auto& d : data_) {
-            left = std::min(left, d.x);
-            right = std::max(right, d.x);
-            top = std::min(top, d.y);
-            bottom = std::max(bottom, d.y);
+            left = (std::min)(left, d.x);
+            right = (std::max)(right, d.x);
+            top = (std::min)(top, d.y);
+            bottom = (std::max)(bottom, d.y);
         }
 
         double dw = right - left;

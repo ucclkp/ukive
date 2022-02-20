@@ -951,8 +951,8 @@ namespace ukive {
     }
 
     bool Window::onResizing(Size* new_size) {
-        new_size->width = std::max(new_size->width, min_width_);
-        new_size->height = std::max(new_size->height, min_height_);
+        new_size->width = (std::max)(new_size->width, min_width_);
+        new_size->height = (std::max)(new_size->height, min_height_);
         return true;
     }
 

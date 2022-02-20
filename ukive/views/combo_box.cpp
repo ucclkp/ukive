@@ -134,7 +134,7 @@ namespace ukive {
             break;
 
         case SizeInfo::CONTENT:
-            f_width = std::min(info.width.val, padding_w + db_w + tv_w);
+            f_width = (std::min)(info.width.val, padding_w + db_w + tv_w);
             break;
 
         case SizeInfo::FREEDOM:
@@ -149,12 +149,12 @@ namespace ukive {
             break;
 
         case SizeInfo::CONTENT:
-            f_height = std::min(info.height.val, padding_h + std::max(tv_h, db_h));
+            f_height = (std::min)(info.height.val, padding_h + (std::max)(tv_h, db_h));
             break;
 
         case SizeInfo::FREEDOM:
         default:
-            f_height = padding_h + std::max(tv_h, db_h);
+            f_height = padding_h + (std::max)(tv_h, db_h);
             break;
         }
 
@@ -260,7 +260,7 @@ namespace ukive {
         if (v == button_) {
             if (is_finished_) {
                 auto bounds = getBoundsInRoot();
-                auto width = std::max(bounds.width(), min_dropdown_width_);
+                auto width = (std::max)(bounds.width(), min_dropdown_width_);
                 show(bounds.left, bounds.bottom, width);
             } else {
                 close();

@@ -120,12 +120,12 @@ namespace ukive {
             if (orientation_ == VERTICAL) {
                 int child_h = int(std::round(
                     child_li->weight / static_cast<float>(total_weight)*(parent_info.height.val - cur_size)));
-                child_h = std::max(0, child_h - vert_margin);
+                child_h = (std::max)(0, child_h - vert_margin);
                 child_height.val = child_h;
             } else if (orientation_ == HORIZONTAL) {
                 int child_w = int(std::round(
                     child_li->weight / static_cast<float>(total_weight)*(parent_info.width.val - cur_size)));
-                child_w = std::max(0, child_w - hori_margin);
+                child_w = (std::max)(0, child_w - hori_margin);
                 child_width.val = child_w;
             }
 
@@ -165,7 +165,7 @@ namespace ukive {
         switch (info.width.mode) {
         case SizeInfo::CONTENT:
             final_width = getWrappedWidth();
-            final_width = std::min(final_width + getPadding().hori(), info.width.val);
+            final_width = (std::min)(final_width + getPadding().hori(), info.width.val);
             break;
 
         case SizeInfo::FREEDOM:
@@ -185,7 +185,7 @@ namespace ukive {
                     total_height += child->getDeterminedSize().height + child->getLayoutMargin().vert();
                 }
             }
-            final_height = std::min(info.height.val, total_height + getPadding().vert());
+            final_height = (std::min)(info.height.val, total_height + getPadding().vert());
             break;
         }
 
@@ -223,7 +223,7 @@ namespace ukive {
                     total_width += child->getDeterminedSize().width + child->getLayoutMargin().hori();
                 }
             }
-            final_width = std::min(total_width + getPadding().hori(), info.width.val);
+            final_width = (std::min)(total_width + getPadding().hori(), info.width.val);
             break;
         }
 
@@ -246,13 +246,13 @@ namespace ukive {
         switch (info.height.mode) {
         case SizeInfo::CONTENT:
             final_height = getWrappedHeight();
-            final_height = std::min(final_height + getPadding().vert(), info.height.val);
-            final_height = std::max(getDeterminedSize().height, final_height);
+            final_height = (std::min)(final_height + getPadding().vert(), info.height.val);
+            final_height = (std::max)(getDeterminedSize().height, final_height);
             break;
 
         case SizeInfo::FREEDOM:
             final_height = getWrappedHeight() + getPadding().vert();
-            final_height = std::max(getDeterminedSize().height, final_height);
+            final_height = (std::max)(getDeterminedSize().height, final_height);
             break;
 
         case SizeInfo::DEFINED:

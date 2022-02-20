@@ -77,12 +77,12 @@ namespace ukive {
         int final_dy = 0;
         if (dy > 0) {
             int scroll_y = getScrollY();
-            final_dy = std::max(scroll_y - dy, 0) - scroll_y;
+            final_dy = (std::max)(scroll_y - dy, 0) - scroll_y;
         } else if (dy < 0) {
             int scroll_y = getScrollY();
             int extend = computeScrollExtend();
             if (extend > 0) {
-                final_dy = std::min(scroll_y - dy, extend) - scroll_y;
+                final_dy = (std::min)(scroll_y - dy, extend) - scroll_y;
             }
         }
 
@@ -110,7 +110,7 @@ namespace ukive {
             if (child && child->getVisibility() != VANISHED) {
                 auto& margin = child->getLayoutMargin();
                 int child_width = child->getDeterminedSize().width + margin.hori();
-                final_width = std::min(child_width + getPadding().hori(), info.width.val);
+                final_width = (std::min)(child_width + getPadding().hori(), info.width.val);
             }
             break;
         }
@@ -137,7 +137,7 @@ namespace ukive {
             if (child && child->getVisibility() != VANISHED) {
                 auto& margin = child->getLayoutMargin();
                 int child_height = child->getDeterminedSize().height + margin.vert();
-                final_height = std::min(child_height + getPadding().vert(), info.height.val);
+                final_height = (std::min)(child_height + getPadding().vert(), info.height.val);
             }
             break;
         }

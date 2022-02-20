@@ -161,7 +161,7 @@ namespace vsul {
         ss_desc.border_color[2] = 0;
         ss_desc.border_color[3] = 0;
         ss_desc.min_lod = 0;
-        ss_desc.max_lod = std::numeric_limits<float>::max();
+        ss_desc.max_lod = (std::numeric_limits<float>::max)();
         sampler_state_.reset(device->createSamplerState(&ss_desc));
         if (!sampler_state_) {
             LOG(Log::WARNING) << "Failed to create sampler state";

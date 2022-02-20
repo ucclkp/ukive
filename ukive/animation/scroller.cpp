@@ -181,7 +181,7 @@ namespace ukive {
             cur_ = start_ + distance_;
             is_finished_ = true;
         } else {
-            double percent = std::min(elapsed / duration, 1.0);
+            double percent = (std::min)(elapsed / duration, 1.0);
             cur_ = start_ + distance_ * percent;
         }
     }

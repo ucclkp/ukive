@@ -35,7 +35,7 @@ namespace ukive {
             }
 
             final_width = final_width + getPadding().hori();
-            final_width = std::min(info.width.val, final_width);
+            final_width = (std::min)(info.width.val, final_width);
             break;
 
         case SizeInfo::FREEDOM:
@@ -61,7 +61,7 @@ namespace ukive {
             }
 
             final_height = final_height + getPadding().vert();
-            final_height = std::min(info.height.val, final_height);
+            final_height = (std::min)(info.height.val, final_height);
             break;
 
         case SizeInfo::FREEDOM:
@@ -175,7 +175,7 @@ namespace ukive {
         }
 
         if (always || (img_width > width || img_height > height)) {
-            float scale = std::min(
+            float scale = (std::min)(
                 float(width) / img_width,
                 float(height) / img_height);
 

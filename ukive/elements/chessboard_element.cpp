@@ -43,8 +43,8 @@ namespace ukive {
         bool is_vert_dark_color = !is_dark_color;
         for (;;) {
             for (;;) {
-                int cur_width = std::min(cell_length_, bounds.right - cur_left);
-                int cur_height = std::min(cell_length_, bounds.bottom - cur_top);
+                int cur_width = (std::min)(cell_length_, bounds.right - cur_left);
+                int cur_height = (std::min)(cell_length_, bounds.bottom - cur_top);
                 if (cur_width <= 0 || cur_height <= 0) {
                     break;
                 }

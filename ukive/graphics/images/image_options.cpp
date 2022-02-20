@@ -14,7 +14,7 @@ namespace {
 
     bool isEqual(float f1, float f2) {
         if (std::abs(f1 - f2) <= std::numeric_limits<float>::epsilon() * std::abs(f1 - f2) ||
-            std::abs(f1 - f2) < std::numeric_limits<float>::min())
+            std::abs(f1 - f2) < (std::numeric_limits<float>::min)())
         {
             return true;
         }

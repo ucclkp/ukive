@@ -7,6 +7,7 @@
 #include "pipe_client_win.h"
 
 #include "utils/log.h"
+#include "utils/numbers.hpp"
 
 
 namespace ukive {
@@ -110,8 +111,6 @@ namespace win {
     }
 
     bool PipeClientWin::write(const std::string_view& buf) {
-        ubassert(buf.size() <= std::numeric_limits<DWORD>::max());
-
         if (pipe_ == INVALID_HANDLE_VALUE) {
             return false;
         }
@@ -120,7 +119,7 @@ namespace win {
         BOOL fSuccess = ::WriteFile(
             pipe_,                  // pipe handle
             buf.data(),             // message
-            DWORD(buf.size()),             // message length
+            utl::num_cast<DWORD>(buf.size()),             // message length
             &cbWritten,             // bytes written
             nullptr);               // not overlapped
 

@@ -131,9 +131,6 @@ namespace win {
         void* pixel_data, size_t size, size_t stride,
         const ImageOptions& options)
     {
-        ubassert(size <= std::numeric_limits<UINT>::max());
-        ubassert(stride <= std::numeric_limits<UINT>::max());
-
         if (width <= 0 || height <= 0) {
             ubassert(false);
             return nullptr;
@@ -144,7 +141,7 @@ namespace win {
         utl::win::ComPtr<IWICBitmap> bmp;
         HRESULT hr = wic_factory_->CreateBitmapFromMemory(
             width, height, format,
-            UINT(stride), UINT(size), static_cast<BYTE*>(pixel_data),
+            utl::num_cast<UINT>(stride), utl::num_cast<UINT>(size), static_cast<BYTE*>(pixel_data),
             &bmp);
         if (FAILED(hr)) {
             ubassert(false);
@@ -245,9 +242,7 @@ namespace win {
         const std::u16string_view& file_name)
     {
         if (width <= 0 || height <= 0 ||
-            !data || byte_count == 0 || stride == 0 ||
-            byte_count > std::numeric_limits<UINT>::max() ||
-            stride > std::numeric_limits<UINT>::max())
+            !data || byte_count == 0 || stride == 0)
         {
             ubassert(false);
             return false;
@@ -306,7 +301,10 @@ namespace win {
         }
 
         hr = frame->WritePixels(
-            height, UINT(stride), UINT(byte_count), static_cast<BYTE*>(data));
+            height,
+            utl::num_cast<UINT>(stride),
+            utl::num_cast<UINT>(byte_count),
+            static_cast<BYTE*>(data));
         if (FAILED(hr)) {
             return false;
         }

@@ -65,7 +65,7 @@ namespace ukive {
 
                 int c_width, c_height;
                 parent_->measureItem(item, child_width, &c_width, &c_height);
-                row_height = std::max(c_height, row_height);
+                row_height = (std::max)(c_height, row_height);
 
                 ++view_index;
             }
@@ -135,7 +135,7 @@ namespace ukive {
                     item,
                     columns_[col].getLeft(), bounds.top + total_height - offset,
                     width, height);
-                row_height = std::max(height, row_height);
+                row_height = (std::max)(height, row_height);
 
                 ++view_index;
             }
@@ -222,7 +222,7 @@ namespace ukive {
                     item,
                     columns_[col].getLeft(), bounds.top + total_height - offset,
                     c_width, c_height);
-                row_height = std::max(c_height, row_height);
+                row_height = (std::max)(c_height, row_height);
 
                 ++view_index;
             }
@@ -305,7 +305,7 @@ namespace ukive {
                 int c_width, c_height;
                 parent_->measureItem(new_item, child_max_width, &c_width, &c_height);
 
-                max_height = std::max(max_height, c_height);
+                max_height = (std::max)(max_height, c_height);
                 tmps.push_back(new_item);
 
                 --tmp_pos;
@@ -372,7 +372,7 @@ namespace ukive {
                 if (prev_index > 0) {
                     --prev_index;
                     for (size_t i = 0; i < col_count_; ++i) {
-                        prev_bottom = std::max(prev_bottom, columns_[i].getItem(prev_index)->getMgdBottom());
+                        prev_bottom = (std::max)(prev_bottom, columns_[i].getItem(prev_index)->getMgdBottom());
                     }
                 }
             }
@@ -453,7 +453,7 @@ namespace ukive {
             for (size_t j = 0; j < col_count_; ++j) {
                 auto item = columns_[j].getItem(i);
                 if (item) {
-                    row_height = std::max(row_height, item->getMgdHeight());
+                    row_height = (std::max)(row_height, item->getMgdHeight());
                 }
             }
             row_heights.push_back(row_height);
@@ -577,7 +577,7 @@ namespace ukive {
 
     void GridListLayouter::recycleTopChildren(int dy) {
         size_t min_col = 0;
-        size_t min_data_pos = std::numeric_limits<size_t>::max();
+        size_t min_data_pos = (std::numeric_limits<size_t>::max)();
         for (size_t i = 0; i < col_count_; ++i) {
             auto item = columns_[i].getFirstVisible(dy);
             if (item && item->data_pos < min_data_pos) {

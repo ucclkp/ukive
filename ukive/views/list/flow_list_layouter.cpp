@@ -40,7 +40,7 @@ namespace ukive {
 
         for (auto& r : cur_records_) {
             if (!r.is_null) {
-                r.cur_offset = std::max(r.cur_offset, 0);
+                r.cur_offset = (std::max)(r.cur_offset, 0);
             }
         }
 
@@ -118,7 +118,7 @@ namespace ukive {
 
         for (auto& r : cur_records_) {
             if (!r.is_null) {
-                r.cur_offset = std::max(r.cur_offset, 0);
+                r.cur_offset = (std::max)(r.cur_offset, 0);
             }
         }
 
@@ -446,13 +446,13 @@ namespace ukive {
 
     size_t FlowListLayouter::calPreferredCurPos() const {
         size_t index = 0;
-        size_t pos = std::numeric_limits<size_t>::max();
+        size_t pos = (std::numeric_limits<size_t>::max)();
         for (const auto& r : cur_records_) {
             if (r.is_null) {
                 ++index;
                 continue;
             }
-            pos = std::min(pos, r.cur_row * col_count_ + index);
+            pos = (std::min)(pos, r.cur_row * col_count_ + index);
             if (pos == 0) {
                 break;
             }

@@ -75,9 +75,11 @@ namespace mac {
         native_ = [[UKNSWindow alloc] initWithContentRect:NSMakeRect(x_, y_, width_, height_)
                                       styleMask:mask
                                       backing:NSBackingStoreBuffered defer:NO];
+
+        std::basic_string<unichar> u_title(title_.begin(), title_.end());
         NSString* str = [[NSString alloc] initWithCharacters
-                         :reinterpret_cast<const unichar*>(title_.c_str())
-                         length:title_.size()];
+                         :u_title.c_str()
+                         length:u_title.size()];
         [native_ setTitle:str];
         [native_ setDelegate:native_];
         [native_ setReleasedWhenClosed:YES];
@@ -317,8 +319,9 @@ namespace mac {
     void WindowImplMac::setTitle(const std::u16string_view& title) {
         title_ = title;
         if (native_) {
+            std::basic_string<unichar> u_title(title_.begin(), title_.end());
             NSString* str = [[NSString alloc] initWithCharacters
-                             :reinterpret_cast<const unichar*>(title_.c_str()) length:title_.size()];
+                             :u_title.c_str() length:u_title.size()];
             [native_ setTitle:str];
             [str release];
         }

@@ -46,8 +46,8 @@ namespace ukive {
     }
 
     bool rangeIntersect(const Range& r1, const DWRITE_TEXT_RANGE& r2) {
-        auto _pos = std::max<size_t>(r1.pos, r2.startPosition);
-        auto _end = std::min<size_t>(r1.end(), r2.startPosition + r2.length);
+        auto _pos = (std::max<size_t>)(r1.pos, r2.startPosition);
+        auto _end = (std::min<size_t>)(r1.end(), r2.startPosition + r2.length);
         return _end > _pos;
     }
 
@@ -362,16 +362,13 @@ namespace win {
     bool DWTextLayout::hitTestTextRange(
         size_t pos, size_t len, float org_x, float org_y, std::vector<HitTestInfo>* info)
     {
-        ubassert(pos <= std::numeric_limits<UINT32>::max());
-        ubassert(len <= std::numeric_limits<UINT32>::max());
-
         UINT32 count;
         HRESULT hr = text_layout_->HitTestTextRange(
-            UINT32(pos), UINT32(len), org_x, org_y, nullptr, 0, &count);
+            utl::num_cast<UINT32>(pos), utl::num_cast<UINT32>(len), org_x, org_y, nullptr, 0, &count);
         if (hr == E_NOT_SUFFICIENT_BUFFER && count > 0) {
             std::unique_ptr<DWRITE_HIT_TEST_METRICS[]> metrics(new DWRITE_HIT_TEST_METRICS[count]);
             hr = text_layout_->HitTestTextRange(
-                UINT32(pos), UINT32(len), org_x, org_y, metrics.get(), count, &count);
+                utl::num_cast<UINT32>(pos), utl::num_cast<UINT32>(len), org_x, org_y, metrics.get(), count, &count);
             if (SUCCEEDED(hr)) {
                 for (uint32_t i = 0; i < count; ++i) {
                     HitTestInfo ht;
@@ -394,11 +391,10 @@ namespace win {
     bool DWTextLayout::hitTestTextPos(
         size_t pos, bool is_trailing, PointF* pt, HitTestInfo* info)
     {
-        ubassert(pos <= std::numeric_limits<UINT32>::max());
-
         FLOAT x, y;
         DWRITE_HIT_TEST_METRICS metrics;
-        HRESULT hr = text_layout_->HitTestTextPosition(UINT32(pos), is_trailing ? TRUE : FALSE, &x, &y, &metrics);
+        HRESULT hr = text_layout_->HitTestTextPosition(
+            utl::num_cast<UINT32>(pos), is_trailing ? TRUE : FALSE, &x, &y, &metrics);
         if (FAILED(hr)) {
             ubassert(false);
             return false;
@@ -428,7 +424,7 @@ namespace win {
         std::vector<LineMetrics> metrics;
         if (getLineMetrics(&metrics)) {
             for (const auto& m : metrics) {
-                max_height = std::max(m.height, max_height);
+                max_height = (std::max)(m.height, max_height);
             }
         }
         return max_height;

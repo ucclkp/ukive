@@ -4,13 +4,15 @@
 // This program is licensed under GPLv3 license that can be
 // found in the LICENSE file.
 
-#ifndef UKIVE_GRAPHICS_3D_MATRIX_H_
-#define UKIVE_GRAPHICS_3D_MATRIX_H_
+#ifndef UKIVE_GRAPHICS_3D_MATRIX_HPP_
+#define UKIVE_GRAPHICS_3D_MATRIX_HPP_
+
+#include <limits>
+
+#include "utils/numbers.hpp"
 
 #include "point.hpp"
 #include "vector.hpp"
-
-#include <limits>
 
 
 namespace ukv3d {
@@ -133,9 +135,7 @@ namespace ukv3d {
          */
         bool inverse(Matrix3x3T* out) const {
             auto sigma = m11*(m22*m33 - m23*m32) - m12*(m21*m33 - m23*m31) + m13*(m21*m32 - m22*m31);
-            if (std::abs(sigma) <= std::numeric_limits<Ty>::epsilon() * std::abs(sigma) ||
-                std::abs(sigma) < std::numeric_limits<Ty>::min())
-            {
+            if (utl::is_num_zero(sigma)) {
                 return false;
             }
 
@@ -393,9 +393,7 @@ namespace ukv3d {
                 - m12*m21*(m33*m44 - m34*m43) + m12*m23*(m31*m44 - m34*m41) - m12*m24*(m31*m43 - m33*m41)
                 + m13*m21*(m32*m44 - m34*m42) - m13*m22*(m31*m44 - m34*m41) + m13*m24*(m31*m42 - m32*m41)
                 - m14*m21*(m32*m43 - m33*m42) + m14*m22*(m31*m43 - m33*m41) - m14*m23*(m31*m42 - m32*m41);
-            if (std::abs(sigma) <= std::numeric_limits<Ty>::epsilon() * std::abs(sigma) ||
-                std::abs(sigma) < std::numeric_limits<Ty>::min())
-            {
+            if (utl::is_num_zero(sigma)) {
                 return false;
             }
 
@@ -661,4 +659,4 @@ namespace ukv3d {
 
 }
 
-#endif  // UKIVE_GRAPHICS_3D_MATRIX_H_
+#endif  // UKIVE_GRAPHICS_3D_MATRIX_HPP_

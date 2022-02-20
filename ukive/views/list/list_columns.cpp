@@ -91,11 +91,11 @@ namespace ukive {
     int Column::getFinalScroll(int dy) const {
         if (dy > 0) {
             if (top_ - getItemsTop() < dy) {
-                dy = std::max(top_ - getItemsTop(), 0);
+                dy = (std::max)(top_ - getItemsTop(), 0);
             }
         } else if (dy < 0) {
             if (bottom_ - getItemsBottom() > dy) {
-                dy = std::min(bottom_ - getItemsBottom(), 0);
+                dy = (std::min)(bottom_ - getItemsBottom(), 0);
             }
         }
         return dy;

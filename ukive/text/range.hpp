@@ -22,8 +22,8 @@ namespace ukive {
             : pos(pos), length(length) {}
 
         void same(const RangeT& rhs) {
-            auto _pos = std::max(pos, rhs.pos);
-            auto _end = std::min(end(), rhs.end());
+            auto _pos = (std::max)(pos, rhs.pos);
+            auto _end = (std::min)(end(), rhs.end());
             if (_end < _pos) {
                 pos = 0;
                 length = 0;
@@ -43,8 +43,8 @@ namespace ukive {
         }
 
         bool intersect(const RangeT& rhs) const {
-            auto _pos = std::max(pos, rhs.pos);
-            auto _end = std::min(end(), rhs.end());
+            auto _pos = (std::max)(pos, rhs.pos);
+            auto _end = (std::min)(end(), rhs.end());
             return _end > _pos;
         }
 

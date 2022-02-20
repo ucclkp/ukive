@@ -65,7 +65,7 @@ namespace ukive {
     }
 
     void SeekBar::setProgress(float progress, bool notify) {
-        float prog = std::min(maximum_, progress);
+        float prog = (std::min)(maximum_, progress);
         float percent = prog / maximum_;
         if (percent != seek_percent_) {
             seek_percent_ = percent;
@@ -124,8 +124,8 @@ namespace ukive {
     void SeekBar::computePercent(int x, int y) {
         float mouse_in_track = x - getPadding().start - thumb_max_diameter_ / 2.f;
         int track_width = getWidth() - thumb_max_diameter_ - getPadding().hori();
-        seek_percent_ = std::max(0.f, mouse_in_track / track_width);
-        seek_percent_ = std::min(1.f, seek_percent_);
+        seek_percent_ = (std::max)(0.f, mouse_in_track / track_width);
+        seek_percent_ = (std::min)(1.f, seek_percent_);
 
         if (listener_) {
             listener_->onSeekValueChanged(this, seek_percent_*maximum_);
@@ -184,7 +184,7 @@ namespace ukive {
 
         switch (info.height.mode) {
         case SizeInfo::CONTENT:
-            final_height = std::min(info.height.val, thumb_max_diameter_ + getPadding().vert());
+            final_height = (std::min)(info.height.val, thumb_max_diameter_ + getPadding().vert());
             break;
 
         case SizeInfo::FREEDOM:

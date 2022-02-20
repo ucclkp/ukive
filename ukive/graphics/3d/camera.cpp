@@ -80,8 +80,8 @@ namespace ukv3d {
     Camera::~Camera() {}
 
     void Camera::resize(int width, int height) {
-        width_ = std::max(width, 1);
-        height_ = std::max(height, 1);
+        width_ = (std::max)(width, 1);
+        height_ = (std::max)(height, 1);
 
         {
             double fov_height = 2.0 * NEAR_PLANE * std::tan(PIDIV4 / 2.0);

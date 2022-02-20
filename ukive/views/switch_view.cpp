@@ -74,8 +74,8 @@ namespace ukive {
     }
 
     Size SwitchView::onDetermineSize(const SizeInfo& info) {
-        int final_w = def_track_width_ + std::max(def_thumb_radius_ * 2 - def_track_height_, 0);
-        int final_h = std::max(def_track_height_, def_thumb_radius_ * 2);
+        int final_w = def_track_width_ + (std::max)(def_thumb_radius_ * 2 - def_track_height_, 0);
+        int final_h = (std::max)(def_track_height_, def_thumb_radius_ * 2);
         final_w += getPadding().hori();
         final_h += getPadding().vert();
 
@@ -95,7 +95,7 @@ namespace ukive {
                 kNormalTrackColor, kCheckedTrackColor,
                 cur_value, &target_color);
 
-            int x = std::max(def_thumb_radius_ - def_track_height_ / 2, 0);
+            int x = (std::max)(def_thumb_radius_ - def_track_height_ / 2, 0);
             canvas->fillRoundRect(
                 RectF(float(x), float(x), float(def_track_width_), float(def_track_height_)),
                 float(def_track_height_ / 2), target_color);
@@ -103,7 +103,7 @@ namespace ukive {
 
         // 滑块
         {
-            int cx = std::max(def_thumb_radius_, def_track_height_ / 2);
+            int cx = (std::max)(def_thumb_radius_, def_track_height_ / 2);
             float target_cx = float(cx + cur_pos_);
             Color target_color;
             interpolateColor(
@@ -145,7 +145,7 @@ namespace ukive {
                 if (is_moved_) {
                     auto range = def_track_width_ - def_track_height_;
                     auto cur = start_pos_ + distance;
-                    cur_pos_ = std::min(std::max(0, cur), range);
+                    cur_pos_ = (std::min)((std::max)(0, cur), range);
                     requestDraw();
                 }
             }

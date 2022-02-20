@@ -66,7 +66,7 @@ namespace ukive {
         super::onDraw(canvas);
 
         auto bounds = getContentBounds();
-        int length = std::min(getContext().dp2pxi(20), bounds.height());
+        int length = (std::min)(getContext().dp2pxi(20), bounds.height());
 
         float hp_offset = 0.f;
         int stroke_width = getContext().dp2pxi(2.f);
@@ -99,10 +99,10 @@ namespace ukive {
             auto vec2 = line2e - line2s;
 
             canvas->drawLine(
-                line1s, line1s + vec1 * (std::min(value, 0.5f) * 2),
+                line1s, line1s + vec1 * ((std::min)(value, 0.5f) * 2),
                 std::floor(getContext().dp2px(2.5f)), Color::Blue800);
             canvas->drawLine(
-                line2s, line2s + vec2 * (std::max(value - 0.5f, 0.f) * 2),
+                line2s, line2s + vec2 * ((std::max)(value - 0.5f, 0.f) * 2),
                 std::floor(getContext().dp2px(2.5f)), Color::Blue800);
         }
     }

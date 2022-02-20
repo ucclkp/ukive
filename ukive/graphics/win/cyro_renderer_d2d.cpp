@@ -7,6 +7,7 @@
 #include "ukive/graphics/win/cyro_renderer_d2d.h"
 
 #include "utils/log.h"
+#include "utils/numbers.hpp"
 
 #include "ukive/app/application.h"
 #include "ukive/text/win/dw_text_layout.h"
@@ -175,12 +176,11 @@ namespace win {
         int width, int height,
         const void* pixel_data, size_t size, size_t stride, const ImageOptions& options)
     {
-        ubassert(stride <= std::numeric_limits<UINT32>::max());
-
         auto prop = mapBitmapProps(options);
 
         utl::win::ComPtr<ID2D1Bitmap> d2d_bmp;
-        HRESULT hr = rt_->CreateBitmap(D2D1::SizeU(width, height), pixel_data, UINT32(stride), prop, &d2d_bmp);
+        HRESULT hr = rt_->CreateBitmap(
+            D2D1::SizeU(width, height), pixel_data, utl::num_cast<UINT32>(stride), prop, &d2d_bmp);
         if (FAILED(hr)) {
             ubassert(false);
             return nullptr;

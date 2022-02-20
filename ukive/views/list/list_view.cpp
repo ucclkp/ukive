@@ -52,16 +52,16 @@ namespace ukive {
     }
 
     Size ListView::onDetermineSize(const SizeInfo& info) {
-        int width = std::max(info.width.val, getMinimumSize().width);
-        int height = std::max(info.height.val, getMinimumSize().height);
+        int width = (std::max)(info.width.val, getMinimumSize().width);
+        int height = (std::max)(info.height.val, getMinimumSize().height);
 
         scroller_.finish();
 
         if (layouter_) {
             layouter_->onMeasureAtPosition(
                 true,
-                std::max(0, width - getPadding().hori()),
-                std::max(0, height - getPadding().vert()));
+                (std::max)(0, width - getPadding().hori()),
+                (std::max)(0, height - getPadding().vert()));
         }
 
         return Size(width, height);
@@ -507,8 +507,8 @@ namespace ukive {
         int total_height = prev + next;
 
         float percent = static_cast<float>(prev) / (total_height - getHeight());
-        percent = std::max(0.f, percent);
-        percent = std::min(1.f, percent);
+        percent = (std::max)(0.f, percent);
+        percent = (std::min)(1.f, percent);
 
         scroll_bar_->update(total_height, percent);
     }

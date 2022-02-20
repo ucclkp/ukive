@@ -108,7 +108,7 @@ namespace ukive {
         super::onDraw(canvas);
 
         auto bounds = getContentBounds();
-        int length = std::min(getContext().dp2pxi(20), bounds.height());
+        int length = (std::min)(getContext().dp2pxi(20), bounds.height());
 
         int stroke_width = getContext().dp2pxi(2.f);
 

@@ -135,13 +135,13 @@ namespace ukive {
 
         switch (width.mode) {
         case SizeInfo::CONTENT: {
-            text_layout_->setMaxWidth(float(std::max(width.val - hori_padding, 0)));
+            text_layout_->setMaxWidth(float((std::max)(width.val - hori_padding, 0)));
 
-            final_width = std::min(getTextWidth() + blink_thickness + hori_padding, width.val);
-            final_width = std::max(final_width, getMinimumSize().width);
+            final_width = (std::min)(getTextWidth() + blink_thickness + hori_padding, width.val);
+            final_width = (std::max)(final_width, getMinimumSize().width);
 
             if (width.val != final_width) {
-                text_layout_->setMaxWidth(float(std::max(final_width - hori_padding, 0)));
+                text_layout_->setMaxWidth(float((std::max)(final_width - hori_padding, 0)));
             }
             break;
         }
@@ -151,9 +151,9 @@ namespace ukive {
             text_layout_->setTextWrapping(TextLayout::TextWrapping::NONE);
 
             final_width = getTextWidth() + blink_thickness + hori_padding;
-            final_width = std::max(final_width, getMinimumSize().width);
+            final_width = (std::max)(final_width, getMinimumSize().width);
 
-            text_layout_->setMaxWidth(float(std::max(final_width - hori_padding, 0)));
+            text_layout_->setMaxWidth(float((std::max)(final_width - hori_padding, 0)));
 
             text_layout_->setTextWrapping(
                 is_auto_wrap_ ? TextLayout::TextWrapping::WRAP : TextLayout::TextWrapping::NONE);
@@ -161,7 +161,7 @@ namespace ukive {
 
         case SizeInfo::DEFINED:
         default:
-            text_layout_->setMaxWidth(float(std::max(width.val - hori_padding, 0)));
+            text_layout_->setMaxWidth(float((std::max)(width.val - hori_padding, 0)));
             final_width = width.val;
             break;
         }
@@ -175,13 +175,13 @@ namespace ukive {
             - getPadding().vert()
             - space_.top - space_.bottom;
 
-        return std::max(0, text_height - content_height);
+        return (std::max)(0, text_height - content_height);
     }
 
     int TextView::computeHorizontalScrollRange() {
         int content_width = getWidth()
             - getPadding().hori() - space_.left - space_.right;
-        return std::max(0, getTextWidth() - content_width);
+        return (std::max)(0, getTextWidth() - content_width);
     }
 
     void TextView::computeTextOffsetAtViewTop() {
@@ -221,9 +221,9 @@ namespace ukive {
         int range = computeVerticalScrollRange();
         if (range > 0) {
             if (dy < 0) {
-                final_y = std::max(0, getScrollY() + dy);
+                final_y = (std::max)(0, getScrollY() + dy);
             } else if (dy > 0) {
-                final_y = std::min(range, getScrollY() + dy);
+                final_y = (std::min)(range, getScrollY() + dy);
             }
         }
 
@@ -235,9 +235,9 @@ namespace ukive {
         int range = computeHorizontalScrollRange();
         if (range > 0) {
             if (dx < 0) {
-                final_x = std::max(0, getScrollX() + dx);
+                final_x = (std::max)(0, getScrollX() + dx);
             } else if (dx > 0) {
-                final_x = std::min(range, getScrollX() + dx);
+                final_x = (std::min)(range, getScrollX() + dx);
             }
         }
 
@@ -300,7 +300,7 @@ namespace ukive {
 
             //检查是否超出屏幕。
             int max_scroll_offset = computeVerticalScrollRange() - getScrollY();
-            int offset_y = std::min(max_scroll_offset, scroll_offset);
+            int offset_y = (std::min)(max_scroll_offset, scroll_offset);
             if (offset_y != 0) {
                 scrollBy(0, offset_y);
                 scrolled = true;
@@ -358,8 +358,8 @@ namespace ukive {
             //检查是否超出屏幕。
             int min_scroll_offset = 0 - getScrollX();
             int max_scroll_offset = computeHorizontalScrollRange() - getScrollX();
-            int offset_x = std::min(max_scroll_offset, scroll_offset);
-            offset_x = std::max(min_scroll_offset, offset_x);
+            int offset_x = (std::min)(max_scroll_offset, scroll_offset);
+            offset_x = (std::max)(min_scroll_offset, offset_x);
             if (offset_x != 0) {
                 scrollBy(offset_x, 0);
                 scrolled = true;
@@ -753,9 +753,9 @@ namespace ukive {
         switch (info.height.mode) {
         case SizeInfo::CONTENT:
         {
-            final_height = std::min(getTextHeight() + vert_padding, info.height.val);
-            final_height = std::max(final_height, getMinimumSize().height);
-            text_layout_->setMaxHeight(float(std::max(final_height - vert_padding, 0)));
+            final_height = (std::min)(getTextHeight() + vert_padding, info.height.val);
+            final_height = (std::max)(final_height, getMinimumSize().height);
+            text_layout_->setMaxHeight(float((std::max)(final_height - vert_padding, 0)));
             break;
         }
 
@@ -763,14 +763,14 @@ namespace ukive {
             text_layout_->setMaxHeight(0);
 
             final_height = getTextHeight() + vert_padding;
-            final_height = std::max(final_height, getMinimumSize().height);
+            final_height = (std::max)(final_height, getMinimumSize().height);
 
-            text_layout_->setMaxHeight(float(std::max(final_height - vert_padding, 0)));
+            text_layout_->setMaxHeight(float((std::max)(final_height - vert_padding, 0)));
             break;
 
         case SizeInfo::DEFINED:
         default:
-            text_layout_->setMaxHeight(float(std::max(info.height.val - vert_padding, 0)));
+            text_layout_->setMaxHeight(float((std::max)(info.height.val - vert_padding, 0)));
             final_height = info.height.val;
             break;
         }

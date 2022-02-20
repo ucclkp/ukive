@@ -101,17 +101,17 @@ namespace ukive {
                 right = rhs.right;
                 bottom = rhs.bottom;
             } else {
-                left = std::min(left, rhs.left);
-                top = std::min(top, rhs.top);
-                right = std::max(right, rhs.right);
-                bottom = std::max(bottom, rhs.bottom);
+                left = (std::min)(left, rhs.left);
+                top = (std::min)(top, rhs.top);
+                right = (std::max)(right, rhs.right);
+                bottom = (std::max)(bottom, rhs.bottom);
             }
         }
         void same(const RectT& rhs) {
-            left = std::max(left, rhs.left);
-            top = std::max(top, rhs.top);
-            right = std::min(right, rhs.right);
-            bottom = std::min(bottom, rhs.bottom);
+            left = (std::max)(left, rhs.left);
+            top = (std::max)(top, rhs.top);
+            right = (std::min)(right, rhs.right);
+            bottom = (std::min)(bottom, rhs.bottom);
 
             if (empty()) {
                 left = top = right = bottom = 0;

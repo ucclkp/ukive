@@ -281,7 +281,7 @@ namespace mac {
                 [text_storage_ addAttribute:NSParagraphStyleAttributeName value:style range:range];
                 break;
             case LineSpacing::PROPORTIONAL:
-                [style setLineHeightMultiple:std::max(spacing - 1, 0.f)];
+                [style setLineHeightMultiple:(std::max)(spacing - 1, 0.f)];
                 [text_storage_ addAttribute:NSParagraphStyleAttributeName value:style range:range];
                 break;
             default:
