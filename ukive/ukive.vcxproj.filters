@@ -1539,6 +1539,9 @@
     <ClInclude Include="graphics\colors\icc\types\icc_type_s15f16_array.h">
       <Filter>graphics\colors\icc\types</Filter>
     </ClInclude>
+    <ClInclude Include="views\combo_box_selected_listener.h">
+      <Filter>views</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="window">

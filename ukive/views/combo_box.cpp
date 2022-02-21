@@ -8,6 +8,7 @@
 
 #include <algorithm>
 
+#include "utils/numbers.hpp"
 #include "utils/weak_bind.hpp"
 
 #include "ukive/animation/animation_director.h"
@@ -16,6 +17,7 @@
 #include "ukive/elements/shape_element.h"
 #include "ukive/event/input_event.h"
 #include "ukive/views/button.h"
+#include "ukive/views/combo_box_selected_listener.h"
 #include "ukive/views/list/linear_list_layouter.h"
 #include "ukive/views/list/list_view.h"
 #include "ukive/views/list/list_item.h"
@@ -42,9 +44,11 @@ namespace ukive {
     }
 
     void ComboBox::initViews() {
+        default_title_ = u"ComboBox";
+
         // TextView
         text_view_ = new TextView(getContext());
-        text_view_->setText(u"ComboBox");
+        text_view_->setText(default_title_);
         text_view_->setLayoutSize(LS_AUTO, LS_AUTO);
         addView(text_view_);
 
@@ -79,6 +83,87 @@ namespace ukive {
     void ComboBox::addItem(const std::u16string_view& title) {
         data_.push_back(std::u16string(title));
         notifyDataChanged();
+    }
+
+    void ComboBox::addItem(const std::u16string_view& title, size_t index) {
+        if (index > data_.size()) {
+            index = data_.size();
+        }
+        if (selected_index_ >= 0 &&
+            index <= utl::num_cast<size_t>(selected_index_))
+        {
+            ++selected_index_;
+        }
+
+        data_.insert(data_.begin() + index, std::u16string(title));
+        notifyDataChanged();
+    }
+
+    void ComboBox::removeItem(size_t index) {
+        if (index >= data_.size()) {
+            return;
+        }
+        if (selected_index_ >= 0) {
+            if (utl::num_cast<size_t>(selected_index_) == index) {
+                selected_index_ = -1;
+                text_view_->setText(default_title_);
+            } else if (index < utl::num_cast<size_t>(selected_index_)) {
+                --selected_index_;
+            }
+        }
+
+        data_.erase(data_.begin() + index);
+        notifyDataChanged();
+    }
+
+    void ComboBox::clearItems() {
+        data_.clear();
+        selected_index_ = -1;
+        text_view_->setText(default_title_);
+        notifyDataChanged();
+    }
+
+    void ComboBox::setDefaultItem(const std::u16string_view& title) {
+        default_title_ = title;
+        if (selected_index_ < 0) {
+            text_view_->setText(default_title_);
+        }
+    }
+
+    void ComboBox::setDropdownMinWidth(int min_width) {
+        if (min_dropdown_width_ != min_width) {
+            min_dropdown_width_ = min_width;
+            requestLayout();
+        }
+    }
+
+    void ComboBox::setListener(ComboBoxSelectedListener* l) {
+        listener_ = l;
+    }
+
+    void ComboBox::setSelectedIndex(int index) {
+        if (index < 0) {
+            if (selected_index_ < 0) {
+                return;
+            }
+        } else if (index == selected_index_) {
+            return;
+        }
+
+        if (index < 0 || data_.empty()) {
+            selected_index_ = -1;
+            text_view_->setText(default_title_);
+        } else {
+            selected_index_ = index;
+            if (utl::num_cast<size_t>(selected_index_) >= data_.size()) {
+                selected_index_ = utl::num_cast<int>(data_.size()) - 1u;
+            }
+            text_view_->setText(data_[selected_index_]);
+        }
+    }
+
+    int ComboBox::getSelectedIndex() const {
+        return selected_index_;
     }
 
     void ComboBox::determineViewsSize(const SizeInfo& info) {
@@ -271,7 +356,12 @@ namespace ukive {
     void ComboBox::onItemClicked(ListView* list_view, ListItem* item, View* v) {
         if (item->data_pos < data_.size()) {
             text_view_->setText(data_[item->data_pos]);
+            selected_index_ = utl::num_cast<int>(item->data_pos);
             close();
+
+            if (listener_) {
+                listener_->onComboItemSelected(this);
+            }
         }
     }
 

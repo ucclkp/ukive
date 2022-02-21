@@ -22,6 +22,7 @@ namespace ukive {
 
     class TextView;
     class DropdownButton;
+    class ComboBoxSelectedListener;
 
     class ComboBox :
         public LayoutView,
@@ -36,6 +37,16 @@ namespace ukive {
         ~ComboBox();
 
         void addItem(const std::u16string_view& title);
+        void addItem(const std::u16string_view& title, size_t index);
+        void removeItem(size_t index);
+        void clearItems();
+
+        void setSelectedIndex(int index);
+        void setDefaultItem(const std::u16string_view& title);
+        void setDropdownMinWidth(int min_width);
+        void setListener(ComboBoxSelectedListener* l);
+
+        int getSelectedIndex() const;
 
     protected:
         class TextViewListItem : public ListItem {
@@ -76,11 +87,15 @@ namespace ukive {
 
         TextView* text_view_;
         DropdownButton* button_;
+        ListView* list_view_ = nullptr;
+
+        int selected_index_ = -1;
         std::vector<std::u16string> data_;
+        std::u16string default_title_;
 
         bool is_finished_ = true;
         int min_dropdown_width_ = 0;
-        ListView* list_view_ = nullptr;
+        ComboBoxSelectedListener* listener_ = nullptr;
         std::shared_ptr<InnerWindow> inner_window_;
         utl::WeakRefNest<ComboBox> weak_ref_nest_;
     };

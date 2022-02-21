@@ -409,6 +409,7 @@
     <ClInclude Include="views\check_listener.h" />
     <ClInclude Include="views\click_listener.h" />
     <ClInclude Include="views\combo_box.h" />
+    <ClInclude Include="views\combo_box_selected_listener.h" />
     <ClInclude Include="views\layout\shade_layout.h" />
     <ClInclude Include="views\layout_info\gravity.h" />
     <ClInclude Include="views\layout_info\layout_info.h" />
