@@ -17,7 +17,8 @@ namespace ukive {
     public:
         LinearListLayouter();
 
-        void onMeasureAtPosition(bool cur, int width, int height) override;
+        Size onDetermineSize(
+            int cw, int ch, SizeInfo::Mode wm, SizeInfo::Mode hm) override;
         int onLayoutAtPosition(bool cur) override;
         int onDataChangedAtPosition(size_t pos, int offset, bool cur) override;
         int onSmoothScrollToPosition(size_t pos, int offset) override;
@@ -47,8 +48,8 @@ namespace ukive {
 
         Column column_;
 
-        size_t cur_position_;
-        int cur_offset_in_position_;
+        size_t cur_pos_;
+        int cur_offset_;
     };
 
 }

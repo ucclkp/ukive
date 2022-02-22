@@ -27,6 +27,11 @@ namespace ukive {
         return typeid(*lp) == typeid(ShadeLayoutInfo);
     }
 
+    Size ShadeLayout::onDetermineSize(const SizeInfo& info) {
+        auto size = super::onDetermineSize(info);
+        return size;
+    }
+
     void ShadeLayout::onLayout(
         const Rect& new_bounds,
         const Rect& old_bounds)
@@ -35,17 +40,25 @@ namespace ukive {
             if (child->getVisibility() != VANISHED) {
                 auto& size = child->getDeterminedSize();
                 auto li = static_cast<ShadeLayoutInfo*>(child->getExtraLayoutInfo());
-                if (li->gravity == GV_NONE) {
-                    int child_left = getPadding().start + child->getLayoutMargin().start;
-                    int child_top = getPadding().top + child->getLayoutMargin().top;
+                auto cp = getPadding() + child->getLayoutMargin();
 
+                if (li->gravity == GV_NONE) {
                     child->layout(
-                        Rect(child_left, child_top, size.width, size.height));
+                        Rect(cp.start, cp.top, size.width, size.height));
                 } else {
+                    auto root_bounds = getBoundsInRoot();
+                    root_bounds.insets(cp);
+
+                    auto anchor_bounds = li->anchor;
+                    anchor_bounds.same(root_bounds);
+
                     Rect bounds;
                     calculateGravityBounds(
-                        getBoundsInRoot(), li->is_max_visible, li->is_discretized,
-                        li->anchor, li->gravity, size, &bounds, &li->adj_gravity);
+                        root_bounds, li->is_max_visible, li->is_discretized,
+                        anchor_bounds, li->gravity, size, &bounds, &li->adj_gravity);
+
+                    bounds.same(root_bounds);
+
                     // li->anchor 是 RootLayout 中的坐标，计算出的 bounds 也一样。
                     // 需要转换到 ShadeLayout 中的坐标。
                     bounds.offset(-getLeft(), -getTop());
@@ -53,6 +66,15 @@ namespace ukive {
                 }
             }
         }
+    }
+
+    bool ShadeLayout::hitChildren(int x, int y) {
+        for (auto c : *this) {
+            if (c->getBounds().hit(x, y)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

@@ -17,6 +17,7 @@ namespace ukive {
     class LayoutInfo;
     class SimpleLayout;
     class SequenceLayout;
+    class ShadeLayout;
     class TitleBar;
 
     class RootLayout : public NonClientLayout {
@@ -48,7 +49,7 @@ namespace ukive {
     private:
         typedef NonClientLayout super;
         TitleBar* title_bar_;
-        SimpleLayout* shade_layout_;
+        ShadeLayout* shade_layout_;
         SimpleLayout* content_layout_;
         View* content_view_;
 

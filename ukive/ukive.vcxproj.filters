@@ -682,6 +682,12 @@
     <ClCompile Include="graphics\colors\icc\types\icc_type_s15f16_array.cpp">
       <Filter>graphics\colors\icc\types</Filter>
     </ClCompile>
+    <ClCompile Include="views\list\list_handler_source.cpp">
+      <Filter>views\list</Filter>
+    </ClCompile>
+    <ClCompile Include="views\list\list_item_interact_helper.cpp">
+      <Filter>views\list</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">
@@ -1541,6 +1547,12 @@
     </ClInclude>
     <ClInclude Include="views\combo_box_selected_listener.h">
       <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="views\list\list_handler_source.h">
+      <Filter>views\list</Filter>
+    </ClInclude>
+    <ClInclude Include="views\list\list_item_interact_helper.h">
+      <Filter>views\list</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

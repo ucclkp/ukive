@@ -74,7 +74,7 @@ namespace ukive {
         inner_window_->setOutsideTouchable(false);
         inner_window_->setDismissByTouchOutside(true);
         inner_window_->setBackground(shape_element);
-        inner_window_->setHeight(getContext().dp2pxi(100));
+        inner_window_->setHeight(LS_AUTO);
         inner_window_->setEventListener(this);
 
         min_dropdown_width_ = getContext().dp2pxi(100);

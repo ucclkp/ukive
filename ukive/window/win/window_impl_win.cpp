@@ -1921,12 +1921,12 @@ namespace win {
             return nc_result;
         }
 
-        delegate_->onDestroyed();
-
         if (display_power_notify_) {
             ::UnregisterPowerSettingNotification(display_power_notify_);
             display_power_notify_ = nullptr;
         }
+
+        delegate_->onDestroyed();
         return 0;
     }
 

@@ -23,25 +23,35 @@ namespace ukive {
     {
     }
 
-    void GridListLayouter::onMeasureAtPosition(bool cur, int width, int height) {
+    Size GridListLayouter::onDetermineSize(
+        int cw, int ch, SizeInfo::Mode wm, SizeInfo::Mode hm)
+    {
+        int width = cw;
+        int height = ch;
+
         if (!isAvailable()) {
-            return;
+            return Size(
+                width, hm == SizeInfo::CONTENT ? 0 : height);
         }
 
-        size_t cur_row = cur ? cur_row_ : 0;
-        int offset = cur ? cur_offset_ : 0;
+        size_t cur_row = cur_row_;
+        int offset = cur_offset_;
         auto item_count = source_->onGetListDataCount(parent_);
 
-        columns_.setVertical(0, height);
         columns_.setHorizontal(0, width);
-
         parent_->freezeLayout();
 
         size_t row_index = 0;
         size_t view_index = 0;
         int total_height = 0;
         size_t cur_col = 0;
+        bool is_filled = false;
         for (auto row = cur_row; row * col_count_ < item_count; ++row) {
+            if (total_height >= height + offset) {
+                is_filled = true;
+                break;
+            }
+
             size_t col;
             int row_height = 0;
             for (col = 0; col < col_count_; ++col) {
@@ -61,31 +71,45 @@ namespace ukive {
                     }
                 }
 
-                int child_width = columns_[col].getWidth();
-
-                int c_width, c_height;
-                parent_->measureItem(item, child_width, &c_width, &c_height);
-                row_height = (std::max)(c_height, row_height);
+                int child_max_width = columns_[col].getWidth();
+                auto item_size = parent_->determineItemSize(item, child_max_width);
+                row_height = (std::max)(item_size.height, row_height);
 
                 ++view_index;
             }
 
-            if (col > 0 && col < col_count_) {
-                cur_col = col;
-            } else {
-                cur_col = 0;
-            }
-
             ++row_index;
             total_height += row_height;
+            // 一行填不满的话，记下到哪一列为止
+            cur_col = col < col_count_ ? col : 0;
+        }
 
-            if (total_height >= height + offset) {
-                break;
+        if (!is_filled && total_height < height) {
+            for (auto row = cur_row; row-- > 0;) {
+                int row_height = 0;
+                for (size_t col = 0; col < col_count_; ++col) {
+                    auto pos = row * col_count_ + col;
+                    auto item = parent_->makeNewItem(pos, col);
+                    columns_[col].addItem(item, 0);
+
+                    int child_max_width = columns_[col].getWidth();
+                    auto item_size = parent_->determineItemSize(item, child_max_width);
+                    row_height = (std::max)(item_size.height, row_height);
+                }
+
+                ++row_index;
+                total_height += row_height;
+                if (total_height >= height) {
+                    cur_row_ = row;
+                    cur_offset_ = total_height - height;
+                    break;
+                }
             }
         }
 
         for (size_t i = 0; i < col_count_; ++i) {
             auto start = row_index;
+            // 如果存在未填满的行，要把空位留出来
             if (cur_col > 0 && i >= cur_col) {
                 --start;
             }
@@ -98,6 +122,11 @@ namespace ukive {
         }
 
         parent_->unfreezeLayout();
+
+        if (hm == SizeInfo::CONTENT && total_height < height) {
+            return Size(width, total_height);
+        }
+        return Size(width, height);
     }
 
     int GridListLayouter::onLayoutAtPosition(bool cur) {
@@ -188,7 +217,7 @@ namespace ukive {
         }
 
         int diff = 0;
-        bool full_child_reached = false;
+        bool is_filled = false;
 
         parent_->freezeLayout();
 
@@ -216,29 +245,23 @@ namespace ukive {
 
                 int child_max_width = columns_[col].getWidth();
 
-                int c_width, c_height;
-                parent_->measureItem(item, child_max_width, &c_width, &c_height);
+                auto item_size = parent_->determineItemSize(item, child_max_width);
                 parent_->layoutItem(
                     item,
                     columns_[col].getLeft(), bounds.top + total_height - offset,
-                    c_width, c_height);
-                row_height = (std::max)(c_height, row_height);
+                    item_size.width, item_size.height);
+                row_height = (std::max)(item_size.height, row_height);
 
                 ++view_index;
             }
 
-            if (col > 0 && col < col_count_) {
-                cur_col = col;
-            } else {
-                cur_col = 0;
-            }
-
             ++row_index;
             total_height += row_height;
+            cur_col = col < col_count_ ? col : 0;
 
             diff = bounds.bottom - (bounds.top + total_height - offset);
             if (total_height >= bounds.height() + offset) {
-                full_child_reached = true;
+                is_filled = true;
                 break;
             }
         }
@@ -259,7 +282,7 @@ namespace ukive {
         parent_->unfreezeLayout();
 
         if (row_count > 0) {
-            if ((!full_child_reached && diff > 0) || (to_bottom && diff < 0)) {
+            if ((!is_filled && diff > 0) || (to_bottom && diff < 0)) {
                 return diff;
             }
         }
@@ -289,7 +312,6 @@ namespace ukive {
         int distance_y = getColsTop() + dy - bounds.top;
         while (cur_data_pos > 0 && !columns_.isTopFilled(dy)) {
             --cur_data_pos;
-            auto row = cur_data_pos / col_count_;
             auto col = cur_data_pos % col_count_;
 
             ubassert(col + 1 == col_count_);
@@ -302,10 +324,9 @@ namespace ukive {
                 int child_max_width = columns_[i].getWidth();
                 auto new_item = parent_->makeNewItem(tmp_pos, 0);
 
-                int c_width, c_height;
-                parent_->measureItem(new_item, child_max_width, &c_width, &c_height);
+                auto item_size = parent_->determineItemSize(new_item, child_max_width);
 
-                max_height = (std::max)(max_height, c_height);
+                max_height = (std::max)(max_height, item_size.height);
                 tmps.push_back(new_item);
 
                 --tmp_pos;
@@ -382,16 +403,15 @@ namespace ukive {
                 int child_max_width = columns_[i].getWidth();
                 auto new_item = parent_->makeNewItem(cur_data_pos, parent_->getChildCount());
 
-                int c_width, c_height;
-                parent_->measureItem(new_item, child_max_width, &c_width, &c_height);
+                auto item_size = parent_->determineItemSize(new_item, child_max_width);
                 parent_->layoutItem(
                     new_item,
                     columns_[i].getLeft(), prev_bottom,
-                    c_width, c_height);
+                    item_size.width, item_size.height);
                 columns_[i].addItem(new_item);
 
-                if (c_height > max_height) {
-                    max_height = c_height;
+                if (item_size.height > max_height) {
+                    max_height = item_size.height;
                 }
 
                 if (i + 1 < col_count_) {

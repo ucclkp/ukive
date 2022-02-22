@@ -7,7 +7,9 @@
 #ifndef UKIVE_VIEWS_LIST_LIST_LAYOUTER_H_
 #define UKIVE_VIEWS_LIST_LIST_LAYOUTER_H_
 
+#include "ukive/graphics/size.hpp"
 #include "ukive/views/list/list_source.h"
+#include "ukive/views/size_info.h"
 
 
 namespace ukive {
@@ -34,7 +36,8 @@ namespace ukive {
 
         void bind(ListView* parent, ListSource* source);
 
-        virtual void onMeasureAtPosition(bool cur, int width, int height) = 0;
+        virtual Size onDetermineSize(
+            int cw, int ch, SizeInfo::Mode wm, SizeInfo::Mode hm) = 0;
         virtual int onLayoutAtPosition(bool cur) = 0;
         virtual int onDataChangedAtPosition(size_t pos, int offset, bool cur) = 0;
         virtual int onSmoothScrollToPosition(size_t pos, int offset) = 0;

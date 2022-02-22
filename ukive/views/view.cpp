@@ -183,7 +183,7 @@ namespace ukive {
             return;
         }
 
-        ubassert(!element->isAttachedToWindow());
+        ubassert(!element || !element->isAttachedToWindow());
         if (bg_element_) {
             if (isAttachedToWindow()) {
                 ubassert(bg_element_->isAttachedToWindow());
@@ -221,7 +221,7 @@ namespace ukive {
             return;
         }
 
-        ubassert(!element->isAttachedToWindow());
+        ubassert(!element || !element->isAttachedToWindow());
         if (fg_element_) {
             if (isAttachedToWindow()) {
                 ubassert(fg_element_->isAttachedToWindow());

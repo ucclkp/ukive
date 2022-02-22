@@ -94,7 +94,7 @@ namespace ukive {
         bool findViewIndexFromStart(ListItem* item, size_t* index) const;
         bool findViewIndexFromEnd(ListItem* item, size_t* index) const;
 
-        void measureItem(ListItem* item, int max_width, int* width, int* height);
+        Size determineItemSize(ListItem* item, int max_width);
         void layoutItem(ListItem* item, int left, int top, int width, int height);
 
         void updateOverlayScrollBar();

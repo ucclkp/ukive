@@ -33,6 +33,7 @@ namespace shell {
     void TextWindow::onCreated() {
         Window::onCreated();
 
+        //showTitleBar();
         using Rlp = ukive::RestraintLayoutInfo;
 
         //root view.
@@ -123,10 +124,10 @@ namespace shell {
     bool TextWindow::onCreateContextMenu(
         ukive::ContextMenu *contextMenu, ukive::Menu *menu)
     {
-        menu->addItem(0, 0, u"Test");
-        menu->addItem(1, 0, u"Test");
-        menu->addItem(2, 0, u"Test");
-        menu->addItem(3, 0, u"Test");
+        menu->addItem(0, 0, u"Test1");
+        menu->addItem(1, 0, u"Test2");
+        menu->addItem(2, 0, u"Test3");
+        menu->addItem(3, 0, u"Test4");
 
         return true;
     }

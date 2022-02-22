@@ -31,7 +31,7 @@ namespace ukive {
 
     void calculateGravityBounds(
         const Rect& root, bool is_max_visible, bool is_discretized,
-        const Rect& anchor, int gravity, const Size& target_size, Rect* out, int* adj_gravity);
+        const Rect& anchor, int gravity, const Size& target_max_size, Rect* out, int* adj_gravity);
 
 }
 

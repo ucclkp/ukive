@@ -52,19 +52,48 @@ namespace ukive {
     }
 
     Size ListView::onDetermineSize(const SizeInfo& info) {
-        int width = (std::max)(info.width.val, getMinimumSize().width);
-        int height = (std::max)(info.height.val, getMinimumSize().height);
+        if (info.width.mode == SizeInfo::FREEDOM ||
+            info.height.mode == SizeInfo::FREEDOM)
+        {
+            return {};
+        }
+
+        int width;
+        int height;
+
+        switch (info.width.mode) {
+        case SizeInfo::CONTENT:
+            width = (std::max)(info.width.val, getMinimumSize().width);
+            break;
+        case SizeInfo::DEFINED:
+        default:
+            width = info.width.val;
+            break;
+        }
+
+        switch (info.height.mode) {
+        case SizeInfo::CONTENT:
+            height = (std::max)(info.height.val, getMinimumSize().height);
+            break;
+        case SizeInfo::DEFINED:
+        default:
+            height = info.height.val;
+            break;
+        }
+
+        width = (std::max)(0, width - getPadding().hori());
+        height = (std::max)(0, height - getPadding().vert());
 
         scroller_.finish();
 
         if (layouter_) {
-            layouter_->onMeasureAtPosition(
-                true,
-                (std::max)(0, width - getPadding().hori()),
-                (std::max)(0, height - getPadding().vert()));
+            return layouter_->onDetermineSize(
+                width, height, info.width.mode, info.height.mode);
         }
 
-        return Size(width, height);
+        return Size(
+            width,
+            info.height.mode == SizeInfo::CONTENT ? 0 : height);
     }
 
     void ListView::onLayout(
@@ -310,12 +339,14 @@ namespace ukive {
         if (layouter_) {
             auto bounds = getContentBounds();
             layouter_->bind(this, source_);
-            layouter_->onMeasureAtPosition(true, bounds.width(), bounds.height());
+            layouter_->onDetermineSize(
+                bounds.width(), bounds.height(),
+                SizeInfo::DEFINED, SizeInfo::DEFINED);
             layoutAtPosition(true);
         }
 
         updateOverlayScrollBar();
-        requestDraw();
+        requestLayout();
     }
 
     void ListView::setSecDimUnknown(bool unknown) {
@@ -466,7 +497,7 @@ namespace ukive {
         return false;
     }
 
-    void ListView::measureItem(ListItem* item, int max_width, int* width, int* height) {
+    Size ListView::determineItemSize(ListItem* item, int max_width) {
         auto& child_size = item->item_view->getLayoutSize();
         int width_margin = item->getHoriMargins();
         int height_margin = item->getVertMargins();
@@ -484,9 +515,7 @@ namespace ukive {
 
         int t_width = item->item_view->getDeterminedSize().width + width_margin;
         int t_height = item->item_view->getDeterminedSize().height + height_margin;
-
-        *width = t_width;
-        *height = t_height;
+        return Size(t_width, t_height);
     }
 
     void ListView::layoutItem(ListItem* item, int left, int top, int width, int height) {

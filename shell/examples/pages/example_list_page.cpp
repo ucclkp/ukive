@@ -7,6 +7,7 @@
 #include "example_list_page.h"
 
 #include "ukive/views/button.h"
+#include "ukive/views/list/flow_list_layouter.h"
 #include "ukive/views/list/grid_list_layouter.h"
 #include "ukive/views/list/linear_list_layouter.h"
 #include "ukive/views/list/list_view.h"
@@ -39,6 +40,7 @@ namespace shell {
         list_view_ = findView<ukive::ListView>(v, Res::Id::lv_list_page_list);
         list_view_->setLayouter(new ukive::GridListLayouter(4));
         //list_view_->setLayouter(new ukive::LinearListLayouter());
+        //list_view_->setLayouter(new ukive::FlowListLayouter(4));
         list_view_->setSource(list_source_);
 
         return v;

@@ -25,11 +25,31 @@ namespace ukive {
             return !equal(rhs);
         }
 
+        PaddingT operator+(const PaddingT& rhs) const {
+            PaddingT out(*this);
+            out.add(rhs);
+            return out;
+        }
+
         void set(Ty start, Ty top, Ty end, Ty bottom) {
             this->start = start;
             this->top = top;
             this->end = end;
             this->bottom = bottom;
+        }
+
+        void add(Ty start, Ty top, Ty end, Ty bottom) {
+            this->start += start;
+            this->top += top;
+            this->end += end;
+            this->bottom += bottom;
+        }
+
+        void add(const PaddingT& rhs) {
+            this->start += rhs.start;
+            this->top += rhs.top;
+            this->end += rhs.end;
+            this->bottom += rhs.bottom;
         }
 
         Ty vert() const {

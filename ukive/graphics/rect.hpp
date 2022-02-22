@@ -70,7 +70,7 @@ namespace ukive {
         }
 
         bool empty() const {
-            return (right - left <= 0) || (bottom - top <= 0);
+            return (right <= left) || (bottom <= top);
         }
         bool equal(const RectT& rhs) const {
             return (left == rhs.left
@@ -105,6 +105,9 @@ namespace ukive {
                 top = (std::min)(top, rhs.top);
                 right = (std::max)(right, rhs.right);
                 bottom = (std::max)(bottom, rhs.bottom);
+
+                if (right < left) left = right;
+                if (bottom < top) top = bottom;
             }
         }
         void same(const RectT& rhs) {
@@ -113,9 +116,8 @@ namespace ukive {
             right = (std::min)(right, rhs.right);
             bottom = (std::min)(bottom, rhs.bottom);
 
-            if (empty()) {
-                left = top = right = bottom = 0;
-            }
+            if (right < left) left = right;
+            if (bottom < top) top = bottom;
         }
 
         void setPos(const PointT<Ty>& pos) {
@@ -154,24 +156,36 @@ namespace ukive {
             top += insets.top;
             right -= insets.end;
             bottom -= insets.bottom;
+
+            if (right < left) left = right;
+            if (bottom < top) top = bottom;
         }
         void insets(Ty left, Ty top, Ty right, Ty bottom) {
             this->left += left;
             this->top += top;
             this->right -= right;
             this->bottom -= bottom;
+
+            if (right < left) left = right;
+            if (bottom < top) top = bottom;
         }
         void extend(const PaddingT<Ty>& ext) {
             left -= ext.start;
             top -= ext.top;
             right += ext.end;
             bottom += ext.bottom;
+
+            if (right < left) left = right;
+            if (bottom < top) top = bottom;
         }
         void extend(Ty left, Ty top, Ty right, Ty bottom) {
             this->left -= left;
             this->top -= top;
             this->right += right;
             this->bottom += bottom;
+
+            if (right < left) left = right;
+            if (bottom < top) top = bottom;
         }
         void offset(Ty dx, Ty dy) {
             left += dx;

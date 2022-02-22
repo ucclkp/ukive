@@ -22,9 +22,12 @@ namespace ukive {
         LayoutInfo* makeExtraLayoutInfo(AttrsRef attrs) const override;
         bool isValidExtraLayoutInfo(LayoutInfo* lp) const override;
 
+        Size onDetermineSize(const SizeInfo& info) override;
         void onLayout(
             const Rect& new_bounds,
             const Rect& old_bounds) override;
+
+        bool hitChildren(int x, int y);
 
     private:
         using super = SimpleLayout;

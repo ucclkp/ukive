@@ -17,7 +17,8 @@ namespace ukive {
     public:
         explicit GridListLayouter(size_t col_count);
 
-        void onMeasureAtPosition(bool cur, int width, int height) override;
+        Size onDetermineSize(
+            int cw, int ch, SizeInfo::Mode wm, SizeInfo::Mode hm) override;
         int onLayoutAtPosition(bool cur) override;
         int onDataChangedAtPosition(size_t pos, int offset, bool cur) override;
         int onSmoothScrollToPosition(size_t pos, int offset) override;

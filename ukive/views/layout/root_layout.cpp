@@ -197,8 +197,22 @@ namespace ukive {
 
     HitPoint RootLayout::onNCHitTest(int x, int y) {
         auto hit_point = super::onNCHitTest(x, y);
-        if (hit_point == HitPoint::CLIENT &&
-            title_bar_ &&
+        if (hit_point != HitPoint::CLIENT) {
+            return hit_point;
+        }
+
+        if (shade_layout_ &&
+            shade_layout_->getVisibility() == SHOW)
+        {
+            auto bounds = shade_layout_->getBounds();
+            if (bounds.hit(x, y)) {
+                if (shade_layout_->hitChildren(x - bounds.left, y - bounds.top)) {
+                    return HitPoint::CLIENT;
+                }
+            }
+        }
+
+        if (title_bar_ &&
             title_bar_->getVisibility() == SHOW)
         {
             x -= content_layout_->getLeft();

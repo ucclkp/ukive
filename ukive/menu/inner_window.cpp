@@ -161,12 +161,14 @@ namespace ukive {
             delete decor_view_;
         }
 
-        createDecorView(w->getContext());
+        auto c = w->getContext();
+
+        createDecorView(c);
 
         is_marked_as_dismissing_ = false;
 
         decor_view_->setLayoutSize(View::LS_AUTO, View::LS_AUTO);
-        decor_view_->setLayoutMargin(x, y, 0, 0);
+        decor_view_->setLayoutMargin(x, y, c.dp2pxi(8), c.dp2pxi(8));
 
         w->getRootLayout()->addShade(decor_view_, {}, GV_NONE);
 
@@ -194,13 +196,17 @@ namespace ukive {
             return;
         }
 
-        createDecorView(w->getContext());
+        auto c = w->getContext();
+        createDecorView(c);
 
         is_marked_as_dismissing_ = false;
 
         decor_view_->setLayoutSize(View::LS_AUTO, View::LS_AUTO);
+        decor_view_->setLayoutMargin(
+            c.dp2pxi(8), c.dp2pxi(8), c.dp2pxi(8), c.dp2pxi(8));
 
-        w->getRootLayout()->addShade(decor_view_, anchor->getBoundsInRoot(), gravity);
+        w->getRootLayout()->addShade(
+            decor_view_, anchor->getBoundsInRoot(), gravity);
 
         window_ = w;
         is_showing_ = true;
@@ -210,8 +216,8 @@ namespace ukive {
         if (!decor_view_ || !is_showing_) {
             return;
         }
-
-        decor_view_->setLayoutMargin(x, y, 0, 0);
+        auto c = decor_view_->getContext();
+        decor_view_->setLayoutMargin(x, y, c.dp2pxi(8), c.dp2pxi(8));
     }
 
     void InnerWindow::update(View* anchor, int gravity) {
@@ -224,7 +230,8 @@ namespace ukive {
             return;
         }
 
-        w->getRootLayout()->updateShade(decor_view_, anchor->getBoundsInRoot(), gravity);
+        w->getRootLayout()->updateShade(
+            decor_view_, anchor->getBoundsInRoot(), gravity);
     }
 
     void InnerWindow::markDismissing() {
@@ -247,15 +254,7 @@ namespace ukive {
     }
 
     Size InnerWindow::InnerDecorView::onDetermineSize(const SizeInfo& info) {
-        auto new_info = info;
-        if (info.width.mode != SizeInfo::DEFINED) {
-            new_info.width.mode = SizeInfo::FREEDOM;
-        }
-        if (info.height.mode != SizeInfo::DEFINED) {
-            new_info.height.mode = SizeInfo::FREEDOM;
-        }
-
-        return super::onDetermineSize(new_info);
+        return super::onDetermineSize(info);
     }
 
     void InnerWindow::InnerDecorView::onBeforeLayout(Rect* new_bounds, const Rect& old_bounds) {

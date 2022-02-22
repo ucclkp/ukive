@@ -15,9 +15,10 @@ namespace ukive {
 
     class FlowListLayouter : public ListLayouter {
     public:
-        FlowListLayouter();
+        explicit FlowListLayouter(size_t col_count);
 
-        void onMeasureAtPosition(bool cur, int width, int height) override;
+        Size onDetermineSize(
+            int cw, int ch, SizeInfo::Mode wm, SizeInfo::Mode hm) override;
         int onLayoutAtPosition(bool cur) override;
         int onDataChangedAtPosition(size_t pos, int offset, bool cur) override;
         int onSmoothScrollToPosition(size_t pos, int offset) override;
@@ -38,12 +39,12 @@ namespace ukive {
 
     private:
         struct Record {
-            size_t cur_row = 0;
+            size_t cur_data_pos = 0;
             int cur_offset = 0;
             bool is_null = true;
         };
 
-        size_t calPreferredCurPos() const;
+        size_t getCurrentDataPos() const;
 
         bool canScrollToTop() const;
         bool canScrollToBottom() const;
