@@ -4,8 +4,8 @@
 // This program is licensed under GPLv3 license that can be
 // found in the LICENSE file.
 
-#ifndef UKIVE_MENU_INNER_WINDOW_H_
-#define UKIVE_MENU_INNER_WINDOW_H_
+#ifndef UKIVE_BASICS_INNER_WINDOW_H_
+#define UKIVE_BASICS_INNER_WINDOW_H_
 
 #include "ukive/views/layout/simple_layout.h"
 #include "ukive/views/layout_info/gravity.h"
@@ -111,4 +111,4 @@ namespace ukive {
 
 }
 
-#endif  // UKIVE_MENU_INNER_WINDOW_H_
+#endif  // UKIVE_BASICS_INNER_WINDOW_H_

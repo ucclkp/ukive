@@ -34,6 +34,8 @@ namespace win {
             return DXGI_FORMAT_R8G8B8A8_UINT;
         case GPUDataFormat::R32_UINT:
             return DXGI_FORMAT_R32_UINT;
+        case GPUDataFormat::R8_UINT:
+            return DXGI_FORMAT_R8_UINT;
         case GPUDataFormat::B8G8B8R8_UNORM:
             return DXGI_FORMAT_B8G8R8A8_UNORM;
         case GPUDataFormat::D24_UNORM_S8_UINT:

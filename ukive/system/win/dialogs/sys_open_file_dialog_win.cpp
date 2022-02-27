@@ -4,7 +4,7 @@
 // This program is licensed under GPLv3 license that can be
 // found in the LICENSE file.
 
-#include "open_file_dialog_win.h"
+#include "sys_open_file_dialog_win.h"
 
 #include <ShlObj.h>
 
@@ -18,9 +18,9 @@
 namespace ukive {
 namespace win {
 
-    OpenFileDialogWin::OpenFileDialogWin() {}
+    SysOpenFileDialogWin::SysOpenFileDialogWin() {}
 
-    int OpenFileDialogWin::show(Window* parent, uint32_t flags) {
+    int SysOpenFileDialogWin::show(Window* parent, uint32_t flags) {
         utl::win::ComPtr<IFileOpenDialog> pfd;
         HRESULT hr = ::CoCreateInstance(
             CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pfd));
@@ -92,7 +92,7 @@ namespace win {
         return 1;
     }
 
-    void OpenFileDialogWin::addType(const std::u16string_view& types, const std::u16string_view& desc) {
+    void SysOpenFileDialogWin::addType(const std::u16string_view& types, const std::u16string_view& desc) {
         exts_.push_back(
             {
                 std::wstring(types.begin(), types.end()),
@@ -100,11 +100,11 @@ namespace win {
             });
     }
 
-    void OpenFileDialogWin::clearTypes() {
+    void SysOpenFileDialogWin::clearTypes() {
         exts_.clear();
     }
 
-    const std::vector<std::u16string>& OpenFileDialogWin::getSelectedFiles() const {
+    const std::vector<std::u16string>& SysOpenFileDialogWin::getSelectedFiles() const {
         return sel_files_;
     }
 

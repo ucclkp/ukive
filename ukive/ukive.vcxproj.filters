@@ -43,9 +43,6 @@
     <ClCompile Include="menu\context_menu.cpp">
       <Filter>menu</Filter>
     </ClCompile>
-    <ClCompile Include="menu\inner_window.cpp">
-      <Filter>menu</Filter>
-    </ClCompile>
     <ClCompile Include="menu\menu_impl.cpp">
       <Filter>menu</Filter>
     </ClCompile>
@@ -547,10 +544,10 @@
     <ClCompile Include="views\media_view.cpp">
       <Filter>views</Filter>
     </ClCompile>
-    <ClCompile Include="system\dialogs\open_file_dialog.cpp">
+    <ClCompile Include="system\dialogs\sys_open_file_dialog.cpp">
       <Filter>system\dialogs</Filter>
     </ClCompile>
-    <ClCompile Include="system\win\dialogs\open_file_dialog_win.cpp">
+    <ClCompile Include="system\win\dialogs\sys_open_file_dialog_win.cpp">
       <Filter>system\win\dialogs</Filter>
     </ClCompile>
     <ClCompile Include="system\win\ipc\pipe_client_win.cpp">
@@ -688,6 +685,24 @@
     <ClCompile Include="views\list\list_item_interact_helper.cpp">
       <Filter>views\list</Filter>
     </ClCompile>
+    <ClCompile Include="system\win\dialogs\sys_message_dialog_win.cpp">
+      <Filter>system\win\dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="dialogs\dialog.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="basics\inner_window.cpp">
+      <Filter>basics</Filter>
+    </ClCompile>
+    <ClCompile Include="dialogs\message_dialog.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="elements\drawer_element.cpp">
+      <Filter>elements</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\gpu\gpu_texture.cpp">
+      <Filter>graphics\gpu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">
@@ -733,9 +748,6 @@
       <Filter>menu</Filter>
     </ClInclude>
     <ClInclude Include="menu\context_menu_callback.h">
-      <Filter>menu</Filter>
-    </ClInclude>
-    <ClInclude Include="menu\inner_window.h">
       <Filter>menu</Filter>
     </ClInclude>
     <ClInclude Include="menu\menu.h">
@@ -1392,10 +1404,10 @@
     <ClInclude Include="views\media_view.h">
       <Filter>views</Filter>
     </ClInclude>
-    <ClInclude Include="system\dialogs\open_file_dialog.h">
+    <ClInclude Include="system\dialogs\sys_open_file_dialog.h">
       <Filter>system\dialogs</Filter>
     </ClInclude>
-    <ClInclude Include="system\win\dialogs\open_file_dialog_win.h">
+    <ClInclude Include="system\win\dialogs\sys_open_file_dialog_win.h">
       <Filter>system\win\dialogs</Filter>
     </ClInclude>
     <ClInclude Include="system\win\ipc\pipe_client_win.h">
@@ -1554,6 +1566,21 @@
     <ClInclude Include="views\list\list_item_interact_helper.h">
       <Filter>views\list</Filter>
     </ClInclude>
+    <ClInclude Include="system\dialogs\sys_message_dialog.h">
+      <Filter>system\dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="dialogs\dialog.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="basics\inner_window.h">
+      <Filter>basics</Filter>
+    </ClInclude>
+    <ClInclude Include="dialogs\message_dialog.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="elements\drawer_element.h">
+      <Filter>elements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="window">
@@ -1705,6 +1732,12 @@
     </Filter>
     <Filter Include="graphics\colors\icc\types">
       <UniqueIdentifier>{d89baae9-14f3-4072-b867-80cc9ca6b3f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dialogs">
+      <UniqueIdentifier>{851aed68-ad31-4e1f-9ac7-4b52faca3e22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="basics">
+      <UniqueIdentifier>{715cec78-759c-44f7-a6ac-216fe2d62dce}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

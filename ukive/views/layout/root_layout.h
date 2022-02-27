@@ -33,6 +33,7 @@ namespace ukive {
         void addShade(View* shade, const Rect& anchor, int gravity);
         void updateShade(View* shade, const Rect& anchor, int gravity);
         void removeShade(View* shade);
+        void setShadeBackground(Element* element, bool owned = true);
 
         bool isTitleBarShowing() const;
         TitleBar* getTitleBar() const;

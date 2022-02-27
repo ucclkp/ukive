@@ -9,8 +9,8 @@
 
 #include <memory>
 
+#include "ukive/basics/inner_window.h"
 #include "ukive/menu/menu_callback.h"
-#include "ukive/menu/inner_window.h"
 
 
 namespace ukive {

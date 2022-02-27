@@ -9,7 +9,7 @@
 
 #include "utils/weak_ref_nest.hpp"
 
-#include "ukive/menu/inner_window.h"
+#include "ukive/basics/inner_window.h"
 #include "ukive/views/click_listener.h"
 #include "ukive/views/layout/layout_view.h"
 #include "ukive/views/list/list_item_event_router.h"

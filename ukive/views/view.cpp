@@ -1030,7 +1030,7 @@ namespace ukive {
 
         std::weak_ptr<InputEvent> wptr = cur_ev_;
         bool consumed = processInputEvent(e);
-        if (wptr.expired()) {
+        if (wptr.expired() || !isAttachedToWindow()) {
             return consumed;
         }
 

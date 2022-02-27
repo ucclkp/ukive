@@ -13,7 +13,8 @@
 #include "ukive/views/list/list_view.h"
 #include "ukive/window/window.h"
 #include "ukive/resources/layout_instantiator.h"
-#include "ukive/system/dialogs/open_file_dialog.h"
+#include "ukive/system/dialogs/sys_message_dialog.h"
+#include "ukive/dialogs/message_dialog.h"
 
 #include "shell/examples/example_list_source.h"
 #include "shell/resources/necro_resources_id.h"
@@ -69,16 +70,8 @@ namespace shell {
                 showTitleBar();
             }*/
 
-            /*BOOL enable_aero = true;
-            BOOL new_aero = true;
-            ::DwmIsCompositionEnabled(&enable_aero);
-            if (enable_aero) {
-                ::DwmEnableComposition(DWM_EC_DISABLECOMPOSITION);
-            } else {
-                ::DwmEnableComposition(DWM_EC_ENABLECOMPOSITION);
-            }
-
-            ::DwmIsCompositionEnabled(&new_aero);*/
+            ukive::MessageDialog::showDialog(
+                getWindow(), u"提示", u"这是一行提示文本", u"确定");
         }
     }
 

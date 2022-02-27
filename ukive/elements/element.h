@@ -61,6 +61,7 @@ namespace ukive {
         Rect getBounds() const;
         ElementCallback* getCallback() const;
         Window* getWindow() const;
+        bool isParentHasFocus() const;
         bool isAttachedToWindow() const;
 
         virtual void draw(Canvas* canvas) = 0;

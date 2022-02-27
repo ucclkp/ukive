@@ -8,12 +8,15 @@
 #define UKIVE_GRAPHICS_GPU_GPU_TEXTURE_H_
 
 #include <cstdint>
+#include <memory>
 
 #include "ukive/graphics/gpu/gpu_resource.h"
 #include "ukive/graphics/gpu/gpu_types.h"
 
 
 namespace ukive {
+
+    class GPUShaderResource;
 
     class GPUTexture : public GPUResource {
     public:
@@ -44,11 +47,21 @@ namespace ukive {
             bool is_dynamic;
         };
 
+        static GPUTexture* createShaderTex2D(
+            uint32_t width, uint32_t height,
+            GPUDataFormat format, uint32_t stride, const void* data);
+
         virtual ~GPUTexture() = default;
+
+        void setShaderRes(GPUShaderResource* res);
+        GPUShaderResource* getShaderRes() const;
 
         Type getType() const override { return Type::Texture; }
 
         virtual const Desc& getDesc() const = 0;
+
+    private:
+        std::shared_ptr<GPUShaderResource> shader_res_;
     };
 
 }

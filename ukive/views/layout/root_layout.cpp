@@ -139,9 +139,14 @@ namespace ukive {
     void RootLayout::removeShade(View* shade) {
         shade_layout_->removeView(shade, false);
         if (shade_layout_->getChildCount() == 0) {
+            shade_layout_->setBackground(nullptr);
             removeView(shade_layout_, false);
             shade_added_ = false;
         }
+    }
+
+    void RootLayout::setShadeBackground(Element* element, bool owned) {
+        shade_layout_->setBackground(element, owned);
     }
 
     bool RootLayout::isTitleBarShowing() const {

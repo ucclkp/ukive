@@ -399,7 +399,7 @@ namespace ukive {
                     e->setOutside(true);
                     consumed = child->dispatchInputEvent(e);
                     e->setOutside(false);
-                    if (!wptr.expired()) {
+                    if (!wptr.expired() && isAttachedToWindow()) {
                         getWindow()->setLastInputView(prev_target);
                     }
                 }

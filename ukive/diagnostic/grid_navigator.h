@@ -7,7 +7,7 @@
 #ifndef UKIVE_DIAGNOSTIC_GRID_NAVIGATOR_H_
 #define UKIVE_DIAGNOSTIC_GRID_NAVIGATOR_H_
 
-#include "ukive/menu/inner_window.h"
+#include "ukive/basics/inner_window.h"
 
 
 namespace ukive {

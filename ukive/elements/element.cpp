@@ -119,6 +119,10 @@ namespace ukive {
         return window_;
     }
 
+    bool Element::isParentHasFocus() const {
+        return is_parent_has_focus_;
+    }
+
     bool Element::isAttachedToWindow() const {
         return is_attached_to_window_;
     }
