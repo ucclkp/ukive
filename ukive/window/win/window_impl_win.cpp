@@ -1112,8 +1112,8 @@ namespace win {
             return false;
         }
 
-        auto pump = static_cast<utl::win::MessagePumpUIWin*>(
-            utl::MessagePump::getCurrent());
+        auto mp_ptr = utl::MessagePump::getCurrent();
+        auto pump = static_cast<utl::win::MessagePumpUIWin*>(mp_ptr.get());
 
         POINT pos;
         ::GetCursorPos(&pos);
@@ -2178,8 +2178,8 @@ namespace win {
              * “注入”到内部的消息循环中。
              */
             *handled = true;
-            auto pump = static_cast<utl::win::MessagePumpUIWin*>(
-                utl::MessagePump::getCurrent());
+            auto mp_ptr = utl::MessagePump::getCurrent();
+            auto pump = static_cast<utl::win::MessagePumpUIWin*>(mp_ptr.get());
 
             pump->setInSizeModalLoop(true);
             auto ret = ::DefWindowProcW(hWnd_, WM_SYSCOMMAND, wParam, lParam);
@@ -2203,8 +2203,8 @@ namespace win {
 
             // 参见上方 SC_SIZE 里的注释
             *handled = true;
-            auto pump = static_cast<utl::win::MessagePumpUIWin*>(
-                utl::MessagePump::getCurrent());
+            auto mp_ptr = utl::MessagePump::getCurrent();
+            auto pump = static_cast<utl::win::MessagePumpUIWin*>(mp_ptr.get());
 
             pump->setInMoveModalLoop(true);
             /**

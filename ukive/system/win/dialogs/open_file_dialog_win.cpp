@@ -49,7 +49,8 @@ namespace win {
             pfd->SetFileTypes(UINT(exts_raw.size()), exts_raw.data());
         }
 
-        auto pump = static_cast<utl::win::MessagePumpUIWin*>(utl::MessagePump::getCurrent());
+        auto mp_ptr = utl::MessagePump::getCurrent();
+        auto pump = static_cast<utl::win::MessagePumpUIWin*>(mp_ptr.get());
 
         auto hwnd = static_cast<WindowImplWin*>(parent->getImpl())->getHandle();
         pump->setInDialogModalLoop(true);

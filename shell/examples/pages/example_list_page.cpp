@@ -13,6 +13,7 @@
 #include "ukive/views/list/list_view.h"
 #include "ukive/window/window.h"
 #include "ukive/resources/layout_instantiator.h"
+#include "ukive/system/dialogs/open_file_dialog.h"
 
 #include "shell/examples/example_list_source.h"
 #include "shell/resources/necro_resources_id.h"
