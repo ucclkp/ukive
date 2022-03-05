@@ -4,8 +4,8 @@
 // This program is licensed under GPLv3 license that can be
 // found in the LICENSE file.
 
-#ifndef UKIVE_GRAPHICS_RECT_H_
-#define UKIVE_GRAPHICS_RECT_H_
+#ifndef UKIVE_GRAPHICS_RECT_HPP_
+#define UKIVE_GRAPHICS_RECT_HPP_
 
 #include <algorithm>
 
@@ -49,7 +49,7 @@ namespace ukive {
         }
 
         PointT<Ty> pos() const {
-            return PointT<Ty>(left, top);
+            return PointT<Ty>{left, top};
         }
         SizeT<Ty> size() const {
             return SizeT<Ty>(width(), height());
@@ -83,8 +83,8 @@ namespace ukive {
                 && y >= top && y < bottom);
         }
         bool hit(const PointT<Ty>& p) const {
-            return (p.x >= left && p.x < right
-                && p.y >= top && p.y < bottom);
+            return (p.x() >= left && p.x() < right
+                && p.y() >= top && p.y() < bottom);
         }
         bool contains(const RectT& rect) const {
             return (rect.left >= left && rect.right <= right)
@@ -206,4 +206,4 @@ namespace ukive {
 
 }
 
-#endif  // UKIVE_GRAPHICS_RECT_H_
+#endif  // UKIVE_GRAPHICS_RECT_HPP_

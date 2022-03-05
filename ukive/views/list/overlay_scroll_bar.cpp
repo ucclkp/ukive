@@ -90,9 +90,9 @@ namespace ukive {
                 dragging_start_ = p;
             } else {
                 int distance_y = 0;
-                if (p.y < thumb_bounds_.top) {
+                if (p.y() < thumb_bounds_.top) {
                     distance_y = -thumb_bounds_.height();
-                } else if (p.y >= thumb_bounds_.bottom) {
+                } else if (p.y() >= thumb_bounds_.bottom) {
                     distance_y = thumb_bounds_.height();
                 }
 
@@ -107,7 +107,7 @@ namespace ukive {
     }
 
     bool OverlayScrollBar::onMouseDragged(const Point& p) {
-        int distance_y = p.y - dragging_start_.y;
+        int distance_y = p.y() - dragging_start_.y();
         if (distance_y != 0) {
             moveScroller(distance_y);
         }

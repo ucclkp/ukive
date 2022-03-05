@@ -932,17 +932,17 @@ namespace win {
     }
 
     void WindowImplWin::convScreenToClient(Point* p) const {
-        POINT raw_p = { p->x, p->y };
+        POINT raw_p { p->x(), p->y() };
         ::ScreenToClient(hWnd_, &raw_p);
-        p->x = raw_p.x;
-        p->y = raw_p.y;
+        p->x() = raw_p.x;
+        p->y() = raw_p.y;
     }
 
     void WindowImplWin::convClientToScreen(Point* p) const {
-        POINT raw_p = { p->x, p->y };
+        POINT raw_p { p->x(), p->y() };
         ::ClientToScreen(hWnd_, &raw_p);
-        p->x = raw_p.x;
-        p->y = raw_p.y;
+        p->x() = raw_p.x;
+        p->y() = raw_p.y;
     }
 
     float WindowImplWin::scaleToNative(float val) const {
@@ -1462,11 +1462,11 @@ namespace win {
         bool pass_to_window = false;
         auto nc_result = non_client_frame_->onNcHitTest(wParam, lParam, handled, &pass_to_window, &point);
         if (*handled && pass_to_window) {
-            Point pt(point.x, point.y);
+            Point pt{ point.x, point.y };
             ukive::scaleFromNative(this, &pt);
 
             int win_hp;
-            auto hit_point = delegate_->onNCHitTest(pt.x, pt.y);
+            auto hit_point = delegate_->onNCHitTest(pt.x(), pt.y());
 
             switch (hit_point) {
             case HitPoint::TOP_LEFT:

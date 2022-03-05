@@ -224,12 +224,8 @@
     <ClInclude Include="event\win\window_message_buncher_win.h" />
     <ClInclude Include="graphics\3d\camera.h" />
     <ClInclude Include="graphics\3d\drawing_object_manager.h" />
-    <ClInclude Include="graphics\3d\geocal.hpp" />
     <ClInclude Include="graphics\3d\graph_creator.h" />
-    <ClInclude Include="graphics\3d\matrix.hpp" />
-    <ClInclude Include="graphics\3d\point.hpp" />
     <ClInclude Include="graphics\3d\scene.h" />
-    <ClInclude Include="graphics\3d\vector.hpp" />
     <ClInclude Include="graphics\canvas.h" />
     <ClInclude Include="graphics\colors\color.h" />
     <ClInclude Include="graphics\colors\icc\icc_profile.h" />
@@ -306,7 +302,6 @@
     <ClInclude Include="graphics\render_node\render_node.h" />
     <ClInclude Include="graphics\render_node\render_tree.h" />
     <ClInclude Include="graphics\size.hpp" />
-    <ClInclude Include="graphics\vector2.hpp" />
     <ClInclude Include="graphics\vsyncable.h" />
     <ClInclude Include="graphics\vsync_provider.h" />
     <ClInclude Include="graphics\win\colors\color_manager_win.h" />

@@ -109,7 +109,7 @@ namespace ukive {
             interpolateColor(
                 kNormalThumbColor, kCheckedThumbColor, cur_value, &target_color);
 
-            canvas->fillCircle(PointF(target_cx, float(cx)), float(cx), target_color);
+            canvas->fillCircle({ target_cx, float(cx) }, float(cx), target_color);
         }
     }
 

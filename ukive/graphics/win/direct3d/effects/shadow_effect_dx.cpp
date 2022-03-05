@@ -8,6 +8,7 @@
 
 #include "utils/log.h"
 #include "utils/files/file_utils.h"
+#include "utils/math/algebra/special_matrix.hpp"
 
 #include "ukive/app/application.h"
 #include "ukive/graphics/win/offscreen_buffer_win.h"
@@ -247,10 +248,10 @@ namespace win {
 
         // 顶点缓存
         VertexData vertices[] {
-            { ukv3d::Point3F(0,            float(height), 0) },
-            { ukv3d::Point3F(float(width), float(height), 0) },
-            { ukv3d::Point3F(float(width), 0,             0) },
-            { ukv3d::Point3F(0,            0,             0) },
+            { 0,            float(height), 0 },
+            { float(width), float(height), 0 },
+            { float(width), 0,             0 },
+            { 0,            0,             0 },
         };
 
         D3D11_BUFFER_DESC vb_desc;
@@ -300,20 +301,20 @@ namespace win {
         float pos_y = height_ / 2.f;
 
         // 摄像机位置。
-        auto pos = ukv3d::Point3F(pos_x, pos_y, -2);
+        auto pos = utl::pt3f{ pos_x, pos_y, -2 };
         // 摄像机看向的位置。
-        auto look_at = ukv3d::Point3F(pos_x, pos_y, 0);
+        auto look_at = utl::pt3f{ pos_x, pos_y, 0 };
         // 摄像机上向量
-        auto up = ukv3d::Vector3F(0.0f, 1.0f, 0.0f);
+        auto up = utl::vec3f{ 0.0f, 1.0f, 0.0f };
 
         world_matrix_.identity();
-        view_matrix_ = ukv3d::Matrix4x4F::camera(pos, pos - look_at, up);
-        ortho_matrix_ = ukv3d::Matrix4x4F::orthoProj(-width_ / 2.f, width_ / 2.f, -height_ / 2.f, height_ / 2.f, 1, 2);
-        ukv3d::Matrix4x4F adj(
+        view_matrix_ = utl::math::camera4x4(pos, pos - look_at, up);
+        ortho_matrix_ = utl::math::orthoProj4x4<float>(-width_ / 2.f, width_ / 2.f, -height_ / 2.f, height_ / 2.f, 1, 2);
+        utl::mat4f adj{
             1, 0, 0, 0,
             0, 1, 0, 0,
             0, 0, -0.5f, 2 / 2.f + 1,
-            0, 0, 0, 1);
+            0, 0, 0, 1 };
         ortho_matrix_.mul(adj);
 
         wvo_matrix_ = ortho_matrix_ * view_matrix_ * world_matrix_;

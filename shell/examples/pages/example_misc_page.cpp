@@ -62,13 +62,13 @@ namespace {
         ukive::PointF p2{ 3, 0 };
         for (int i = 0; i <= 100; ++i) {
             double s = i / double(100);
-            auto tn = 3 * p1.x*s*(1 - s)*(1 - s) + 3 * p2.x*s*s*(1 - s) + T * s*s*s;
-            auto vn = V * std::pow(1 - s, 3) + 3 * p1.y*s*(1 - s)*(1 - s) + 3 * p2.y*s*s*(1 - s);
+            auto tn = 3 * p1.x() *s*(1 - s)*(1 - s) + 3 * p2.x() *s*s*(1 - s) + T * s*s*s;
+            auto vn = V * std::pow(1 - s, 3) + 3 * p1.y() *s*(1 - s)*(1 - s) + 3 * p2.y() *s*s*(1 - s);
             v->addData(tn, vn, false);
         }
         v->addData(0, V, true, true);
-        v->addData(p1.x, p1.y, true, true);
-        v->addData(p2.x, p2.y, true, true);
+        v->addData(p1.x(), p1.y(), true, true);
+        v->addData(p2.x(), p2.y(), true, true);
         v->addData(T, 0, true, true);
     }
 
@@ -140,7 +140,7 @@ namespace {
             : InlineObjectSpan(start, end) {}
 
         void onDrawInlineObject(ukive::Canvas* c, float x, float y) override {
-            c->fillCircle(ukive::PointF(x + 15, y), 10.f, ukive::Color::Blue300);
+            c->fillCircle({ x + 15, y }, 10.f, ukive::Color::Blue300);
         }
 
         void onGetMetrics(float* width, float* height, float* baseline) override {

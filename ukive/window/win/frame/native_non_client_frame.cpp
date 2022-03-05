@@ -110,13 +110,13 @@ namespace win {
             *pass_to_window = true;
 
             Point cp;
-            cp.x = GET_X_LPARAM(lParam);
-            cp.y = GET_Y_LPARAM(lParam);
+            cp.x() = GET_X_LPARAM(lParam);
+            cp.y() = GET_Y_LPARAM(lParam);
 
             window_->convScreenToClient(&cp);
 
-            p->x = cp.x;
-            p->y = cp.y;
+            p->x = cp.x();
+            p->y = cp.y();
         } else {
             *handled = false;
             *pass_to_window = false;

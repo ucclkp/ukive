@@ -50,8 +50,7 @@ namespace vsul {
     }
 
     void VisualLayoutScene::onSceneRender(ukive::GPUContext* context, ukive::GPURenderTarget* rt) {
-        ukv3d::Matrix4x4F wvp_matrix;
-        ukv3d::Matrix4x4F wvp_matrix_t;
+        utl::mat4f wvp_matrix;
 
         context->setRasterizerState(rasterizer_state_.get());
         context->setViewport(1, &viewport_);
@@ -62,7 +61,7 @@ namespace vsul {
         //d3d_dc->ClearDepthStencilView(depth_stencil_view_.get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
         camera_->getWVPMatrix(&wvp_matrix);
-        wvp_matrix.transport(&wvp_matrix_t);
+        utl::mat4f wvp_matrix_t = wvp_matrix.T();
 
         // Assist
         assist_configure_.active(context);

@@ -66,7 +66,7 @@ namespace ukive {
     }
 
     void ModelConfigure::setMatrix(
-        GPUContext* context, const ukv3d::Matrix4x4F& matrix)
+        GPUContext* context, const utl::mat4f& matrix)
     {
         auto panel_cb = static_cast<MatrixConstBuffer*>(context->lock(panel_cb_.get()));
         if (panel_cb) {

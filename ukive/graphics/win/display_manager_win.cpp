@@ -58,7 +58,7 @@ namespace win {
     }
 
     DisplayManager::DisplayPtr DisplayManagerWin::fromPoint(const Point& p) {
-        POINT pt{ p.x, p.y };
+        POINT pt{ p.x(), p.y() };
         HMONITOR monitor = ::MonitorFromPoint(pt, MONITOR_DEFAULTTONEAREST);
         if (!monitor) {
             LOG(Log::WARNING) << "Failed to get monitor handle!";

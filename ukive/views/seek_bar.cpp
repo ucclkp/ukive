@@ -239,7 +239,7 @@ namespace ukive {
             }
         }
         canvas->fillCircle(
-            PointF(center_x, center_y), thumb_cur_diameter / 2.f, Color::Blue400);
+            { center_x, center_y }, thumb_cur_diameter / 2.f, Color::Blue400);
     }
 
     bool SeekBar::onInputEvent(InputEvent* e) {

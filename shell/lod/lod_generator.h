@@ -9,7 +9,7 @@
 
 #define ALTITUDE_MAP_SIZE 1024
 
-#include "ukive/graphics/3d/matrix.hpp"
+#include "utils/math/algebra/point.hpp"
 
 
 namespace shell {
@@ -29,7 +29,7 @@ namespace shell {
         float getCoef2();
 
         void renderLodTerrain(
-            ukv3d::Point3F viewPosition, ukv3d::Matrix4x4F wvpMatrix, int* indexBuffer);
+            utl::pt3f viewPosition, utl::mat4f wvpMatrix, int* indexBuffer);
 
         TerrainVertexData* getVertices();
         int getVertexCount();
@@ -57,12 +57,12 @@ namespace shell {
 
         bool checkNodeCanDivide(QTreeNode* node);
         bool assessNodeCanDivide(
-            QTreeNode* node, ukv3d::Point3F viewPosition);
+            QTreeNode* node, utl::pt3f viewPosition);
 
         void drawNode(QTreeNode* node, int* indexBuffer);
 
-        bool cullNodeWithBound(QTreeNode* node, ukv3d::Matrix4x4F wvpMatrix);
-        void constructNodeBound(QTreeNode* node, ukv3d::Point3F* bound);
+        bool cullNodeWithBound(QTreeNode* node, utl::mat4f wvpMatrix);
+        void constructNodeBound(QTreeNode* node, utl::pt3f* bound);
 
         int max_level_;
         int vertex_count_;

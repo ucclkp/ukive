@@ -10,6 +10,7 @@
 #include "ukive/graphics/rect.hpp"
 #include "ukive/graphics/size.hpp"
 
+
 namespace ukive {
 
     extern const int kDefaultDpi;

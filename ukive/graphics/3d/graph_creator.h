@@ -10,7 +10,7 @@
 #include "ukive/graphics/win/direct3d/assist_configure.h"
 #include "ukive/graphics/win/direct3d/model_configure.h"
 
-#include "ukive/graphics/3d/point.hpp"
+#include "utils/math/algebra/point.hpp"
 
 
 namespace ukv3d {
@@ -25,11 +25,11 @@ namespace ukv3d {
         void calculateNormalVector(
             ukive::ModelVertexData* vertices, int vertexCount, int* indices, int indexCount);
 
-        void putLine(ukv3d::Point3F* point1, ukv3d::Point3F* point2, int tag);
+        void putLine(utl::pt3f* point1, utl::pt3f* point2, int tag);
         void putCube(int tag, float edgeLength);
         void putWorldAxis(int tag, float length);
-        void putMark(int tag, ukv3d::Point3F* mark, float length);
-        void putBlock(int tag, const ukv3d::Point3F& posCenter, float radius);
+        void putMark(int tag, utl::pt3f* mark, float length);
+        void putBlock(int tag, const utl::pt3f& posCenter, float radius);
 
     private:
         DrawingObjectManager* drawing_obj_mgr_;

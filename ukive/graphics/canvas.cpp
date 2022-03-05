@@ -196,7 +196,7 @@ namespace ukive {
 
     void Canvas::scale(float sx, float sy, float cx, float cy) {
         if (renderer_) {
-            renderer_->scale(sx, sy, PointF(cx, cy));
+            renderer_->scale(sx, sy, { cx, cy });
         }
     }
 
@@ -206,7 +206,7 @@ namespace ukive {
 
     void Canvas::rotate(float angle, float cx, float cy) {
         if (renderer_) {
-            renderer_->rotate(angle, PointF(cx, cy));
+            renderer_->rotate(angle, { cx, cy });
         }
     }
 

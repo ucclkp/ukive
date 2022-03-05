@@ -619,13 +619,13 @@ namespace ukive {
         }
 
         Point pt;
-        pt.x = bound.left;
-        pt.y = bound.top;
+        pt.x() = bound.left;
+        pt.y() = bound.top;
 
         w->convClientToScreen(&pt);
 
-        int dx = pt.x - bound.left;
-        int dy = pt.y - bound.top;
+        int dx = pt.x() - bound.left;
+        int dy = pt.y() - bound.top;
 
         bound.offset(dx, dy);
 
@@ -683,10 +683,10 @@ namespace ukive {
         PointF lt, tr, rb, bl;
         matrix.transformRect(RectF(*bounds), &lt, &tr, &rb, &bl);
 
-        bounds->left = int(std::floor((std::min)({ lt.x, tr.x, rb.x, bl.x })));
-        bounds->top = int(std::floor((std::min)({ lt.y, tr.y, rb.y, bl.y })));
-        bounds->right = int(std::ceil((std::max)({ lt.x, tr.x, rb.x, bl.x })));
-        bounds->bottom = int(std::ceil((std::max)({ lt.y, tr.y, rb.y, bl.y })));
+        bounds->left = int(std::floor((std::min)({  lt.x(), tr.x(), rb.x(), bl.x() })));
+        bounds->top = int(std::floor((std::min)({   lt.y(), tr.y(), rb.y(), bl.y() })));
+        bounds->right = int(std::ceil((std::max)({  lt.x(), tr.x(), rb.x(), bl.x() })));
+        bounds->bottom = int(std::ceil((std::max)({ lt.y(), tr.y(), rb.y(), bl.y() })));
     }
 
     bool View::isEnabled() const {

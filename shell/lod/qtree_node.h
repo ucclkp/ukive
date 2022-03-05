@@ -7,7 +7,7 @@
 #ifndef SHELL_LOD_QTREE_NODE_H_
 #define SHELL_LOD_QTREE_NODE_H_
 
-#include "ukive/graphics/3d/point.hpp"
+#include "utils/math/algebra/point.hpp"
 
 
 namespace shell {
@@ -21,8 +21,8 @@ namespace shell {
         int indexX;
         int indexY;
         float rough;
-        ukv3d::Point3F mincoord;
-        ukv3d::Point3F maxcoord;
+        utl::pt3f mincoord;
+        utl::pt3f maxcoord;
         QTreeNode* child[4];
 
         QTreeNode* next;

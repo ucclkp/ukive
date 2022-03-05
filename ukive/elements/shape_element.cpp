@@ -100,10 +100,10 @@ namespace ukive {
             float cy = (bound.bottom - bound.top) / 2.f;
 
             if (has_solid_) {
-                canvas->fillOval(PointF(cx, cy), cx, cy, solid_color_);
+                canvas->fillOval(PointF{ cx, cy }, cx, cy, solid_color_);
             }
             if (has_stroke_) {
-                canvas->drawOval(PointF(cx, cy), cx, cy, stroke_width_, stroke_color_);
+                canvas->drawOval(PointF{ cx, cy }, cx, cy, stroke_width_, stroke_color_);
             }
             break;
         }

@@ -64,9 +64,9 @@ namespace shell {
             if (altitude < 0)
                 altitude += 255;
 
-            vertices_[i].position = ukv3d::Point3F(
-                edgeLength*column / (row_vertex_count_ - 1),
-                float(altitude) * 2, edgeLength - edgeLength*row / (row_vertex_count_ - 1));
+            vertices_[i].position = utl::pt3f{
+                edgeLength * column / (row_vertex_count_ - 1),
+                float(altitude) * 2, edgeLength - edgeLength * row / (row_vertex_count_ - 1) };
         }
 
         index_count_ = 0;
@@ -229,8 +229,8 @@ namespace shell {
             float d5, d6, d7, d8;
             float nodeSize;
             float maxD;
-            ukv3d::Point3F minC;
-            ukv3d::Point3F maxC;
+            utl::pt3f minC;
+            utl::pt3f maxC;
 
             int stage;
             Snapshot* behind;
@@ -248,8 +248,8 @@ namespace shell {
 
         //返回值
         float diff;
-        ukv3d::Point3F mincoord;
-        ukv3d::Point3F maxcoord;
+        utl::pt3f mincoord;
+        utl::pt3f maxcoord;
 
         while (recursionStack)
         {
@@ -287,9 +287,9 @@ namespace shell {
                 float maxX, maxY, maxZ;
                 for (int i = 0; i < 9; ++i)
                 {
-                    float x = vData[i]->position.x;
-                    float y = vData[i]->position.y;
-                    float z = vData[i]->position.z;
+                    float x = vData[i]->position.x();
+                    float y = vData[i]->position.y();
+                    float z = vData[i]->position.z();
 
                     if (i == 0) {
                         minX = maxX = x;
@@ -307,19 +307,19 @@ namespace shell {
                     }
                 }
 
-                current->minC = ukv3d::Point3F(minX, minY, minZ);
-                current->maxC = ukv3d::Point3F(maxX, maxY, maxZ);
+                current->minC = utl::pt3f{minX, minY, minZ};
+                current->maxC = utl::pt3f{maxX, maxY, maxZ};
 
-                float topHor = (vData[0]->position.y + vData[2]->position.y) / 2.f;
-                float rightHor = (vData[2]->position.y + vData[8]->position.y) / 2.f;
-                float bottomHor = (vData[8]->position.y + vData[6]->position.y) / 2.f;
-                float leftHor = (vData[6]->position.y + vData[0]->position.y) / 2.f;
+                float topHor = (vData[0]->position.y() + vData[2]->position.y()) / 2.f;
+                float rightHor = (vData[2]->position.y() + vData[8]->position.y()) / 2.f;
+                float bottomHor = (vData[8]->position.y() + vData[6]->position.y()) / 2.f;
+                float leftHor = (vData[6]->position.y() + vData[0]->position.y()) / 2.f;
 
-                current->d0 = std::abs(vData[1]->position.y - topHor);
-                current->d1 = std::abs(vData[5]->position.y - rightHor);
-                current->d2 = std::abs(vData[7]->position.y - bottomHor);
-                current->d3 = std::abs(vData[3]->position.y - leftHor);
-                current->d4 = std::abs(vData[4]->position.y - (topHor + rightHor + bottomHor + leftHor) / 4.f);
+                current->d0 = std::abs(vData[1]->position.y() - topHor);
+                current->d1 = std::abs(vData[5]->position.y() - rightHor);
+                current->d2 = std::abs(vData[7]->position.y() - bottomHor);
+                current->d3 = std::abs(vData[3]->position.y() - leftHor);
+                current->d4 = std::abs(vData[4]->position.y() - (topHor + rightHor + bottomHor + leftHor) / 4.f);
 
                 current->nodeSize = (
                     vData[2]->position - vData[0]->position).length();
@@ -355,13 +355,13 @@ namespace shell {
             {
                 current->d5 = diff;
 
-                if (mincoord.x < current->minC.x) current->minC.x = mincoord.x;
-                if (mincoord.y < current->minC.y) current->minC.y = mincoord.y;
-                if (mincoord.z < current->minC.z) current->minC.z = mincoord.z;
+                if (mincoord.x() < current->minC.x()) current->minC.x() = mincoord.x();
+                if (mincoord.y() < current->minC.y()) current->minC.y() = mincoord.y();
+                if (mincoord.z() < current->minC.z()) current->minC.z() = mincoord.z();
 
-                if (maxcoord.x > current->maxC.x) current->maxC.x = maxcoord.x;
-                if (maxcoord.y > current->maxC.y) current->maxC.y = maxcoord.y;
-                if (maxcoord.z > current->maxC.z) current->maxC.z = maxcoord.z;
+                if (maxcoord.x() > current->maxC.x()) current->maxC.x() = maxcoord.x();
+                if (maxcoord.y() > current->maxC.y()) current->maxC.y() = maxcoord.y();
+                if (maxcoord.z() > current->maxC.z()) current->maxC.z() = maxcoord.z();
 
                 current->stage = 2;
                 current->behind = recursionStack;
@@ -381,13 +381,13 @@ namespace shell {
             {
                 current->d6 = diff;
 
-                if (mincoord.x < current->minC.x) current->minC.x = mincoord.x;
-                if (mincoord.y < current->minC.y) current->minC.y = mincoord.y;
-                if (mincoord.z < current->minC.z) current->minC.z = mincoord.z;
+                if (mincoord.x() < current->minC.x()) current->minC.x() = mincoord.x();
+                if (mincoord.y() < current->minC.y()) current->minC.y() = mincoord.y();
+                if (mincoord.z() < current->minC.z()) current->minC.z() = mincoord.z();
 
-                if (maxcoord.x > current->maxC.x) current->maxC.x = maxcoord.x;
-                if (maxcoord.y > current->maxC.y) current->maxC.y = maxcoord.y;
-                if (maxcoord.z > current->maxC.z) current->maxC.z = maxcoord.z;
+                if (maxcoord.x() > current->maxC.x()) current->maxC.x() = maxcoord.x();
+                if (maxcoord.y() > current->maxC.y()) current->maxC.y() = maxcoord.y();
+                if (maxcoord.z() > current->maxC.z()) current->maxC.z() = maxcoord.z();
 
                 current->stage = 3;
                 current->behind = recursionStack;
@@ -407,13 +407,13 @@ namespace shell {
             {
                 current->d7 = diff;
 
-                if (mincoord.x < current->minC.x) current->minC.x = mincoord.x;
-                if (mincoord.y < current->minC.y) current->minC.y = mincoord.y;
-                if (mincoord.z < current->minC.z) current->minC.z = mincoord.z;
+                if (mincoord.x() < current->minC.x()) current->minC.x() = mincoord.x();
+                if (mincoord.y() < current->minC.y()) current->minC.y() = mincoord.y();
+                if (mincoord.z() < current->minC.z()) current->minC.z() = mincoord.z();
 
-                if (maxcoord.x > current->maxC.x) current->maxC.x = maxcoord.x;
-                if (maxcoord.y > current->maxC.y) current->maxC.y = maxcoord.y;
-                if (maxcoord.z > current->maxC.z) current->maxC.z = maxcoord.z;
+                if (maxcoord.x() > current->maxC.x()) current->maxC.x() = maxcoord.x();
+                if (maxcoord.y() > current->maxC.y()) current->maxC.y() = maxcoord.y();
+                if (maxcoord.z() > current->maxC.z()) current->maxC.z() = maxcoord.z();
 
                 current->stage = 4;
                 current->behind = recursionStack;
@@ -435,13 +435,13 @@ namespace shell {
                     current->d8 = diff;
                     current->maxD = current->d0;
 
-                    if (mincoord.x < current->minC.x) current->minC.x = mincoord.x;
-                    if (mincoord.y < current->minC.y) current->minC.y = mincoord.y;
-                    if (mincoord.z < current->minC.z) current->minC.z = mincoord.z;
+                    if (mincoord.x() < current->minC.x()) current->minC.x() = mincoord.x();
+                    if (mincoord.y() < current->minC.y()) current->minC.y() = mincoord.y();
+                    if (mincoord.z() < current->minC.z()) current->minC.z() = mincoord.z();
 
-                    if (maxcoord.x > current->maxC.x) current->maxC.x = maxcoord.x;
-                    if (maxcoord.y > current->maxC.y) current->maxC.y = maxcoord.y;
-                    if (maxcoord.z > current->maxC.z) current->maxC.z = maxcoord.z;
+                    if (maxcoord.x() > current->maxC.x()) current->maxC.x() = maxcoord.x();
+                    if (maxcoord.y() > current->maxC.y()) current->maxC.y() = maxcoord.y();
+                    if (maxcoord.z() > current->maxC.z()) current->maxC.z() = maxcoord.z();
 
                     if (current->d1 > current->maxD) current->maxD = current->d1;
                     if (current->d2 > current->maxD) current->maxD = current->d2;
@@ -502,7 +502,7 @@ namespace shell {
     }
 
     bool LodGenerator::assessNodeCanDivide(
-        QTreeNode* node, ukv3d::Point3F viewPosition)
+        QTreeNode* node, utl::pt3f viewPosition)
     {
         int innerStep = calInnerStep(node);
 
@@ -628,15 +628,15 @@ namespace shell {
         }
     }
 
-    bool LodGenerator::cullNodeWithBound(QTreeNode *node, ukv3d::Matrix4x4F wvpMatrix)
+    bool LodGenerator::cullNodeWithBound(QTreeNode *node, utl::mat4f wvpMatrix)
     {
         bool result = false;
-        ukv3d::Vector4D plane[6];
+        utl::vec4d plane[6];
 
-        ukv3d::Vector4D col0(wvpMatrix.m11, wvpMatrix.m21, wvpMatrix.m31, wvpMatrix.m41);
-        ukv3d::Vector4D col1(wvpMatrix.m12, wvpMatrix.m22, wvpMatrix.m32, wvpMatrix.m42);
-        ukv3d::Vector4D col2(wvpMatrix.m13, wvpMatrix.m23, wvpMatrix.m33, wvpMatrix.m43);
-        ukv3d::Vector4D col3(wvpMatrix.m14, wvpMatrix.m24, wvpMatrix.m34, wvpMatrix.m44);
+        utl::vec4d col0 = utl::vec4d(wvpMatrix.col(0));
+        utl::vec4d col1 = utl::vec4d(wvpMatrix.col(1));
+        utl::vec4d col2 = utl::vec4d(wvpMatrix.col(2));
+        utl::vec4d col3 = utl::vec4d(wvpMatrix.col(3));
 
         plane[0] = col2;
         plane[1] = col3 - col2;
@@ -645,38 +645,38 @@ namespace shell {
         plane[4] = col3 - col1;
         plane[5] = col3 + col1;
 
-        ukv3d::Vector3D p, q;
+        utl::vec3d p, q;
         for (unsigned int i = 0; i < 6; i++) {
             plane[i].nor();
 
-            ukv3d::Vector4D planeStore = plane[i];
+            utl::vec4d planeStore = plane[i];
 
-            if (planeStore.x > 0) {
-                q.x = node->maxcoord.x;
-                p.x = node->mincoord.x;
+            if (planeStore.x() > 0) {
+                q.x() = node->maxcoord.x();
+                p.x() = node->mincoord.x();
             } else {
-                p.x = node->maxcoord.x;
-                q.x = node->mincoord.x;
+                p.x() = node->maxcoord.x();
+                q.x() = node->mincoord.x();
             }
 
-            if (planeStore.y > 0) {
-                q.y = node->maxcoord.y;
-                p.y = node->mincoord.y;
+            if (planeStore.y() > 0) {
+                q.y() = node->maxcoord.y();
+                p.y() = node->mincoord.y();
             } else {
-                p.y = node->maxcoord.y;
-                q.y = node->mincoord.y;
+                p.y() = node->maxcoord.y();
+                q.y() = node->mincoord.y();
             }
 
-            if (planeStore.z > 0) {
-                q.z = node->maxcoord.z;
-                p.z = node->mincoord.z;
+            if (planeStore.z() > 0) {
+                q.z() = node->maxcoord.z();
+                p.z() = node->mincoord.z();
             } else {
-                p.z = node->maxcoord.z;
-                q.z = node->mincoord.z;
+                p.z() = node->maxcoord.z();
+                q.z() = node->mincoord.z();
             }
 
-            auto dot = plane[i].v3() * q;
-            if (dot + planeStore.w < 0) {
+            auto dot = plane[i].reduce<3>() * q;
+            if (dot + planeStore.w() < 0) {
                 result = true;
                 break;
             }
@@ -685,7 +685,7 @@ namespace shell {
         return result;
     }
 
-    void LodGenerator::constructNodeBound(QTreeNode *node, ukv3d::Point3F *bound)
+    void LodGenerator::constructNodeBound(QTreeNode *node, utl::pt3f *bound)
     {
         int innerStep = calInnerStep(node);
         TerrainVertexData* vData[9];
@@ -719,13 +719,13 @@ namespace shell {
 
         for (int i = 0; i < 9; ++i) {
             if (i == 0) {
-                minX = maxX = vData[i]->position.x;
-                minY = maxY = vData[i]->position.y;
-                minZ = maxZ = vData[i]->position.z;
+                minX = maxX = vData[i]->position.x();
+                minY = maxY = vData[i]->position.y();
+                minZ = maxZ = vData[i]->position.z();
             } else {
-                float x = vData[i]->position.x;
-                float y = vData[i]->position.y;
-                float z = vData[i]->position.z;
+                float x = vData[i]->position.x();
+                float y = vData[i]->position.y();
+                float z = vData[i]->position.z();
 
                 if (x < minX) minX = x;
                 if (x > maxX) maxX = x;
@@ -738,12 +738,12 @@ namespace shell {
             }
         }
 
-        bound[0].x = minX;
+        bound[0].x() = minX;
     }
 
 
     void LodGenerator::renderLodTerrain(
-        ukv3d::Point3F viewPosition, ukv3d::Matrix4x4F wvpMatrix, int* indexBuffer)
+        utl::pt3f viewPosition, utl::mat4f wvpMatrix, int* indexBuffer)
     {
         int level = 0;
         index_count_ = 0;

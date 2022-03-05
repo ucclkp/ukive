@@ -1026,9 +1026,6 @@
     <ClInclude Include="graphics\win\images\lc_image_factory_win.h">
       <Filter>graphics\win\images</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\point.hpp">
-      <Filter>graphics</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\rect.hpp">
       <Filter>graphics</Filter>
     </ClInclude>
@@ -1193,21 +1190,6 @@
     </ClInclude>
     <ClInclude Include="views\space3d_view.h">
       <Filter>views</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\vector2.hpp">
-      <Filter>graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\3d\point.hpp">
-      <Filter>graphics\3d</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\3d\vector.hpp">
-      <Filter>graphics\3d</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\3d\matrix.hpp">
-      <Filter>graphics\3d</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\3d\geocal.hpp">
-      <Filter>graphics\3d</Filter>
     </ClInclude>
     <ClInclude Include="graphics\3d\camera.h">
       <Filter>graphics\3d</Filter>
@@ -1580,6 +1562,9 @@
     </ClInclude>
     <ClInclude Include="elements\drawer_element.h">
       <Filter>elements</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\point.hpp">
+      <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

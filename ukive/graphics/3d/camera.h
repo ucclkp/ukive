@@ -7,7 +7,7 @@
 #ifndef UKIVE_GRAPHICS_3D_CAMERA_H_
 #define UKIVE_GRAPHICS_3D_CAMERA_H_
 
-#include "ukive/graphics/3d/matrix.hpp"
+#include "utils/math/algebra/point.hpp"
 
 
 namespace ukv3d {
@@ -32,31 +32,31 @@ namespace ukv3d {
         // 该方法有缺陷，请看方法内注释。
         void setCameraLookAt(float x, float y, float z);
 
-        const Point3F* getCameraPos() const;
-        const Point3F* getCameraLookAt() const;
-        const Vector3F* getCameraUp() const;
+        const utl::pt3f* getCameraPos() const;
+        const utl::pt3f* getCameraLookAt() const;
+        const utl::vec3f* getCameraUp() const;
 
-        const Matrix4x4F* getWorldMatrix() const;
-        const Matrix4x4F* getViewMatrix() const;
-        const Matrix4x4F* getProjectionMatrix() const;
-        const Matrix4x4F* getOrthoMatrix() const;
+        const utl::mat4f* getWorldMatrix() const;
+        const utl::mat4f* getViewMatrix() const;
+        const utl::mat4f* getProjectionMatrix() const;
+        const utl::mat4f* getOrthoMatrix() const;
 
-        void getWVPMatrix(Matrix4x4F* wvp) const;
-        void getWVOMatrix(Matrix4x4F* wvo) const;
+        void getWVPMatrix(utl::mat4f* wvp) const;
+        void getWVOMatrix(utl::mat4f* wvo) const;
 
     private:
-        Point3F pos_;
-        Point3F look_at_;
-        Vector3F up_;
-        Vector3F right_;
-        Vector3F look_;
-        Vector3F z_vector_;
-        Vector3F y_vector_;
+        utl::pt3f pos_;
+        utl::pt3f look_at_;
+        utl::vec3f up_;
+        utl::vec3f right_;
+        utl::vec3f look_;
+        utl::vec3f z_vector_;
+        utl::vec3f y_vector_;
 
-        Matrix4x4F world_matrix_;
-        Matrix4x4F view_matrix_;
-        Matrix4x4F projection_matrix_;
-        Matrix4x4F ortho_matrix_;
+        utl::mat4f world_matrix_;
+        utl::mat4f view_matrix_;
+        utl::mat4f projection_matrix_;
+        utl::mat4f ortho_matrix_;
 
         int width_;
         int height_;

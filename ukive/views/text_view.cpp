@@ -659,7 +659,7 @@ namespace ukive {
         TextLayout::HitTestInfo metrics;
         if (text_layout_->hitTestTextPos(position, false, &pt, &metrics)) {
             text_blink_->calculateRect(
-                pt.x, pt.y, pt.y + metrics.rect.height(), out);
+                pt.x(), pt.y(), pt.y() + metrics.rect.height(), out);
             return true;
         }
         return false;
@@ -1411,10 +1411,10 @@ namespace ukive {
                 return {};
             }
 
-            bounds.left = p.x;
-            bounds.top = p.y;
-            bounds.right = p.x;
-            bounds.bottom = p.y + metrics.rect.height();
+            bounds.left = p.x();
+            bounds.top = p.y();
+            bounds.right = p.x();
+            bounds.bottom = p.y() + metrics.rect.height();
         } else {
             std::vector<TextLayout::HitTestInfo> hit_metrics;
             if (!text_layout_->hitTestTextRange(start, end - start, 0.f, 0.f, &hit_metrics)) {

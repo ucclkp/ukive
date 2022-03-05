@@ -101,7 +101,7 @@ namespace ukive {
 
                 Color ripple_color = Color::ofRGB(0, float(1 - ripple_animator_.getCurValue()) * 0.1f);
                 content_off_->fillCircle(
-                    PointF(Point(start_x_, start_y_)),
+                    PointF(Point{ start_x_, start_y_ }),
                     float(ripple_animator_.getCurValue() * r), ripple_color);
             }
             content_off_->endDraw();

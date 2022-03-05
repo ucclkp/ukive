@@ -9,7 +9,7 @@
 
 #include <memory>
 
-#include "ukive/graphics/3d/matrix.hpp"
+#include "utils/math/algebra/point.hpp"
 
 
 namespace ukive {
@@ -22,8 +22,8 @@ namespace ukive {
 namespace shell {
 
     struct TerrainVertexData {
-        ukv3d::Point3F position;
-        ukv3d::Vector2F texcoord;
+        utl::pt3f position;
+        utl::vec2f texcoord;
 
         TerrainVertexData() {}
     };
@@ -38,11 +38,11 @@ namespace shell {
         void active(ukive::GPUContext* context);
         void close();
 
-        void setMatrix(ukive::GPUContext* context, const ukv3d::Matrix4x4F& matrix);
+        void setMatrix(ukive::GPUContext* context, const utl::mat4f& matrix);
 
     private:
         struct MatrixConstBuffer {
-            ukv3d::Matrix4x4F wvp;
+            utl::mat4f wvp;
         };
 
         std::unique_ptr<ukive::GPUBuffer> const_buffer_;

@@ -28,10 +28,10 @@ namespace ukive {
 
         tri_path_.reset(Path::create());
         if (tri_path_->open()) {
-            tri_path_->begin(PointF(0, 0), true);
-            tri_path_->addLine(PointF(Point(tri_height_, tri_height_)));
-            tri_path_->addLine(PointF(0, float(tri_length_)));
-            tri_path_->addLine(PointF(0, 0));
+            tri_path_->begin({ 0, 0 }, true);
+            tri_path_->addLine(PointF(Point{ tri_height_, tri_height_ }));
+            tri_path_->addLine({ 0, float(tri_length_) });
+            tri_path_->addLine({ 0, 0 });
             tri_path_->end(true);
             tri_path_->close();
         }

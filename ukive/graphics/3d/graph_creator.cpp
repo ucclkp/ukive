@@ -50,20 +50,20 @@ namespace ukv3d {
         }
 
         auto vertex_data = new ukive::AssistVertexData[vertex_count];
-        vertex_data[0].position.set(-length, 0, 0);
-        vertex_data[0].color.set(1, 0, 0, 1);
-        vertex_data[1].position.set(length, 0, 0);
-        vertex_data[1].color.set(1, 0, 0, 1);
+        vertex_data[0].position = { -length, 0, 0 };
+        vertex_data[0].color = { 1, 0, 0, 1 };
+        vertex_data[1].position = { length, 0, 0 };
+        vertex_data[1].color = { 1, 0, 0, 1 };
 
-        vertex_data[2].position.set(0, -length, 0);
-        vertex_data[2].color.set(0, 1, 0, 1);
-        vertex_data[3].position.set(0, length, 0);
-        vertex_data[3].color.set(0, 1, 0, 1);
+        vertex_data[2].position = { 0, -length, 0 };
+        vertex_data[2].color = { 0, 1, 0, 1 };
+        vertex_data[3].position = { 0, length, 0 };
+        vertex_data[3].color = { 0, 1, 0, 1 };
 
-        vertex_data[4].position.set(0, 0, -length);
-        vertex_data[4].color.set(0, 0, 1, 1);
-        vertex_data[5].position.set(0, 0, length);
-        vertex_data[5].color.set(0, 0, 1, 1);
+        vertex_data[4].position = { 0, 0, -length };
+        vertex_data[4].color = { 0, 0, 1, 1 };
+        vertex_data[5].position = { 0, 0, length };
+        vertex_data[5].color = { 0, 0, 1, 1 };
 
         auto indices = new int[index_count] {
             0, 1, 2, 3, 4, 5
@@ -75,15 +75,15 @@ namespace ukv3d {
             sizeof(ukive::AssistVertexData), vertex_count, index_count, tag);
     }
 
-    void GraphCreator::putLine(ukv3d::Point3F* point1, ukv3d::Point3F* point2, int tag) {
+    void GraphCreator::putLine(utl::pt3f* point1, utl::pt3f* point2, int tag) {
         unsigned int vertex_count = 2;
         unsigned int index_count = 2;
 
         auto vertex_data = new ukive::AssistVertexData[vertex_count];
         vertex_data[0].position = *point1;
-        vertex_data[0].color.set(0.5f, 0, 0, 1);
+        vertex_data[0].color = { 0.5f, 0, 0, 1 };
         vertex_data[1].position = *point2;
-        vertex_data[1].color.set(0.5f, 0, 0, 1);
+        vertex_data[1].color = { 0.5f, 0, 0, 1 };
 
         auto indices = new int[index_count] {
             0, 1
@@ -95,19 +95,19 @@ namespace ukv3d {
             sizeof(ukive::AssistVertexData), vertex_count, index_count, tag);
     }
 
-    void GraphCreator::putMark(int tag, ukv3d::Point3F* mark, float length) {
+    void GraphCreator::putMark(int tag, utl::pt3f* mark, float length) {
         unsigned int vertex_count = 4;
         unsigned int index_count = 4;
 
         auto vertex_data = new ukive::AssistVertexData[vertex_count];
-        vertex_data[0].position.set(mark->x - length, 0, mark->z);
-        vertex_data[0].color.set(0.5f, 0, 0, 1);
-        vertex_data[1].position.set(mark->x + length, 0, mark->z);
-        vertex_data[1].color.set(0.5f, 0, 0, 1);
-        vertex_data[2].position.set(mark->x, 0, mark->z - length);
-        vertex_data[2].color.set(0.5f, 0, 0, 1);
-        vertex_data[3].position.set(mark->x, 0, mark->z + length);
-        vertex_data[3].color.set(0.5f, 0, 0, 1);
+        vertex_data[0].position = { mark->x() - length, 0, mark->z() };
+        vertex_data[0].color = { 0.5f, 0, 0, 1 };
+        vertex_data[1].position = { mark->x() + length, 0, mark->z() };
+        vertex_data[1].color = { 0.5f, 0, 0, 1 };
+        vertex_data[2].position = { mark->x(), 0, mark->z() - length };
+        vertex_data[2].color = { 0.5f, 0, 0, 1 };
+        vertex_data[3].position = { mark->x(), 0, mark->z() + length };
+        vertex_data[3].color = { 0.5f, 0, 0, 1 };
 
         auto indices = new int[index_count] {
             0, 1, 2, 3
@@ -119,42 +119,42 @@ namespace ukv3d {
             sizeof(ukive::AssistVertexData), vertex_count, index_count, tag);
     }
 
-    void GraphCreator::putBlock(int tag, const ukv3d::Point3F& posCenter, float radius) {
+    void GraphCreator::putBlock(int tag, const utl::pt3f& posCenter, float radius) {
         unsigned int vertex_count = 8;
         unsigned int index_count = 36;
 
         auto vertex_data = new ukive::AssistVertexData[vertex_count];
-        vertex_data[0].position.set(
-            posCenter.x - radius, posCenter.y - radius, posCenter.z - radius);
-        vertex_data[0].color.set(1, 1, 0, 1);
+        vertex_data[0].position = {
+            posCenter.x() - radius, posCenter.y() - radius, posCenter.z() - radius };
+        vertex_data[0].color = { 1, 1, 0, 1 };
 
-        vertex_data[1].position.set(
-            posCenter.x + radius, posCenter.y - radius, posCenter.z - radius);
-        vertex_data[1].color.set(1, 1, 0, 1);
+        vertex_data[1].position = {
+            posCenter.x() + radius, posCenter.y() - radius, posCenter.z() - radius };
+        vertex_data[1].color = { 1, 1, 0, 1 };
 
-        vertex_data[2].position.set(
-            posCenter.x + radius, posCenter.y - radius, posCenter.z + radius);
-        vertex_data[2].color.set(1, 1, 0, 1);
+        vertex_data[2].position = {
+            posCenter.x() + radius, posCenter.y() - radius, posCenter.z() + radius };
+        vertex_data[2].color = { 1, 1, 0, 1 };
 
-        vertex_data[3].position.set(
-            posCenter.x - radius, posCenter.y - radius, posCenter.z + radius);
-        vertex_data[3].color.set(1, 1, 0, 1);
+        vertex_data[3].position = {
+            posCenter.x() - radius, posCenter.y() - radius, posCenter.z() + radius };
+        vertex_data[3].color = { 1, 1, 0, 1 };
 
-        vertex_data[4].position.set(
-            posCenter.x - radius, posCenter.y + radius, posCenter.z + radius);
-        vertex_data[4].color.set(1, 1, 0, 1);
+        vertex_data[4].position = {
+            posCenter.x() - radius, posCenter.y() + radius, posCenter.z() + radius };
+        vertex_data[4].color = { 1, 1, 0, 1 };
 
-        vertex_data[5].position.set(
-            posCenter.x - radius, posCenter.y + radius, posCenter.z - radius);
-        vertex_data[5].color.set(1, 1, 0, 1);
+        vertex_data[5].position = {
+            posCenter.x() - radius, posCenter.y() + radius, posCenter.z() - radius };
+        vertex_data[5].color = { 1, 1, 0, 1 };
 
-        vertex_data[6].position.set(
-            posCenter.x + radius, posCenter.y + radius, posCenter.z - radius);
-        vertex_data[6].color.set(1, 1, 0, 1);
+        vertex_data[6].position = {
+            posCenter.x() + radius, posCenter.y() + radius, posCenter.z() - radius };
+        vertex_data[6].color = { 1, 1, 0, 1 };
 
-        vertex_data[7].position.set(
-            posCenter.x + radius, posCenter.y + radius, posCenter.z + radius);
-        vertex_data[7].color.set(1, 1, 0, 1);
+        vertex_data[7].position = {
+            posCenter.x() + radius, posCenter.y() + radius, posCenter.z() + radius };
+        vertex_data[7].color = { 1, 1, 0, 1 };
 
         auto indices = new int[index_count] {
             0, 5, 1,
@@ -184,37 +184,37 @@ namespace ukv3d {
         float half = edgeLength / 2.f;
 
         auto vertex_data = new ukive::ModelVertexData[vertex_count];
-        vertex_data[0].position.set(-half, -half, -half);
-        vertex_data[0].color.set(1, 0, 0, 1);
-        vertex_data[0].texcoord.set(0, 1);
+        vertex_data[0].position = { -half, -half, -half };
+        vertex_data[0].color = { 1, 0, 0, 1 };
+        vertex_data[0].texcoord = { 0, 1 };
 
-        vertex_data[1].position.set(half, -half, -half);
-        vertex_data[1].color.set(1, 0, 0, 1);
-        vertex_data[1].texcoord.set(1, 1);
+        vertex_data[1].position = { half, -half, -half };
+        vertex_data[1].color = { 1, 0, 0, 1 };
+        vertex_data[1].texcoord = { 1, 1 };
 
-        vertex_data[2].position.set(half, -half, half);
-        vertex_data[2].color.set(0, 1, 0, 1);
-        vertex_data[2].texcoord.set(1, 0);
+        vertex_data[2].position = { half, -half, half };
+        vertex_data[2].color = { 0, 1, 0, 1 };
+        vertex_data[2].texcoord = { 1, 0 };
 
-        vertex_data[3].position.set(-half, -half, half);
-        vertex_data[3].color.set(0, 1, 0, 1);
-        vertex_data[3].texcoord.set(0, 0);
+        vertex_data[3].position = { -half, -half, half };
+        vertex_data[3].color = { 0, 1, 0, 1 };
+        vertex_data[3].texcoord = { 0, 0 };
 
-        vertex_data[4].position.set(-half, half, half);
-        vertex_data[4].color.set(0, 0, 1, 1);
-        vertex_data[4].texcoord.set(0, 0);
+        vertex_data[4].position = { -half, half, half };
+        vertex_data[4].color = { 0, 0, 1, 1 };
+        vertex_data[4].texcoord = { 0, 0 };
 
-        vertex_data[5].position.set(-half, half, -half);
-        vertex_data[5].color.set(0, 0, 1, 1);
-        vertex_data[5].texcoord.set(0, 1);
+        vertex_data[5].position = { -half, half, -half };
+        vertex_data[5].color = { 0, 0, 1, 1 };
+        vertex_data[5].texcoord = { 0, 1 };
 
-        vertex_data[6].position.set(half, half, -half);
-        vertex_data[6].color.set(0, 0, 1, 1);
-        vertex_data[6].texcoord.set(1, 1);
+        vertex_data[6].position = { half, half, -half };
+        vertex_data[6].color = { 0, 0, 1, 1 };
+        vertex_data[6].texcoord = { 1, 1 };
 
-        vertex_data[7].position.set(half, half, half);
-        vertex_data[7].color.set(0, 0, 1, 1);
-        vertex_data[7].texcoord.set(1, 0);
+        vertex_data[7].position = { half, half, half };
+        vertex_data[7].color = { 0, 0, 1, 1 };
+        vertex_data[7].texcoord = { 1, 0 };
 
         auto indices = new int[index_count] {
             0, 5, 1,

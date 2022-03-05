@@ -65,7 +65,7 @@ namespace shell {
     }
 
     void TerrainConfigure::setMatrix(
-        ukive::GPUContext* context, const ukv3d::Matrix4x4F& matrix)
+        ukive::GPUContext* context, const utl::mat4f& matrix)
     {
         auto cb = static_cast<MatrixConstBuffer*>(context->lock(const_buffer_.get()));
         if (cb) {

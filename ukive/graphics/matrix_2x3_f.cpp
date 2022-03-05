@@ -95,19 +95,19 @@ namespace ukive {
     }
 
     void Matrix2x3F::transformPoint(PointF* point) {
-        auto x = point->x*m11 + point->y*m12 + m13;
-        auto y = point->x*m21 + point->y*m22 + m23;
-        point->x = x;
-        point->y = y;
+        auto x = point->x()*m11 + point->y()*m12 + m13;
+        auto y = point->x()*m21 + point->y()*m22 + m23;
+        point->x() = x;
+        point->y() = y;
     }
 
     void Matrix2x3F::transformRect(
         const RectF& rect, PointF* lt, PointF* tr, PointF* rb, PointF* bl)
     {
-        PointF s_lt(rect.left, rect.top);
-        PointF s_tr(rect.right, rect.top);
-        PointF s_rb(rect.right, rect.bottom);
-        PointF s_bl(rect.left, rect.bottom);
+        PointF s_lt{ rect.left, rect.top };
+        PointF s_tr{ rect.right, rect.top };
+        PointF s_rb{ rect.right, rect.bottom };
+        PointF s_bl{ rect.left, rect.bottom };
 
         transformPoint(&s_lt);
         transformPoint(&s_tr);

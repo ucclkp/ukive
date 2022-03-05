@@ -54,7 +54,7 @@ namespace ukive {
             auto color = D2D1ConvertColorSpace(
                 D2D1_COLOR_SPACE_SRGB, D2D1_COLOR_SPACE_SCRGB, c);
 
-            float wp_scale = 80 / D2D1_SCENE_REFERRED_SDR_WHITE_LEVEL;
+            float wp_scale = 320.f / D2D1_SCENE_REFERRED_SDR_WHITE_LEVEL;
             color.r *= wp_scale;
             color.g *= wp_scale;
             color.b *= wp_scale;
@@ -268,13 +268,13 @@ namespace win {
     }
 
     void CyroRendererD2D::scale(float sx, float sy, const PointF& c) {
-        matrix_.preScale(sx, sy, c.x, c.y);
+        matrix_.preScale(sx, sy, c.x(), c.y());
 
         rt_->SetTransform(convMatrix(matrix_));
     }
 
     void CyroRendererD2D::rotate(float angle, const PointF& c) {
-        matrix_.preRotate(angle, c.x, c.y);
+        matrix_.preRotate(angle, c.x(), c.y());
 
         rt_->SetTransform(convMatrix(matrix_));
     }
@@ -297,8 +297,8 @@ namespace win {
 
         solid_brush_->SetColor(d2d_color);
         rt_->DrawLine(
-            D2D1::Point2F(p.x, p.y),
-            D2D1::Point2F(p.x, p.y),
+            D2D1::Point2F(p.x(), p.y()),
+            D2D1::Point2F(p.x(), p.y()),
             solid_brush_.get(), paint.getStrokeWidth());
     }
 
@@ -309,8 +309,8 @@ namespace win {
 
         solid_brush_->SetColor(d2d_color);
         rt_->DrawLine(
-            D2D1::Point2F(start.x, start.y),
-            D2D1::Point2F(end.x, end.y),
+            D2D1::Point2F(start.x(), start.y()),
+            D2D1::Point2F(end.x(), end.y()),
             solid_brush_.get(), paint.getStrokeWidth());
     }
 
@@ -400,7 +400,7 @@ namespace win {
             convColorSpace(&d2d_color, buffer_->getImageOptions());
             solid_brush_->SetColor(d2d_color);
             rt_->DrawEllipse(
-                D2D1::Ellipse(D2D1::Point2F(c.x, c.y), rx, ry),
+                D2D1::Ellipse(D2D1::Point2F(c.x(), c.y()), rx, ry),
                 solid_brush_.get(), paint.getStrokeWidth());
             break;
         }
@@ -412,7 +412,7 @@ namespace win {
             convColorSpace(&d2d_color, buffer_->getImageOptions());
             solid_brush_->SetColor(d2d_color);
             rt_->FillEllipse(
-                D2D1::Ellipse(D2D1::Point2F(c.x, c.y), rx, ry), solid_brush_.get());
+                D2D1::Ellipse(D2D1::Point2F(c.x(), c.y()), rx, ry), solid_brush_.get());
             break;
         }
 
@@ -422,7 +422,7 @@ namespace win {
             bitmap_brush_->SetExtendModeY(convExtendMode(paint.getImageExtendModeY()));
 
             rt_->FillEllipse(
-                D2D1::Ellipse(D2D1::Point2F(c.x, c.y), rx, ry), bitmap_brush_.get());
+                D2D1::Ellipse(D2D1::Point2F(c.x(), c.y()), rx, ry), bitmap_brush_.get());
             break;
         }
     }

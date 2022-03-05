@@ -65,7 +65,7 @@ namespace ukive {
     }
 
     void AssistConfigure::setMatrix(
-        GPUContext* context, const ukv3d::Matrix4x4F& matrix)
+        GPUContext* context, const utl::mat4f& matrix)
     {
         auto assist_cb = static_cast<AssistConstBuffer*>(context->lock(assist_cb_.get()));
         if (assist_cb) {

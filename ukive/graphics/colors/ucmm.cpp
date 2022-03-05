@@ -283,8 +283,9 @@ namespace ukive {
             Zr, Zg, Zb,
         };
 
-        utl::math::MatrixT<float, 3, 3> m_inv;
-        if (!m.inverse(&m_inv)) {
+        bool has_inv;
+        auto m_inv = m.inverse(&has_inv);
+        if (!has_inv) {
             return false;
         }
 
@@ -325,8 +326,9 @@ namespace ukive {
             0.0389f,  -0.0685f, 1.0296f,
         };
 
-        utl::math::MatrixT<float, 3, 3> m_BDF_inv;
-        if (!m_BDF.inverse(&m_BDF_inv)) {
+        bool has_inv;
+        auto m_BDF_inv = m_BDF.inverse(&has_inv);
+        if (!has_inv) {
             return false;
         }
 
@@ -421,8 +423,9 @@ namespace ukive {
                 conn = m_adapt * conn;
             }
 
-            utl::math::MatrixT<float, 3, 3> mat_inv;
-            if (!mat.inverse(&mat_inv)) {
+            bool has_inv;
+            auto mat_inv = mat.inverse(&has_inv);
+            if (!has_inv) {
                 return icc::ICCRC_NOT_INVERTIBLE;
             }
 

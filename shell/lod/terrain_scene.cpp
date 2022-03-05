@@ -7,6 +7,7 @@
 #include "terrain_scene.h"
 
 #include "utils/log.h"
+#include "utils/math/algebra/geocal.hpp"
 
 #include "ukive/app/application.h"
 #include "ukive/event/input_event.h"
@@ -14,7 +15,6 @@
 #include "ukive/graphics/graphic_device_manager.h"
 #include "ukive/graphics/3d/drawing_object_manager.h"
 #include "ukive/graphics/3d/camera.h"
-#include "ukive/graphics/3d/geocal.hpp"
 #include "ukive/graphics/gpu/gpu_rasterizer_state.h"
 #include "ukive/views/text_view.h"
 #include "ukive/views/space3d_view.h"
@@ -123,7 +123,7 @@ namespace shell {
                 auto locked_vd = static_cast<ukive::ModelVertexData*>(data);
                 auto object_vd = static_cast<ukive::ModelVertexData*>(object->vertices.get());
 
-                object_vd[0].position.x += 0.1f;
+                object_vd[0].position.x() += 0.1f;
 
                 for (unsigned int i = 0; i < object->vertex_count; ++i) {
                     locked_vd[i].position = object_vd[i].position;
@@ -149,7 +149,7 @@ namespace shell {
 
             auto vPosition = getCamera()->getCameraPos();
 
-            ukv3d::Matrix4x4F wvpMatrix;
+            utl::mat4f wvpMatrix;
             getCamera()->getWVPMatrix(&wvpMatrix);
 
             lod_generator_->renderLodTerrain(*vPosition, wvpMatrix, indices);
@@ -159,19 +159,19 @@ namespace shell {
     }
 
     void TerrainScene::elementAwareness(int ex, int ey) {
-        ukv3d::Point3F ori;
-        ukv3d::Vector3F dir;
+        utl::pt3f ori;
+        utl::vec3f dir;
         getPickLine(ex, ey, &ori, &dir);
 
         bool isHitVer = false;
-        ukv3d::Point3D vPos;
+        utl::pt3d vPos;
         auto *object = getDrawingObjectManager()->getByTag(kNormalCube);
         if (object) {
             auto vData = static_cast<ukive::ModelVertexData*>(object->vertices.get());
             for (unsigned int i = 0; i < object->vertex_count; ++i) {
-                auto pos = ukv3d::Point3D(vData[i].position);
-                auto distance = ukv3d::distanceLinePoint(
-                    ukv3d::Point3D(ori), ukv3d::Point3D(ori + dir), pos);
+                auto pos = utl::pt3d(vData[i].position);
+                auto distance = utl::math::distanceLinePoint3(
+                    utl::pt3d(ori), utl::pt3d(ori + dir), pos);
                 if (distance < 20.f) {
                     vPos = pos;
                     isHitVer = true;
@@ -180,7 +180,7 @@ namespace shell {
 
             if (isHitVer) {
                 if (!drawing_obj_mgr_->contains(155)) {
-                    graph_creator_->putBlock(155, ukv3d::Point3F(vPos), 10.f);
+                    graph_creator_->putBlock(155, utl::pt3f(vPos), 10.f);
                     space_view_->requestDraw();
                 }
             } else {
@@ -193,35 +193,33 @@ namespace shell {
     }
 
     void TerrainScene::getPickLine(
-        int sx, int sy, ukv3d::Point3F* line_org, ukv3d::Vector3F* line_dir)
+        int sx, int sy, utl::pt3f* line_org, utl::vec3f* line_dir)
     {
         auto worldMatrix = camera_->getWorldMatrix();
         auto viewMatrix = camera_->getViewMatrix();
         auto projectionMatrix = camera_->getProjectionMatrix();
 
-        auto vx = (2.0f * sx / width_ - 1.0f) / projectionMatrix->m11;
-        auto vy = (-2.0f * sy / height_ + 1.0f) / projectionMatrix->m22;
+        auto vx = (2.0f * sx / width_ - 1.0f) / projectionMatrix->get(0, 0);
+        auto vy = (-2.0f * sy / height_ + 1.0f) / projectionMatrix->get(1, 1);
 
-        ukv3d::Vector4D rayDir(vx, vy, 1.0f, 0);
-        ukv3d::Vector4D rayOrigin(0.0f, 0.0f, 0.0f, 1);
+        utl::hvec4d rayDir{ vx, vy, 1.0f, 0 };
+        utl::hvec4d rayOrigin{ 0.0f, 0.0f, 0.0f, 1 };
 
-        auto world = ukv3d::Matrix4x4D(*worldMatrix);
-        auto view = ukv3d::Matrix4x4D(*viewMatrix);
+        auto world = utl::mat4d(*worldMatrix);
+        auto view = utl::mat4d(*viewMatrix);
 
-        ukv3d::Matrix4x4D inverseView;
-        view.inverse(&inverseView);
+        utl::mat4d inverseView = view.inverse();
 
         rayDir = (rayDir * inverseView).nor();
         rayOrigin = rayOrigin * inverseView;
 
-        ukv3d::Matrix4x4D inverseWorld;
-        world.inverse(&inverseWorld);
+        utl::mat4d inverseWorld = world.inverse();
 
         rayDir = (rayDir * inverseWorld).nor();
         rayOrigin = rayOrigin * inverseWorld;
 
-        line_org->set(float(rayOrigin.x), float(rayOrigin.y), float(rayOrigin.z));
-        *line_dir = ukv3d::Vector3F(rayDir.v3());
+        *line_org = { float(rayOrigin.x()), float(rayOrigin.y()), float(rayOrigin.z()) };
+        *line_dir = utl::vec3f(rayDir.reduce<3>().T());
     }
 
     void TerrainScene::setViewports(float x, float y, float width, float height) {
@@ -367,14 +365,13 @@ namespace shell {
     {
         on_render_handler_();
 
-        ukv3d::Matrix4x4F wvp_matrix;
-        ukv3d::Matrix4x4F wvp_matrix_t;
+        utl::mat4f wvp_matrix;
 
         context->setRasterizerState(rasterizer_state_.get());
         context->setViewport(1, &viewport_);
 
         getCamera()->getWVPMatrix(&wvp_matrix);
-        wvp_matrix.transport(&wvp_matrix_t);
+        utl::mat4f wvp_matrix_t = wvp_matrix.T();
 
         assist_configure_->active(context);
         assist_configure_->setMatrix(context, wvp_matrix_t);

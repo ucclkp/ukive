@@ -63,12 +63,12 @@ namespace ukive {
 
             if (d.draw_point) {
                 canvas->fillCircle(
-                    PointF(Point(vx, vy)), float(node_radius), Color::Blue300);
+                    PointF(Point{ vx, vy }), float(node_radius), Color::Blue300);
             }
             if (has_prev && !d.single_point) {
                 canvas->drawLine(
                     PointF(prev),
-                    PointF(Point(vx, vy)),
+                    PointF(Point{ vx, vy }),
                     getContext().dp2px(1.5f), Color::Blue300);
             }
 

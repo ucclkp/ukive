@@ -43,7 +43,7 @@ namespace win {
     void PathWin::begin(const PointF& start, bool fill) {
         ubassert(sink_);
         sink_->BeginFigure(
-            D2D1::Point2F(start.x, start.y),
+            D2D1::Point2F(start.x(), start.y()),
             fill ? D2D1_FIGURE_BEGIN_FILLED : D2D1_FIGURE_BEGIN_HOLLOW);
     }
 
@@ -69,14 +69,14 @@ namespace win {
 
     void PathWin::addLine(const PointF& p) {
         ubassert(sink_);
-        sink_->AddLine(D2D1::Point2F(p.x, p.y));
+        sink_->AddLine(D2D1::Point2F(p.x(), p.y()));
     }
 
     void PathWin::addQBezier(const PointF& p1, const PointF& p2) {
         ubassert(sink_);
         sink_->AddQuadraticBezier(
             D2D1::QuadraticBezierSegment(
-                D2D1::Point2F(p1.x, p1.y), D2D1::Point2F(p2.x, p2.y)));
+                D2D1::Point2F(p1.x(), p1.y()), D2D1::Point2F(p2.x(), p2.y())));
     }
 
 }

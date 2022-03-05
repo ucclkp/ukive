@@ -401,8 +401,8 @@ namespace win {
         }
 
         if (pt) {
-            pt->x = x;
-            pt->y = y;
+            pt->x() = x;
+            pt->y() = y;
         }
 
         info->pos = metrics.textPosition;

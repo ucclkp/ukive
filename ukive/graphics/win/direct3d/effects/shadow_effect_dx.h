@@ -9,9 +9,10 @@
 
 #include <memory>
 
+#include "utils/math/algebra/point.hpp"
+
 #include "ukive/graphics/effects/shadow_effect.h"
 #include "ukive/graphics/win/directx_manager.h"
-#include "ukive/graphics/3d/matrix.hpp"
 #include "ukive/window/context.h"
 
 
@@ -44,15 +45,11 @@ namespace win {
 
     private:
         struct ConstBuffer {
-            ukv3d::Matrix4x4F wvo;
+            utl::mat4f wvo;
         };
 
         struct VertexData {
-            ukv3d::Point3F position;
-
-            VertexData() {}
-            VertexData(const ukv3d::Point3F& pos)
-                : position(pos) {}
+            utl::pt3f position;
         };
 
         bool createTexture(
@@ -72,10 +69,10 @@ namespace win {
         bool is_initialized_ = false;
         bool is_hdr_enabled_ = false;
 
-        ukv3d::Matrix4x4F wvo_matrix_;
-        ukv3d::Matrix4x4F world_matrix_;
-        ukv3d::Matrix4x4F view_matrix_;
-        ukv3d::Matrix4x4F ortho_matrix_;
+        utl::mat4f wvo_matrix_;
+        utl::mat4f world_matrix_;
+        utl::mat4f view_matrix_;
+        utl::mat4f ortho_matrix_;
 
         utl::win::ComPtr<ID3D11RenderTargetView> bg_rtv_;
         utl::win::ComPtr<ID3D11ShaderResourceView> bg_srv_;

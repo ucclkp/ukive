@@ -8,6 +8,8 @@
 
 #include <algorithm>
 
+#include "utils/math/algebra/special_matrix.hpp"
+
 #define NEAR_PLANE 10.0f
 #define FAR_PLANE 100000.0f
 #define PIDIV4  3.14159265359 / 4
@@ -20,60 +22,54 @@ namespace ukv3d {
           height_(height >= 1 ? height : 1)
     {
         //摄像机位置。
-        pos_.set(0.0f, 0.0f, -10.0f);
+        pos_ = { 0.0f, 0.0f, -10.0f };
         //摄像机看向的位置。
-        look_at_.set(0.0f, 0.0f, 0.0f);
+        look_at_ = { 0.0f, 0.0f, 0.0f };
 
-        up_.set(0.0f, 1.0f, 0.0f);
-        right_.set(1.0f, 0.0f, 0.0f);
-        look_.set(0.0f, 0.0f, 1.0f);
+        up_ = { 0.0f, 1.0f, 0.0f };
+        right_ = { 1.0f, 0.0f, 0.0f };
+        look_ = { 0.0f, 0.0f, 1.0f };
 
-        z_vector_.set(0.0f, 0.0f, 1.0f);
-        y_vector_.set(0.0f, 1.0f, 0.0f);
+        z_vector_ = { 0.0f, 0.0f, 1.0f};
+        y_vector_ = { 0.0f, 1.0f, 0.0f};
 
-        auto upVec = Vector3D(up_);
-        auto posVec = Point3D(pos_);
-        auto lookAtVec = Point3D(look_at_);
+        auto upVec = utl::vec3d(up_);
+        auto posVec = utl::pt3d(pos_);
+        auto lookAtVec = utl::pt3d(look_at_);
 
         radius_ = (lookAtVec - posVec).length();
 
         world_matrix_.identity();
 
         {
-            auto m = Matrix4x4D::camera(posVec, posVec - lookAtVec, upVec);
-            Matrix4x4D tm;
-            m.transport(&tm);
-            view_matrix_ = Matrix4x4F(tm);
+            auto m = utl::math::camera4x4(posVec, posVec - lookAtVec, upVec);
+            view_matrix_ = utl::mat4f(m.T());
         }
         {
             double fov_height = 2.0 * NEAR_PLANE * std::tan(PIDIV4 / 2.0);
             double fov_width = width_ / double(height_) * fov_height;
 
-            auto m = Matrix4x4D::orthoProj(
+            auto m = utl::math::orthoProj4x4<double>(
                 -fov_width / 2.0, fov_width / 2.0, -fov_height / 2.0, fov_height / 2.0, NEAR_PLANE, FAR_PLANE)
-                * Matrix4x4D::persp(NEAR_PLANE, FAR_PLANE);
+                * utl::math::persp4x4<double>(NEAR_PLANE, FAR_PLANE);
             // DirectX 的正规矩阵是左手的，且 Z 深度设置为了 [0, 1]。
-            m.m33 *= -1;
-            m.m34 *= -0.5;
+            m(2, 2) *= -1;
+            m(2, 3) *= -0.5;
 
-            Matrix4x4D tm;
-            m.transport(&tm);
-            projection_matrix_ = Matrix4x4F(tm);
+            projection_matrix_ = utl::mat4f(m.T());
         }
         {
-            auto m = Matrix4x4D::orthoProj(
+            auto m = utl::math::orthoProj4x4<double>(
                 -width_ / 2.f, width_ / 2.f, -height_ / 2.f, height_ / 2.f, NEAR_PLANE, FAR_PLANE);
             // DirectX 的正规矩阵是左手的，且 Z 深度设置为了 [0, 1]，且近平面和 XOY 平面重合。
-            Matrix4x4D adj(
+            utl::mat4d adj{
                 1, 0, 0, 0,
                 0, 1, 0, 0,
                 0, 0, -0.5f, FAR_PLANE / 2.f + NEAR_PLANE,
-                0, 0, 0, 1);
+                0, 0, 0, 1 };
             m.mul(adj);
 
-            Matrix4x4D tm;
-            m.transport(&tm);
-            ortho_matrix_ = Matrix4x4F(tm);
+            ortho_matrix_ = utl::mat4f(m.T());
         }
     }
 
@@ -87,119 +83,107 @@ namespace ukv3d {
             double fov_height = 2.0 * NEAR_PLANE * std::tan(PIDIV4 / 2.0);
             double fov_width = width_ / double(height_) * fov_height;
 
-            auto m = Matrix4x4D::orthoProj(-fov_width / 2.0, fov_width / 2.0, -fov_height / 2.0, fov_height / 2.0, NEAR_PLANE, FAR_PLANE)
-                * Matrix4x4D::persp(NEAR_PLANE, FAR_PLANE);
-            m.m33 *= -1;
-            m.m34 *= -0.5;
+            auto m = utl::math::orthoProj4x4<double>(-fov_width / 2.0, fov_width / 2.0, -fov_height / 2.0, fov_height / 2.0, NEAR_PLANE, FAR_PLANE)
+                * utl::math::persp4x4<double>(NEAR_PLANE, FAR_PLANE);
+            m(2, 2) *= -1;
+            m(2, 3) *= -0.5;
 
-            Matrix4x4D tm;
-            m.transport(&tm);
-            projection_matrix_ = Matrix4x4F(tm);
+            projection_matrix_ = utl::mat4f(m.T());
         }
         {
-            auto m = Matrix4x4D::orthoProj(-width_/2.f, width_/2.f, -height_/2.f, height_/2.f, NEAR_PLANE, FAR_PLANE);
-            Matrix4x4D adj(
+            auto m = utl::math::orthoProj4x4<double>(-width_/2.f, width_/2.f, -height_/2.f, height_/2.f, NEAR_PLANE, FAR_PLANE);
+            utl::mat4d adj{
                 1, 0, 0, 0,
                 0, 1, 0, 0,
                 0, 0, -0.5f, FAR_PLANE / 2.f + NEAR_PLANE,
-                0, 0, 0, 1);
+                0, 0, 0, 1 };
             m.mul(adj);
 
-            Matrix4x4D tm;
-            m.transport(&tm);
-            ortho_matrix_ = Matrix4x4F(tm);
+            ortho_matrix_ = utl::mat4f(m.T());
         }
     }
 
     void Camera::moveCamera(float dx, float dy) {
-        Vector3D frontVec(look_.x, 0, look_.z);
+        utl::vec3d frontVec{ look_.x(), 0, look_.z() };
         frontVec.nor();
 
-        auto upVec = Vector3D(up_);
-        auto rightVec = Vector3D(right_);
-        auto posVec = Point3D(pos_);
-        auto lookAtVec = Point3D(look_at_);
+        auto upVec = utl::vec3d(up_);
+        auto rightVec = utl::vec3d(right_);
+        auto posVec = utl::pt3d(pos_);
+        auto lookAtVec = utl::pt3d(look_at_);
 
         auto deltaVec = frontVec * dy + rightVec * dx;
 
         posVec = posVec + deltaVec;
         lookAtVec = lookAtVec + deltaVec;
 
-        auto m = Matrix4x4D::camera(posVec, posVec - lookAtVec, upVec);
-        Matrix4x4D tm;
-        m.transport(&tm);
-
-        view_matrix_ = Matrix4x4F(tm);
-        pos_ = Point3F(posVec);
-        look_at_ = Point3F(lookAtVec);
+        auto m = utl::math::camera4x4(posVec, posVec - lookAtVec, upVec);
+        view_matrix_ = utl::mat4f(m.T());
+        pos_ = utl::pt3f(posVec);
+        look_at_ = utl::pt3f(lookAtVec);
     }
 
     void Camera::scaleCamera(float factor) {
-        auto upVec = Vector3D(up_);
-        auto lookVec = Vector3D(look_);
-        auto lookAtVec = Point3D(look_at_);
+        auto upVec = utl::vec3d(up_);
+        auto lookVec = utl::vec3d(look_);
+        auto lookAtVec = utl::pt3d(look_at_);
 
         radius_ *= factor;
         auto posVec = lookAtVec + lookVec * -radius_;
 
-        auto m = Matrix4x4D::camera(posVec, posVec - lookAtVec, upVec);
-        Matrix4x4D tm;
-        m.transport(&tm);
-
-        view_matrix_ = Matrix4x4F(tm);
-        pos_ = Point3F(posVec);
+        auto m = utl::math::camera4x4(posVec, posVec - lookAtVec, upVec);
+        view_matrix_ = utl::mat4f(m.T());
+        pos_ = utl::pt3f(posVec);
     }
 
     void Camera::circuleCamera2(float dxAngle, float dyAngle) {
-        auto yVec = Vector3D(y_vector_);
-        auto rightVec = Vector4D(right_.x, right_.y, right_.z, 0);
-        auto posVec = Point3D(pos_);
-        auto lookVec = Vector4D(look_.x, look_.y, look_.z, 0);
+        auto yVec = utl::vec3d(y_vector_);
+        auto rightVec = utl::hvec4d{ right_.x(), right_.y(), right_.z(), 0 };
+        auto posVec = utl::pt3d(pos_);
+        auto lookVec = utl::hvec4d{ look_.x(), look_.y(), look_.z(), 0 };
 
-        auto rotateMatrix = Matrix4x4D::rotateAxis(yVec, -dxAngle);
+        auto rotateMatrix = utl::math::rotateAxis4x4<double>(yVec, -dxAngle);
         lookVec = lookVec.mul(rotateMatrix);
         rightVec = rightVec.mul(rotateMatrix);
         rightVec.nor();
 
-        auto lookAtVec = posVec + lookVec.v3() * radius_;
+        auto lookAtVec = posVec + lookVec.reduce<3>() * radius_;
 
-        rotateMatrix = Matrix4x4D::rotateAxis(rightVec.v3(), -dyAngle);
+        rotateMatrix = utl::math::rotateAxis4x4<double>(rightVec.reduce<3>().T(), -dyAngle);
 
         lookVec = lookVec.mul(rotateMatrix);
-        lookAtVec = posVec + lookVec.v3() * radius_;
+        lookAtVec = posVec + lookVec.reduce<3>() * radius_;
 
-        auto upVec = lookVec.v3() ^ rightVec.v3();
+        auto upVec = lookVec.reduce<3>() ^ rightVec.reduce<3>();
         upVec.nor();
         lookVec.nor();
 
         {
-            auto m = Matrix4x4D::camera(posVec, posVec - lookAtVec, upVec);
-            Matrix4x4D tm;
-            m.transport(&tm);
-            view_matrix_ = Matrix4x4F(tm);
+            auto m = utl::math::camera4x4(posVec, posVec - lookAtVec, upVec.T());
+            view_matrix_ = utl::mat4f(m.T());
         }
 
-        up_ = Vector3F(upVec);
-        right_ = Vector3F(rightVec.v3());
-        look_ = Vector3F(lookVec.v3());
-        look_at_ = Point3F(lookAtVec);
+        up_ = utl::vec3f(upVec.T());
+        right_ = utl::vec3f(rightVec.reduce<3>().T());
+        look_ = utl::vec3f(lookVec.reduce<3>().T());
+        look_at_ = utl::pt3f(lookAtVec);
     }
 
 
     void Camera::moveWorld(float dx, float dy) {
-        Vector3D frontVec(look_.x, 0, look_.z);
+        utl::vec3d frontVec{ look_.x(), 0, look_.z() };
         frontVec.nor();
         frontVec = frontVec * dy;
 
-        auto rightVec = Vector3D(right_);
+        auto rightVec = utl::vec3d(right_);
         rightVec = rightVec * dx;
 
-        auto transMatrix = Matrix4x4D::translate(
-            frontVec.x + rightVec.x, 0, frontVec.z + rightVec.z);
+        auto transMatrix = utl::math::translate4x4<double>(
+            frontVec.x() + rightVec.x(), 0, frontVec.z() + rightVec.z());
 
-        auto worldMatrix = Matrix4x4D(world_matrix_);
+        auto worldMatrix = utl::mat4d(world_matrix_);
         worldMatrix = worldMatrix * transMatrix;
-        world_matrix_ = Matrix4x4F(worldMatrix);
+        world_matrix_ = utl::mat4f(worldMatrix);
     }
 
     void Camera::scaleWorld(int direction) {
@@ -211,25 +195,25 @@ namespace ukv3d {
             scaleFactor = 0.9f;
 
         auto scaleMatrix
-            = Matrix4x4D::scale(scaleFactor, scaleFactor, scaleFactor);
+            = utl::math::scale4x4<double>(scaleFactor, scaleFactor, scaleFactor);
 
-        auto worldMatrix = Matrix4x4D(world_matrix_);
+        auto worldMatrix = utl::mat4d(world_matrix_);
         worldMatrix = worldMatrix * scaleMatrix;
-        world_matrix_ = Matrix4x4F(worldMatrix);
+        world_matrix_ = utl::mat4f(worldMatrix);
     }
 
     void Camera::rotateWorld(float dxAngle, float dyAngle) {
-        auto rotateMatrix = Matrix4x4D::rotateY(dxAngle);
+        auto rotateMatrix = utl::math::rotateY4x4<double>(dxAngle);
 
-        auto worldMatrix = Matrix4x4D(world_matrix_);
+        auto worldMatrix = utl::mat4d(world_matrix_);
         worldMatrix = worldMatrix * rotateMatrix;
-        world_matrix_ = Matrix4x4F(worldMatrix);
+        world_matrix_ = utl::mat4f(worldMatrix);
     }
 
     void Camera::setCameraPosition(float x, float y, float z) {
-        auto upVec = Vector3D(up_);
-        auto lookAtVec = Point3D(look_at_);
-        Point3D posVec(x, y, z);
+        auto upVec = utl::vec3d(up_);
+        auto lookAtVec = utl::pt3d(look_at_);
+        utl::pt3d posVec{ x, y, z };
         auto lookVec = lookAtVec - posVec;
 
         radius_ = lookVec.length();
@@ -243,22 +227,20 @@ namespace ukv3d {
         rightVec.nor();
 
         {
-            auto m = Matrix4x4D::camera(posVec, posVec - lookAtVec, upVec);
-            Matrix4x4D tm;
-            m.transport(&tm);
-            view_matrix_ = Matrix4x4F(tm);
+            auto m = utl::math::camera4x4(posVec, posVec - lookAtVec, upVec);
+            view_matrix_ = utl::mat4f(m.T());
         }
 
-        up_ = Vector3F(upVec);
-        right_ = Vector3F(rightVec);
-        pos_ = Point3F(posVec);
-        look_ = Vector3F(lookVec);
+        up_ = utl::vec3f(upVec);
+        right_ = utl::vec3f(rightVec);
+        pos_ = utl::pt3f(posVec);
+        look_ = utl::vec3f(lookVec);
     }
 
     void Camera::setCameraLookAt(float x, float y, float z) {
-        auto upVec = Vector3D(up_);
-        auto posVec = Point3D(pos_);
-        Point3D lookAtVec(x, y, z);
+        auto upVec = utl::vec3d(up_);
+        auto posVec = utl::pt3d(pos_);
+        utl::pt3d lookAtVec{ x, y, z };
         auto lookVec = lookAtVec - posVec;
 
         radius_ = lookVec.length();
@@ -272,60 +254,58 @@ namespace ukv3d {
         rightVec.nor();
 
         {
-            auto m = Matrix4x4D::camera(posVec, posVec - lookAtVec, upVec);
-            Matrix4x4D tm;
-            m.transport(&tm);
-            view_matrix_ = Matrix4x4F(tm);
+            auto m = utl::math::camera4x4(posVec, posVec - lookAtVec, upVec);
+            view_matrix_ = utl::mat4f(m.T());
         }
 
-        up_ = Vector3F(upVec);
-        right_ = Vector3F(rightVec);
-        look_ = Vector3F(lookVec);
-        look_at_ = Point3F(lookAtVec);
+        up_ = utl::vec3f(upVec);
+        right_ = utl::vec3f(rightVec);
+        look_ = utl::vec3f(lookVec);
+        look_at_ = utl::pt3f(lookAtVec);
     }
 
-    const Point3F* Camera::getCameraPos() const {
+    const utl::pt3f* Camera::getCameraPos() const {
         return &pos_;
     }
 
-    const Point3F* Camera::getCameraLookAt() const {
+    const utl::pt3f* Camera::getCameraLookAt() const {
         return &look_at_;
     }
 
-    const Vector3F* Camera::getCameraUp() const {
+    const utl::vec3f* Camera::getCameraUp() const {
         return &up_;
     }
 
-    const Matrix4x4F* Camera::getWorldMatrix() const {
+    const utl::mat4f* Camera::getWorldMatrix() const {
         return &world_matrix_;
     }
 
-    const Matrix4x4F* Camera::getViewMatrix() const {
+    const utl::mat4f* Camera::getViewMatrix() const {
         return &view_matrix_;
     }
 
-    const Matrix4x4F* Camera::getProjectionMatrix() const {
+    const utl::mat4f* Camera::getProjectionMatrix() const {
         return &projection_matrix_;
     }
 
-    const Matrix4x4F* Camera::getOrthoMatrix() const {
+    const utl::mat4f* Camera::getOrthoMatrix() const {
         return &ortho_matrix_;
     }
 
-    void Camera::getWVPMatrix(Matrix4x4F* wvp) const {
-        auto world = Matrix4x4D(world_matrix_);
-        auto view = Matrix4x4D(view_matrix_);
-        auto projection = Matrix4x4D(projection_matrix_);
+    void Camera::getWVPMatrix(utl::mat4f* wvp) const {
+        auto world = utl::mat4d(world_matrix_);
+        auto view = utl::mat4d(view_matrix_);
+        auto projection = utl::mat4d(projection_matrix_);
 
-        *wvp = Matrix4x4F(world * view * projection);
+        *wvp = utl::mat4f(world * view * projection);
     }
 
-    void Camera::getWVOMatrix(Matrix4x4F* wvo) const {
-        auto world = Matrix4x4D(world_matrix_);
-        auto view = Matrix4x4D(view_matrix_);
-        auto ortho = Matrix4x4D(ortho_matrix_);
+    void Camera::getWVOMatrix(utl::mat4f* wvo) const {
+        auto world = utl::mat4d(world_matrix_);
+        auto view = utl::mat4d(view_matrix_);
+        auto ortho = utl::mat4d(ortho_matrix_);
 
-        *wvo = Matrix4x4F(world * view * ortho);
+        *wvo = utl::mat4f(world * view * ortho);
     }
 
 }

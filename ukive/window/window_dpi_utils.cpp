@@ -39,8 +39,8 @@ namespace ukive {
 
     void scaleToNative(WindowNative* w, Point* pt) {
         if (Application::getOptions().is_auto_dpi_scale) {
-            pt->x = int(w->scaleToNative(float(pt->x)));
-            pt->y = int(w->scaleToNative(float(pt->y)));
+            pt->x() = int(w->scaleToNative(float(pt->x())));
+            pt->y() = int(w->scaleToNative(float(pt->y())));
         }
     }
 
@@ -73,8 +73,8 @@ namespace ukive {
 
     void scaleFromNative(WindowNative* w, Point* pt) {
         if (Application::getOptions().is_auto_dpi_scale) {
-            pt->x = int(w->scaleFromNative(float(pt->x)));
-            pt->y = int(w->scaleFromNative(float(pt->y)));
+            pt->x() = int(w->scaleFromNative(float(pt->x())));
+            pt->y() = int(w->scaleFromNative(float(pt->y())));
         }
     }
 

@@ -9,7 +9,7 @@
 
 #include <memory>
 
-#include "ukive/graphics/3d/matrix.hpp"
+#include "utils/math/algebra/point.hpp"
 
 
 namespace ukive {
@@ -20,12 +20,12 @@ namespace ukive {
     class GPUInputLayout;
 
     struct AssistVertexData {
-        ukv3d::Point3F position;
-        ukv3d::Point4F color;
-        ukv3d::Vector2F texcoord;
+        utl::pt3f position;
+        utl::pt4f color;
+        utl::vec2f texcoord;
 
         AssistVertexData()
-            : color(ukv3d::Point4F(0, 0, 0, 1)) {}
+            : color({ 0, 0, 0, 1 }) {}
     };
 
 
@@ -38,11 +38,11 @@ namespace ukive {
         void active(GPUContext* context);
         void close();
 
-        void setMatrix(GPUContext* context, const ukv3d::Matrix4x4F& matrix);
+        void setMatrix(GPUContext* context, const utl::mat4f& matrix);
 
     private:
         struct AssistConstBuffer {
-            ukv3d::Matrix4x4F wvp;
+            utl::mat4f wvp;
         };
 
         std::unique_ptr<GPUBuffer> assist_cb_;

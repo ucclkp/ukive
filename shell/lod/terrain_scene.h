@@ -70,7 +70,7 @@ namespace shell {
         void updateCube();
         void updateLodTerrain();
         void elementAwareness(int ex, int ey);
-        void getPickLine(int sx, int sy, ukv3d::Point3F* line_org, ukv3d::Vector3F* line_dir);
+        void getPickLine(int sx, int sy, utl::pt3f* line_org, utl::vec3f* line_dir);
         void setViewports(float x, float y, float width, float height);
 
     private:
