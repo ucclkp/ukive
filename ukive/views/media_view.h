@@ -42,12 +42,12 @@ namespace ukive {
         void onMediaStopped() override;
         void onMediaEnded() override;
         void onMediaClosed() override;
-        void onRenderVideoFrame(ImageFrame* frame) override;
+        void onRenderVideoFrame(const GPtr<ImageFrame>& frame) override;
 
     private:
         std::u16string file_path_;
         std::unique_ptr<MediaPlayer> media_player_;
-        ImageFrame* video_frame_ = nullptr;
+        GPtr<ImageFrame> video_frame_;
     };
 
 }

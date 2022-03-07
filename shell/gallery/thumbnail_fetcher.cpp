@@ -130,15 +130,9 @@ namespace shell {
 
                 if (data.is_file) {
                     if (!getThumbnail(data.path, thumbnail.get())) {
-                        thumbnail->data.clear();
-                        thumbnail->width = 0;
-                        thumbnail->height = 0;
                     }
                 } else {
                     if (!getFolderThumbnail(data.path, thumbnail.get())) {
-                        thumbnail->data.clear();
-                        thumbnail->width = 0;
-                        thumbnail->height = 0;
                     }
                 }
 
@@ -179,8 +173,8 @@ namespace shell {
                 return false;
             }
             auto frame = img.getFrames()[0];
-            img.removeFrame(frame, false);
-            out->ph_bmp.reset(frame);
+            img.removeFrame(frame);
+            out->ph_bmp = frame;
             return true;
         }
 
@@ -197,9 +191,8 @@ namespace shell {
 
     bool ThumbnailFetcher::getThumbnail(const std::u16string& file_name, Thumbnail* out) {
         auto ic = ukive::Application::getImageLocFactory();
-        if (!ic->getThumbnail(
-            file_name, 400, 400, &out->data, &out->width, &out->height, &out->options))
-        {
+        out->ph_bmp = ic->getThumbnail(file_name, 400, 400, &out->options);
+        if (!out->ph_bmp) {
             return false;
         }
         return true;

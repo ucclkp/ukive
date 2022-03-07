@@ -53,7 +53,7 @@ namespace vsul {
         utl::mat4f wvp_matrix;
 
         context->setRasterizerState(rasterizer_state_.get());
-        context->setViewport(1, &viewport_);
+        context->setViewports(1, &viewport_);
 
         //d3d_dc->OMSetDepthStencilState(depth_stencil_state_.get(), 1);
         //d3d_dc->PSSetSamplers(0, 1, &sampler_state_);
@@ -126,7 +126,7 @@ namespace vsul {
         ds_desc.back_face.stencil_depth_fail_op = ukive::GPUDepthStencilState::StencilOp::Decr;
         ds_desc.back_face.stencil_pass_op = ukive::GPUDepthStencilState::StencilOp::Keep;
         ds_desc.back_face.stencil_func = ukive::ComparisonFunc::Always;
-        depth_stencil_state_.reset(device->createDepthStencilState(&ds_desc));
+        depth_stencil_state_ = device->createDepthStencilState(ds_desc);
         if (!depth_stencil_state_) {
             LOG(Log::WARNING) << "Failed to create depth stencil state";
             return false;
@@ -141,7 +141,7 @@ namespace vsul {
         desc.front_counter_clockwise = false;
         desc.multisample_enabled = false;
         desc.scissor_enabled = false;
-        rasterizer_state_.reset(device->createRasterizerState(&desc));
+        rasterizer_state_ = device->createRasterizerState(desc);
         if (!rasterizer_state_) {
             LOG(Log::WARNING) << "Failed to create rasterizer state";
             return false;
@@ -161,7 +161,7 @@ namespace vsul {
         ss_desc.border_color[3] = 0;
         ss_desc.min_lod = 0;
         ss_desc.max_lod = (std::numeric_limits<float>::max)();
-        sampler_state_.reset(device->createSamplerState(&ss_desc));
+        sampler_state_ = device->createSamplerState(ss_desc);
         if (!sampler_state_) {
             LOG(Log::WARNING) << "Failed to create sampler state";
             return false;
@@ -192,7 +192,7 @@ namespace vsul {
         tex_desc.res_type = ukive::GPUResource::RES_DEPTH_STENCIL;
         tex_desc.is_dynamic = false;
         tex_desc.dim = ukive::GPUTexture::Dimension::_2D;
-        depth_stencil_buffer_.reset(device->createTexture(&tex_desc, nullptr));
+        depth_stencil_buffer_ = device->createTexture(tex_desc, nullptr);
         if (!depth_stencil_buffer_) {
             LOG(Log::WARNING) << "Failed to create 2d texture";
             return false;
@@ -203,7 +203,7 @@ namespace vsul {
         dsv_desc.format = ukive::GPUDataFormat::D24_UNORM_S8_UINT;
         dsv_desc.view_dim = ukive::GPUDepthStencil::DSV_DIMENSION_TEXTURE2D;
 
-        depth_stencil_view_.reset(device->createDepthStencil(&dsv_desc, depth_stencil_buffer_.get()));
+        depth_stencil_view_ = device->createDepthStencil(dsv_desc, depth_stencil_buffer_.get());
         if (!depth_stencil_view_) {
             LOG(Log::WARNING) << "Failed to create depth stencil view";
             return false;

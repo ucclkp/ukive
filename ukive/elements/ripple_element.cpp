@@ -105,7 +105,7 @@ namespace ukive {
                     float(ripple_animator_.getCurValue() * r), ripple_color);
             }
             content_off_->endDraw();
-            std::shared_ptr<ImageFrame> content_img(content_off_->extractImage());
+            auto content_img = content_off_->extractImage();
 
             if (list_.empty()) {
                 canvas->drawImage(content_img.get());
@@ -125,7 +125,7 @@ namespace ukive {
                 mask_off_->setOpacity(canvas->getOpacity());
                 MultiElement::draw(mask_off_.get());
                 mask_off_->endDraw();
-                std::shared_ptr<ImageFrame> mask_img(mask_off_->extractImage());
+                auto mask_img = mask_off_->extractImage();
 
                 if (is_draw_mask_) {
                     canvas->drawImage(mask_img.get());

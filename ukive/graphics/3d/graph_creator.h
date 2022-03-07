@@ -7,8 +7,8 @@
 #ifndef UKIVE_GRAPHICS_3D_GRAPH_CREATOR_H_
 #define UKIVE_GRAPHICS_3D_GRAPH_CREATOR_H_
 
-#include "ukive/graphics/win/direct3d/assist_configure.h"
-#include "ukive/graphics/win/direct3d/model_configure.h"
+#include "ukive/graphics/win/3d/assist_configure.h"
+#include "ukive/graphics/win/3d/model_configure.h"
 
 #include "utils/math/algebra/point.hpp"
 

@@ -172,9 +172,6 @@
     <ClCompile Include="window\window_native.cpp">
       <Filter>window</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\win\direct3d\effects\shadow_effect_dx.cpp">
-      <Filter>graphics\win\direct3d\effects</Filter>
-    </ClCompile>
     <ClCompile Include="text\win\dwrite\text_analysis_sink.cpp">
       <Filter>text\win\dwrite</Filter>
     </ClCompile>
@@ -319,51 +316,6 @@
     <ClCompile Include="text\win\dw_inline_object.cpp">
       <Filter>text\win</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\win\gpu\gpu_context_d3d.cpp">
-      <Filter>graphics\win\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\win\gpu\gpu_device_d3d.cpp">
-      <Filter>graphics\win\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\win\gpu\gpu_buffer_d3d.cpp">
-      <Filter>graphics\win\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\win\gpu\gpu_depth_stencil_d3d.cpp">
-      <Filter>graphics\win\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\win\gpu\gpu_depth_stencil_state_d3d.cpp">
-      <Filter>graphics\win\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\win\gpu\gpu_input_layout_d3d.cpp">
-      <Filter>graphics\win\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\win\gpu\gpu_rasterizer_state_d3d.cpp">
-      <Filter>graphics\win\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\win\gpu\gpu_render_target_d3d.cpp">
-      <Filter>graphics\win\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\win\gpu\gpu_sampler_state_d3d.cpp">
-      <Filter>graphics\win\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\win\gpu\gpu_shader_d3d.cpp">
-      <Filter>graphics\win\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\win\gpu\gpu_texture_d3d.cpp">
-      <Filter>graphics\win\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\win\gpu\gpu_shader_resource_d3d.cpp">
-      <Filter>graphics\win\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\win\gpu\gpu_d3d_utils.cpp">
-      <Filter>graphics\win\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\win\direct3d\assist_configure.cpp">
-      <Filter>graphics\win\direct3d</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\win\direct3d\model_configure.cpp">
-      <Filter>graphics\win\direct3d</Filter>
-    </ClCompile>
     <ClCompile Include="views\space3d_view.cpp">
       <Filter>views</Filter>
     </ClCompile>
@@ -475,45 +427,6 @@
     <ClCompile Include="text\input_method_connection.cpp">
       <Filter>text</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\mac\gpu\gpu_buffer_metal.cpp">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\mac\gpu\gpu_context_metal.cpp">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\mac\gpu\gpu_depth_stencil_metal.cpp">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\mac\gpu\gpu_depth_stencil_state_metal.cpp">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\mac\gpu\gpu_device_metal.cpp">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\mac\gpu\gpu_input_layout_metal.cpp">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\mac\gpu\gpu_metal_utils.cpp">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\mac\gpu\gpu_rasterizer_state_metal.cpp">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\mac\gpu\gpu_render_target_metal.cpp">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\mac\gpu\gpu_sampler_state_metal.cpp">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\mac\gpu\gpu_shader_metal.cpp">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\mac\gpu\gpu_shader_resource_metal.cpp">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\mac\gpu\gpu_texture_metal.cpp">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClCompile>
     <ClCompile Include="views\layout_info\list_layout_info.cpp">
       <Filter>views\layout_info</Filter>
     </ClCompile>
@@ -616,9 +529,6 @@
     <ClCompile Include="graphics\effects\image_effect.cpp">
       <Filter>graphics\effects</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\win\direct3d\effects\image_effect_dx.cpp">
-      <Filter>graphics\win\direct3d\effects</Filter>
-    </ClCompile>
     <ClCompile Include="event\win\window_message_buncher_win.cpp">
       <Filter>event\win</Filter>
     </ClCompile>
@@ -702,6 +612,96 @@
     </ClCompile>
     <ClCompile Include="graphics\gpu\gpu_texture.cpp">
       <Filter>graphics\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\effects\image_effect_dx.cpp">
+      <Filter>graphics\win\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\effects\shadow_effect_dx.cpp">
+      <Filter>graphics\win\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\3d\assist_configure.cpp">
+      <Filter>graphics\win\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\3d\model_configure.cpp">
+      <Filter>graphics\win\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_buffer_d3d11.cpp">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_context_d3d11.cpp">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_d3d11_utils.cpp">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_depth_stencil_d3d11.cpp">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_depth_stencil_state_d3d11.cpp">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_device_d3d11.cpp">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_input_layout_d3d11.cpp">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_rasterizer_state_d3d11.cpp">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_render_target_d3d11.cpp">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_sampler_state_d3d11.cpp">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_shader_d3d11.cpp">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_shader_resource_d3d11.cpp">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_texture_d3d11.cpp">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_buffer_metal.cpp">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_context_metal.cpp">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_depth_stencil_metal.cpp">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_depth_stencil_state_metal.cpp">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_device_metal.cpp">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_input_layout_metal.cpp">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_metal_utils.cpp">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_rasterizer_state_metal.cpp">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_render_target_metal.cpp">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_sampler_state_metal.cpp">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_shader_metal.cpp">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_shader_resource_metal.cpp">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_texture_metal.cpp">
+      <Filter>graphics\mac\gpu\metal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -905,9 +905,6 @@
     </ClInclude>
     <ClInclude Include="window\window_native.h">
       <Filter>window</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\win\direct3d\effects\shadow_effect_dx.h">
-      <Filter>graphics\win\direct3d\effects</Filter>
     </ClInclude>
     <ClInclude Include="text\win\dwrite\text_analysis_sink.h">
       <Filter>text\win\dwrite</Filter>
@@ -1143,51 +1140,6 @@
     <ClInclude Include="graphics\gpu\gpu_types.h">
       <Filter>graphics\gpu</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\win\gpu\gpu_context_d3d.h">
-      <Filter>graphics\win\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\win\gpu\gpu_device_d3d.h">
-      <Filter>graphics\win\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\win\gpu\gpu_buffer_d3d.h">
-      <Filter>graphics\win\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\win\gpu\gpu_depth_stencil_d3d.h">
-      <Filter>graphics\win\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\win\gpu\gpu_depth_stencil_state_d3d.h">
-      <Filter>graphics\win\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\win\gpu\gpu_input_layout_d3d.h">
-      <Filter>graphics\win\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\win\gpu\gpu_rasterizer_state_d3d.h">
-      <Filter>graphics\win\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\win\gpu\gpu_render_target_d3d.h">
-      <Filter>graphics\win\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\win\gpu\gpu_sampler_state_d3d.h">
-      <Filter>graphics\win\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\win\gpu\gpu_shader_d3d.h">
-      <Filter>graphics\win\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\win\gpu\gpu_texture_d3d.h">
-      <Filter>graphics\win\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\win\gpu\gpu_shader_resource_d3d.h">
-      <Filter>graphics\win\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\win\gpu\gpu_d3d_utils.h">
-      <Filter>graphics\win\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\win\direct3d\assist_configure.h">
-      <Filter>graphics\win\direct3d</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\win\direct3d\model_configure.h">
-      <Filter>graphics\win\direct3d</Filter>
-    </ClInclude>
     <ClInclude Include="views\space3d_view.h">
       <Filter>views</Filter>
     </ClInclude>
@@ -1317,45 +1269,6 @@
     <ClInclude Include="text\input_method_connection.h">
       <Filter>text</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\mac\gpu\gpu_buffer_metal.h">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\mac\gpu\gpu_context_metal.h">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\mac\gpu\gpu_depth_stencil_metal.h">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\mac\gpu\gpu_depth_stencil_state_metal.h">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\mac\gpu\gpu_device_metal.h">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\mac\gpu\gpu_input_layout_metal.h">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\mac\gpu\gpu_metal_utils.h">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\mac\gpu\gpu_rasterizer_state_metal.h">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\mac\gpu\gpu_render_target_metal.h">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\mac\gpu\gpu_sampler_state_metal.h">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\mac\gpu\gpu_shader_metal.h">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\mac\gpu\gpu_shader_resource_metal.h">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\mac\gpu\gpu_texture_metal.h">
-      <Filter>graphics\mac\gpu</Filter>
-    </ClInclude>
     <ClInclude Include="views\layout_info\list_layout_info.h">
       <Filter>views\layout_info</Filter>
     </ClInclude>
@@ -1467,9 +1380,6 @@
     <ClInclude Include="graphics\effects\image_effect.h">
       <Filter>graphics\effects</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\win\direct3d\effects\image_effect_dx.h">
-      <Filter>graphics\win\direct3d\effects</Filter>
-    </ClInclude>
     <ClInclude Include="event\win\window_message_buncher_win.h">
       <Filter>event\win</Filter>
     </ClInclude>
@@ -1566,6 +1476,108 @@
     <ClInclude Include="graphics\point.hpp">
       <Filter>graphics</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\win\effects\image_effect_dx.h">
+      <Filter>graphics\win\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\effects\shadow_effect_dx.h">
+      <Filter>graphics\win\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\3d\assist_configure.h">
+      <Filter>graphics\win\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\3d\model_configure.h">
+      <Filter>graphics\win\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_buffer_d3d11.h">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_context_d3d11.h">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_d3d11_utils.h">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_depth_stencil_d3d11.h">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_depth_stencil_state_d3d11.h">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_device_d3d11.h">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_input_layout_d3d11.h">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_rasterizer_state_d3d11.h">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_render_target_d3d11.h">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_sampler_state_d3d11.h">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_shader_d3d11.h">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_shader_resource_d3d11.h">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_texture_d3d11.h">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gerror_code.hpp">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gptr.hpp">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gref_count.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gref_count_impl.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_buffer_metal.h">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_context_metal.h">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_depth_stencil_metal.h">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_depth_stencil_state_metal.h">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_device_metal.h">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_input_layout_metal.h">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_metal_utils.h">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_rasterizer_state_metal.h">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_render_target_metal.h">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_sampler_state_metal.h">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_shader_metal.h">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_shader_resource_metal.h">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_texture_metal.h">
+      <Filter>graphics\mac\gpu\metal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="window">
@@ -1621,15 +1633,6 @@
     </Filter>
     <Filter Include="system\win">
       <UniqueIdentifier>{3aa5556b-3593-4bb0-af40-a9a06333fd00}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="graphics\win\direct3d">
-      <UniqueIdentifier>{5f424b39-00ad-4bff-95c0-c23bea57f6df}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="graphics\win\direct3d\effects">
-      <UniqueIdentifier>{0b2ac1fb-9f81-49db-8f95-9c16490293f8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="graphics\win\direct3d\hlsl">
-      <UniqueIdentifier>{613c7614-09ba-406a-8a0d-2b41965040bf}</UniqueIdentifier>
     </Filter>
     <Filter Include="text\win\dwrite">
       <UniqueIdentifier>{e67a551b-fca1-46c8-ae07-05ffc74c19be}</UniqueIdentifier>
@@ -1724,34 +1727,49 @@
     <Filter Include="basics">
       <UniqueIdentifier>{715cec78-759c-44f7-a6ac-216fe2d62dce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="graphics\win\3d">
+      <UniqueIdentifier>{8dc25d52-7e6e-4e77-b7d4-8bd6b16d4c86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\win\hlsl">
+      <UniqueIdentifier>{2ecd8a5a-ed56-4fbc-ac2f-14eed10e975b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\win\effects">
+      <UniqueIdentifier>{8f1624e7-06f4-4547-85f9-27e45d98847d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\win\gpu\d3d11">
+      <UniqueIdentifier>{c433782a-2d32-4efc-a386-bd9cc06793e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\mac\gpu\metal">
+      <UniqueIdentifier>{45f147dd-8ec6-443d-9afe-120a9f44ba9d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="graphics\win\direct3d\hlsl\shadow_effect_vs.hlsl">
-      <Filter>graphics\win\direct3d\hlsl</Filter>
+    <FxCompile Include="graphics\win\hlsl\assist_pixel_shader.hlsl">
+      <Filter>graphics\win\hlsl</Filter>
     </FxCompile>
-    <FxCompile Include="graphics\win\direct3d\hlsl\shadow_effect_vert_ps.hlsl">
-      <Filter>graphics\win\direct3d\hlsl</Filter>
+    <FxCompile Include="graphics\win\hlsl\assist_vertex_shader.hlsl">
+      <Filter>graphics\win\hlsl</Filter>
     </FxCompile>
-    <FxCompile Include="graphics\win\direct3d\hlsl\shadow_effect_hori_ps.hlsl">
-      <Filter>graphics\win\direct3d\hlsl</Filter>
+    <FxCompile Include="graphics\win\hlsl\image_effect_ps.hlsl">
+      <Filter>graphics\win\hlsl</Filter>
     </FxCompile>
-    <FxCompile Include="graphics\win\direct3d\hlsl\assist_pixel_shader.hlsl">
-      <Filter>graphics\win\direct3d\hlsl</Filter>
+    <FxCompile Include="graphics\win\hlsl\image_effect_vs.hlsl">
+      <Filter>graphics\win\hlsl</Filter>
     </FxCompile>
-    <FxCompile Include="graphics\win\direct3d\hlsl\assist_vertex_shader.hlsl">
-      <Filter>graphics\win\direct3d\hlsl</Filter>
+    <FxCompile Include="graphics\win\hlsl\model_pixel_shader.hlsl">
+      <Filter>graphics\win\hlsl</Filter>
     </FxCompile>
-    <FxCompile Include="graphics\win\direct3d\hlsl\model_pixel_shader.hlsl">
-      <Filter>graphics\win\direct3d\hlsl</Filter>
+    <FxCompile Include="graphics\win\hlsl\model_vertex_shader.hlsl">
+      <Filter>graphics\win\hlsl</Filter>
     </FxCompile>
-    <FxCompile Include="graphics\win\direct3d\hlsl\model_vertex_shader.hlsl">
-      <Filter>graphics\win\direct3d\hlsl</Filter>
+    <FxCompile Include="graphics\win\hlsl\shadow_effect_hori_ps.hlsl">
+      <Filter>graphics\win\hlsl</Filter>
     </FxCompile>
-    <FxCompile Include="graphics\win\direct3d\hlsl\image_effect_ps.hlsl">
-      <Filter>graphics\win\direct3d\hlsl</Filter>
+    <FxCompile Include="graphics\win\hlsl\shadow_effect_vert_ps.hlsl">
+      <Filter>graphics\win\hlsl</Filter>
     </FxCompile>
-    <FxCompile Include="graphics\win\direct3d\hlsl\image_effect_vs.hlsl">
-      <Filter>graphics\win\direct3d\hlsl</Filter>
+    <FxCompile Include="graphics\win\hlsl\shadow_effect_vs.hlsl">
+      <Filter>graphics\win\hlsl</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

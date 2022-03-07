@@ -9,12 +9,13 @@
 
 #include <cstdint>
 
+#include "ukive/graphics/gref_count.h"
 #include "ukive/graphics/gpu/gpu_types.h"
 
 
 namespace ukive {
 
-    class GPUSamplerState {
+    class GPUSamplerState : public virtual GRefCount {
     public:
         using Native = intptr_t;
 

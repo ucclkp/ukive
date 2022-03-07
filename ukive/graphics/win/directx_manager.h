@@ -16,6 +16,7 @@
 
 #include "utils/memory/win/com_ptr.hpp"
 
+#include "ukive/graphics/gpu/gpu_device.h"
 #include "ukive/graphics/graphic_device_manager.h"
 
 
@@ -25,8 +26,8 @@ namespace ukive {
 
 namespace win {
 
-    class GPUDeviceD3D;
-    class GPUContextD3D;
+    class GPUDeviceD3D11;
+    class GPUContextD3D11;
 
     class DirectXManager : public GraphicDeviceManager {
     public:
@@ -37,8 +38,8 @@ namespace win {
         bool recreate() override;
         void destroy() override;
 
-        GPUDevice* getGPUDevice() const override;
-        GPUContext* getGPUContext() const override;
+        GPtr<GPUDevice> getGPUDevice() const override;
+        GPtr<GPUContext> getGPUContext() const override;
 
         void enumSystemFonts();
 
@@ -77,8 +78,8 @@ namespace win {
 
         utl::win::ComPtr<IDXGIDevice> dxgi_device_;
 
-        std::unique_ptr<GPUDeviceD3D> gpu_device_;
-        std::unique_ptr<GPUContextD3D> gpu_context_;
+        GPtr<GPUDevice> gpu_device_;
+        GPtr<GPUContext> gpu_context_;
     };
 
 }

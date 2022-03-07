@@ -9,12 +9,14 @@
 
 #include <cstdint>
 
+#include "ukive/graphics/gptr.hpp"
+#include "ukive/graphics/gref_count.h"
 #include "ukive/graphics/gpu/gpu_types.h"
 
 
 namespace ukive {
 
-    class GPUShaderResource {
+    class GPUShaderResource : public virtual GRefCount {
     public:
         enum SRVDimension {
             SRV_DIMENSION_UNKNOWN,

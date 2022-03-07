@@ -14,7 +14,7 @@
 
 namespace ukive {
 
-    class GPUBuffer : public GPUResource {
+    class GPUBuffer : public GPUResource  {
     public:
         struct Desc {
             Desc()

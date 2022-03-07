@@ -56,9 +56,9 @@ GUI_MAIN() {
 
     /*auto shadow_window = std::make_shared<shell::EffectWindow>();
     shadow_window->init(native_params);
-    shadow_window->setTitle(u"Shadow");
-    shadow_window->setWidth(ukive::Application::dp2pxi(1500));
-    shadow_window->setHeight(ukive::Application::dp2pxi(1300));
+    shadow_window->setTitle(u"Effects");
+    shadow_window->setWidth(ukive::Application::dp2pxi(800));
+    shadow_window->setHeight(ukive::Application::dp2pxi(800));
     shadow_window->center();
     shadow_window->show();*/
 

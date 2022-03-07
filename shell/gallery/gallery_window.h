@@ -91,7 +91,7 @@ namespace shell {
             std::u16string title;
             std::u16string path;
             std::u16string first_img_name;
-            std::shared_ptr<ukive::ImageFrame> img;
+            ukive::GPtr<ukive::ImageFrame> img;
             bool is_dir;
             ThumbStatus ts = ThumbStatus::None;
             std::shared_ptr<int> token = std::make_shared<int>(0);

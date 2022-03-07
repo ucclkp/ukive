@@ -11,6 +11,7 @@
 
 #include "ukive/views/view.h"
 #include "ukive/graphics/matrix_2x3_f.h"
+#include "ukive/graphics/gptr.hpp"
 
 
 namespace ukive {
@@ -38,11 +39,11 @@ namespace ukive {
 
         void setMatrix(const Matrix2x3F& m);
         void setScaleType(ScaleType type);
-        void setImage(const std::shared_ptr<ImageFrame>& img);
+        void setImage(const GPtr<ImageFrame>& img);
 
         Matrix2x3F getMatrix() const;
         ScaleType getScaleType() const;
-        std::shared_ptr<ImageFrame> getImage() const;
+        GPtr<ImageFrame> getImage() const;
 
     protected:
         void onContextChanged(const Context& context) override;

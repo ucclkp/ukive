@@ -48,13 +48,13 @@ namespace ukive {
         if (content_img_) {
             auto gpu_context = Application::getGraphicDeviceManager()->getGPUContext();
 
-            gpu_context->setRenderTargets(1, render_target_view_.get(), nullptr);
+            gpu_context->setRenderTargets(1, &render_target_view_, nullptr);
 
             Color d2d_color = getWindow()->getBackgroundColor();
             float bg_color[4] = { d2d_color.r, d2d_color.g, d2d_color.b, d2d_color.a };
             gpu_context->clearRenderTarget(render_target_view_.get(), bg_color);
 
-            scene_->onSceneRender(gpu_context, render_target_view_.get());
+            scene_->onSceneRender(gpu_context.get(), render_target_view_.get());
 
             canvas->drawImage(content_img_.get());
         }
@@ -127,13 +127,13 @@ namespace ukive {
         tex_desc.res_type = GPUResource::RES_RENDER_TARGET | GPUResource::RES_SHADER_RES;
         tex_desc.is_dynamic = false;
         tex_desc.dim = GPUTexture::Dimension::_2D;
-        content_surface_.reset(gpu_device->createTexture(&tex_desc, nullptr));
+        content_surface_ = gpu_device->createTexture(tex_desc, nullptr);
         if (!content_surface_) {
             LOG(Log::WARNING) << "Failed to create 2d texture";
             return false;
         }
 
-        render_target_view_.reset(gpu_device->createRenderTarget(content_surface_.get()));
+        render_target_view_ = gpu_device->createRenderTarget(content_surface_.get());
         if (!render_target_view_) {
             LOG(Log::WARNING) << "Failed to create render target view";
             return false;
@@ -141,7 +141,7 @@ namespace ukive {
 
         auto dpi = getContext().getAutoScale() * getContext().getDefaultDpi();
 
-        content_img_.reset(cyro_rt->createSharedImageFrame(content_surface_.get(), ImageOptions(dpi, dpi)));
+        content_img_ = cyro_rt->createSharedImageFrame(content_surface_, ImageOptions(dpi, dpi));
         if (!content_img_) {
             LOG(Log::WARNING) << "Failed to create content image";
             return false;

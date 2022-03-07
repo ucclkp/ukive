@@ -890,7 +890,7 @@ namespace ukive {
             bg_off.setOpacity(c->getOpacity());
             drawBackground(&bg_off);
             bg_off.endDraw();
-            std::shared_ptr<ImageFrame> bg_img(bg_off.extractImage());
+            auto bg_img = bg_off.extractImage();
             if (bg_img) {
                 Canvas offscreen(
                     getWidth(), getHeight(),
@@ -927,7 +927,7 @@ namespace ukive {
         cur_c.clear();
         drawContent(&cur_c);
         cur_c.endDraw();
-        std::shared_ptr<ImageFrame> c_img(cur_c.extractImage());
+        auto c_img = cur_c.extractImage();
         if (c_img) {
             if (anime_params_.reveal().getType() == ViewRevealTVals::Type::Circle) {
                 c->pushClip(RectF(0, 0, float(getWidth()), float(getHeight())));

@@ -9,6 +9,7 @@
 
 #include <cstddef>
 
+#include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/graphics_utils.h"
 #include "ukive/graphics/size.hpp"
 
@@ -46,7 +47,7 @@ namespace ukive {
         virtual CyroRenderTarget* getRT() const = 0;
         virtual const ImageOptions& getImageOptions() const = 0;
 
-        virtual ImageFrame* onExtractImage(const ImageOptions& options) = 0;
+        virtual GPtr<ImageFrame> onExtractImage(const ImageOptions& options) = 0;
     };
 
 

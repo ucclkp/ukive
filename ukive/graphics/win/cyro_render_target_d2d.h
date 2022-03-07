@@ -18,8 +18,8 @@ namespace win {
     public:
         CyroRenderTargetD2D() = default;
 
-        ImageFrame* createSharedImageFrame(
-            GPUTexture* texture, const ImageOptions& options) override;
+        GPtr<ImageFrame> createSharedImageFrame(
+            const GPtr<GPUTexture>& texture, const ImageOptions& options) override;
         void destroy() override;
 
         void setNative(const utl::win::ComPtr<ID2D1RenderTarget>& rt);

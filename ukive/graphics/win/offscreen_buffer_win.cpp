@@ -11,7 +11,8 @@
 
 #include "ukive/app/application.h"
 #include "ukive/graphics/images/image_options.h"
-#include "ukive/graphics/win/gpu/gpu_context_d3d.h"
+#include "ukive/graphics/win/gpu/d3d11/gpu_context_d3d11.h"
+#include "ukive/graphics/win/gpu/d3d11/gpu_texture_d3d11.h"
 #include "ukive/graphics/win/images/image_options_d2d_utils.h"
 #include "ukive/graphics/win/images/image_frame_win.h"
 #include "ukive/window/window_dpi_utils.h"
@@ -89,12 +90,14 @@ namespace win {
         return GRet::Succeeded;
     }
 
-    ImageFrame* OffscreenBufferWin::onExtractImage(const ImageOptions& options) {
+    GPtr<ImageFrame> OffscreenBufferWin::onExtractImage(const ImageOptions& options) {
         D2D1_BITMAP_PROPERTIES bmp_prop = mapBitmapProps(options);
+
+        auto tex2d_d3d = static_cast<GPUTexture2DD3D11*>(d3d_tex2d_.get())->getNative();
 
         utl::win::ComPtr<ID2D1Bitmap> bitmap;
         HRESULT hr = rt_->getNative()->CreateSharedBitmap(
-            __uuidof(IDXGISurface), d3d_tex2d_.cast<IDXGISurface>().get(), &bmp_prop, &bitmap);
+            __uuidof(IDXGISurface), tex2d_d3d.cast<IDXGISurface>().get(), &bmp_prop, &bitmap);
         if (FAILED(hr)) {
             if (hr == DXGI_ERROR_DEVICE_REMOVED ||
                 hr == DXGI_ERROR_DEVICE_RESET)
@@ -102,13 +105,13 @@ namespace win {
                 return {};
             }
             LOG(Log::WARNING) << "Failed to create shared bitmap: " << hr;
-            return nullptr;
+            return {};
         }
 
-        auto context = static_cast<GPUContextD3D*>(
-            Application::getGraphicDeviceManager()->getGPUContext())->getNative();
+        auto context = Application::getGraphicDeviceManager()->getGPUContext();
 
-        return new ImageFrameWin(bitmap, rt_->getNative(), context, d3d_tex2d_);
+        return GPtr<ImageFrame>(new ImageFrameWin(
+            bitmap, rt_->getNative(), context, d3d_tex2d_));
     }
 
     Size OffscreenBufferWin::getSize() const {
@@ -139,7 +142,7 @@ namespace win {
         return img_options_;
     }
 
-    utl::win::ComPtr<ID3D11Texture2D> OffscreenBufferWin::getTexture() const {
+    GPtr<GPUTexture> OffscreenBufferWin::getTexture() const {
         return d3d_tex2d_;
     }
 
@@ -154,15 +157,23 @@ namespace win {
             break;
         }
 
-        d3d_tex2d_ = static_cast<DirectXManager*>(Application::getGraphicDeviceManager())->
-            createTexture2D(
-                utl::num_cast<UINT>(width), utl::num_cast<UINT>(height),
-                true, img_options_.pixel_format == ImagePixelFormat::HDR, false);
+        GPUDataFormat format;
+        if (img_options_.pixel_format == ImagePixelFormat::HDR) {
+            format = GPUDataFormat::R16G16B16A16_FLOAT;
+        } else {
+            format = GPUDataFormat::B8G8B8R8_UNORM;
+        }
+
+        d3d_tex2d_ = GPUTexture::createShaderTex2D(
+            utl::num_cast<uint32_t>(width),
+            utl::num_cast<uint32_t>(height), format, true, 0, nullptr);
         if (!d3d_tex2d_) {
+            LOG(Log::WARNING) << "Failed to create offscreen rt!";
             return false;
         }
 
-        auto dxgi_surface = d3d_tex2d_.cast<IDXGISurface>();
+        auto tex2d_d3d = static_cast<GPUTexture2DD3D11*>(d3d_tex2d_.get())->getNative();
+        auto dxgi_surface = tex2d_d3d.cast<IDXGISurface>();
         if (!dxgi_surface) {
             LOG(Log::WARNING) << "Failed to query DXGI surface.";
             return false;

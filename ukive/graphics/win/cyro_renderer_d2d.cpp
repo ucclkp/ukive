@@ -134,30 +134,30 @@ namespace win {
         return buffer_;
     }
 
-    ImageFrame* CyroRendererD2D::createImage(const LcImageFrame* frame) {
+    GPtr<ImageFrame> CyroRendererD2D::createImage(const GPtr<LcImageFrame>& frame) {
         float dpi_x, dpi_y;
         frame->getDpi(&dpi_x, &dpi_y);
 
         D2D1_BITMAP_PROPERTIES props =
             D2D1::BitmapProperties(D2D1::PixelFormat(), dpi_x, dpi_y);
 
-        auto native_src = static_cast<const LcImageFrameWin*>(frame)->getNativeSrc();
+        auto native_src = frame.cast<LcImageFrameWin>()->getNativeSrc();
         if (!native_src) {
             assert(false);
-            return nullptr;
+            return {};
         }
 
         utl::win::ComPtr<ID2D1Bitmap> d2d_bmp;
         HRESULT hr = rt_->CreateBitmapFromWicBitmap(native_src.get(), &props, &d2d_bmp);
         if (FAILED(hr)) {
             assert(false);
-            return nullptr;
+            return {};
         }
 
-        return new ImageFrameWin(d2d_bmp, rt_, native_src);
+        return GPtr<ImageFrame>(new ImageFrameWin(d2d_bmp, rt_, native_src));
     }
 
-    ImageFrame* CyroRendererD2D::createImage(
+    GPtr<ImageFrame> CyroRendererD2D::createImage(
         int width, int height, const ImageOptions& options)
     {
         auto prop = mapBitmapProps(options);
@@ -166,13 +166,13 @@ namespace win {
         HRESULT hr = rt_->CreateBitmap(D2D1::SizeU(width, height), prop, &d2d_bmp);
         if (FAILED(hr)) {
             ubassert(false);
-            return nullptr;
+            return {};
         }
 
-        return new ImageFrameWin(d2d_bmp, rt_, {});
+        return GPtr<ImageFrame>(new ImageFrameWin(d2d_bmp, rt_, {}));
     }
 
-    ImageFrame* CyroRendererD2D::createImage(
+    GPtr<ImageFrame> CyroRendererD2D::createImage(
         int width, int height,
         const void* pixel_data, size_t size, size_t stride, const ImageOptions& options)
     {
@@ -183,10 +183,10 @@ namespace win {
             D2D1::SizeU(width, height), pixel_data, utl::num_cast<UINT32>(stride), prop, &d2d_bmp);
         if (FAILED(hr)) {
             ubassert(false);
-            return nullptr;
+            return {};
         }
 
-        return new ImageFrameWin(d2d_bmp, rt_, {});
+        return GPtr<ImageFrame>(new ImageFrameWin(d2d_bmp, rt_, {}));
     }
 
     void CyroRendererD2D::setOpacity(float opacity) {

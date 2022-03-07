@@ -9,10 +9,11 @@
 
 #include <memory>
 
+#include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/gpu/gpu_types.h"
 #include "ukive/graphics/3d/scene.h"
-#include "ukive/graphics/win/direct3d/assist_configure.h"
-#include "ukive/graphics/win/direct3d/model_configure.h"
+#include "ukive/graphics/win/3d/assist_configure.h"
+#include "ukive/graphics/win/3d/model_configure.h"
 
 
 namespace ukv3d {
@@ -64,12 +65,12 @@ namespace vsul {
         ukive::ModelConfigure model_configure_;
 
         ukive::Viewport viewport_;
-        std::unique_ptr<ukive::GPUTexture> depth_stencil_buffer_;
-        std::unique_ptr<ukive::GPUDepthStencil> depth_stencil_view_;
-        std::unique_ptr<ukive::GPUShaderResource> shader_resource_view_;
-        std::unique_ptr<ukive::GPUDepthStencilState> depth_stencil_state_;
-        std::unique_ptr<ukive::GPURasterizerState> rasterizer_state_;
-        std::unique_ptr<ukive::GPUSamplerState> sampler_state_;
+        ukive::GPtr<ukive::GPUTexture> depth_stencil_buffer_;
+        ukive::GPtr<ukive::GPUDepthStencil> depth_stencil_view_;
+        ukive::GPtr<ukive::GPUShaderResource> shader_resource_view_;
+        ukive::GPtr<ukive::GPUDepthStencilState> depth_stencil_state_;
+        ukive::GPtr<ukive::GPURasterizerState> rasterizer_state_;
+        ukive::GPtr<ukive::GPUSamplerState> sampler_state_;
     };
 
 }

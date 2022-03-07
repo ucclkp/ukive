@@ -7,8 +7,10 @@
 #ifndef UKIVE_MEDIA_MEDIA_PLAYER_H_
 #define UKIVE_MEDIA_MEDIA_PLAYER_H_
 
+#include <memory>
 #include <string>
 
+#include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/size.hpp"
 
 
@@ -28,7 +30,7 @@ namespace ukive {
         virtual void onMediaEnded() = 0;
         virtual void onMediaClosed() = 0;
 
-        virtual void onRenderVideoFrame(ImageFrame* frame) = 0;
+        virtual void onRenderVideoFrame(const GPtr<ImageFrame>& frame) = 0;
     };
 
     class MediaPlayer {

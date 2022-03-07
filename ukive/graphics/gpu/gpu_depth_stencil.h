@@ -9,12 +9,13 @@
 
 #include <cstdint>
 
+#include "ukive/graphics/gref_count.h"
 #include "ukive/graphics/gpu/gpu_types.h"
 
 
 namespace ukive {
 
-    class GPUDepthStencil {
+    class GPUDepthStencil : public virtual GRefCount {
     public:
         enum DSVDimension {
             DSV_DIMENSION_UNKNOWN,

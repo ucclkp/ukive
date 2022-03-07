@@ -15,11 +15,8 @@ namespace ukive {
 
     class Image::ImageOntic {
     public:
-        ~ImageOntic() {
-            utl::STLDeleteElements(&frames);
-        }
-
-        std::vector<ImageFrame*> frames;
+        std::vector<GPtr<ImageFrame>> frames;
+        std::shared_ptr<ImageData> data;
     };
 
 }
@@ -28,14 +25,14 @@ namespace ukive {
 
     Image::Image() {}
 
-    void Image::addFrame(ImageFrame* frame) {
+    void Image::addFrame(const GPtr<ImageFrame>& frame) {
         if (!ontic_) {
             ontic_ = std::make_shared<ImageOntic>();
         }
         ontic_->frames.push_back(frame);
     }
 
-    void Image::removeFrame(ImageFrame* frame, bool del) {
+    void Image::removeFrame(const GPtr<ImageFrame>& frame) {
         if (!ontic_ || !frame) {
             return;
         }
@@ -49,30 +46,58 @@ namespace ukive {
             }
         }
 
-        if (del) {
-            delete frame;
+        if (frames.empty()) {
+            ontic_.reset();
         }
+    }
+
+    void Image::removeFrameAt(size_t index) {
+        if (!ontic_) {
+            return;
+        }
+
+        auto& frames = ontic_->frames;
+        if (frames.size() <= index) {
+            return;
+        }
+
+        auto frame = *(frames.begin() + index);
+        frames.erase(frames.begin() + index);
 
         if (frames.empty()) {
             ontic_.reset();
         }
     }
 
-    void Image::clearFrames(bool del) {
+    void Image::clearFrames() {
         if (!ontic_) {
             return;
-        }
-
-        if (del) {
-            utl::STLDeleteElements(&ontic_->frames);
         }
 
         ontic_->frames.clear();
         ontic_.reset();
     }
 
+    void Image::setData(const std::shared_ptr<ImageData>& data) {
+        if (!ontic_) {
+            ontic_ = std::make_shared<ImageOntic>();
+        }
+        ontic_->data = data;
+    }
+
+    const std::shared_ptr<ImageData>& Image::getData() const {
+        static std::shared_ptr<ImageData> stub;
+        if (!ontic_) {
+            return stub;
+        }
+        return ontic_->data;
+    }
+
     bool Image::isValid() const {
-        return !!ontic_;
+        if (!ontic_) {
+            return false;
+        }
+        return !ontic_->frames.empty();
     }
 
     SizeF Image::getBounds() const {
@@ -99,8 +124,8 @@ namespace ukive {
         return size;
     }
 
-    const std::vector<ImageFrame*>& Image::getFrames() const {
-        static std::vector<ImageFrame*> stub;
+    const std::vector<GPtr<ImageFrame>>& Image::getFrames() const {
+        static std::vector<GPtr<ImageFrame>> stub;
         if (!ontic_) {
             return stub;
         }

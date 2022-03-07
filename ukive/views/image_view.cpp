@@ -127,7 +127,7 @@ namespace ukive {
         requestDraw();
     }
 
-    void ImageView::setImage(const std::shared_ptr<ImageFrame>& img) {
+    void ImageView::setImage(const GPtr<ImageFrame>& img) {
         if (img) {
             img_element_.reset(new ImageElement(img));
             setImageBounds(getWidth(), getHeight());
@@ -199,7 +199,7 @@ namespace ukive {
         return scale_type_;
     }
 
-    std::shared_ptr<ImageFrame> ImageView::getImage() const {
+    GPtr<ImageFrame> ImageView::getImage() const {
         if (!img_element_) {
             return {};
         }

@@ -32,7 +32,7 @@ namespace win {
         void onBeginDraw() override;
         GRet onEndDraw() override;
 
-        ImageFrame* onExtractImage(const ImageOptions& options) override;
+        GPtr<ImageFrame> onExtractImage(const ImageOptions& options) override;
 
         Size getSize() const override;
         Size getPixelSize() const override;

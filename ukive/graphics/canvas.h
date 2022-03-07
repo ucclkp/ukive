@@ -10,6 +10,7 @@
 #include <memory>
 
 #include "ukive/graphics/colors/color.h"
+#include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/graphics_utils.h"
 #include "ukive/graphics/matrix_2x3_f.h"
 
@@ -33,14 +34,14 @@ namespace ukive {
         explicit Canvas(const std::shared_ptr<CyroRenderer>& renderer);
         ~Canvas();
 
-        ImageFrame* createImage(const LcImageFrame* frame);
-        ImageFrame* createImage(int width, int height);
-        ImageFrame* createImage(
+        GPtr<ImageFrame> createImage(const GPtr<LcImageFrame>& frame);
+        GPtr<ImageFrame> createImage(int width, int height);
+        GPtr<ImageFrame> createImage(
             int width, int height, const ImageOptions& options);
-        ImageFrame* createImage(
+        GPtr<ImageFrame> createImage(
             int width, int height,
             const void* pixel_data, size_t size, size_t stride);
-        ImageFrame* createImage(
+        GPtr<ImageFrame> createImage(
             int width, int height,
             const void* pixel_data, size_t size, size_t stride,
             const ImageOptions& options);
@@ -64,8 +65,8 @@ namespace ukive {
         int getHeight() const;
         CyroRenderer* getRenderer() const;
         CyroBuffer* getBuffer() const;
-        ImageFrame* extractImage() const;
-        ImageFrame* extractImage(const ImageOptions& options) const;
+        GPtr<ImageFrame> extractImage() const;
+        GPtr<ImageFrame> extractImage(const ImageOptions& options) const;
 
         void scale(float sx, float sy);
         void scale(float sx, float sy, float cx, float cy);

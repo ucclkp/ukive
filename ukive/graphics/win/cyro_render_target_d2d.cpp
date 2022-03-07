@@ -11,31 +11,31 @@
 #include "ukive/app/application.h"
 #include "ukive/graphics/win/images/image_frame_win.h"
 #include "ukive/graphics/win/images/image_options_d2d_utils.h"
-#include "ukive/graphics/win/gpu/gpu_context_d3d.h"
-#include "ukive/graphics/win/gpu/gpu_texture_d3d.h"
+#include "ukive/graphics/win/gpu/d3d11/gpu_context_d3d11.h"
+#include "ukive/graphics/win/gpu/d3d11/gpu_texture_d3d11.h"
 
 
 namespace ukive {
 namespace win {
 
-    ImageFrame* CyroRenderTargetD2D::createSharedImageFrame(
-        GPUTexture* texture, const ImageOptions& options)
+    GPtr<ImageFrame> CyroRenderTargetD2D::createSharedImageFrame(
+        const GPtr<GPUTexture>& texture, const ImageOptions& options)
     {
         auto& desc = texture->getDesc();
         if (desc.dim != GPUTexture::Dimension::_2D) {
-            return nullptr;
+            return {};
         }
 
-        auto res = static_cast<GPUTexture2DD3D*>(texture)->getNative();
+        auto res = static_cast<GPUTexture2DD3D11*>(texture.get())->getNative();
         if (!res) {
-            return nullptr;
+            return {};
         }
 
         utl::win::ComPtr<IDXGISurface> dxgi_surface;
         HRESULT hr = res->QueryInterface(&dxgi_surface);
         if (FAILED(hr)) {
             LOG(Log::WARNING) << "Failed to query DXGI surface: " << hr;
-            return nullptr;
+            return {};
         }
 
         D2D1_BITMAP_PROPERTIES bmp_prop = mapBitmapProps(options);
@@ -45,13 +45,13 @@ namespace win {
             __uuidof(IDXGISurface), dxgi_surface.get(), &bmp_prop, &d2d_bmp);
         if (FAILED(hr)) {
             LOG(Log::WARNING) << "Failed to create shared bitmap: " << hr;
-            return nullptr;
+            return {};
         }
 
-        auto context = static_cast<GPUContextD3D*>(
-            Application::getGraphicDeviceManager()->getGPUContext())->getNative();
+        auto context =
+            Application::getGraphicDeviceManager()->getGPUContext();
 
-        return new ImageFrameWin(d2d_bmp, rt_, context, res);
+        return GPtr<ImageFrame>(new ImageFrameWin(d2d_bmp, rt_, context, texture));
     }
 
     void CyroRenderTargetD2D::destroy() {

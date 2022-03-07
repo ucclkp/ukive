@@ -9,6 +9,7 @@
 
 #include "utils/memory/win/com_ptr.hpp"
 
+#include "ukive/graphics/gref_count_impl.h"
 #include "ukive/graphics/images/lc_image_frame.h"
 
 #include <wincodec.h>
@@ -22,7 +23,10 @@
 namespace ukive {
 namespace win {
 
-    class LcImageFrameWin : public LcImageFrame {
+    class LcImageFrameWin :
+        public LcImageFrame,
+        public GRefCountImpl
+    {
     public:
         LcImageFrameWin(
             const utl::win::ComPtr<IWICImagingFactory>& factory,

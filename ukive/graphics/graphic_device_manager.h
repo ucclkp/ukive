@@ -27,8 +27,8 @@ namespace ukive {
         virtual bool recreate() = 0;
         virtual void destroy() = 0;
 
-        virtual GPUDevice* getGPUDevice() const = 0;
-        virtual GPUContext* getGPUContext() const = 0;
+        virtual GPtr<GPUDevice> getGPUDevice() const = 0;
+        virtual GPtr<GPUContext> getGPUContext() const = 0;
 
         void addListener(GraphicContextChangeListener* l);
         void removeListener(GraphicContextChangeListener* l);

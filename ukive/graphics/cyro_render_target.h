@@ -7,6 +7,8 @@
 #ifndef UKIVE_GRAPHICS_CYRO_RENDER_TARGET_H_
 #define UKIVE_GRAPHICS_CYRO_RENDER_TARGET_H_
 
+#include "ukive/graphics/gptr.hpp"
+
 
 namespace ukive {
 
@@ -18,8 +20,8 @@ namespace ukive {
     public:
         virtual ~CyroRenderTarget() = default;
 
-        virtual ImageFrame* createSharedImageFrame(
-            GPUTexture* texture, const ImageOptions& options) = 0;
+        virtual GPtr<ImageFrame> createSharedImageFrame(
+            const GPtr<GPUTexture>& texture, const ImageOptions& options) = 0;
         virtual void destroy() = 0;
     };
 

@@ -8,6 +8,7 @@
 
 #include <Icm.h>
 #include <ShlObj.h>
+#include <Shlwapi.h>
 #include <VersionHelpers.h>
 
 #include "utils/log.h"
@@ -93,12 +94,12 @@ namespace win {
         wic_factory_.reset();
     }
 
-    LcImageFrame* LcImageFactoryWin::create(
+    GPtr<LcImageFrame> LcImageFactoryWin::create(
         int width, int height, const ImageOptions& options)
     {
         if (width <= 0 || height <= 0) {
             ubassert(false);
-            return nullptr;
+            return {};
         }
 
         auto format = mapPixelFormat(options);
@@ -109,7 +110,7 @@ namespace win {
             WICBitmapCacheOnDemand, &bmp);
         if (FAILED(hr)) {
             ubassert(false);
-            return nullptr;
+            return {};
         }
 
         switch (options.dpi_type) {
@@ -123,17 +124,17 @@ namespace win {
             break;
         }
 
-        return new LcImageFrameWin(wic_factory_, bmp);
+        return GPtr<LcImageFrame>(new LcImageFrameWin(wic_factory_, bmp));
     }
 
-    LcImageFrame* LcImageFactoryWin::create(
+    GPtr<LcImageFrame> LcImageFactoryWin::create(
         int width, int height,
         void* pixel_data, size_t size, size_t stride,
         const ImageOptions& options)
     {
         if (width <= 0 || height <= 0) {
             ubassert(false);
-            return nullptr;
+            return {};
         }
 
         auto format = mapPixelFormat(options);
@@ -145,7 +146,7 @@ namespace win {
             &bmp);
         if (FAILED(hr)) {
             ubassert(false);
-            return nullptr;
+            return {};
         }
 
         switch (options.dpi_type) {
@@ -159,7 +160,7 @@ namespace win {
             break;
         }
 
-        return new LcImageFrameWin(wic_factory_, bmp);
+        return GPtr<LcImageFrame>(new LcImageFrameWin(wic_factory_, bmp));
     }
 
     LcImage LcImageFactoryWin::decodeFile(
@@ -173,7 +174,7 @@ namespace win {
     }
 
     LcImage LcImageFactoryWin::decodeMemory(
-        void* buffer, size_t size, const ImageOptions& options)
+        const void* buffer, size_t size, const ImageOptions& options)
     {
         auto decoder = createDecoder(buffer, size);
         if (!decoder) {
@@ -182,18 +183,17 @@ namespace win {
         return processDecoder(decoder.get(), options);
     }
 
-    bool LcImageFactoryWin::getThumbnail(
+    GPtr<LcImageFrame> LcImageFactoryWin::getThumbnail(
         const std::u16string_view& file_name,
-        int frame_width, int frame_height,
-        std::string* out, int* real_w, int* real_h, ImageOptions* options)
+        int frame_width, int frame_height, ImageOptions* options)
     {
-        if (!out || !real_w || !real_h || !options) {
-            return false;
+        if (!options) {
+            return {};
         }
 
+        GPtr<LcImageFrame> frame;
         std::wstring wfn(file_name.begin(), file_name.end());
 
-        bool succeeded = false;
         utl::win::ComPtr<IShellItemImageFactory> factory;
         HRESULT hr = ::SHCreateItemFromParsingName(wfn.c_str(), nullptr, IID_PPV_ARGS(&factory));
         if (SUCCEEDED(hr)) {
@@ -201,6 +201,7 @@ namespace win {
             hr = factory->GetImage({ frame_width, frame_height }, SIIGBF_RESIZETOFIT, &hbmp);
             if (SUCCEEDED(hr)) {
                 BITMAP bmp;
+                // TODO:
                 if (::GetObjectW(hbmp, sizeof(BITMAP), &bmp) && bmp.bmBitsPixel == 32) {
                     BITMAPINFO info = {};
                     info.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
@@ -210,19 +211,21 @@ namespace win {
                     info.bmiHeader.biBitCount = bmp.bmBitsPixel;
                     info.bmiHeader.biCompression = BI_RGB;
 
-                    out->resize(bmp.bmWidth * bmp.bmHeight * 4);
+                    size_t buf_size = bmp.bmWidth * bmp.bmHeight * 4;
+                    auto buf = new unsigned char[buf_size];
 
                     HDC hdc = ::GetDC(nullptr);
                     if (::GetDIBits(
                         hdc, hbmp, 0, bmp.bmHeight,
-                        &*out->begin(), &info, DIB_RGB_COLORS))
+                        buf, &info, DIB_RGB_COLORS))
                     {
-                        *real_w = bmp.bmWidth;
-                        *real_h = bmp.bmHeight;
                         options->dpi_type = ImageDPIType::DEFAULT;
                         options->pixel_format = ImagePixelFormat::B8G8R8A8_UNORM;
                         options->alpha_mode = ImageAlphaMode::IGNORED;
-                        succeeded = true;
+                        frame = create(
+                            bmp.bmWidth, bmp.bmHeight, buf, buf_size, bmp.bmWidth * 4, *options);
+                    } else {
+                        delete[] buf;
                     }
 
                     ::ReleaseDC(nullptr, hdc);
@@ -231,7 +234,7 @@ namespace win {
                 ::DeleteObject(hbmp);
             }
         }
-        return succeeded;
+        return frame;
     }
 
     bool LcImageFactoryWin::saveToFile(
@@ -493,7 +496,7 @@ namespace win {
         return decoder;
     }
 
-    utl::win::ComPtr<IWICBitmapDecoder> LcImageFactoryWin::createDecoder(void* buffer, size_t size) {
+    utl::win::ComPtr<IWICBitmapDecoder> LcImageFactoryWin::createDecoder(const void* buffer, size_t size) {
         utl::win::ComPtr<IWICStream> stream;
         HRESULT hr = wic_factory_->CreateStream(&stream);
         if (FAILED(hr)) {
@@ -501,8 +504,16 @@ namespace win {
             return {};
         }
 
-        hr = stream->InitializeFromMemory(
-            static_cast<BYTE*>(buffer), utl::num_cast<DWORD>(size));
+        utl::win::ComPtr<IStream> is(
+            ::SHCreateMemStream(
+                static_cast<const BYTE*>(buffer),
+                utl::num_cast<UINT>(size)));
+        if (!is) {
+            ubassert(false);
+            return {};
+        }
+
+        hr = stream->InitializeFromIStream(is.get());
         if (FAILED(hr)) {
             ubassert(false);
             return {};
@@ -628,7 +639,7 @@ namespace win {
                 getFrameMetadata(frame_decoder.get(), fr_data.get());
                 frame->setData(fr_data);
             }
-            image.addFrame(frame);
+            image.addFrame(GPtr<LcImageFrame>(frame));
         }
 
         return image;

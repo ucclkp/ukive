@@ -238,8 +238,8 @@ namespace shell {
 
         auto rm = ukive::Application::getResourceManager();
         auto img_path = rm->getResRootPath() / u"freshpaint.png";
-        auto img = ukive::ImageFrame::decodeFile(getWindow(), img_path.u16string());
-        image_view_->setImage(std::shared_ptr<ukive::ImageFrame>(img));
+        auto img = ukive::ImageFrame::decodeFile(getWindow()->getCanvas(), img_path.u16string());
+        image_view_->setImage(img);
         image_view_->animeParams()->setOrder(ukive::ViewAnimatorParams::RST);
 
         test_button_ = findView<ukive::Button>(v, Res::Id::bt_misc_button);

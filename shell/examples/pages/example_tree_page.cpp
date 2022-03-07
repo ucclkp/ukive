@@ -8,6 +8,8 @@
 
 #include "utils/strings/int_conv.hpp"
 
+#include "ukive/elements/color_element.h"
+#include "ukive/graphics/images/image_frame.h"
 #include "ukive/views/layout/restraint_layout.h"
 #include "ukive/views/layout_info/restraint_layout_info.h"
 #include "ukive/views/image_view.h"
@@ -16,7 +18,6 @@
 #include "ukive/views/tree/tree_node.h"
 #include "ukive/views/tree/tree_node_button.h"
 #include "ukive/resources/layout_instantiator.h"
-#include "ukive/elements/color_element.h"
 
 #include "shell/resources/necro_resources_id.h"
 

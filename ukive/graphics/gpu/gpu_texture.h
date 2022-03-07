@@ -10,13 +10,13 @@
 #include <cstdint>
 #include <memory>
 
+#include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/gpu/gpu_resource.h"
 #include "ukive/graphics/gpu/gpu_types.h"
+#include "ukive/graphics/gpu/gpu_shader_resource.h"
 
 
 namespace ukive {
-
-    class GPUShaderResource;
 
     class GPUTexture : public GPUResource {
     public:
@@ -47,21 +47,23 @@ namespace ukive {
             bool is_dynamic;
         };
 
-        static GPUTexture* createShaderTex2D(
+        static GEcPtr<GPUTexture> createShaderTex2D(
             uint32_t width, uint32_t height,
-            GPUDataFormat format, uint32_t stride, const void* data);
+            GPUDataFormat format, bool rt,
+            uint32_t stride, const void* data);
 
-        virtual ~GPUTexture() = default;
+        GPtr<GPUShaderResource> srv() const;
 
-        void setShaderRes(GPUShaderResource* res);
-        GPUShaderResource* getShaderRes() const;
+        gerc createSRV();
 
         Type getType() const override { return Type::Texture; }
 
         virtual const Desc& getDesc() const = 0;
 
     private:
-        std::shared_ptr<GPUShaderResource> shader_res_;
+        void setSRV(const GPtr<GPUShaderResource>& res);
+
+        GPtr<GPUShaderResource> shader_res_;
     };
 
 }

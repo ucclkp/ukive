@@ -9,6 +9,7 @@
 
 #include <string>
 
+#include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/images/image_options.h"
 
 
@@ -26,9 +27,9 @@ namespace ukive {
         virtual bool initialization() = 0;
         virtual void destroy() = 0;
 
-        virtual LcImageFrame* create(
+        virtual GPtr<LcImageFrame> create(
             int width, int height, const ImageOptions& options) = 0;
-        virtual LcImageFrame* create(
+        virtual GPtr<LcImageFrame> create(
             int width, int height,
             void* pixel_data, size_t size, size_t stride,
             const ImageOptions& options) = 0;
@@ -36,12 +37,11 @@ namespace ukive {
         virtual LcImage decodeFile(
             const std::u16string_view& file_name, const ImageOptions& options) = 0;
         virtual LcImage decodeMemory(
-            void* buffer, size_t size, const ImageOptions& options) = 0;
+            const void* buffer, size_t size, const ImageOptions& options) = 0;
 
-        virtual bool getThumbnail(
+        virtual GPtr<LcImageFrame> getThumbnail(
             const std::u16string_view& file_name,
-            int frame_width, int frame_height,
-            std::string* out, int* real_w, int* real_h, ImageOptions* options) = 0;
+            int frame_width, int frame_height, ImageOptions* options) = 0;
 
         virtual bool saveToFile(
             int width, int height,

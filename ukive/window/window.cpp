@@ -818,7 +818,7 @@ namespace ukive {
 
         off_canvas_->endDraw();
 
-        std::shared_ptr<ImageFrame> img(off_canvas_->extractImage());
+        auto img = off_canvas_->extractImage();
 
         // 把离屏画布上的内容画到窗口上
         canvas_->beginDraw();

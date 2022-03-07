@@ -6,6 +6,8 @@
 
 #include "media_player_win.h"
 
+#include <memory>
+
 #include <evr.h>
 #include <mfapi.h>
 
@@ -15,13 +17,14 @@
 
 #include "ukive/app/application.h"
 #include "ukive/graphics/graphic_device_manager.h"
-#include "ukive/graphics/win/gpu/gpu_context_d3d.h"
-#include "ukive/graphics/win/gpu/gpu_device_d3d.h"
+#include "ukive/graphics/win/gpu/d3d11/gpu_context_d3d11.h"
+#include "ukive/graphics/win/gpu/d3d11/gpu_device_d3d11.h"
 #include "ukive/window/win/window_impl_win.h"
 #include "ukive/media/win/mf_async_callback.h"
 #include "ukive/media/win/mf_video_presenter_activate.h"
 #include "ukive/graphics/canvas.h"
 #include "ukive/graphics/cyro_buffer.h"
+#include "ukive/graphics/images/image_options.h"
 #include "ukive/graphics/win/cyro_render_target_d2d.h"
 #include "ukive/graphics/win/images/image_frame_win.h"
 #include "ukive/window/window.h"
@@ -229,7 +232,7 @@ namespace win {
             vp_activate_ = nullptr;
         }
 
-        video_bitmap_.reset();
+        video_frame_.reset();
         video_texture_.reset();
 
         if (video_sample_) {
@@ -332,9 +335,8 @@ namespace win {
             break;
         case MSG_RENDER_SURFACE:
             if (callback_) {
-                callback_->onRenderVideoFrame(static_cast<ImageFrame*>(msg.data));
-            } else {
-                delete static_cast<ImageFrame*>(msg.data);
+                callback_->onRenderVideoFrame(
+                    std::static_pointer_cast<MessageData>(msg.shared_data)->frame);
             }
             break;
         default:
@@ -343,35 +345,20 @@ namespace win {
     }
 
     void MediaPlayerWin::onCreateSurface(HANDLE shared) {
-        auto device = static_cast<GPUDeviceD3D*>(
-            Application::getGraphicDeviceManager()->getGPUDevice());
+        auto device =
+            Application::getGraphicDeviceManager()->getGPUDevice();
 
-        HRESULT hr = device->getNative()->OpenSharedResource(shared, IID_PPV_ARGS(&video_texture_));
-        if (SUCCEEDED(hr)) {
-            utl::win::ComPtr<IDXGISurface> dxgi_surface;
-            hr = video_texture_->QueryInterface(&dxgi_surface);
-            if (FAILED(hr)) {
-                LOG(Log::WARNING) << "Failed to query DXGI surface: " << hr;
-                return;
-            }
-
-            auto props = D2D1::BitmapProperties(
-                D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_IGNORE));
-
-            DXGI_SURFACE_DESC desc;
-            dxgi_surface->GetDesc(&desc);
-
-            hr = static_cast<CyroRenderTargetD2D*>(
-                window_->getCanvas()->getBuffer()->getRT())->getNative()->CreateSharedBitmap(
-                __uuidof(IDXGISurface), dxgi_surface.get(), &props, &video_bitmap_);
-            if (FAILED(hr)) {
-                return;
-            }
+        video_texture_ = device->openSharedTexture2D(reinterpret_cast<intptr_t>(shared));
+        if (video_texture_) {
+            auto rt = window_->getCanvas()->getBuffer()->getRT();
+            video_frame_ = rt->createSharedImageFrame(
+                video_texture_,
+                ImageOptions(ImagePixelFormat::B8G8R8A8_UNORM, ImageAlphaMode::IGNORED));
         }
     }
 
     void MediaPlayerWin::onDestroySurface() {
-        video_bitmap_.reset();
+        video_frame_.reset();
         video_texture_.reset();
         video_sample_.reset();
     }
@@ -382,13 +369,15 @@ namespace win {
 
         auto rt = static_cast<CyroRenderTargetD2D*>(
             window_->getCanvas()->getBuffer()->getRT())->getNative();
-        auto context = static_cast<GPUContextD3D*>(
-            Application::getGraphicDeviceManager()->getGPUContext())->getNative();
+        auto context =
+            Application::getGraphicDeviceManager()->getGPUContext();
 
-        ImageFrameWin* frame = new ImageFrameWin(video_bitmap_, rt, context, video_texture_);
+        auto data = new MessageData();
+        data->frame = video_frame_;
+
         utl::Message msg;
         msg.id = MSG_RENDER_SURFACE;
-        msg.data = frame;
+        msg.shared_data.reset(data);
         cycler_.post(&msg);
     }
 

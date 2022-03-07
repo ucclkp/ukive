@@ -7,6 +7,7 @@
 #ifndef UKIVE_VIEWS_SPACE3D_VIEW_H_
 #define UKIVE_VIEWS_SPACE3D_VIEW_H_
 
+#include "ukive/graphics/gptr.hpp"
 #include "ukive/views/view.h"
 
 
@@ -38,9 +39,9 @@ namespace ukive {
         void releaseResources();
 
         ukv3d::Scene* scene_;
-        std::unique_ptr<ImageFrame> content_img_;
-        std::unique_ptr<GPUTexture> content_surface_;
-        std::unique_ptr<GPURenderTarget> render_target_view_;
+        GPtr<ImageFrame> content_img_;
+        GPtr<GPUTexture> content_surface_;
+        GPtr<GPURenderTarget> render_target_view_;
     };
 
 }

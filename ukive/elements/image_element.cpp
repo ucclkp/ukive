@@ -12,7 +12,7 @@
 
 namespace ukive {
 
-    ImageElement::ImageElement(const std::shared_ptr<ImageFrame>& img)
+    ImageElement::ImageElement(const GPtr<ImageFrame>& img)
         : image_(img) {}
 
 
@@ -60,7 +60,7 @@ namespace ukive {
         return int(std::ceil(image_->getSize().height));
     }
 
-    std::shared_ptr<ImageFrame> ImageElement::getImage() const {
+    GPtr<ImageFrame> ImageElement::getImage() const {
         return image_;
     }
 

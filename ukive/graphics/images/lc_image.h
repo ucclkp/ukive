@@ -10,6 +10,7 @@
 #include <memory>
 #include <vector>
 
+#include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/images/lc_image_frame.h"
 
 
@@ -19,9 +20,9 @@ namespace ukive {
     public:
         LcImage();
 
-        void addFrame(LcImageFrame* frame);
-        void removeFrame(LcImageFrame* frame, bool del);
-        void clearFrames(bool del);
+        void addFrame(const GPtr<LcImageFrame>& frame);
+        void removeFrame(const GPtr<LcImageFrame>& frame);
+        void clearFrames();
 
         bool isValid() const;
 
@@ -30,7 +31,7 @@ namespace ukive {
 
         SizeF getBounds() const;
         SizeU getPixelBounds() const;
-        const std::vector<LcImageFrame*>& getFrames() const;
+        const std::vector<GPtr<LcImageFrame>>& getFrames() const;
 
     private:
         class ImageOntic;

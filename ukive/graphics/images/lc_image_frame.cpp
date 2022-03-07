@@ -14,7 +14,7 @@
 namespace ukive {
 
     // static
-    LcImageFrame* LcImageFrame::create(
+    GPtr<LcImageFrame> LcImageFrame::create(
         int width, int height, const ImageOptions& options)
     {
         auto ic = Application::getImageLocFactory();

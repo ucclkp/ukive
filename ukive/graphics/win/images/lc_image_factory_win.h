@@ -25,9 +25,9 @@ namespace win {
         bool initialization() override;
         void destroy() override;
 
-        LcImageFrame* create(
+        GPtr<LcImageFrame> create(
             int width, int height, const ImageOptions& options) override;
-        LcImageFrame* create(
+        GPtr<LcImageFrame> create(
             int width, int height,
             void* pixel_data, size_t size, size_t stride,
             const ImageOptions& options) override;
@@ -35,12 +35,11 @@ namespace win {
         LcImage decodeFile(
             const std::u16string_view& file_name, const ImageOptions& options) override;
         LcImage decodeMemory(
-            void* buffer, size_t size, const ImageOptions& options) override;
+            const void* buffer, size_t size, const ImageOptions& options) override;
 
-        bool getThumbnail(
+        GPtr<LcImageFrame> getThumbnail(
             const std::u16string_view& file_name,
-            int frame_width, int frame_height,
-            std::string* out, int* real_w, int* real_h, ImageOptions* options) override;
+            int frame_width, int frame_height, ImageOptions* options) override;
 
         bool saveToFile(
             int width, int height,
@@ -57,7 +56,7 @@ namespace win {
 
         utl::win::ComPtr<IWICBitmapDecoder> createDecoder(
             const std::u16string_view& file_name);
-        utl::win::ComPtr<IWICBitmapDecoder> createDecoder(void* buffer, size_t size);
+        utl::win::ComPtr<IWICBitmapDecoder> createDecoder(const void* buffer, size_t size);
         utl::win::ComPtr<IWICBitmapSource> convertPixelFormat(
             IWICBitmapSource* frame, const ImageOptions& options);
 

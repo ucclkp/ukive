@@ -7,6 +7,8 @@
 #ifndef UKIVE_GRAPHICS_EFFECTS_CYRO_EFFECT_H_
 #define UKIVE_GRAPHICS_EFFECTS_CYRO_EFFECT_H_
 
+#include "ukive/graphics/gptr.hpp"
+
 
 namespace ukive {
 
@@ -34,7 +36,7 @@ namespace ukive {
 
         virtual bool setContent(OffscreenBuffer* content) = 0;
 
-        virtual ImageFrame* getOutput() const = 0;
+        virtual GPtr<ImageFrame> getOutput() const = 0;
     };
 
 }

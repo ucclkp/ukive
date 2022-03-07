@@ -44,9 +44,13 @@ namespace shell {
     void EffectWindow::onCreated() {
         Window::onCreated();
 
-        setBackgroundColor(ukive::Color::White);
+        setBackgroundColor(ukive::Color::Green500);
 
-        createImages();
+        createShadowImages();
+
+        image_effect_.reset(new ukive::win::ImageEffectGPU(getContext()));
+        image_effect_->initialize();
+        image_effect_->setSize(400, 400, false);
 
         /*using Rlp = ukive::RestraintLayoutInfo;
 
@@ -80,7 +84,7 @@ namespace shell {
         auto rm = ukive::Application::getResourceManager();
         //auto modified_img_path = rm->getResRootPath() / u"AdobeRGB_2.jpg";
         auto modified_img_path = rm->getResRootPath() / u"wcg_test.png";
-        image_img_ = ukive::ImageFrame::decodeFile(this, modified_img_path.u16string());
+        image_img_ = ukive::ImageFrame::decodeFile(getCanvas(), modified_img_path.u16string());
 
         ukive::Color src(0.5f, 0.5f, 0.5f, 1);
 
@@ -94,17 +98,26 @@ namespace shell {
     void EffectWindow::onPreDrawCanvas(ukive::Canvas* canvas) {
         Window::onPreDrawCanvas(canvas);
 
-        /*canvas->save();
-        canvas->translate(-RADIUS, -RADIUS);
+        canvas->save();
+        canvas->translate(RADIUS, RADIUS);
 
-        canvas->drawImage(100, 10, shadow_img_);
+        image_effect_->draw(canvas);
+        //canvas->drawImage(100, 10, shadow_img_);
 
-        canvas->restore();*/
+        canvas->drawLine({ 10, 10.5f }, { 10.5f, 20.5f }, 1, ukive::Color::Black);
+
+        canvas->translate(50.5f, 50.5f);
+        canvas->fillCircle({}, 0.4f, ukive::Color::Red500);
+
+        canvas->translate(5.2f, 0.2f);
+        canvas->fillCircle({}, 2, ukive::Color::Red500);
+
+        canvas->restore();
 
         //canvas->drawImage(100, 10, content_img_.get());
         //canvas->drawImage(100, 10, image_img_);
 
-        canvas->fillRect(ukive::RectF(0, 0, 1000, 1000), color_);
+        //canvas->fillRect(ukive::RectF(0, 0, 1000, 1000), color_);
     }
 
     void EffectWindow::onDestroy() {
@@ -130,7 +143,7 @@ namespace shell {
 
         case ukive::Context::DEV_RESTORE:
         {
-            createImages();
+            createShadowImages();
             break;
         }
 
@@ -155,7 +168,7 @@ namespace shell {
         }
     }
 
-    void EffectWindow::createImages() {
+    void EffectWindow::createShadowImages() {
         ukive::Canvas canvas(
             BACKGROUND_SIZE, BACKGROUND_SIZE,
             getCanvas()->getBuffer()->getImageOptions());
@@ -164,7 +177,7 @@ namespace shell {
         canvas.fillRect(ukive::RectF(0, 0, BACKGROUND_SIZE, BACKGROUND_SIZE), ukive::Color::Green400);
         //canvas.fillCircle(BACKGROUND_SIZE / 2.f, BACKGROUND_SIZE / 2.f, BACKGROUND_SIZE / 4.f, ukive::Color::Blue200);
         canvas.endDraw();
-        content_img_ = std::shared_ptr<ukive::ImageFrame>(canvas.extractImage());
+        content_img_ = canvas.extractImage();
 
         shadow_effect_.reset(ukive::ShadowEffect::create(getContext()));
         shadow_effect_->initialize();

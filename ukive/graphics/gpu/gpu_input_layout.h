@@ -9,38 +9,40 @@
 
 #include <cstdint>
 
+#include "ukive/graphics/gref_count.h"
 #include "ukive/graphics/gpu/gpu_types.h"
 
 
 namespace ukive {
 
-    class GPUInputLayout {
+    class GPUInputLayout : public virtual GRefCount {
     public:
-        enum AlignedByteOffset : uint32_t {
-            Append,
-        };
-
         struct Desc {
             const char* name;
             uint32_t index;
             uint32_t input_slot;
             uint32_t aligned_byte_offset;
             GPUDataFormat format;
+            bool is_align_append;
 
             Desc()
                 : name(nullptr),
                   index(0),
                   input_slot(0),
                   aligned_byte_offset(0),
-                  format(GPUDataFormat::UNKNOWN) {}
+                  format(GPUDataFormat::UNKNOWN),
+                  is_align_append(true) {}
 
             Desc(
-                const char* name, uint32_t index,
-                uint32_t input_slot, uint32_t aligned_byte_offset,
-                GPUDataFormat format)
+                const char* name,
+                GPUDataFormat format,
+                uint32_t index = 0,
+                uint32_t input_slot = 0,
+                bool is_append = true, uint32_t aligned_byte_offset = 0)
                 : name(name), index(index),
                   input_slot(input_slot), aligned_byte_offset(aligned_byte_offset),
-                  format(format) {}
+                  format(format),
+                  is_align_append(is_append) {}
         };
 
         virtual ~GPUInputLayout() = default;

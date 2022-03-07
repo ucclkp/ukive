@@ -17,17 +17,15 @@
 
 #include "ukive/graphics/images/image_options.h"
 #include "ukive/graphics/images/lc_image_frame.h"
+#include "ukive/graphics/gptr.hpp"
 
 
 namespace shell {
 
     struct Thumbnail {
         int id;
-        std::string data;
-        int width;
-        int height;
         ukive::ImageOptions options;
-        std::shared_ptr<ukive::LcImageFrame> ph_bmp;
+        ukive::GPtr<ukive::LcImageFrame> ph_bmp;
         std::weak_ptr<int> w_token;
     };
 

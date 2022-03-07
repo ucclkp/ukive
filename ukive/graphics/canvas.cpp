@@ -32,14 +32,14 @@ namespace ukive {
 
     Canvas::~Canvas() {}
 
-    ImageFrame* Canvas::createImage(const LcImageFrame* frame) {
+    GPtr<ImageFrame> Canvas::createImage(const GPtr<LcImageFrame>& frame) {
         if (!renderer_ || !frame) {
-            return nullptr;
+            return {};
         }
         return renderer_->createImage(frame);
     }
 
-    ImageFrame* Canvas::createImage(int width, int height) {
+    GPtr<ImageFrame> Canvas::createImage(int width, int height) {
         if (!renderer_ || width <= 0 || height <= 0) {
             return {};
         }
@@ -47,7 +47,7 @@ namespace ukive {
             width, height, getBuffer()->getImageOptions());
     }
 
-    ImageFrame* Canvas::createImage(
+    GPtr<ImageFrame> Canvas::createImage(
         int width, int height,
         const ImageOptions& options)
     {
@@ -57,7 +57,7 @@ namespace ukive {
         return renderer_->createImage(width, height, options);
     }
 
-    ImageFrame* Canvas::createImage(
+    GPtr<ImageFrame> Canvas::createImage(
         int width, int height,
         const void* pixel_data, size_t size, size_t stride)
     {
@@ -71,7 +71,7 @@ namespace ukive {
             width, height, pixel_data, size, stride, getBuffer()->getImageOptions());
     }
 
-    ImageFrame* Canvas::createImage(
+    GPtr<ImageFrame> Canvas::createImage(
         int width, int height,
         const void* pixel_data, size_t size, size_t stride,
         const ImageOptions& options)
@@ -173,18 +173,18 @@ namespace ukive {
         return renderer_->getBuffer();
     }
 
-    ImageFrame* Canvas::extractImage() const {
+    GPtr<ImageFrame> Canvas::extractImage() const {
         if (!renderer_) {
-            return nullptr;
+            return {};
         }
 
         return renderer_->getBuffer()->onExtractImage(
             renderer_->getBuffer()->getImageOptions());
     }
 
-    ImageFrame* Canvas::extractImage(const ImageOptions& options) const {
+    GPtr<ImageFrame> Canvas::extractImage(const ImageOptions& options) const {
         if (!renderer_) {
-            return nullptr;
+            return {};
         }
 
         return renderer_->getBuffer()->onExtractImage(options);

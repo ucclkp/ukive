@@ -11,6 +11,8 @@
 
 #include "utils/math/algebra/point.hpp"
 
+#include "ukive/graphics/gptr.hpp"
+
 
 namespace ukive {
     class GPUBuffer;
@@ -45,10 +47,10 @@ namespace shell {
             utl::mat4f wvp;
         };
 
-        std::unique_ptr<ukive::GPUBuffer> const_buffer_;
-        std::unique_ptr<ukive::GPUShader> pixel_shader_;
-        std::unique_ptr<ukive::GPUShader> vertex_shader_;
-        std::unique_ptr<ukive::GPUInputLayout> input_layout_;
+        ukive::GPtr<ukive::GPUBuffer> const_buffer_;
+        ukive::GPtr<ukive::GPUShader> pixel_shader_;
+        ukive::GPtr<ukive::GPUShader> vertex_shader_;
+        ukive::GPtr<ukive::GPUInputLayout> input_layout_;
     };
 
 }

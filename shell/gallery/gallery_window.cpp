@@ -142,22 +142,12 @@ namespace shell {
             return;
         }
 
-        ukive::ImageFrame* img;
-        if (thumb.data.empty()) {
-            img = img = ukive::ImageFrame::create(
-                list_view_->getWindow(), thumb.ph_bmp.get());
-        }
-        else {
-            img = ukive::ImageFrame::create(
-                list_view_->getWindow(),
-                thumb.width, thumb.height,
-                thumb.data.data(),
-                thumb.data.size(), thumb.width * 4, thumb.options);
-        }
+        auto img = ukive::ImageFrame::create(
+            list_view_->getWindow()->getCanvas(), thumb.ph_bmp);
 
         auto& d = data_[thumb.id];
         d.ts = ThumbStatus::Complete;
-        d.img = std::shared_ptr<ukive::ImageFrame>(img);
+        d.img = img;
         notifyDataChanged();
     }
 

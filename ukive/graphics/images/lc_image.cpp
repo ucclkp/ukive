@@ -15,11 +15,7 @@ namespace ukive {
 
     class LcImage::ImageOntic {
     public:
-        ~ImageOntic() {
-            utl::STLDeleteElements(&frames);
-        }
-
-        std::vector<LcImageFrame*> frames;
+        std::vector<GPtr<LcImageFrame>> frames;
         std::shared_ptr<ImageData> data;
     };
 
@@ -29,14 +25,14 @@ namespace ukive {
 
     LcImage::LcImage() {}
 
-    void LcImage::addFrame(LcImageFrame* frame) {
+    void LcImage::addFrame(const GPtr<LcImageFrame>& frame) {
         if (!ontic_) {
             ontic_ = std::make_shared<ImageOntic>();
         }
         ontic_->frames.push_back(frame);
     }
 
-    void LcImage::removeFrame(LcImageFrame* frame, bool del) {
+    void LcImage::removeFrame(const GPtr<LcImageFrame>& frame) {
         if (!ontic_ || !frame) {
             return;
         }
@@ -50,22 +46,14 @@ namespace ukive {
             }
         }
 
-        if (del) {
-            delete frame;
-        }
-
         if (frames.empty()) {
             ontic_.reset();
         }
     }
 
-    void LcImage::clearFrames(bool del) {
+    void LcImage::clearFrames() {
         if (!ontic_) {
             return;
-        }
-
-        if (del) {
-            utl::STLDeleteElements(&ontic_->frames);
         }
 
         ontic_->frames.clear();
@@ -118,8 +106,8 @@ namespace ukive {
         return size;
     }
 
-    const std::vector<LcImageFrame*>& LcImage::getFrames() const {
-        static std::vector<LcImageFrame*> stub;
+    const std::vector<GPtr<LcImageFrame>>& LcImage::getFrames() const {
+        static std::vector<GPtr<LcImageFrame>> stub;
         if (!ontic_) {
             return stub;
         }

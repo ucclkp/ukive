@@ -13,9 +13,10 @@
 namespace ukive {
 
     //  static
-    GPUTexture* GPUTexture::createShaderTex2D(
+    GEcPtr<GPUTexture> GPUTexture::createShaderTex2D(
         uint32_t width, uint32_t height,
-        GPUDataFormat format, uint32_t stride, const void* data)
+        GPUDataFormat format, bool rt,
+        uint32_t stride, const void* data)
     {
         auto dev = Application::getGraphicDeviceManager()->getGPUDevice();
 
@@ -27,29 +28,38 @@ namespace ukive {
         desc.depth = 0u;
         desc.is_dynamic = false;
         desc.mip_levels = 1u;
-        desc.res_type = RES_SHADER_RES;
+        desc.res_type = RES_SHADER_RES | (rt ? RES_RENDER_TARGET : 0);
 
         GPUBuffer::ResourceData data_desc;
-        data_desc.pitch = stride;
-        data_desc.slice_pitch = 0;
-        data_desc.sys_mem = data;
-
-        auto tex = dev->createTexture(&desc, &data_desc);
-        if (!tex) {
-            return nullptr;
+        if (data) {
+            data_desc.pitch = stride;
+            data_desc.slice_pitch = 0;
+            data_desc.sys_mem = data;
         }
 
-        auto res = dev->createShaderResource(nullptr, tex);
-        tex->setShaderRes(res);
+        auto tex = dev->createTexture(desc, data ? &data_desc : nullptr);
+        if (!tex) {
+            return tex;
+        }
+
+        tex.code = tex->createSRV();
         return tex;
     }
 
-    void GPUTexture::setShaderRes(GPUShaderResource* res) {
-        shader_res_.reset(res);
+    void GPUTexture::setSRV(const GPtr<GPUShaderResource>& res) {
+        shader_res_ = res;
     }
 
-    GPUShaderResource* GPUTexture::getShaderRes() const {
-        return shader_res_.get();
+    GPtr<GPUShaderResource> GPUTexture::srv() const {
+        return shader_res_;
+    }
+
+    gerc GPUTexture::createSRV() {
+        shader_res_.reset();
+        auto dev = Application::getGraphicDeviceManager()->getGPUDevice();
+        auto srv = dev->createShaderResource(nullptr, this);
+        setSRV(srv);
+        return srv.code;
     }
 
 }

@@ -7,10 +7,12 @@
 #ifndef UKIVE_GRAPHICS_GPU_GPU_RESOURCE_H_
 #define UKIVE_GRAPHICS_GPU_GPU_RESOURCE_H_
 
+#include "ukive/graphics/gref_count.h"
+
 
 namespace ukive {
 
-    class GPUResource {
+    class GPUResource : public virtual GRefCount {
     public:
         enum ResourceType {
             RES_VERTEX_BUFFER   = 1 << 0,

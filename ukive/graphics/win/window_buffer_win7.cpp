@@ -11,6 +11,7 @@
 #include "ukive/app/application.h"
 #include "ukive/system/win/win10_version.h"
 #include "ukive/window/win/window_impl_win.h"
+#include "ukive/graphics/images/image_frame.h"
 #include "ukive/graphics/images/image_options.h"
 #include "ukive/graphics/win/images/lc_image_frame_win.h"
 
@@ -106,8 +107,8 @@ namespace win {
         return ret;
     }
 
-    ImageFrame* WindowBufferWin7::onExtractImage(const ImageOptions& options) {
-        return nullptr;
+    GPtr<ImageFrame> WindowBufferWin7::onExtractImage(const ImageOptions& options) {
+        return {};
     }
 
     Size WindowBufferWin7::getSize() const {
@@ -160,8 +161,8 @@ namespace win {
 
     bool WindowBufferWin7::createSoftwareBRT() {
         auto bounds = window_->getBounds();
-        std::shared_ptr<LcImageFrame> img_loc(
-            LcImageFrame::create(bounds.width(), bounds.height(), ImageOptions()));
+        auto img_loc =
+            LcImageFrame::create(bounds.width(), bounds.height(), ImageOptions());
         if (!img_loc) {
             LOG(Log::WARNING) << "Failed to create wic bitmap.";
             return false;

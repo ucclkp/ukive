@@ -10,6 +10,7 @@
 #include <memory>
 #include <vector>
 
+#include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/images/image_frame.h"
 
 
@@ -19,15 +20,19 @@ namespace ukive {
     public:
         Image();
 
-        void addFrame(ImageFrame* frame);
-        void removeFrame(ImageFrame* frame, bool del);
-        void clearFrames(bool del);
+        void addFrame(const GPtr<ImageFrame>& frame);
+        void removeFrame(const GPtr<ImageFrame>& frame);
+        void removeFrameAt(size_t index);
+        void clearFrames();
 
         bool isValid() const;
 
+        void setData(const std::shared_ptr<ImageData>& data);
+        const std::shared_ptr<ImageData>& getData() const;
+
         SizeF getBounds() const;
         SizeU getPixelBounds() const;
-        const std::vector<ImageFrame*>& getFrames() const;
+        const std::vector<GPtr<ImageFrame>>& getFrames() const;
 
     private:
         class ImageOntic;

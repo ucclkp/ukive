@@ -13,6 +13,8 @@
 #include "ukive/graphics/gpu/gpu_depth_stencil.h"
 #include "ukive/graphics/gpu/gpu_depth_stencil_state.h"
 #include "ukive/graphics/gpu/gpu_rasterizer_state.h"
+#include "ukive/graphics/gref_count.h"
+#include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/gpu/gpu_sampler_state.h"
 #include "ukive/graphics/gpu/gpu_input_layout.h"
 #include "ukive/graphics/gpu/gpu_texture.h"
@@ -30,29 +32,31 @@ namespace ukive {
     class GPUSamplerState;
     class GPUShaderResource;
 
-    class GPUDevice {
+    class GPUDevice : public virtual GRefCount {
     public:
         virtual ~GPUDevice() = default;
 
-        virtual GPUBuffer* createBuffer(
-            const GPUBuffer::Desc* desc, const GPUBuffer::ResourceData* data) = 0;
-        virtual GPUInputLayout* createInputLayout(
+        virtual GEcPtr<GPUBuffer> createBuffer(
+            const GPUBuffer::Desc& desc, const GPUBuffer::ResourceData* data) = 0;
+        virtual GEcPtr<GPUInputLayout> createInputLayout(
             const GPUInputLayout::Desc* desc, size_t desc_count,
             const void* shader_bc, size_t size) = 0;
-        virtual GPUTexture* createTexture(
-            const GPUTexture::Desc* desc, const GPUBuffer::ResourceData* data) = 0;
-        virtual GPURenderTarget* createRenderTarget(GPUResource* resource) = 0;
-        virtual GPUDepthStencil* createDepthStencil(
-            const GPUDepthStencil::Desc* desc, GPUResource* resource) = 0;
-        virtual GPUShaderResource* createShaderResource(
+        virtual GEcPtr<GPUTexture> createTexture(
+            const GPUTexture::Desc& desc, const GPUBuffer::ResourceData* data) = 0;
+        virtual GEcPtr<GPURenderTarget> createRenderTarget(GPUResource* resource) = 0;
+        virtual GEcPtr<GPUDepthStencil> createDepthStencil(
+            const GPUDepthStencil::Desc& desc, GPUResource* resource) = 0;
+        virtual GEcPtr<GPUShaderResource> createShaderResource(
             const GPUShaderResource::Desc* desc, GPUResource* resource) = 0;
 
-        virtual GPUDepthStencilState* createDepthStencilState(const GPUDepthStencilState::Desc* desc) = 0;
-        virtual GPURasterizerState* createRasterizerState(const GPURasterizerState::Desc* desc) = 0;
-        virtual GPUSamplerState* createSamplerState(const GPUSamplerState::Desc* desc) = 0;
+        virtual GEcPtr<GPUDepthStencilState> createDepthStencilState(const GPUDepthStencilState::Desc& desc) = 0;
+        virtual GEcPtr<GPURasterizerState> createRasterizerState(const GPURasterizerState::Desc& desc) = 0;
+        virtual GEcPtr<GPUSamplerState> createSamplerState(const GPUSamplerState::Desc& desc) = 0;
 
-        virtual GPUShader* createVertexShader(const void* shader_bc, size_t size) = 0;
-        virtual GPUShader* createPixelShader(const void* shader_bc, size_t size) = 0;
+        virtual GEcPtr<GPUShader> createVertexShader(const void* shader_bc, size_t size) = 0;
+        virtual GEcPtr<GPUShader> createPixelShader(const void* shader_bc, size_t size) = 0;
+
+        virtual GEcPtr<GPUTexture> openSharedTexture2D(intptr_t handle) = 0;
     };
 
 }

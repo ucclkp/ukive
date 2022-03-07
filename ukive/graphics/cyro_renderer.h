@@ -9,6 +9,7 @@
 
 #include <string>
 
+#include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/point.hpp"
 #include "ukive/graphics/rect.hpp"
 
@@ -37,10 +38,10 @@ namespace ukive {
 
         virtual CyroBuffer* getBuffer() const = 0;
 
-        virtual ImageFrame* createImage(const LcImageFrame* frame) = 0;
-        virtual ImageFrame* createImage(
+        virtual GPtr<ImageFrame> createImage(const GPtr<LcImageFrame>& frame) = 0;
+        virtual GPtr<ImageFrame> createImage(
             int width, int height, const ImageOptions& options) = 0;
-        virtual ImageFrame* createImage(
+        virtual GPtr<ImageFrame> createImage(
             int width, int height,
             const void* pixel_data, size_t size, size_t stride,
             const ImageOptions& options) = 0;

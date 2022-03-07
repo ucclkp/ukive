@@ -10,6 +10,8 @@
 #include <memory>
 #include <string>
 
+#include "ukive/graphics/gptr.hpp"
+#include "ukive/graphics/gref_count.h"
 #include "ukive/graphics/images/image_options.h"
 #include "ukive/graphics/size.hpp"
 
@@ -20,9 +22,9 @@ namespace ukive {
     class ImageData;
     class ImageOptions;
 
-    class LcImageFrame {
+    class LcImageFrame : public virtual GRefCount {
     public:
-        static LcImageFrame* create(
+        static GPtr<LcImageFrame> create(
             int width, int height, const ImageOptions& options);
         static bool saveToFile(
             int width, int height,

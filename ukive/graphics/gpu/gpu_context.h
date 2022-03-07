@@ -10,6 +10,8 @@
 #include <cstdint>
 
 #include "ukive/graphics/gpu/gpu_buffer.h"
+#include "ukive/graphics/gptr.hpp"
+#include "ukive/graphics/gref_count.h"
 #include "ukive/graphics/gpu/gpu_render_target.h"
 #include "ukive/graphics/gpu/gpu_sampler_state.h"
 #include "ukive/graphics/gpu/gpu_shader_resource.h"
@@ -30,7 +32,7 @@ namespace ukive {
     class GPUResource;
     struct Viewport;
 
-    class GPUContext {
+    class GPUContext : public virtual GRefCount {
     public:
         enum ClearFlags {
             CLEAR_DEPTH   = 1 << 0,
@@ -49,7 +51,7 @@ namespace ukive {
 
         // IA
         virtual void setVertexBuffers(
-            uint32_t start_slot, uint32_t num, const GPUBuffer* buffers,
+            uint32_t start_slot, uint32_t num, GPUBuffer* const* buffers,
             const uint32_t* strides, const uint32_t* offset) = 0;
         virtual void setIndexBuffer(
             const GPUBuffer* buffer, GPUDataFormat format, uint32_t offset) = 0;
@@ -58,24 +60,24 @@ namespace ukive {
 
         // OM
         virtual void setRenderTargets(
-            uint32_t num, const GPURenderTarget* rts, GPUDepthStencil* ds) = 0;
+            uint32_t num, GPURenderTarget* const* rts, GPUDepthStencil* ds) = 0;
         virtual void setDepthStencilState(
             GPUDepthStencilState* state, uint32_t stencil_ref) = 0;
 
         // VS
         virtual void setVertexShader(GPUShader* shader) = 0;
         virtual void setVConstantBuffers(
-            uint32_t start_slot, uint32_t num, const GPUBuffer* buffers) = 0;
+            uint32_t start_slot, uint32_t num, GPUBuffer* const* buffers) = 0;
 
         // PS
         virtual void setPixelShader(GPUShader* shader) = 0;
         virtual void setPSamplerStates(
-            uint32_t start_slot, uint32_t num, const GPUSamplerState* states) = 0;
+            uint32_t start_slot, uint32_t num, GPUSamplerState* const* states) = 0;
         virtual void setPShaderResources(
-            uint32_t start_slot, uint32_t num, const GPUShaderResource* res) = 0;
+            uint32_t start_slot, uint32_t num, GPUShaderResource* const* res) = 0;
 
         // RS
-        virtual void setViewport(uint32_t num, const Viewport* vps) = 0;
+        virtual void setViewports(uint32_t num, const Viewport* vps) = 0;
         virtual void setRasterizerState(GPURasterizerState* state) = 0;
 
         virtual void clearRenderTarget(GPURenderTarget* rt, const float rgba[4]) = 0;

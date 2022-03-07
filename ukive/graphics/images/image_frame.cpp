@@ -17,81 +17,88 @@
 namespace ukive {
 
     // static
-    ImageFrame* ImageFrame::create(Window *win, const LcImageFrame* frame) {
-        return win->getCanvas()->createImage(frame);
+    GPtr<ImageFrame> ImageFrame::create(Canvas* canvas, const GPtr<LcImageFrame>& frame) {
+        return canvas->createImage(frame);
     }
 
     // static
-    ImageFrame* ImageFrame::create(Window* win, int width, int height) {
-        return win->getCanvas()->createImage(width, height);
+    GPtr<ImageFrame> ImageFrame::create(Canvas* canvas, int width, int height) {
+        return canvas->createImage(width, height);
     }
 
     // static
-    ImageFrame* ImageFrame::create(
-        Window* win, int width, int height, const ImageOptions& options)
+    GPtr<ImageFrame> ImageFrame::create(
+        Canvas* canvas, int width, int height, const ImageOptions& options)
     {
-        return win->getCanvas()->createImage(width, height, options);
+        return canvas->createImage(width, height, options);
     }
 
     // static
-    ImageFrame* ImageFrame::create(
-        Window *win, int width, int height,
+    GPtr<ImageFrame> ImageFrame::create(
+        Canvas* canvas, int width, int height,
         const void* pixel_data, size_t size, size_t stride)
     {
-        return win->getCanvas()->createImage(width, height, pixel_data, size, stride);
+        return canvas->createImage(width, height, pixel_data, size, stride);
     }
 
     // static
-    ImageFrame* ImageFrame::create(
-        Window *win, int width, int height,
+    GPtr<ImageFrame> ImageFrame::create(
+        Canvas* canvas, int width, int height,
         const void* pixel_data, size_t size, size_t stride,
         const ImageOptions& options)
     {
-        return win->getCanvas()->createImage(width, height, pixel_data, size, stride, options);
+        return canvas->createImage(width, height, pixel_data, size, stride, options);
     }
 
     // static
-    ImageFrame* ImageFrame::decodeFile(
-        Window* win, const std::u16string_view& file_name)
+    GPtr<ImageFrame> ImageFrame::decodeFile(
+        Canvas* canvas, const std::u16string_view& file_name)
     {
         auto ic = Application::getImageLocFactory();
         auto img = ic->decodeFile(
-            file_name, win->getCanvas()->getBuffer()->getImageOptions());
+            file_name, canvas->getBuffer()->getImageOptions());
         if (!img.isValid()) {
-            return nullptr;
+            return {};
         }
 
-        return win->getCanvas()->createImage(img.getFrames()[0]);
+        return canvas->createImage(img.getFrames()[0]);
     }
 
     // static
-    ImageFrame* ImageFrame::decodeFile(
-        Window* win, const std::u16string_view& file_name, const ImageOptions& options)
+    GPtr<ImageFrame> ImageFrame::decodeFile(
+        Canvas* canvas, const std::u16string_view& file_name, const ImageOptions& options)
     {
         auto ic = Application::getImageLocFactory();
         auto img = ic->decodeFile(file_name, options);
         if (!img.isValid()) {
-            return nullptr;
-        }
-
-        return win->getCanvas()->createImage(img.getFrames()[0]);
-    }
-
-    // static
-    ImageFrame* ImageFrame::decodeThumbnail(
-        Window *win, const std::u16string_view& file_name, int width, int height)
-    {
-        auto ic = Application::getImageLocFactory();
-
-        int real_w, real_h;
-        std::string data;
-        ImageOptions options;
-        if (!ic->getThumbnail(file_name, width, height, &data, &real_w, &real_h, &options)) {
             return {};
         }
 
-        return create(
-            win, real_w, real_h, data.data(), data.size(), real_w*4, options);
+        return canvas->createImage(img.getFrames()[0]);
+    }
+
+    // static
+    GPtr<ImageFrame> ImageFrame::decodeThumbnail(
+        Canvas* canvas, const std::u16string_view& file_name, int width, int height)
+    {
+        auto ic = Application::getImageLocFactory();
+
+        std::string data;
+        ImageOptions options;
+        auto frame = ic->getThumbnail(file_name, width, height, &options);
+        if (!frame) {
+            return {};
+        }
+
+        return canvas->createImage(frame);
+    }
+
+    void ImageFrame::setData(const std::shared_ptr<ImageData>& data) {
+        data_ = data;
+    }
+
+    const std::shared_ptr<ImageData>& ImageFrame::getData() const {
+        return data_;
     }
 
 }

@@ -10,6 +10,7 @@
 #include <memory>
 
 #include "ukive/graphics/cyro_buffer.h"
+#include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/images/image_options.h"
 #include "ukive/graphics/win/cyro_render_target_d2d.h"
 #include "ukive/graphics/win/directx_manager.h"
@@ -33,7 +34,7 @@ namespace win {
         void onBeginDraw() override;
         GRet onEndDraw() override;
 
-        ImageFrame* onExtractImage(const ImageOptions& options) override;
+        GPtr<ImageFrame> onExtractImage(const ImageOptions& options) override;
 
         Size getSize() const override;
         Size getPixelSize() const override;
@@ -41,14 +42,14 @@ namespace win {
         CyroRenderTarget* getRT() const override;
         const ImageOptions& getImageOptions() const override;
 
-        utl::win::ComPtr<ID3D11Texture2D> getTexture() const;
+        GPtr<GPUTexture> getTexture() const;
 
     private:
         bool createHardwareBRT(int width, int height);
 
         int width_, height_;
         ImageOptions img_options_;
-        utl::win::ComPtr<ID3D11Texture2D> d3d_tex2d_;
+        GPtr<GPUTexture> d3d_tex2d_;
         std::unique_ptr<CyroRenderTargetD2D> rt_;
     };
 

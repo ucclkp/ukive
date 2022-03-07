@@ -11,11 +11,11 @@
 
 #include "utils/message/cycler.h"
 
+#include "ukive/graphics/gptr.hpp"
+#include "ukive/graphics/gpu/gpu_texture.h"
 #include "ukive/media/media_player.h"
 #include "ukive/media/win/mf_d3d9_render_engine.h"
 
-#include <d2d1.h>
-#include <d3d11.h>
 #include <mfidl.h>
 
 
@@ -58,6 +58,10 @@ namespace win {
             Stopped,
             Ended,
             Closed,
+        };
+
+        struct MessageData {
+            GPtr<ImageFrame> frame;
         };
 
         static bool startup();
@@ -116,8 +120,8 @@ namespace win {
         HWND hwnd_ = nullptr;
         Window* window_ = nullptr;
         utl::win::ComPtr<IMFSample> video_sample_;
-        utl::win::ComPtr<ID2D1Bitmap> video_bitmap_;
-        utl::win::ComPtr<ID3D11Texture2D> video_texture_;
+        GPtr<ImageFrame> video_frame_;
+        GPtr<GPUTexture> video_texture_;
         MediaPlayerCallback* callback_ = nullptr;
 
         utl::Cycler cycler_;

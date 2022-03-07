@@ -44,7 +44,7 @@ namespace ukive {
         View::onDraw(canvas);
 
         if (video_frame_) {
-            canvas->drawImage(video_frame_);
+            canvas->drawImage(video_frame_.get());
         }
     }
 
@@ -75,10 +75,7 @@ namespace ukive {
         case Context::DEV_LOST:
         {
             // 通知场景，要把设备资源释放掉
-            if (video_frame_) {
-                delete video_frame_;
-                video_frame_ = nullptr;
-            }
+            video_frame_.reset();
             break;
         }
 
@@ -96,7 +93,7 @@ namespace ukive {
     }
 
     void MediaView::onAttachedToWindow(Window* w) {
-        //media_player_->openFile(uR"(G:\Test\test.mp4)", w);
+        media_player_->openFile(uR"(G:\Test\test.mp4)", w);
     }
 
     void MediaView::onDetachFromWindow() {
@@ -129,11 +126,8 @@ namespace ukive {
 
     }
 
-    void MediaView::onRenderVideoFrame(ImageFrame* frame) {
+    void MediaView::onRenderVideoFrame(const GPtr<ImageFrame>& frame) {
         // TODO:
-        if (video_frame_) {
-            delete video_frame_;
-        }
         video_frame_ = frame;
         requestDraw();
     }

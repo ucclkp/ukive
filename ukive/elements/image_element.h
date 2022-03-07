@@ -20,7 +20,7 @@ namespace ukive {
             Wrap,
         };
 
-        explicit ImageElement(const std::shared_ptr<ImageFrame>& img);
+        explicit ImageElement(const GPtr<ImageFrame>& img);
         ~ImageElement() = default;
 
         void setOpacity(float opt);
@@ -33,7 +33,7 @@ namespace ukive {
         int getContentWidth() const override;
         int getContentHeight() const override;
 
-        std::shared_ptr<ImageFrame> getImage() const;
+        GPtr<ImageFrame> getImage() const;
 
     protected:
         void onContextChanged(const Context& context) override;
@@ -41,7 +41,7 @@ namespace ukive {
     private:
         float opacity_ = 1.f;
         ExtendMode mode_ = Clamp;
-        std::shared_ptr<ImageFrame> image_;
+        GPtr<ImageFrame> image_;
     };
 
 }

@@ -82,7 +82,7 @@ namespace shell {
         vb_data.sys_mem = lod_generator_->getVertices();
         vb_data.pitch = 0;
         vb_data.slice_pitch = 0;
-        vertex_buffer_.reset(device->createBuffer(&vb, &vb_data));
+        vertex_buffer_ = device->createBuffer(vb, &vb_data);
 
         ukive::GPUBuffer::Desc ib;
         ib.is_dynamic = true;
@@ -95,7 +95,7 @@ namespace shell {
         ib_data.sys_mem = lod_generator_->getIndices();
         ib_data.pitch = 0;
         ib_data.slice_pitch = 0;
-        index_buffer_.reset(device->createBuffer(&ib, &ib_data));
+        index_buffer_ = device->createBuffer(ib, &ib_data);
     }
 
     void TerrainScene::createStates() {
@@ -110,7 +110,7 @@ namespace shell {
         desc.front_counter_clockwise = false;
         desc.multisample_enabled = false;
         desc.scissor_enabled = false;
-        rasterizer_state_.reset(device->createRasterizerState(&desc));
+        rasterizer_state_ = device->createRasterizerState(desc);
     }
 
     void TerrainScene::updateCube() {
@@ -368,7 +368,7 @@ namespace shell {
         utl::mat4f wvp_matrix;
 
         context->setRasterizerState(rasterizer_state_.get());
-        context->setViewport(1, &viewport_);
+        context->setViewports(1, &viewport_);
 
         getCamera()->getWVPMatrix(&wvp_matrix);
         utl::mat4f wvp_matrix_t = wvp_matrix.T();
@@ -387,7 +387,7 @@ namespace shell {
         unsigned int vertexDataOffset = 0;
         unsigned int vertexStructSize = sizeof(TerrainVertexData);
         context->setVertexBuffers(
-            0, 1, vertex_buffer_.get(), &vertexStructSize, &vertexDataOffset);
+            0, 1, &vertex_buffer_, &vertexStructSize, &vertexDataOffset);
         context->setIndexBuffer(index_buffer_.get(), ukive::GPUDataFormat::R32_UINT, 0);
         context->drawIndexed(lod_generator_->getIndexCount(), 0, 0);
 

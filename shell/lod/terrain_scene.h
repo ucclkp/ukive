@@ -9,6 +9,7 @@
 
 #include <functional>
 
+#include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/gpu/gpu_types.h"
 #include "ukive/graphics/3d/scene.h"
 #include "ukive/graphics/3d/graph_creator.h"
@@ -90,9 +91,9 @@ namespace shell {
         TerrainConfigure* terrain_configure_;
 
         ukive::Viewport viewport_;
-        std::unique_ptr<ukive::GPUBuffer> index_buffer_;
-        std::unique_ptr<ukive::GPUBuffer> vertex_buffer_;
-        std::unique_ptr<ukive::GPURasterizerState> rasterizer_state_;
+        ukive::GPtr<ukive::GPUBuffer> index_buffer_;
+        ukive::GPtr<ukive::GPUBuffer> vertex_buffer_;
+        ukive::GPtr<ukive::GPURasterizerState> rasterizer_state_;
 
         ukv3d::Camera* camera_;
         ukv3d::GraphCreator* graph_creator_;

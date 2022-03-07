@@ -9,10 +9,12 @@
 
 #include <cstdint>
 
+#include "ukive/graphics/gref_count.h"
+
 
 namespace ukive {
 
-    class GPURenderTarget {
+    class GPURenderTarget : public virtual GRefCount {
     public:
         using Native = intptr_t;
 

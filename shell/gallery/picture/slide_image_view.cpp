@@ -34,8 +34,8 @@ namespace shell {
 
     void SlideImageView::setFirstImageFile(const std::u16string& img_file) {
         setImage(
-            std::shared_ptr<ukive::ImageFrame>(
-                ukive::ImageFrame::decodeFile(getWindow(), img_file, ukive::ImageOptions())));
+            ukive::ImageFrame::decodeFile(
+                getWindow()->getCanvas(), img_file, ukive::ImageOptions()));
 
         files_.clear();
         std::error_code ec;
@@ -82,8 +82,8 @@ namespace shell {
         if (cur_index_ > 0) {
             --cur_index_;
             setImage(
-                std::shared_ptr<ukive::ImageFrame>(ukive::ImageFrame::decodeFile(
-                getWindow(), files_[cur_index_].path, ukive::ImageOptions())));
+                ukive::ImageFrame::decodeFile(
+                    getWindow()->getCanvas(), files_[cur_index_].path, ukive::ImageOptions()));
         }
     }
 
@@ -91,8 +91,8 @@ namespace shell {
         if (cur_index_ + 1 < utl::num_cast<int>(files_.size())) {
             ++cur_index_;
             setImage(
-                std::shared_ptr<ukive::ImageFrame>(ukive::ImageFrame::decodeFile(
-                getWindow(), files_[cur_index_].path, ukive::ImageOptions())));
+                ukive::ImageFrame::decodeFile(
+                    getWindow()->getCanvas(), files_[cur_index_].path, ukive::ImageOptions()));
         }
     }
 

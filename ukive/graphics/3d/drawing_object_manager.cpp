@@ -118,7 +118,7 @@ namespace ukv3d {
         auto object = getByTag(tag);
         if (object) {
             gpu_context->setVertexBuffers(
-                0, 1, object->vertex_buffer.get(),
+                0, 1, &object->vertex_buffer,
                 &object->vertex_struct_size,
                 &object->vertex_data_offset);
             gpu_context->setIndexBuffer(object->index_buffer.get(), ukive::GPUDataFormat::R32_UINT, 0);
@@ -154,7 +154,7 @@ namespace ukv3d {
         vb_data.sys_mem = obj->vertices.get();
         vb_data.pitch = 0;
         vb_data.slice_pitch = 0;
-        obj->vertex_buffer.reset(device->createBuffer(&vb, &vb_data));
+        obj->vertex_buffer = device->createBuffer(vb, &vb_data);
 
         GPUBuffer::Desc ib;
         ib.is_dynamic = true;
@@ -167,7 +167,7 @@ namespace ukv3d {
         ib_data.sys_mem = obj->indices.get();
         ib_data.pitch = 0;
         ib_data.slice_pitch = 0;
-        obj->index_buffer.reset(device->createBuffer(&ib, &ib_data));
+        obj->index_buffer = device->createBuffer(ib, &ib_data);
     }
 
     // DrawingObject

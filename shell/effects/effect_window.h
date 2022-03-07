@@ -10,7 +10,7 @@
 #include "ukive/window/window.h"
 #include "ukive/animation/animator.h"
 #include "ukive/graphics/vsyncable.h"
-#include "ukive/graphics/win/direct3d/effects/image_effect_dx.h"
+#include "ukive/graphics/win/effects/image_effect_dx.h"
 
 
 namespace ukive {
@@ -46,16 +46,16 @@ namespace shell {
             uint64_t start_time, uint32_t display_freq, uint32_t real_interval) override;
 
     private:
-        void createImages();
+        void createShadowImages();
 
         ukive::Button* ce_button_;
         ukive::Animator animator_;
 
-        ukive::ImageFrame* shadow_img_ = nullptr;
-        ukive::ImageFrame* image_img_ = nullptr;
-        std::shared_ptr<ukive::ImageFrame> content_img_;
+        ukive::GPtr<ukive::ImageFrame> shadow_img_;
+        ukive::GPtr<ukive::ImageFrame> image_img_;
+        ukive::GPtr<ukive::ImageFrame> content_img_;
         std::unique_ptr<ukive::ShadowEffect> shadow_effect_;
-        std::unique_ptr<ukive::win::ImageEffectDX> image_effect_;
+        std::unique_ptr<ukive::win::ImageEffectGPU> image_effect_;
     };
 
 }

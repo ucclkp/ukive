@@ -6,8 +6,6 @@
 
 #include "mf_async_callback.h"
 
-#include <Shlwapi.h>
-
 
 namespace ukive {
 namespace win {

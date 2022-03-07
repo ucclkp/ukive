@@ -106,7 +106,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;Mscms.lib;dwmapi.lib;d2d1.lib;Mf.lib;Mfplat.lib;Mfuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;Shlwapi.lib;Mscms.lib;dwmapi.lib;d2d1.lib;Mf.lib;Mfplat.lib;Mfuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <FxCompile>
       <ObjectFileOutput>$(SolutionDir)build\x86\$(Configuration)\shaders\%(Filename).cso</ObjectFileOutput>
@@ -132,7 +132,7 @@
       <ShaderModel>4.0</ShaderModel>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;Mscms.lib;dwmapi.lib;d2d1.lib;Mf.lib;Mfplat.lib;Mfuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;Shlwapi.lib;Mscms.lib;dwmapi.lib;d2d1.lib;Mf.lib;Mfplat.lib;Mfuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -159,7 +159,7 @@
       <ShaderModel>4.0</ShaderModel>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;Mscms.lib;dwmapi.lib;d2d1.lib;Mf.lib;Mfplat.lib;Mfuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;Shlwapi.lib;Mscms.lib;dwmapi.lib;d2d1.lib;Mf.lib;Mfplat.lib;Mfuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -185,7 +185,7 @@
       <ShaderModel>4.0</ShaderModel>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;Mscms.lib;dwmapi.lib;d2d1.lib;Mf.lib;Mfplat.lib;Mfuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dwrite.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3d9.lib;evr.lib;dxva2.lib;strmiids.lib;Rpcrt4.lib;Slwga.lib;Shlwapi.lib;Mscms.lib;dwmapi.lib;d2d1.lib;Mf.lib;Mfplat.lib;Mfuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -256,6 +256,10 @@
     <ClInclude Include="graphics\effects\cyro_effect.h" />
     <ClInclude Include="graphics\effects\image_effect.h" />
     <ClInclude Include="graphics\effects\shadow_effect.h" />
+    <ClInclude Include="graphics\gerror_code.hpp" />
+    <ClInclude Include="graphics\gptr.hpp" />
+    <ClInclude Include="graphics\gref_count.h" />
+    <ClInclude Include="graphics\gref_count_impl.h" />
     <ClInclude Include="graphics\graphics_utils.h" />
     <ClInclude Include="graphics\gpu\gpu_buffer.h" />
     <ClInclude Include="graphics\gpu\gpu_context.h" />
@@ -280,19 +284,19 @@
     <ClInclude Include="graphics\images\lc_image.h" />
     <ClInclude Include="graphics\images\lc_image_factory.h" />
     <ClInclude Include="graphics\images\lc_image_frame.h" />
-    <ClInclude Include="graphics\mac\gpu\gpu_buffer_metal.h" />
-    <ClInclude Include="graphics\mac\gpu\gpu_context_metal.h" />
-    <ClInclude Include="graphics\mac\gpu\gpu_depth_stencil_metal.h" />
-    <ClInclude Include="graphics\mac\gpu\gpu_depth_stencil_state_metal.h" />
-    <ClInclude Include="graphics\mac\gpu\gpu_device_metal.h" />
-    <ClInclude Include="graphics\mac\gpu\gpu_input_layout_metal.h" />
-    <ClInclude Include="graphics\mac\gpu\gpu_metal_utils.h" />
-    <ClInclude Include="graphics\mac\gpu\gpu_rasterizer_state_metal.h" />
-    <ClInclude Include="graphics\mac\gpu\gpu_render_target_metal.h" />
-    <ClInclude Include="graphics\mac\gpu\gpu_sampler_state_metal.h" />
-    <ClInclude Include="graphics\mac\gpu\gpu_shader_metal.h" />
-    <ClInclude Include="graphics\mac\gpu\gpu_shader_resource_metal.h" />
-    <ClInclude Include="graphics\mac\gpu\gpu_texture_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_buffer_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_context_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_depth_stencil_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_depth_stencil_state_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_device_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_input_layout_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_metal_utils.h" />
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_rasterizer_state_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_render_target_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_sampler_state_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_shader_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_shader_resource_metal.h" />
+    <ClInclude Include="graphics\mac\gpu\metal\gpu_texture_metal.h" />
     <ClInclude Include="graphics\matrix_2x3_f.h" />
     <ClInclude Include="graphics\padding.hpp" />
     <ClInclude Include="graphics\paint.h" />
@@ -304,33 +308,33 @@
     <ClInclude Include="graphics\size.hpp" />
     <ClInclude Include="graphics\vsyncable.h" />
     <ClInclude Include="graphics\vsync_provider.h" />
+    <ClInclude Include="graphics\win\3d\assist_configure.h" />
+    <ClInclude Include="graphics\win\3d\model_configure.h" />
     <ClInclude Include="graphics\win\colors\color_manager_win.h" />
     <ClInclude Include="graphics\win\cyro_renderer_d2d.h" />
     <ClInclude Include="graphics\win\cyro_render_target_d2d.h" />
-    <ClInclude Include="graphics\win\direct3d\assist_configure.h" />
-    <ClInclude Include="graphics\win\direct3d\effects\image_effect_dx.h" />
-    <ClInclude Include="graphics\win\direct3d\effects\shadow_effect_dx.h" />
-    <ClInclude Include="graphics\win\direct3d\model_configure.h" />
     <ClInclude Include="graphics\win\directx_manager.h" />
     <ClInclude Include="graphics\win\display_manager_win.h" />
     <ClInclude Include="graphics\win\display_win.h" />
+    <ClInclude Include="graphics\win\effects\image_effect_dx.h" />
+    <ClInclude Include="graphics\win\effects\shadow_effect_dx.h" />
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_buffer_d3d11.h" />
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_context_d3d11.h" />
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_d3d11_utils.h" />
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_depth_stencil_d3d11.h" />
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_depth_stencil_state_d3d11.h" />
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_device_d3d11.h" />
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_input_layout_d3d11.h" />
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_rasterizer_state_d3d11.h" />
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_render_target_d3d11.h" />
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_sampler_state_d3d11.h" />
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_shader_d3d11.h" />
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_shader_resource_d3d11.h" />
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_texture_d3d11.h" />
     <ClInclude Include="graphics\win\images\image_frame_win.h" />
     <ClInclude Include="graphics\win\images\image_options_d2d_utils.h" />
     <ClInclude Include="graphics\win\images\lc_image_factory_win.h" />
     <ClInclude Include="graphics\win\images\lc_image_frame_win.h" />
-    <ClInclude Include="graphics\win\gpu\gpu_buffer_d3d.h" />
-    <ClInclude Include="graphics\win\gpu\gpu_context_d3d.h" />
-    <ClInclude Include="graphics\win\gpu\gpu_d3d_utils.h" />
-    <ClInclude Include="graphics\win\gpu\gpu_depth_stencil_d3d.h" />
-    <ClInclude Include="graphics\win\gpu\gpu_depth_stencil_state_d3d.h" />
-    <ClInclude Include="graphics\win\gpu\gpu_device_d3d.h" />
-    <ClInclude Include="graphics\win\gpu\gpu_input_layout_d3d.h" />
-    <ClInclude Include="graphics\win\gpu\gpu_rasterizer_state_d3d.h" />
-    <ClInclude Include="graphics\win\gpu\gpu_render_target_d3d.h" />
-    <ClInclude Include="graphics\win\gpu\gpu_sampler_state_d3d.h" />
-    <ClInclude Include="graphics\win\gpu\gpu_shader_d3d.h" />
-    <ClInclude Include="graphics\win\gpu\gpu_shader_resource_d3d.h" />
-    <ClInclude Include="graphics\win\gpu\gpu_texture_d3d.h" />
     <ClInclude Include="graphics\win\offscreen_buffer_win.h" />
     <ClInclude Include="graphics\win\path_win.h" />
     <ClInclude Include="graphics\win\vsync_provider_win.h" />
@@ -550,19 +554,19 @@
     <ClCompile Include="graphics\images\lc_image.cpp" />
     <ClCompile Include="graphics\images\lc_image_factory.cpp" />
     <ClCompile Include="graphics\images\lc_image_frame.cpp" />
-    <ClCompile Include="graphics\mac\gpu\gpu_buffer_metal.cpp" />
-    <ClCompile Include="graphics\mac\gpu\gpu_context_metal.cpp" />
-    <ClCompile Include="graphics\mac\gpu\gpu_depth_stencil_metal.cpp" />
-    <ClCompile Include="graphics\mac\gpu\gpu_depth_stencil_state_metal.cpp" />
-    <ClCompile Include="graphics\mac\gpu\gpu_device_metal.cpp" />
-    <ClCompile Include="graphics\mac\gpu\gpu_input_layout_metal.cpp" />
-    <ClCompile Include="graphics\mac\gpu\gpu_metal_utils.cpp" />
-    <ClCompile Include="graphics\mac\gpu\gpu_rasterizer_state_metal.cpp" />
-    <ClCompile Include="graphics\mac\gpu\gpu_render_target_metal.cpp" />
-    <ClCompile Include="graphics\mac\gpu\gpu_sampler_state_metal.cpp" />
-    <ClCompile Include="graphics\mac\gpu\gpu_shader_metal.cpp" />
-    <ClCompile Include="graphics\mac\gpu\gpu_shader_resource_metal.cpp" />
-    <ClCompile Include="graphics\mac\gpu\gpu_texture_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_buffer_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_context_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_depth_stencil_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_depth_stencil_state_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_device_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_input_layout_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_metal_utils.cpp" />
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_rasterizer_state_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_render_target_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_sampler_state_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_shader_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_shader_resource_metal.cpp" />
+    <ClCompile Include="graphics\mac\gpu\metal\gpu_texture_metal.cpp" />
     <ClCompile Include="graphics\matrix_2x3_f.cpp" />
     <ClCompile Include="graphics\paint.cpp" />
     <ClCompile Include="graphics\path.cpp" />
@@ -570,33 +574,33 @@
     <ClCompile Include="graphics\render_node\render_tree.cpp" />
     <ClCompile Include="graphics\vsyncable.cpp" />
     <ClCompile Include="graphics\vsync_provider.cpp" />
+    <ClCompile Include="graphics\win\3d\assist_configure.cpp" />
+    <ClCompile Include="graphics\win\3d\model_configure.cpp" />
     <ClCompile Include="graphics\win\colors\color_manager_win.cpp" />
     <ClCompile Include="graphics\win\cyro_renderer_d2d.cpp" />
     <ClCompile Include="graphics\win\cyro_render_target_d2d.cpp" />
-    <ClCompile Include="graphics\win\direct3d\assist_configure.cpp" />
-    <ClCompile Include="graphics\win\direct3d\effects\image_effect_dx.cpp" />
-    <ClCompile Include="graphics\win\direct3d\effects\shadow_effect_dx.cpp" />
-    <ClCompile Include="graphics\win\direct3d\model_configure.cpp" />
     <ClCompile Include="graphics\win\directx_manager.cpp" />
     <ClCompile Include="graphics\win\display_manager_win.cpp" />
     <ClCompile Include="graphics\win\display_win.cpp" />
+    <ClCompile Include="graphics\win\effects\image_effect_dx.cpp" />
+    <ClCompile Include="graphics\win\effects\shadow_effect_dx.cpp" />
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_buffer_d3d11.cpp" />
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_context_d3d11.cpp" />
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_d3d11_utils.cpp" />
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_depth_stencil_d3d11.cpp" />
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_depth_stencil_state_d3d11.cpp" />
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_device_d3d11.cpp" />
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_input_layout_d3d11.cpp" />
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_rasterizer_state_d3d11.cpp" />
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_render_target_d3d11.cpp" />
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_sampler_state_d3d11.cpp" />
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_shader_d3d11.cpp" />
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_shader_resource_d3d11.cpp" />
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_texture_d3d11.cpp" />
     <ClCompile Include="graphics\win\images\image_frame_win.cpp" />
     <ClCompile Include="graphics\win\images\image_options_d2d_utils.cpp" />
     <ClCompile Include="graphics\win\images\lc_image_factory_win.cpp" />
     <ClCompile Include="graphics\win\images\lc_image_frame_win.cpp" />
-    <ClCompile Include="graphics\win\gpu\gpu_buffer_d3d.cpp" />
-    <ClCompile Include="graphics\win\gpu\gpu_context_d3d.cpp" />
-    <ClCompile Include="graphics\win\gpu\gpu_d3d_utils.cpp" />
-    <ClCompile Include="graphics\win\gpu\gpu_depth_stencil_d3d.cpp" />
-    <ClCompile Include="graphics\win\gpu\gpu_depth_stencil_state_d3d.cpp" />
-    <ClCompile Include="graphics\win\gpu\gpu_device_d3d.cpp" />
-    <ClCompile Include="graphics\win\gpu\gpu_input_layout_d3d.cpp" />
-    <ClCompile Include="graphics\win\gpu\gpu_rasterizer_state_d3d.cpp" />
-    <ClCompile Include="graphics\win\gpu\gpu_render_target_d3d.cpp" />
-    <ClCompile Include="graphics\win\gpu\gpu_sampler_state_d3d.cpp" />
-    <ClCompile Include="graphics\win\gpu\gpu_shader_d3d.cpp" />
-    <ClCompile Include="graphics\win\gpu\gpu_shader_resource_d3d.cpp" />
-    <ClCompile Include="graphics\win\gpu\gpu_texture_d3d.cpp" />
     <ClCompile Include="graphics\win\offscreen_buffer_win.cpp" />
     <ClCompile Include="graphics\win\path_win.cpp" />
     <ClCompile Include="graphics\win\vsync_provider_win.cpp" />
@@ -714,55 +718,55 @@
     <ClCompile Include="window\win\window_impl_win.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="graphics\win\direct3d\hlsl\assist_pixel_shader.hlsl">
+    <FxCompile Include="graphics\win\hlsl\assist_pixel_shader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="graphics\win\direct3d\hlsl\assist_vertex_shader.hlsl">
+    <FxCompile Include="graphics\win\hlsl\assist_vertex_shader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="graphics\win\direct3d\hlsl\image_effect_ps.hlsl">
+    <FxCompile Include="graphics\win\hlsl\image_effect_ps.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="graphics\win\direct3d\hlsl\image_effect_vs.hlsl">
+    <FxCompile Include="graphics\win\hlsl\image_effect_vs.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="graphics\win\direct3d\hlsl\model_pixel_shader.hlsl">
+    <FxCompile Include="graphics\win\hlsl\model_pixel_shader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="graphics\win\direct3d\hlsl\model_vertex_shader.hlsl">
+    <FxCompile Include="graphics\win\hlsl\model_vertex_shader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="graphics\win\direct3d\hlsl\shadow_effect_hori_ps.hlsl">
+    <FxCompile Include="graphics\win\hlsl\shadow_effect_hori_ps.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="graphics\win\direct3d\hlsl\shadow_effect_vert_ps.hlsl">
+    <FxCompile Include="graphics\win\hlsl\shadow_effect_vert_ps.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="graphics\win\direct3d\hlsl\shadow_effect_vs.hlsl">
+    <FxCompile Include="graphics\win\hlsl\shadow_effect_vs.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>

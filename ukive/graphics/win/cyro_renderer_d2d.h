@@ -28,10 +28,10 @@ namespace win {
 
         CyroBuffer* getBuffer() const override;
 
-        ImageFrame* createImage(const LcImageFrame* frame) override;
-        ImageFrame* createImage(
+        GPtr<ImageFrame> createImage(const GPtr<LcImageFrame>& frame) override;
+        GPtr<ImageFrame> createImage(
             int width, int height, const ImageOptions& options) override;
-        ImageFrame* createImage(
+        GPtr<ImageFrame> createImage(
             int width, int height,
             const void* pixel_data, size_t size, size_t stride,
             const ImageOptions& options) override;

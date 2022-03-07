@@ -7,10 +7,12 @@
 #ifndef UKIVE_GRAPHICS_GPU_GPU_SHADER_H_
 #define UKIVE_GRAPHICS_GPU_GPU_SHADER_H_
 
+#include "ukive/graphics/gref_count.h"
+
 
 namespace ukive {
 
-    class GPUShader {
+    class GPUShader : public virtual GRefCount {
     public:
         virtual ~GPUShader() = default;
     };

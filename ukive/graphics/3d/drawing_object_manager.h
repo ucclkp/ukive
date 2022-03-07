@@ -11,6 +11,8 @@
 #include <memory>
 #include <string>
 
+#include "ukive/graphics/gptr.hpp"
+
 
 namespace ukive {
     class GPUBuffer;
@@ -28,8 +30,8 @@ namespace ukv3d {
             std::string name;
             std::shared_ptr<void> vertices;
             std::shared_ptr<int> indices;
-            std::shared_ptr<ukive::GPUBuffer> vertex_buffer;
-            std::shared_ptr<ukive::GPUBuffer> index_buffer;
+            ukive::GPtr<ukive::GPUBuffer> vertex_buffer;
+            ukive::GPtr<ukive::GPUBuffer> index_buffer;
             unsigned int vertex_count;
             unsigned int vertex_struct_size;
             unsigned int vertex_data_offset;

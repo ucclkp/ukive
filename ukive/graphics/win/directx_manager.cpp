@@ -11,8 +11,8 @@
 #include "utils/log.h"
 
 #include "ukive/graphics/images/image_options.h"
-#include "ukive/graphics/win/gpu/gpu_context_d3d.h"
-#include "ukive/graphics/win/gpu/gpu_device_d3d.h"
+#include "ukive/graphics/win/gpu/d3d11/gpu_context_d3d11.h"
+#include "ukive/graphics/win/gpu/d3d11/gpu_device_d3d11.h"
 #include "ukive/window/window.h"
 
 
@@ -95,12 +95,12 @@ namespace win {
         shutdownDevice();
     }
 
-    GPUDevice* DirectXManager::getGPUDevice() const {
-        return gpu_device_.get();
+    GPtr<GPUDevice> DirectXManager::getGPUDevice() const {
+        return gpu_device_;
     }
 
-    GPUContext* DirectXManager::getGPUContext() const {
-        return gpu_context_.get();
+    GPtr<GPUContext> DirectXManager::getGPUContext() const {
+        return gpu_context_;
     }
 
     void DirectXManager::enumSystemFonts() {
@@ -186,13 +186,15 @@ namespace win {
     }
 
     bool DirectXManager::initDevice() {
-        D3D_FEATURE_LEVEL featureLevel[] = {
+        D3D_FEATURE_LEVEL feature_levels[] = {
             D3D_FEATURE_LEVEL_11_1,
             D3D_FEATURE_LEVEL_11_0,
             D3D_FEATURE_LEVEL_10_1,
-            D3D_FEATURE_LEVEL_10_0
+            D3D_FEATURE_LEVEL_10_0,
+            D3D_FEATURE_LEVEL_9_3,
+            D3D_FEATURE_LEVEL_9_2,
+            D3D_FEATURE_LEVEL_9_1,
         };
-
 
         //D3D_DRIVER_TYPE driver_type = D3D_DRIVER_TYPE_WARP;
         //UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT | D3D11_CREATE_DEVICE_DEBUGGABLE;
@@ -202,11 +204,17 @@ namespace win {
 
         HRESULT hr = ::D3D11CreateDevice(
             nullptr, driver_type, nullptr, flags,
-            featureLevel, ARRAYSIZE(featureLevel), D3D11_SDK_VERSION,
+            feature_levels, ARRAYSIZE(feature_levels), D3D11_SDK_VERSION,
             &d3d_device_, nullptr, &d3d_devicecontext_);
         if (FAILED(hr)) {
-            LOG(Log::ERR) << "Failed to create d3d device.";
-            return false;
+            hr = ::D3D11CreateDevice(
+                nullptr, driver_type, nullptr, flags,
+                feature_levels + 1, ARRAYSIZE(feature_levels) - 1, D3D11_SDK_VERSION,
+                &d3d_device_, nullptr, &d3d_devicecontext_);
+            if (FAILED(hr)) {
+                LOG(Log::ERR) << "Failed to create d3d device.";
+                return false;
+            }
         }
 
         hr = d3d_device_->QueryInterface(&dxgi_device_);
@@ -215,8 +223,8 @@ namespace win {
             return false;
         }
 
-        gpu_device_ = std::make_unique<GPUDeviceD3D>(d3d_device_);
-        gpu_context_ = std::make_unique<GPUContextD3D>(d3d_devicecontext_);
+        gpu_device_ = new GPUDeviceD3D11(d3d_device_);
+        gpu_context_ = new GPUContextD3D11(d3d_devicecontext_);
 
         return true;
     }
@@ -398,6 +406,8 @@ namespace win {
         if (FAILED(hr)) {
             ubassert(false);
         }
+
+        //render_target->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
 
         return render_target;
     }
