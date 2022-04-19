@@ -46,7 +46,7 @@ namespace mac {
         uint32_t actual_count = 0;
         CGDirectDisplayID display;
         auto ret = CGGetDisplaysWithPoint(
-                        CGPointMake(p.x, p.y),
+                        CGPointMake(p.x(), p.y()),
                         1, &display, &actual_count);
         if (ret != kCGErrorSuccess || actual_count != 1) {
             return {};

@@ -47,17 +47,17 @@ namespace mac {
         return buffer_;
     }
 
-    ImageFrame* CyroRendererMac::createImage(const LcImageFrame* img) {
+    GPtr<ImageFrame> CyroRendererMac::createImage(const GPtr<LcImageFrame>& img) {
         if (!img) {
-            return nullptr;
+            return {};
         }
-        auto cg_img = static_cast<const LcImageFrameMac*>(img)->getNative();
+        auto cg_img = img.cast<LcImageFrameMac>()->getNative();
         if (!cg_img) {
-            return nullptr;
+            return {};
         }
         auto ns_img = [[NSBitmapImageRep alloc] initWithCGImage:cg_img];
         if (!ns_img) {
-            return nullptr;
+            return {};
         }
 
         float dpi_x, dpi_y;
@@ -66,16 +66,16 @@ namespace mac {
         auto image_fr = new ImageFrameMac(ns_img, false, nullptr);
         image_fr->setDpi(dpi_x, dpi_y);
 
-        return image_fr;
+        return GPtr<ImageFrame>(image_fr);
     }
 
-    ImageFrame* CyroRendererMac::createImage(
+    GPtr<ImageFrame> CyroRendererMac::createImage(
         int width, int height, const ImageOptions& options)
     {
         return createImage(width, height, nullptr, 0, 0, options);
     }
 
-    ImageFrame* CyroRendererMac::createImage(
+    GPtr<ImageFrame> CyroRendererMac::createImage(
         int width, int height,
         const void* pixel_data, size_t size, size_t stride,
         const ImageOptions& options)
@@ -136,7 +136,7 @@ namespace mac {
                                                bytesPerRow:stride
                                               bitsPerPixel:0];
         if (!img) {
-            return nullptr;
+            return {};
         }
 
         auto image_fr = new ImageFrameMac(img, false, buf);
@@ -150,7 +150,7 @@ namespace mac {
                 break;
         }
 
-        return image_fr;
+        return GPtr<ImageFrame>(image_fr);
     }
 
     void CyroRendererMac::setOpacity(float opacity) {
@@ -210,22 +210,22 @@ namespace mac {
     }
 
     void CyroRendererMac::scale(float sx, float sy, const PointF &c) {
-        matrix_.preScale(sx, sy, c.x, c.y);
+        matrix_.preScale(sx, sy, c.x(), c.y());
 
         auto xform = [NSAffineTransform transform];
-        [xform translateXBy:-c.x yBy:-c.y];
+        [xform translateXBy:-c.x() yBy:-c.y()];
         [xform scaleXBy:sx yBy:sy];
-        [xform translateXBy:c.x yBy:c.y];
+        [xform translateXBy:c.x() yBy:c.y()];
         [xform concat];
     }
 
     void CyroRendererMac::rotate(float angle, const PointF &c) {
-        matrix_.preRotate(angle, c.x, c.y);
+        matrix_.preRotate(angle, c.x(), c.y());
 
         auto xform = [NSAffineTransform transform];
-        [xform translateXBy:-c.x yBy:-c.y];
+        [xform translateXBy:-c.x() yBy:-c.y()];
         [xform rotateByDegrees:angle];
-        [xform translateXBy:c.x yBy:c.y];
+        [xform translateXBy:c.x() yBy:c.y()];
         [xform concat];
     }
 
@@ -256,7 +256,7 @@ namespace mac {
                                         alpha:color.a * opacity_];
         [ns_color setFill];
 
-        auto ns_rect = NSMakeRect(p.x, p.y, 1, 1);
+        auto ns_rect = NSMakeRect(p.x(), p.y(), 1, 1);
         NSRectFill(ns_rect);
     }
 
@@ -272,8 +272,8 @@ namespace mac {
 
         auto path = [NSBezierPath bezierPath];
         [path setLineWidth:paint.getStrokeWidth()];
-        [path moveToPoint:NSMakePoint(start.x, start.y)];
-        [path lineToPoint:NSMakePoint(end.x, end.y)];
+        [path moveToPoint:NSMakePoint(start.x(), start.y())];
+        [path lineToPoint:NSMakePoint(end.x(), end.y())];
         [path closePath];
 
         [path stroke];
@@ -366,7 +366,7 @@ namespace mac {
                                         green:color.g
                                          blue:color.b
                                         alpha:color.a * opacity_];
-        auto ns_rect = NSMakeRect(c.x - radius, c.y - radius, radius * 2, radius * 2);
+        auto ns_rect = NSMakeRect(c.x() - radius, c.y() - radius, radius * 2, radius * 2);
         auto path = [NSBezierPath bezierPathWithOvalInRect:ns_rect];
 
         switch (paint.getStyle()) {
@@ -407,7 +407,7 @@ namespace mac {
                                         green:color.g
                                          blue:color.b
                                         alpha:color.a * opacity_];
-        auto ns_rect = NSMakeRect(c.x - rx, c.y - ry, rx * 2, ry * 2);
+        auto ns_rect = NSMakeRect(c.x() - rx, c.y() - ry, rx * 2, ry * 2);
         auto path = [NSBezierPath bezierPathWithOvalInRect:ns_rect];
 
         switch (paint.getStyle()) {

@@ -23,9 +23,9 @@ namespace mac {
        bool initialization() override;
        void destroy() override;
 
-       LcImageFrame* create(
+       GPtr<LcImageFrame> create(
             int width, int height, const ImageOptions& options) override;
-       LcImageFrame* create(
+       GPtr<LcImageFrame> create(
             int width, int height,
             void* pixel_data, size_t size, size_t stride,
             const ImageOptions &options) override;
@@ -33,11 +33,11 @@ namespace mac {
        LcImage decodeFile(
             const std::u16string_view& file_name, const ImageOptions& options) override;
        LcImage decodeMemory(
-            void* buffer, size_t size, const ImageOptions& options) override;
+            const void* buffer, size_t size, const ImageOptions& options) override;
 
-       bool getThumbnail(
-           const std::u16string_view& file_name, int frame_width, int frame_height,
-           std::string* out, int* real_w, int* real_h, ImageOptions* options) override;
+       GPtr<LcImageFrame> getThumbnail(
+           const std::u16string_view& file_name,
+           int frame_width, int frame_height, ImageOptions* options) override;
 
        bool saveToFile(
            int width, int height,

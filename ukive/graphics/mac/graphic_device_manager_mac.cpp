@@ -22,12 +22,12 @@ namespace mac {
 
     }
 
-    GPUDevice* GraphicDeviceManagerMac::getGPUDevice() const {
-        return nullptr;
+    GPtr<GPUDevice> GraphicDeviceManagerMac::getGPUDevice() const {
+        return {};
     }
 
-    GPUContext* GraphicDeviceManagerMac::getGPUContext() const {
-        return nullptr;
+    GPtr<GPUContext> GraphicDeviceManagerMac::getGPUContext() const {
+        return {};
     }
 
 }

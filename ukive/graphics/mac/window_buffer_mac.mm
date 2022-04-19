@@ -64,8 +64,8 @@ namespace mac {
         return img_options_;
     }
 
-    ImageFrame* WindowBufferMac::onExtractImage(const ImageOptions& options) {
-        return nullptr;
+    GPtr<ImageFrame> WindowBufferMac::onExtractImage(const ImageOptions& options) {
+        return {};
     }
 
 }

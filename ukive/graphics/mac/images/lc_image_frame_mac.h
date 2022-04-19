@@ -8,6 +8,7 @@
 #define UKIVE_GRAPHICS_MAC_IMAGES_LC_IMAGE_FRAME_MAC_H_
 
 #include "ukive/graphics/images/lc_image_frame.h"
+#include "ukive/graphics/gref_count_impl.h"
 
 #include <CoreGraphics/CGImage.h>
 
@@ -15,7 +16,10 @@
 namespace ukive {
 namespace mac {
 
-    class LcImageFrameMac : public LcImageFrame {
+    class LcImageFrameMac :
+        public LcImageFrame,
+        public GRefCountImpl
+    {
     public:
         explicit LcImageFrameMac(CGImageRef img);
         ~LcImageFrameMac();

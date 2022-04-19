@@ -56,6 +56,17 @@ namespace mac {
             utl::num_cast<unsigned int>(img_.pixelsHigh));
     }
 
+    bool ImageFrameMac::copyPixels(size_t stride, void *pixels, size_t buf_size) {
+        return false;
+    }
+
+    void* ImageFrameMac::lockPixels() {
+        return nullptr;
+    }
+
+    void ImageFrameMac::unlockPixels() {
+    }
+
     bool ImageFrameMac::alreadyFilpped() const {
         return already_flipped_;
     }

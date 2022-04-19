@@ -452,8 +452,8 @@ namespace mac {
                   ns_rect.origin.x, ns_rect.origin.y,
                   ns_rect.size.width, ns_rect.size.height);
 
-        pt->x = is_trailing ? rect.right : rect.left;
-        pt->y = rect.top;
+        pt->x() = is_trailing ? rect.right : rect.left;
+        pt->y() = rect.top;
         info->pos = uint32_t(act_ch_range.location);
         info->length = uint32_t(act_ch_range.length);
         info->rect = rect;

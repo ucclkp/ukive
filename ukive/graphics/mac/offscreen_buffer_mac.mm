@@ -123,18 +123,18 @@ namespace mac {
         return img_options_;
     }
 
-    ImageFrame* OffscreenBufferMac::onExtractImage(const ImageOptions& options) {
+    GPtr<ImageFrame> OffscreenBufferMac::onExtractImage(const ImageOptions& options) {
         if (!cg_context_) {
-            return nullptr;
+            return {};
         }
         auto img = CGBitmapContextCreateImage(cg_context_);
         if (!img) {
-            return nullptr;
+            return {};
         }
         auto ns_img_rep = [[NSBitmapImageRep alloc] initWithCGImage:img];
         CFRelease(img);
         if (!ns_img_rep) {
-            return nullptr;
+            return {};
         }
 
         auto px_width = CGBitmapContextGetWidth(cg_context_);
@@ -155,7 +155,7 @@ namespace mac {
         }
 
         auto img_fr = new ImageFrameMac(ns_img_rep, true, nullptr);
-        return img_fr;
+        return GPtr<ImageFrame>(img_fr);
     }
 
 }

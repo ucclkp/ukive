@@ -567,19 +567,19 @@ namespace mac {
 
     void WindowImplMac::convScreenToClient(Point* p) const {
         if (native_ && native_view_) {
-            auto ns_p = [native_ convertPointFromScreen:NSMakePoint(p->x, p->y)];
+            auto ns_p = [native_ convertPointFromScreen:NSMakePoint(p->x(), p->y())];
             ns_p = [native_view_ convertPoint:ns_p fromView:nil];
-            p->x = ns_p.x;
-            p->y = ns_p.y;
+            p->x() = ns_p.x;
+            p->y() = ns_p.y;
         }
     }
 
     void WindowImplMac::convClientToScreen(Point* p) const {
         if (native_ && native_view_) {
-            auto ns_p = [native_view_ convertPoint:NSMakePoint(p->x, p->y) toView:nil];
+            auto ns_p = [native_view_ convertPoint:NSMakePoint(p->x(), p->y()) toView:nil];
             ns_p = [native_ convertPointToScreen:ns_p];
-            p->x = ns_p.x;
-            p->y = ns_p.y;
+            p->x() = ns_p.x;
+            p->y() = ns_p.y;
         }
     }
 

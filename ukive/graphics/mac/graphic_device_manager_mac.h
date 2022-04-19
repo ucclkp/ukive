@@ -21,8 +21,8 @@ namespace mac {
         bool recreate() override;
         void destroy() override;
 
-        GPUDevice * getGPUDevice() const override;
-        GPUContext * getGPUContext() const override;
+        GPtr<GPUDevice> getGPUDevice() const override;
+        GPtr<GPUContext> getGPUContext() const override;
     };
 }
 }

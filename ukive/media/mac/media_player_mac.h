@@ -51,6 +51,10 @@ namespace mac {
             Closed,
         };
 
+        struct MessageData {
+            GPtr<ImageFrame> frame;
+        };
+
         static bool startup();
         static void shutdown();
         static unsigned int startup_counter_;

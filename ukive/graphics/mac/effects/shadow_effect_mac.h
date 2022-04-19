@@ -29,7 +29,7 @@ namespace mac {
         bool generate(Canvas* c) override;
         bool draw(Canvas* c) override;
         bool setContent(OffscreenBuffer* content) override;
-        ImageFrame* getOutput() const override;
+        GPtr<ImageFrame> getOutput() const override;
 
         void resetCache() override;
         bool hasCache() const override;
@@ -40,7 +40,7 @@ namespace mac {
     private:
         int radius_ = 0;
         NSShadow* shadow_ = nullptr;
-        std::shared_ptr<ImageFrame> content_;
+        GPtr<ImageFrame> content_;
     };
 
 }

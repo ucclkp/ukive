@@ -29,10 +29,10 @@ namespace mac {
 
         CyroBuffer* getBuffer() const override;
 
-        ImageFrame* createImage(const LcImageFrame* img) override;
-        ImageFrame* createImage(
+        GPtr<ImageFrame> createImage(const GPtr<LcImageFrame>& img) override;
+        GPtr<ImageFrame> createImage(
             int width, int height, const ImageOptions& options) override;
-        ImageFrame* createImage(
+        GPtr<ImageFrame> createImage(
             int width, int height,
             const void* pixel_data, size_t size, size_t stride,
             const ImageOptions& options) override;

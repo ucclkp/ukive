@@ -58,12 +58,12 @@ namespace mac {
 
     bool ShadowEffectMac::setContent(OffscreenBuffer* content) {
         auto off = static_cast<OffscreenBufferMac*>(content);
-        content_.reset(off->onExtractImage(content->getImageOptions()));
+        content_ = off->onExtractImage(content->getImageOptions());
         return true;
     }
 
-    ImageFrame* ShadowEffectMac::getOutput() const {
-        return nullptr;
+    GPtr<ImageFrame> ShadowEffectMac::getOutput() const {
+        return {};
     }
 
     void ShadowEffectMac::resetCache() {

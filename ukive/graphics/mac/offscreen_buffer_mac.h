@@ -39,7 +39,7 @@ namespace mac {
         CyroRenderTarget* getRT() const override;
         const ImageOptions& getImageOptions() const override;
 
-        ImageFrame* onExtractImage(const ImageOptions& options) override;
+        GPtr<ImageFrame> onExtractImage(const ImageOptions& options) override;
 
     private:
         bool createBuffer();

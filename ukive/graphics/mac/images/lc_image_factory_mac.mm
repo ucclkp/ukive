@@ -23,27 +23,27 @@ namespace mac {
     void LcImageFactoryMac::destroy() {
     }
 
-    LcImageFrame* LcImageFactoryMac::create(
+    GPtr<LcImageFrame> LcImageFactoryMac::create(
         int width, int height, const ImageOptions& options)
     {
         return create(width, height, nullptr, 0, 0, options);
     }
 
-    LcImageFrame* LcImageFactoryMac::create(
+    GPtr<LcImageFrame> LcImageFactoryMac::create(
          int width, int height,
          void* pixel_data, size_t size, size_t stride,
          const ImageOptions &options)
     {
         auto context = createCGContext(width, height, pixel_data, size, stride, options);
         if (!context) {
-            return nullptr;
+            return {};
         }
 
         auto image = CGBitmapContextCreateImage(context);
         CGContextRelease(context);
 
         if (!image) {
-            return nullptr;
+            return {};
         }
 
         auto lc_image_fr = new LcImageFrameMac(image);
@@ -56,7 +56,7 @@ namespace mac {
                 break;
         }
 
-        return lc_image_fr;
+        return GPtr<LcImageFrame>(lc_image_fr);
     }
 
     LcImage LcImageFactoryMac::decodeFile(
@@ -78,7 +78,7 @@ namespace mac {
     }
 
     LcImage LcImageFactoryMac::decodeMemory(
-        void* buffer, size_t size, const ImageOptions& options)
+        const void* buffer, size_t size, const ImageOptions& options)
     {
         auto data = [NSData dataWithBytes:buffer length:size];
         CFDataRef cf_data = (CFDataRef)CFBridgingRetain(data);
@@ -91,12 +91,11 @@ namespace mac {
         return lc_image;
     }
 
-    bool LcImageFactoryMac::getThumbnail(
+    GPtr<LcImageFrame> LcImageFactoryMac::getThumbnail(
         const std::u16string_view& file_name,
-        int flame_width, int frame_height,
-        std::string* out, int* real_w, int* real_h, ImageOptions* options)
+        int frame_width, int frame_height, ImageOptions* options)
     {
-        return false;
+        return {};
     }
 
     bool LcImageFactoryMac::saveToFile(
@@ -133,7 +132,7 @@ namespace mac {
                     break;
             }
 
-            lc_image.addFrame(lc_img_fr);
+            lc_image.addFrame(GPtr<LcImageFrame>(lc_img_fr));
         }
         return lc_image;
     }

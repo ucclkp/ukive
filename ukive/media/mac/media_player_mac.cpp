@@ -161,7 +161,8 @@ namespace mac {
             break;
         case MSG_RENDER_SURFACE:
             if (callback_) {
-                callback_->onRenderVideoFrame(static_cast<ImageFrame*>(msg.data));
+                callback_->onRenderVideoFrame(
+                    std::static_pointer_cast<MessageData>(msg.shared_data)->frame);
             } else {
                 delete static_cast<ImageFrame*>(msg.data);
             }

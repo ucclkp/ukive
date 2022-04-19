@@ -22,7 +22,7 @@ namespace ukive {
 #ifdef OS_WINDOWS
         return new win::SysOpenFileDialogWin();
 #elif defined OS_MAC
-        return new mac::OpenFileDialogMac();
+        return new mac::SysOpenFileDialogMac();
 #endif
     }
 
