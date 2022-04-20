@@ -75,7 +75,6 @@ namespace ukive {
         case Context::DEV_LOST:
         {
             // 通知场景，要把设备资源释放掉
-            video_frame_.reset();
             break;
         }
 

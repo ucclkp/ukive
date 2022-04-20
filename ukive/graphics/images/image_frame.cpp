@@ -36,18 +36,18 @@ namespace ukive {
     // static
     GPtr<ImageFrame> ImageFrame::create(
         Canvas* canvas, int width, int height,
-        const void* pixel_data, size_t size, size_t stride)
+        const GPtr<ByteData>& pixel_data, size_t stride)
     {
-        return canvas->createImage(width, height, pixel_data, size, stride);
+        return canvas->createImage(width, height, pixel_data, stride);
     }
 
     // static
     GPtr<ImageFrame> ImageFrame::create(
         Canvas* canvas, int width, int height,
-        const void* pixel_data, size_t size, size_t stride,
+        const GPtr<ByteData>& pixel_data, size_t stride,
         const ImageOptions& options)
     {
-        return canvas->createImage(width, height, pixel_data, size, stride, options);
+        return canvas->createImage(width, height, pixel_data, stride, options);
     }
 
     // static
@@ -85,13 +85,16 @@ namespace ukive {
 
         std::string data;
         ImageOptions options;
-        auto frame = ic->getThumbnail(file_name, width, height, &options);
+        auto frame = ic->createThumbnail(file_name, width, height, &options);
         if (!frame) {
             return {};
         }
 
         return canvas->createImage(frame);
     }
+
+    ImageFrame::ImageFrame(const ImageOptions& options)
+        : options_(options) {}
 
     void ImageFrame::setData(const std::shared_ptr<ImageData>& data) {
         data_ = data;

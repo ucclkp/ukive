@@ -9,6 +9,7 @@
 
 #include <memory>
 
+#include "ukive/graphics/byte_data.h"
 #include "ukive/graphics/colors/color.h"
 #include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/graphics_utils.h"
@@ -40,10 +41,10 @@ namespace ukive {
             int width, int height, const ImageOptions& options);
         GPtr<ImageFrame> createImage(
             int width, int height,
-            const void* pixel_data, size_t size, size_t stride);
+            const GPtr<ByteData>& pixel_data, size_t stride);
         GPtr<ImageFrame> createImage(
             int width, int height,
-            const void* pixel_data, size_t size, size_t stride,
+            const GPtr<ByteData>& pixel_data, size_t stride,
             const ImageOptions& options);
 
         void setOpacity(float opacity);
@@ -79,8 +80,8 @@ namespace ukive {
 
         void fillOpacityMask(
             float width, float height,
-            const ImageFrame* mask, const ImageFrame* content);
-        void fillImageRepeat(const RectF& rect, const ImageFrame* content);
+            ImageFrame* mask, ImageFrame* content);
+        void fillImageRepeat(const RectF& rect, ImageFrame* content);
 
         void drawLine(
             const PointF& start, const PointF& end, const Color& color);
@@ -90,7 +91,7 @@ namespace ukive {
         void drawRect(const RectF& rect, const Color& color);
         void drawRect(const RectF& rect, float stroke_width, const Color& color);
         void fillRect(const RectF& rect, const Color& color);
-        void fillRect(const RectF& rect, const ImageFrame* img);
+        void fillRect(const RectF& rect, ImageFrame* img);
 
         void drawRoundRect(
             const RectF& rect, float radius, const Color& color);
@@ -103,7 +104,7 @@ namespace ukive {
         void drawCircle(const PointF& cp, float radius, const Color& color);
         void drawCircle(const PointF& cp, float radius, float stroke_width, const Color& color);
         void fillCircle(const PointF& cp, float radius, const Color& color);
-        void fillCircle(const PointF& cp, float radius, const ImageFrame* img);
+        void fillCircle(const PointF& cp, float radius, ImageFrame* img);
 
         void drawOval(const PointF& cp, float rx, float ry, const Color& color);
         void drawOval(const PointF& cp, float rx, float ry, float stroke_width, const Color& color);
@@ -111,13 +112,13 @@ namespace ukive {
 
         void drawPath(const Path* path, float stroke_width, const Color& color);
         void fillPath(const Path* path, const Color& color);
-        void fillPath(const Path* path, const ImageFrame* img);
+        void fillPath(const Path* path, ImageFrame* img);
 
-        void drawImage(const ImageFrame* img);
-        void drawImage(float x, float y, const ImageFrame* img);
-        void drawImage(float opacity, const ImageFrame* img);
-        void drawImage(const RectF& dst, float opacity, const ImageFrame* img);
-        void drawImage(const RectF& src, const RectF& dst, float opacity, const ImageFrame* img);
+        void drawImage(ImageFrame* img);
+        void drawImage(float x, float y, ImageFrame* img);
+        void drawImage(float opacity, ImageFrame* img);
+        void drawImage(const RectF& dst, float opacity, ImageFrame* img);
+        void drawImage(const RectF& src, const RectF& dst, float opacity, ImageFrame* img);
 
         void drawText(
             const std::u16string& text,

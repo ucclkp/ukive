@@ -124,12 +124,13 @@ namespace win {
             break;
         }
 
-        return GPtr<LcImageFrame>(new LcImageFrameWin(wic_factory_, bmp));
+        return GPtr<LcImageFrame>(
+            new LcImageFrameWin(options, {}, wic_factory_, bmp));
     }
 
     GPtr<LcImageFrame> LcImageFactoryWin::create(
         int width, int height,
-        void* pixel_data, size_t size, size_t stride,
+        const GPtr<ByteData>& pixel_data, size_t stride,
         const ImageOptions& options)
     {
         if (width <= 0 || height <= 0) {
@@ -142,7 +143,9 @@ namespace win {
         utl::win::ComPtr<IWICBitmap> bmp;
         HRESULT hr = wic_factory_->CreateBitmapFromMemory(
             width, height, format,
-            utl::num_cast<UINT>(stride), utl::num_cast<UINT>(size), static_cast<BYTE*>(pixel_data),
+            utl::num_cast<UINT>(stride),
+            utl::num_cast<UINT>(pixel_data->getSize()),
+            static_cast<BYTE*>(pixel_data->getData()),
             &bmp);
         if (FAILED(hr)) {
             ubassert(false);
@@ -160,30 +163,11 @@ namespace win {
             break;
         }
 
-        return GPtr<LcImageFrame>(new LcImageFrameWin(wic_factory_, bmp));
+        return GPtr<LcImageFrame>(
+            new LcImageFrameWin(options, pixel_data, wic_factory_, bmp));
     }
 
-    LcImage LcImageFactoryWin::decodeFile(
-        const std::u16string_view& file_name, const ImageOptions& options)
-    {
-        auto decoder = createDecoder(file_name);
-        if (!decoder) {
-            return {};
-        }
-        return processDecoder(decoder.get(), options);
-    }
-
-    LcImage LcImageFactoryWin::decodeMemory(
-        const void* buffer, size_t size, const ImageOptions& options)
-    {
-        auto decoder = createDecoder(buffer, size);
-        if (!decoder) {
-            return {};
-        }
-        return processDecoder(decoder.get(), options);
-    }
-
-    GPtr<LcImageFrame> LcImageFactoryWin::getThumbnail(
+    GPtr<LcImageFrame> LcImageFactoryWin::createThumbnail(
         const std::u16string_view& file_name,
         int frame_width, int frame_height, ImageOptions* options)
     {
@@ -223,7 +207,8 @@ namespace win {
                         options->pixel_format = ImagePixelFormat::B8G8R8A8_UNORM;
                         options->alpha_mode = ImageAlphaMode::IGNORED;
                         frame = create(
-                            bmp.bmWidth, bmp.bmHeight, buf, buf_size, bmp.bmWidth * 4, *options);
+                            bmp.bmWidth, bmp.bmHeight,
+                            ByteData::ownPtr(buf, buf_size), bmp.bmWidth * 4, *options);
                     } else {
                         delete[] buf;
                     }
@@ -237,15 +222,35 @@ namespace win {
         return frame;
     }
 
+    LcImage LcImageFactoryWin::decodeFile(
+        const std::u16string_view& file_name, const ImageOptions& options)
+    {
+        auto decoder = createDecoder(file_name);
+        if (!decoder) {
+            return {};
+        }
+        return processDecoder(decoder.get(), options);
+    }
+
+    LcImage LcImageFactoryWin::decodeMemory(
+        const void* buffer, size_t size, const ImageOptions& options)
+    {
+        auto decoder = createDecoder(buffer, size);
+        if (!decoder) {
+            return {};
+        }
+        return processDecoder(decoder.get(), options);
+    }
+
     bool LcImageFactoryWin::saveToFile(
         int width, int height,
-        void* data, size_t byte_count, size_t stride,
+        const void* data, size_t len, size_t stride,
         ImageContainer container,
         const ImageOptions& options,
         const std::u16string_view& file_name)
     {
         if (width <= 0 || height <= 0 ||
-            !data || byte_count == 0 || stride == 0)
+            !data || len == 0 || stride == 0)
         {
             ubassert(false);
             return false;
@@ -306,8 +311,8 @@ namespace win {
         hr = frame->WritePixels(
             height,
             utl::num_cast<UINT>(stride),
-            utl::num_cast<UINT>(byte_count),
-            static_cast<BYTE*>(data));
+            utl::num_cast<UINT>(len),
+            const_cast<BYTE*>(static_cast<const BYTE*>(data)));
         if (FAILED(hr)) {
             return false;
         }
@@ -621,7 +626,7 @@ namespace win {
                 return {};
             }
 
-            LcImageFrame* frame = new LcImageFrameWin(wic_factory_, source);
+            LcImageFrame* frame = new LcImageFrameWin(options, {}, wic_factory_, source);
 
             switch (options.dpi_type) {
             case ImageDPIType::SPECIFIED:

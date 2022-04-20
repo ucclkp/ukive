@@ -81,7 +81,7 @@ namespace ukive {
         void setStyle(Style s);
         void setStrokeStyle(const StrokeStyle& s);
         void setImage(
-            const ImageFrame* b,
+            ImageFrame* b,
             ImageExtendMode x_em = ImageExtendMode::CLAMP,
             ImageExtendMode y_em = ImageExtendMode::CLAMP);
         void setColor(const Color& color);
@@ -91,7 +91,7 @@ namespace ukive {
 
         Style getStyle() const;
         const StrokeStyle& getStrokeStyle() const;
-        const ImageFrame* getImage() const;
+        ImageFrame* getImage() const;
         ImageExtendMode getImageExtendModeX() const;
         ImageExtendMode getImageExtendModeY() const;
         Color getColor() const;
@@ -109,7 +109,7 @@ namespace ukive {
         bool is_antialiased_;
         bool is_text_antialiased_;
 
-        const ImageFrame* frame_ = nullptr;
+        ImageFrame* frame_ = nullptr;
         ImageExtendMode x_em_;
         ImageExtendMode y_em_;
     };

@@ -244,19 +244,6 @@ namespace ukive {
 
     void RippleElement::onContextChanged(const Context& context) {
         switch (context.getChanged()) {
-        case Context::DEV_LOST:
-        {
-            mask_off_.reset();
-            content_off_.reset();
-            break;
-        }
-
-        case Context::DEV_RESTORE:
-        {
-            requestDraw();
-            break;
-        }
-
         default:
             break;
         }

@@ -68,7 +68,8 @@ namespace ukive {
     void ModelConfigure::setMatrix(
         GPUContext* context, const utl::mat4f& matrix)
     {
-        auto panel_cb = static_cast<MatrixConstBuffer*>(context->lock(panel_cb_.get()));
+        auto panel_cb = static_cast<MatrixConstBuffer*>(
+            context->lock(panel_cb_.get(), GPUContext::LOCK_WRITE, nullptr));
         if (panel_cb) {
             panel_cb->wvp = matrix;
             context->unlock(panel_cb_.get());

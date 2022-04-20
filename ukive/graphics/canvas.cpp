@@ -59,30 +59,31 @@ namespace ukive {
 
     GPtr<ImageFrame> Canvas::createImage(
         int width, int height,
-        const void* pixel_data, size_t size, size_t stride)
+        const GPtr<ByteData>& pixel_data, size_t stride)
     {
         if (!renderer_ ||
             width <= 0 || height <= 0 ||
-            !pixel_data || !stride || !size)
+            !pixel_data || !stride)
         {
             return {};
         }
         return renderer_->createImage(
-            width, height, pixel_data, size, stride, getBuffer()->getImageOptions());
+            width, height, pixel_data, stride, getBuffer()->getImageOptions());
     }
 
     GPtr<ImageFrame> Canvas::createImage(
         int width, int height,
-        const void* pixel_data, size_t size, size_t stride,
+        const GPtr<ByteData>& pixel_data, size_t stride,
         const ImageOptions& options)
     {
         if (!renderer_ ||
             width <= 0 || height <= 0 ||
-            !pixel_data || !stride || !size)
+            !pixel_data || !stride)
         {
             return {};
         }
-        return renderer_->createImage(width, height, pixel_data, size, stride, options);
+        return renderer_->createImage(
+            width, height, pixel_data, stride, options);
     }
 
     void Canvas::setOpacity(float opacity) {
@@ -112,7 +113,7 @@ namespace ukive {
 
     void Canvas::beginDraw() {
         if (renderer_) {
-            renderer_->getBuffer()->onBeginDraw();
+            renderer_->onBeginDraw();
         }
     }
 
@@ -120,7 +121,7 @@ namespace ukive {
         if (!renderer_) {
             return GRet::Failed;
         }
-        return renderer_->getBuffer()->onEndDraw();
+        return renderer_->onEndDraw();
     }
 
     void Canvas::pushClip(const RectF& rect) {
@@ -232,14 +233,14 @@ namespace ukive {
 
     void Canvas::fillOpacityMask(
         float width, float height,
-        const ImageFrame* mask, const ImageFrame* content)
+        ImageFrame* mask, ImageFrame* content)
     {
         if (renderer_ && mask && content) {
             renderer_->fillOpacityMask(width, height, mask, content);
         }
     }
 
-    void Canvas::fillImageRepeat(const RectF& rect, const ImageFrame* content) {
+    void Canvas::fillImageRepeat(const RectF& rect, ImageFrame* content) {
         if (!renderer_ || !content) {
             return;
         }
@@ -304,7 +305,7 @@ namespace ukive {
         renderer_->drawRect(rect, paint);
     }
 
-    void Canvas::fillRect(const RectF& rect, const ImageFrame* img) {
+    void Canvas::fillRect(const RectF& rect, ImageFrame* img) {
         if (!renderer_ || !img) {
             return;
         }
@@ -368,7 +369,7 @@ namespace ukive {
         fillOval(cp, radius, radius, color);
     }
 
-    void Canvas::fillCircle(const PointF& cp, float radius, const ImageFrame* img) {
+    void Canvas::fillCircle(const PointF& cp, float radius, ImageFrame* img) {
         if (!renderer_ || !img) {
             return;
         }
@@ -436,7 +437,7 @@ namespace ukive {
         renderer_->drawPath(path, paint);
     }
 
-    void Canvas::fillPath(const Path* path, const ImageFrame* img) {
+    void Canvas::fillPath(const Path* path, ImageFrame* img) {
         if (!renderer_ || !img) {
             return;
         }
@@ -447,7 +448,7 @@ namespace ukive {
         renderer_->drawPath(path, paint);
     }
 
-    void Canvas::drawImage(const ImageFrame* img) {
+    void Canvas::drawImage(ImageFrame* img) {
         if (!img) {
             return;
         }
@@ -458,7 +459,7 @@ namespace ukive {
         drawImage(src, src, 1.f, img);
     }
 
-    void Canvas::drawImage(float x, float y, const ImageFrame* img) {
+    void Canvas::drawImage(float x, float y, ImageFrame* img) {
         if (!img) {
             return;
         }
@@ -470,7 +471,7 @@ namespace ukive {
         drawImage(src, dst, 1.f, img);
     }
 
-    void Canvas::drawImage(float opacity, const ImageFrame* img) {
+    void Canvas::drawImage(float opacity, ImageFrame* img) {
         if (!img) {
             return;
         }
@@ -481,7 +482,7 @@ namespace ukive {
         drawImage(src, src, opacity, img);
     }
 
-    void Canvas::drawImage(const RectF& dst, float opacity, const ImageFrame* img) {
+    void Canvas::drawImage(const RectF& dst, float opacity, ImageFrame* img) {
         if (!img) {
             return;
         }
@@ -492,7 +493,7 @@ namespace ukive {
         drawImage(src, dst, opacity, img);
     }
 
-    void Canvas::drawImage(const RectF& src, const RectF& dst, float opacity, const ImageFrame* img) {
+    void Canvas::drawImage(const RectF& src, const RectF& dst, float opacity, ImageFrame* img) {
         if (renderer_ && img) {
             renderer_->drawImage(src, dst, opacity, img);
         }

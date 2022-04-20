@@ -9,10 +9,9 @@
 
 #include "utils/memory/win/com_ptr.hpp"
 
+#include "ukive/graphics/byte_data.h"
 #include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/gref_count_impl.h"
-#include "ukive/graphics/gpu/gpu_context.h"
-#include "ukive/graphics/gpu/gpu_texture.h"
 #include "ukive/graphics/images/image_frame.h"
 
 #include <d2d1.h>
@@ -30,15 +29,18 @@ namespace win {
         public GRefCountImpl
     {
     public:
+        struct ImageRawParams {
+            int width;
+            int height;
+            GPtr<ByteData> raw_data;
+            size_t stride;
+        };
+
         ImageFrameWin(
-            const utl::win::ComPtr<ID2D1Bitmap>& bmp,
-            const utl::win::ComPtr<ID2D1RenderTarget>& rt,
-            const utl::win::ComPtr<IWICBitmapSource>& src);
-        ImageFrameWin(
-            const utl::win::ComPtr<ID2D1Bitmap>& bmp,
-            const utl::win::ComPtr<ID2D1RenderTarget>& rt,
-            const GPtr<GPUContext>& ctx,
-            const GPtr<GPUTexture>& src);
+            const ImageOptions& options,
+            const ImageRawParams& raw_params,
+            const utl::win::ComPtr<IWICBitmapSource>& src,
+            const utl::win::ComPtr<ID2D1Bitmap>& bmp);
         ~ImageFrameWin();
 
         void setDpi(float dpi_x, float dpi_y) override;
@@ -47,24 +49,18 @@ namespace win {
         SizeF getSize() const override;
         SizeU getPixelSize() const override;
 
-        bool copyPixels(
-            size_t stride, void* pixels, size_t buf_size) override;
-        void* lockPixels() override;
-        void unlockPixels() override;
+        bool prepareForRender(ID2D1RenderTarget* rt);
 
         utl::win::ComPtr<ID2D1Bitmap> getNative() const;
 
     private:
         void initDpiValues();
 
-        GPtr<GPUTexture> d3d_src_;
-        GPtr<GPUContext> d3d_ctx_;
-        utl::win::ComPtr<IWICBitmapSource> wic_src_;
-
         float dpi_x_ = 0;
         float dpi_y_ = 0;
-
-        utl::win::ComPtr<ID2D1RenderTarget> compat_rt_;
+        ImageRawParams raw_params_;
+        std::weak_ptr<int> dev_guard_;
+        utl::win::ComPtr<IWICBitmapSource> wic_src_;
         utl::win::ComPtr<ID2D1Bitmap> native_bitmap_;
     };
 

@@ -62,6 +62,11 @@ namespace mac {
             uint32_t idx_count_pre_inst, uint32_t inst_count,
             uint32_t start_idx_loc, int32_t base_ver_loc, uint32_t start_inst_loc) override;
 
+        void* lock(
+            GPUResource* resource,
+            unsigned flags, size_t* row_stride) override;
+        void unlock(GPUResource* resource) override;
+
     private:
 
     };

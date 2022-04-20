@@ -167,7 +167,7 @@ namespace ukive {
 
         is_marked_as_dismissing_ = false;
 
-        decor_view_->setLayoutSize(View::LS_AUTO, View::LS_AUTO);
+        decor_view_->setLayoutSize(width_, height_);
         decor_view_->setLayoutMargin(x, y, c.dp2pxi(8), c.dp2pxi(8));
 
         w->getRootLayout()->addShade(decor_view_, {}, GV_NONE);
@@ -201,7 +201,7 @@ namespace ukive {
 
         is_marked_as_dismissing_ = false;
 
-        decor_view_->setLayoutSize(View::LS_AUTO, View::LS_AUTO);
+        decor_view_->setLayoutSize(width_, height_);
         decor_view_->setLayoutMargin(
             c.dp2pxi(8), c.dp2pxi(8), c.dp2pxi(8), c.dp2pxi(8));
 

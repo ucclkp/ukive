@@ -30,7 +30,7 @@ namespace ukive {
     }
 
     void Paint::setImage(
-        const ImageFrame* b, ImageExtendMode x_em, ImageExtendMode y_em)
+        ImageFrame* b, ImageExtendMode x_em, ImageExtendMode y_em)
     {
         frame_ = b;
     }
@@ -59,7 +59,7 @@ namespace ukive {
         return stroke_style_;
     }
 
-    const ImageFrame* Paint::getImage() const {
+    ImageFrame* Paint::getImage() const {
         return frame_;
     }
 

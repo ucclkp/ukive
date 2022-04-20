@@ -65,9 +65,6 @@ namespace ukive {
     }
 
     void ImageElement::onContextChanged(const Context& context) {
-        if (context.getChanged() == Context::DEV_LOST) {
-            image_.reset();
-        }
     }
 
 }

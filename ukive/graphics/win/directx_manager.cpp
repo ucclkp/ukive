@@ -77,7 +77,13 @@ namespace win {
         if (!initPersistance()) {
             return false;
         }
-        return initDevice();
+
+        if (!initDevice()) {
+            return false;
+        }
+
+        dev_guard_ = std::make_shared<int>(0);
+        return true;
     }
 
     bool DirectXManager::recreate() {
@@ -87,7 +93,13 @@ namespace win {
         }
 
         shutdownDevice();
-        return initDevice();
+
+        if (!initDevice()) {
+            return false;
+        }
+
+        dev_guard_ = std::make_shared<int>(0);
+        return true;
     }
 
     void DirectXManager::destroy() {
@@ -148,7 +160,7 @@ namespace win {
 
     bool DirectXManager::initPersistance() {
         HRESULT hr = ::D2D1CreateFactory(
-            D2D1_FACTORY_TYPE_SINGLE_THREADED,
+            D2D1_FACTORY_TYPE_MULTI_THREADED,
             &d2d_factory_);
         if (FAILED(hr)) {
             LOG(Log::ERR) << "Failed to create d2d factory.";

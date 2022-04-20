@@ -26,7 +26,7 @@ namespace win {
             return {};
         }
 
-        auto res = static_cast<GPUTexture2DD3D11*>(texture.get())->getNative();
+        auto res = texture.cast<GPUTexture2DD3D11>()->getNative();
         if (!res) {
             return {};
         }
@@ -48,10 +48,7 @@ namespace win {
             return {};
         }
 
-        auto context =
-            Application::getGraphicDeviceManager()->getGPUContext();
-
-        return GPtr<ImageFrame>(new ImageFrameWin(d2d_bmp, rt_, context, texture));
+        return GPtr<ImageFrame>(new ImageFrameWin(options, {}, {}, d2d_bmp));
     }
 
     void CyroRenderTargetD2D::destroy() {

@@ -703,6 +703,9 @@
     <ClCompile Include="graphics\mac\gpu\metal\gpu_texture_metal.cpp">
       <Filter>graphics\mac\gpu\metal</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\byte_data.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">
@@ -1577,6 +1580,9 @@
     </ClInclude>
     <ClInclude Include="graphics\mac\gpu\metal\gpu_texture_metal.h">
       <Filter>graphics\mac\gpu\metal</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\byte_data.h">
+      <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

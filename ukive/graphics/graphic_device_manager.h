@@ -21,6 +21,7 @@ namespace ukive {
     public:
         static GraphicDeviceManager* create();
 
+        GraphicDeviceManager();
         virtual ~GraphicDeviceManager() = default;
 
         virtual bool initialize() = 0;

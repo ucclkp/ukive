@@ -16,9 +16,13 @@ namespace ukive {
 namespace win {
 
     LcImageFrameWin::LcImageFrameWin(
+        const ImageOptions& options,
+        const GPtr<ByteData>& raw_data,
         const utl::win::ComPtr<IWICImagingFactory>& factory,
         const utl::win::ComPtr<IWICBitmapSource>& source)
-        : native_src_(source),
+        : LcImageFrame(options),
+          raw_data_(raw_data),
+          native_src_(source),
           wic_factory_(factory)
     {
         ubassert(source);
@@ -27,9 +31,13 @@ namespace win {
     }
 
     LcImageFrameWin::LcImageFrameWin(
+        const ImageOptions& options,
+        const GPtr<ByteData>& raw_data,
         const utl::win::ComPtr<IWICImagingFactory>& factory,
         const utl::win::ComPtr<IWICBitmap>& bitmap)
-        : native_bitmap_(bitmap),
+        : LcImageFrame(options),
+          raw_data_(raw_data),
+          native_bitmap_(bitmap),
           native_src_(bitmap.cast<IWICBitmapSource>()),
           wic_factory_(factory)
     {
@@ -112,15 +120,29 @@ namespace win {
         return true;
     }
 
-    void* LcImageFrameWin::lockPixels() {
+    void* LcImageFrameWin::lockPixels(unsigned int flags, size_t* stride) {
         if (!createIfNecessary()) {
             return nullptr;
         }
 
+        if (lock_) {
+            if (lock_flags_ != flags) {
+                lock_.reset();
+                lock_flags_ = 0;
+            }
+        }
+
         HRESULT hr;
         if (!lock_) {
-            hr = native_bitmap_->Lock(
-                nullptr, WICBitmapLockRead | WICBitmapLockWrite, &lock_);
+            DWORD a_flags = 0;
+            if (flags & IAF_READ) {
+                a_flags |= WICBitmapLockRead;
+            }
+            if (flags & IAF_WRITE) {
+                a_flags |= WICBitmapLockWrite;
+            }
+
+            hr = native_bitmap_->Lock(nullptr, a_flags, &lock_);
             if (FAILED(hr)) {
                 return nullptr;
             }
@@ -130,9 +152,19 @@ namespace win {
         WICInProcPointer ptr;
         hr = lock_->GetDataPointer(&buf_size, &ptr);
         if (FAILED(hr)) {
+            lock_.reset();
             return nullptr;
         }
 
+        UINT row_stride;
+        hr = lock_->GetStride(&row_stride);
+        if (FAILED(hr)) {
+            lock_.reset();
+            return nullptr;
+        }
+
+        lock_flags_ = flags;
+        *stride = utl::num_cast<size_t>(row_stride);
         return ptr;
     }
 

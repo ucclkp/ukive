@@ -10,8 +10,10 @@
 #include <memory>
 #include <string>
 
+#include "ukive/graphics/byte_data.h"
 #include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/gref_count.h"
+#include "ukive/graphics/images/image_options.h"
 #include "ukive/graphics/size.hpp"
 
 
@@ -20,7 +22,6 @@ namespace ukive {
     class Canvas;
     class Window;
     class LcImageFrame;
-    class ImageOptions;
     class ImageData;
 
     class ImageFrame : public virtual GRefCount {
@@ -31,10 +32,10 @@ namespace ukive {
             Canvas* canvas, int width, int height, const ImageOptions& options);
         static GPtr<ImageFrame> create(
             Canvas* canvas, int width, int height,
-            const void* pixel_data, size_t size, size_t stride);
+            const GPtr<ByteData>& pixel_data, size_t stride);
         static GPtr<ImageFrame> create(
             Canvas* canvas, int width, int height,
-            const void* pixel_data, size_t size, size_t stride,
+            const GPtr<ByteData>& pixel_data, size_t stride,
             const ImageOptions& options);
 
         static GPtr<ImageFrame> decodeFile(
@@ -44,10 +45,13 @@ namespace ukive {
         static GPtr<ImageFrame> decodeThumbnail(
             Canvas* canvas, const std::u16string_view& file_name, int width, int height);
 
+        explicit ImageFrame(const ImageOptions& options);
         virtual ~ImageFrame() = default;
 
         void setData(const std::shared_ptr<ImageData>& data);
         const std::shared_ptr<ImageData>& getData() const;
+
+        const ImageOptions& getOptions() const { return options_; }
 
         virtual void setDpi(float dpi_x, float dpi_y) = 0;
         virtual void getDpi(float* dpi_x, float* dpi_y) const = 0;
@@ -55,12 +59,8 @@ namespace ukive {
         virtual SizeF getSize() const = 0;
         virtual SizeU getPixelSize() const = 0;
 
-        virtual bool copyPixels(
-            size_t stride, void* pixels, size_t buf_size) = 0;
-        virtual void* lockPixels() = 0;
-        virtual void unlockPixels() = 0;
-
     private:
+        ImageOptions options_;
         std::shared_ptr<ImageData> data_;
     };
 

@@ -8,6 +8,8 @@
 
 #include <vector>
 
+#include "utils/numbers.hpp"
+
 #include "ukive/graphics/win/gpu/d3d11/gpu_buffer_d3d11.h"
 #include "ukive/graphics/win/gpu/d3d11/gpu_d3d11_utils.h"
 #include "ukive/graphics/win/gpu/d3d11/gpu_depth_stencil_d3d11.h"
@@ -220,7 +222,10 @@ namespace win {
             idx_count_pre_inst, inst_count, start_idx_loc, base_ver_loc, start_inst_loc);
     }
 
-    void* GPUContextD3D11::lock(GPUResource* resource) {
+    void* GPUContextD3D11::lock(
+        GPUResource* resource,
+        unsigned int type, size_t* row_stride)
+    {
         ID3D11Resource* res = nullptr;
 
         switch (resource->getType()) {
@@ -251,10 +256,21 @@ namespace win {
             return nullptr;
         }
 
+        D3D11_MAP map_type;
+        switch (type) {
+        case LOCK_READ:  map_type = D3D11_MAP_READ; break;
+        case LOCK_WRITE: map_type = D3D11_MAP_WRITE_DISCARD; break;
+        default:         map_type = D3D11_MAP_WRITE_DISCARD; break;
+        }
+
         D3D11_MAPPED_SUBRESOURCE mappedResource;
-        HRESULT hr = d3d_context_->Map(res, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+        HRESULT hr = d3d_context_->Map(res, 0, map_type, 0, &mappedResource);
         if (FAILED(hr)) {
             return nullptr;
+        }
+
+        if (row_stride) {
+            *row_stride = utl::num_cast<size_t>(mappedResource.RowPitch);
         }
 
         return mappedResource.pData;

@@ -79,14 +79,10 @@ namespace win {
         }
     }
 
-    bool CyroRendererD2D::initRes() {
+    bool CyroRendererD2D::initialize() {
         if (!rt_) {
             return false;
         }
-
-        solid_brush_.reset();
-        bitmap_brush_.reset();
-        matrix_.identity();
 
         HRESULT hr = rt_->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &solid_brush_);
         if (FAILED(hr)) {
@@ -106,28 +102,46 @@ namespace win {
         return true;
     }
 
+    void CyroRendererD2D::uninitialize() {
+        solid_brush_.reset();
+        bitmap_brush_.reset();
+        matrix_.identity();
+        opacity_stack_ = {};
+        drawing_state_stack_ = {};
+    }
+
     bool CyroRendererD2D::bind(CyroBuffer* buffer, bool owned) {
-        if (!buffer) {
-            return false;
+        if (buffer_ || !buffer) {
+            unbind();
         }
+
+        if (!buffer) {
+            return true;
+        }
+
         buffer_ = buffer;
         owned_buffer_ = owned;
         rt_ = static_cast<CyroRenderTargetD2D*>(buffer_->getRT())->getNative();
-        return initRes();
+
+        if (!initialize()) {
+            return false;
+        }
+
+        dev_guard_ = static_cast<DirectXManager*>(
+            Application::getGraphicDeviceManager())->getGPUDeviceGuard();
+        return true;
     }
 
-    void CyroRendererD2D::release() {
+    void CyroRendererD2D::unbind() {
+        uninitialize();
         rt_.reset();
-        matrix_.identity();
-        while (!opacity_stack_.empty()) {
-            opacity_stack_.pop();
-        }
-        while (!drawing_state_stack_.empty()) {
-            drawing_state_stack_.pop();
-        }
 
-        solid_brush_.reset();
-        bitmap_brush_.reset();
+        if (buffer_ && owned_buffer_) {
+            buffer_->onDestroy();
+            delete buffer_;
+        }
+        buffer_ = nullptr;
+        dev_guard_.reset();
     }
 
     CyroBuffer* CyroRendererD2D::getBuffer() const {
@@ -154,7 +168,8 @@ namespace win {
             return {};
         }
 
-        return GPtr<ImageFrame>(new ImageFrameWin(d2d_bmp, rt_, native_src));
+        return GPtr<ImageFrame>(
+            new ImageFrameWin(frame->getOptions(), {}, native_src, d2d_bmp));
     }
 
     GPtr<ImageFrame> CyroRendererD2D::createImage(
@@ -169,24 +184,34 @@ namespace win {
             return {};
         }
 
-        return GPtr<ImageFrame>(new ImageFrameWin(d2d_bmp, rt_, {}));
+        return GPtr<ImageFrame>(
+            new ImageFrameWin(options, {}, {}, d2d_bmp));
     }
 
     GPtr<ImageFrame> CyroRendererD2D::createImage(
         int width, int height,
-        const void* pixel_data, size_t size, size_t stride, const ImageOptions& options)
+        const GPtr<ByteData>& pixel_data, size_t stride, const ImageOptions& options)
     {
         auto prop = mapBitmapProps(options);
 
         utl::win::ComPtr<ID2D1Bitmap> d2d_bmp;
         HRESULT hr = rt_->CreateBitmap(
-            D2D1::SizeU(width, height), pixel_data, utl::num_cast<UINT32>(stride), prop, &d2d_bmp);
+            D2D1::SizeU(width, height),
+            pixel_data->getData(),
+            utl::num_cast<UINT32>(stride), prop, &d2d_bmp);
         if (FAILED(hr)) {
             ubassert(false);
             return {};
         }
 
-        return GPtr<ImageFrame>(new ImageFrameWin(d2d_bmp, rt_, {}));
+        ImageFrameWin::ImageRawParams params;
+        params.width = width;
+        params.height = height;
+        params.raw_data = pixel_data;
+        params.stride = stride;
+
+        return GPtr<ImageFrame>(
+            new ImageFrameWin(options, params, {}, d2d_bmp));
     }
 
     void CyroRendererD2D::setOpacity(float opacity) {
@@ -206,6 +231,38 @@ namespace win {
 
     Matrix2x3F CyroRendererD2D::getMatrix() const {
         return matrix_;
+    }
+
+    void CyroRendererD2D::onBeginDraw() {
+        if (!buffer_) {
+            return;
+        }
+
+        if (dev_guard_.expired()) {
+            if (!buffer_->onRecreate()) {
+                return;
+            }
+
+            uninitialize();
+
+            rt_ = static_cast<CyroRenderTargetD2D*>(buffer_->getRT())->getNative();
+
+            if (!initialize()) {
+                return;
+            }
+
+            dev_guard_ = static_cast<DirectXManager*>(
+                Application::getGraphicDeviceManager())->getGPUDeviceGuard();
+        }
+
+        buffer_->onBeginDraw();
+    }
+
+    GRet CyroRendererD2D::onEndDraw() {
+        if (!buffer_) {
+            return GRet::Failed;
+        }
+        return buffer_->onEndDraw();
     }
 
     void CyroRendererD2D::clear() {
@@ -340,12 +397,19 @@ namespace win {
         }
 
         case Paint::Style::IMAGE:
+        {
+            auto img_win = static_cast<ImageFrameWin*>(paint.getImage());
+            if (!img_win->prepareForRender(rt_.get())) {
+                break;
+            }
+
             bitmap_brush_->SetBitmap(CIF_TO_D2D_BMP(paint.getImage()));
             bitmap_brush_->SetExtendModeX(convExtendMode(paint.getImageExtendModeX()));
             bitmap_brush_->SetExtendModeY(convExtendMode(paint.getImageExtendModeY()));
 
             rt_->FillRectangle(d2d_rect, bitmap_brush_.get());
             break;
+        }
         }
     }
 
@@ -377,6 +441,12 @@ namespace win {
         }
 
         case Paint::Style::IMAGE:
+        {
+            auto img_win = static_cast<ImageFrameWin*>(paint.getImage());
+            if (!img_win->prepareForRender(rt_.get())) {
+                break;
+            }
+
             bitmap_brush_->SetBitmap(CIF_TO_D2D_BMP(paint.getImage()));
             bitmap_brush_->SetExtendModeX(convExtendMode(paint.getImageExtendModeX()));
             bitmap_brush_->SetExtendModeY(convExtendMode(paint.getImageExtendModeY()));
@@ -384,6 +454,7 @@ namespace win {
             rt_->FillRoundedRectangle(
                 D2D1::RoundedRect(d2d_rect, radius, radius), bitmap_brush_.get());
             break;
+        }
         }
     }
 
@@ -417,6 +488,12 @@ namespace win {
         }
 
         case Paint::Style::IMAGE:
+        {
+            auto img_win = static_cast<ImageFrameWin*>(paint.getImage());
+            if (!img_win->prepareForRender(rt_.get())) {
+                break;
+            }
+
             bitmap_brush_->SetBitmap(CIF_TO_D2D_BMP(paint.getImage()));
             bitmap_brush_->SetExtendModeX(convExtendMode(paint.getImageExtendModeX()));
             bitmap_brush_->SetExtendModeY(convExtendMode(paint.getImageExtendModeY()));
@@ -424,6 +501,7 @@ namespace win {
             rt_->FillEllipse(
                 D2D1::Ellipse(D2D1::Point2F(c.x(), c.y()), rx, ry), bitmap_brush_.get());
             break;
+        }
         }
     }
 
@@ -453,6 +531,12 @@ namespace win {
         }
 
         case Paint::Style::IMAGE:
+        {
+            auto img_win = static_cast<ImageFrameWin*>(paint.getImage());
+            if (!img_win->prepareForRender(rt_.get())) {
+                break;
+            }
+
             bitmap_brush_->SetBitmap(CIF_TO_D2D_BMP(paint.getImage()));
             bitmap_brush_->SetExtendModeX(convExtendMode(paint.getImageExtendModeX()));
             bitmap_brush_->SetExtendModeY(convExtendMode(paint.getImageExtendModeY()));
@@ -460,10 +544,11 @@ namespace win {
             rt_->FillGeometry(geo, bitmap_brush_.get());
             break;
         }
+        }
     }
 
     void CyroRendererD2D::drawImage(
-        const RectF& src, const RectF& dst, float opacity, const ImageFrame* img)
+        const RectF& src, const RectF& dst, float opacity, ImageFrame* img)
     {
         if (!img) {
             return;
@@ -474,6 +559,11 @@ namespace win {
         D2D1_RECT_F d2d_dst_rect{
             dst.left, dst.top, dst.right, dst.bottom };
 
+        auto img_win = static_cast<ImageFrameWin*>(img);
+        if (!img_win->prepareForRender(rt_.get())) {
+            return;
+        }
+
         rt_->DrawBitmap(
             CIF_TO_D2D_BMP(img), d2d_dst_rect, opacity,
             D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
@@ -481,8 +571,18 @@ namespace win {
     }
 
     void CyroRendererD2D::fillOpacityMask(
-        float width, float height, const ImageFrame* mask, const ImageFrame* content)
+        float width, float height, ImageFrame* mask, ImageFrame* content)
     {
+        auto img_win = static_cast<ImageFrameWin*>(mask);
+        if (!img_win->prepareForRender(rt_.get())) {
+            return;
+        }
+
+        img_win = static_cast<ImageFrameWin*>(content);
+        if (!img_win->prepareForRender(rt_.get())) {
+            return;
+        }
+
         bitmap_brush_->SetBitmap(CIF_TO_D2D_BMP(content));
         bitmap_brush_->SetExtendModeX(D2D1_EXTEND_MODE_CLAMP);
         bitmap_brush_->SetExtendModeY(D2D1_EXTEND_MODE_CLAMP);
@@ -526,11 +626,18 @@ namespace win {
 
         switch (paint.getStyle()) {
         case Paint::Style::IMAGE:
+        {
+            auto img_win = static_cast<ImageFrameWin*>(paint.getImage());
+            if (!img_win->prepareForRender(rt_.get())) {
+                break;
+            }
+
             bitmap_brush_->SetBitmap(CIF_TO_D2D_BMP(paint.getImage()));
             bitmap_brush_->SetExtendModeX(convExtendMode(paint.getImageExtendModeX()));
             bitmap_brush_->SetExtendModeY(convExtendMode(paint.getImageExtendModeY()));
             rt_->DrawTextLayout(D2D1::Point2F(x, y), dw_tl, bitmap_brush_.get());
             break;
+        }
 
         default:
         {

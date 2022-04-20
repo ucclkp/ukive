@@ -114,5 +114,16 @@ namespace mac {
 
     }
 
+    void* GPUContextMetal::lock(
+        GPUResource* resource,
+        unsigned flags, size_t* row_stride)
+    {
+        return nullptr;
+    }
+
+    void GPUContextMetal::unlock(GPUResource* resource) {
+
+    }
+
 }
 }

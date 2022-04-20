@@ -790,7 +790,6 @@ namespace ukive {
 
         // 处理设备丢失
         if (canvas_->endDraw() == GRet::Retry) {
-            renderer_->release();
             processDeviceLost();
         }
     }
@@ -844,8 +843,6 @@ namespace ukive {
 
         // 处理设备丢失
         if (canvas_->endDraw() == GRet::Retry) {
-            off_canvas_.reset();
-            renderer_->release();
             processDeviceLost();
         }
     }
@@ -888,18 +885,11 @@ namespace ukive {
     }
 
     void Window::processDeviceLost() {
-        buffer_->onDestroy();
-
         context_.setChanged(Context::DEV_LOST);
         onUpdateContext();
 
         Application::getGraphicDeviceManager()->notifyDeviceLost();
         Application::getGraphicDeviceManager()->recreate();
-
-        float dpi = context_.getDefaultDpi() * context_.getAutoScale();
-        buffer_->onCreate(0, 0, ImageOptions(dpi, dpi));
-        renderer_->bind(buffer_, false);
-
         Application::getGraphicDeviceManager()->notifyDeviceRestored();
 
         context_.setChanged(Context::DEV_RESTORE);
@@ -916,18 +906,19 @@ namespace ukive {
             return;
         }
 
-        renderer_->release();
+        renderer_->unbind();
 
         GRet ret = buffer_->onResize(0, 0);
         if (ret == GRet::Failed) {
             LOG(Log::ERR) << "Resize canvas failed.";
             return;
         }
+
+        renderer_->bind(buffer_, false);
+
         // 处理设备丢失
         if (ret == GRet::Retry) {
             processDeviceLost();
-        } else {
-            renderer_->bind(buffer_, false);
         }
 
         off_canvas_.reset();

@@ -39,6 +39,11 @@ namespace ukive {
             CLEAR_STENCIL = 1 << 1,
         };
 
+        enum LockType {
+            LOCK_READ,
+            LOCK_WRITE,
+        };
+
         enum class Topology {
             PointList,
             LineList,
@@ -94,7 +99,9 @@ namespace ukive {
             uint32_t idx_count_pre_inst, uint32_t inst_count,
             uint32_t start_idx_loc, int32_t base_ver_loc, uint32_t start_inst_loc) = 0;
 
-        virtual void* lock(GPUResource* resource) = 0;
+        virtual void* lock(
+            GPUResource* resource,
+            unsigned int type, size_t* row_stride) = 0;
         virtual void unlock(GPUResource* resource) = 0;
     };
 

@@ -22,21 +22,31 @@ namespace ukive {
     }
 
     // static
+    GPtr<LcImageFrame> LcImageFrame::create(
+        int width, int height,
+        const GPtr<ByteData>& pixel_data, size_t stride,
+        const ImageOptions& options)
+    {
+        auto ic = Application::getImageLocFactory();
+        return ic->create(width, height, pixel_data, stride, options);
+    }
+
+    // static
     bool LcImageFrame::saveToFile(
         int width, int height,
-        void* data, size_t byte_count, size_t stride,
+        const void* data, size_t len, size_t stride,
         ImageContainer container,
         const ImageOptions& options,
         const std::u16string_view& file_name)
     {
         auto ic = Application::getImageLocFactory();
         return ic->saveToFile(
-            width, height, data, byte_count, stride,
+            width, height, data, len, stride,
             container, options, file_name);
     }
 
-    LcImageFrame::LcImageFrame() {
-    }
+    LcImageFrame::LcImageFrame(const ImageOptions& options)
+        : options_(options) {}
 
     LcImageFrame::~LcImageFrame() {
     }

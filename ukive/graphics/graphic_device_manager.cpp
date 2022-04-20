@@ -20,6 +20,7 @@
 
 namespace ukive {
 
+    // static
     GraphicDeviceManager* GraphicDeviceManager::create() {
 #ifdef OS_WINDOWS
         return new win::DirectXManager();
@@ -27,6 +28,8 @@ namespace ukive {
         return new mac::GraphicDeviceManagerMac();
 #endif
     }
+
+    GraphicDeviceManager::GraphicDeviceManager() {}
 
     void GraphicDeviceManager::addListener(GraphicContextChangeListener* l) {
         utl::addCallbackTo(listeners_, l);

@@ -191,7 +191,7 @@ namespace shell {
 
     bool ThumbnailFetcher::getThumbnail(const std::u16string& file_name, Thumbnail* out) {
         auto ic = ukive::Application::getImageLocFactory();
-        out->ph_bmp = ic->getThumbnail(file_name, 400, 400, &out->options);
+        out->ph_bmp = ic->createThumbnail(file_name, 400, 400, &out->options);
         if (!out->ph_bmp) {
             return false;
         }

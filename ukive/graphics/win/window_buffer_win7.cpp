@@ -38,6 +38,19 @@ namespace win {
         return ret;
     }
 
+    bool WindowBufferWin7::onRecreate() {
+        onDestroy();
+
+        bool ret;
+        is_layered_ = window_->isLayered();
+        if (is_layered_) {
+            ret = createHardwareBRT();
+        } else {
+            ret = createSwapchainBRT();
+        }
+        return ret;
+    }
+
     GRet WindowBufferWin7::onResize(int width, int height) {
         GRet ret;
         if (is_layered_) {

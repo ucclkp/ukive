@@ -9,7 +9,9 @@
 
 #include <string>
 
+#include "ukive/graphics/byte_data.h"
 #include "ukive/graphics/gptr.hpp"
+#include "ukive/graphics/graphics_utils.h"
 #include "ukive/graphics/point.hpp"
 #include "ukive/graphics/rect.hpp"
 
@@ -34,7 +36,7 @@ namespace ukive {
         virtual ~CyroRenderer() = default;
 
         virtual bool bind(CyroBuffer* buffer, bool owned) = 0;
-        virtual void release() = 0;
+        virtual void unbind() = 0;
 
         virtual CyroBuffer* getBuffer() const = 0;
 
@@ -43,13 +45,16 @@ namespace ukive {
             int width, int height, const ImageOptions& options) = 0;
         virtual GPtr<ImageFrame> createImage(
             int width, int height,
-            const void* pixel_data, size_t size, size_t stride,
+            const GPtr<ByteData>& pixel_data, size_t stride,
             const ImageOptions& options) = 0;
 
         virtual void setOpacity(float opacity) = 0;
         virtual float getOpacity() const = 0;
 
         virtual Matrix2x3F getMatrix() const = 0;
+
+        virtual void onBeginDraw() = 0;
+        virtual GRet onEndDraw() = 0;
 
         virtual void clear() = 0;
         virtual void clear(const Color& c) = 0;
@@ -76,10 +81,10 @@ namespace ukive {
             const PointF& c, float rx, float ry, const Paint& paint) = 0;
         virtual void drawPath(const Path* path, const Paint& paint) = 0;
         virtual void drawImage(
-            const RectF& src, const RectF& dst, float opacity, const ImageFrame* img) = 0;
+            const RectF& src, const RectF& dst, float opacity, ImageFrame* img) = 0;
 
         virtual void fillOpacityMask(
-            float width, float height, const ImageFrame* mask, const ImageFrame* content) = 0;
+            float width, float height, ImageFrame* mask, ImageFrame* content) = 0;
 
         virtual void drawText(
             const std::u16string_view& text,

@@ -226,6 +226,7 @@
     <ClInclude Include="graphics\3d\drawing_object_manager.h" />
     <ClInclude Include="graphics\3d\graph_creator.h" />
     <ClInclude Include="graphics\3d\scene.h" />
+    <ClInclude Include="graphics\byte_data.h" />
     <ClInclude Include="graphics\canvas.h" />
     <ClInclude Include="graphics\colors\color.h" />
     <ClInclude Include="graphics\colors\icc\icc_profile.h" />
@@ -521,6 +522,7 @@
     <ClCompile Include="graphics\3d\drawing_object_manager.cpp" />
     <ClCompile Include="graphics\3d\graph_creator.cpp" />
     <ClCompile Include="graphics\3d\scene.cpp" />
+    <ClCompile Include="graphics\byte_data.cpp" />
     <ClCompile Include="graphics\canvas.cpp" />
     <ClCompile Include="graphics\colors\color.cpp" />
     <ClCompile Include="graphics\colors\icc\icc_profile.cpp" />

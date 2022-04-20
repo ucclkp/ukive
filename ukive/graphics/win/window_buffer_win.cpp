@@ -32,6 +32,11 @@ namespace win {
         return createSwapchainBRT();
     }
 
+    bool WindowBufferWin::onRecreate() {
+        onDestroy();
+        return createSwapchainBRT();
+    }
+
     GRet WindowBufferWin::onResize(int width, int height) {
         return resizeSwapchainBRT();
     }

@@ -9,6 +9,7 @@
 
 #include "utils/memory/win/com_ptr.hpp"
 
+#include "ukive/graphics/byte_data.h"
 #include "ukive/graphics/gref_count_impl.h"
 #include "ukive/graphics/images/lc_image_frame.h"
 
@@ -29,9 +30,13 @@ namespace win {
     {
     public:
         LcImageFrameWin(
+            const ImageOptions& options,
+            const GPtr<ByteData>& raw_data,
             const utl::win::ComPtr<IWICImagingFactory>& factory,
             const utl::win::ComPtr<IWICBitmapSource>& source);
         LcImageFrameWin(
+            const ImageOptions& options,
+            const GPtr<ByteData>& raw_data,
             const utl::win::ComPtr<IWICImagingFactory>& factory,
             const utl::win::ComPtr<IWICBitmap>& bitmap);
 
@@ -45,7 +50,7 @@ namespace win {
 
         bool copyPixels(
             size_t stride, void* pixels, size_t buf_size) override;
-        void* lockPixels() override;
+        void* lockPixels(unsigned int flags, size_t* stride) override;
         void unlockPixels() override;
 
         utl::win::ComPtr<IWICBitmap> getNative() const;
@@ -54,6 +59,8 @@ namespace win {
     private:
         float dpi_x_ = 0;
         float dpi_y_ = 0;
+        unsigned int lock_flags_ = 0;
+        GPtr<ByteData> raw_data_;
         utl::win::ComPtr<IWICBitmap> native_bitmap_;
         utl::win::ComPtr<IWICBitmapLock> lock_;
         utl::win::ComPtr<IWICBitmapSource> native_src_;

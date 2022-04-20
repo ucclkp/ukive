@@ -299,7 +299,8 @@ namespace win {
 
         // VS ConstBuffer
         {
-            auto data = context->lock(const_buffer_.get());
+            auto data = context->lock(
+                const_buffer_.get(), GPUContext::LOCK_WRITE, nullptr);
             if (data) {
                 static_cast<ConstBuffer*>(data)->wvo = wvo_matrix_;
                 context->unlock(const_buffer_.get());

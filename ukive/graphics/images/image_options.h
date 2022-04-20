@@ -10,6 +10,11 @@
 
 namespace ukive {
 
+    enum ImageAccessFlags {
+        IAF_READ = 1 << 0,
+        IAF_WRITE = 1 << 1,
+    };
+
     enum class ImageContainer {
         PNG,
         JPEG,

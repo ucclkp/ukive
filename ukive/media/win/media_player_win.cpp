@@ -367,11 +367,6 @@ namespace win {
         //sample->AddRef();
         //video_sample_ = sample;
 
-        auto rt = static_cast<CyroRenderTargetD2D*>(
-            window_->getCanvas()->getBuffer()->getRT())->getNative();
-        auto context =
-            Application::getGraphicDeviceManager()->getGPUContext();
-
         auto data = new MessageData();
         data->frame = video_frame_;
 

@@ -118,7 +118,8 @@ namespace shell {
         if (object) {
             auto gpu_context = ukive::Application::getGraphicDeviceManager()->getGPUContext();
 
-            auto data = gpu_context->lock(object->vertex_buffer.get());
+            auto data = gpu_context->lock(
+                object->vertex_buffer.get(), ukive::GPUContext::LOCK_WRITE, nullptr);
             if (data) {
                 auto locked_vd = static_cast<ukive::ModelVertexData*>(data);
                 auto object_vd = static_cast<ukive::ModelVertexData*>(object->vertices.get());
@@ -143,7 +144,8 @@ namespace shell {
         }
         auto gpu_context = ukive::Application::getGraphicDeviceManager()->getGPUContext();
 
-        auto data = gpu_context->lock(index_buffer_.get());
+        auto data = gpu_context->lock(
+            index_buffer_.get(), ukive::GPUContext::LOCK_WRITE, nullptr);
         if (data) {
             int* indices = static_cast<int*>(data);
 

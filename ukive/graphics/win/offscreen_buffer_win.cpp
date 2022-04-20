@@ -41,9 +41,24 @@ namespace win {
         return createHardwareBRT(width_, height_);
     }
 
+    bool OffscreenBufferWin::onRecreate() {
+        onDestroy();
+
+        if (width_ <= 0 || height_ <= 0) {
+            DLOG(Log::ERR) << "Invalid size value.";
+            return false;
+        }
+
+        return createHardwareBRT(width_, height_);
+    }
+
     GRet OffscreenBufferWin::onResize(int width, int height) {
         if (width <= 0 || height <= 0) {
             DLOG(Log::WARNING) << "Invalid size value.";
+            return GRet::Succeeded;
+        }
+
+        if (rt_->getNative() && width == width_ && height == height_) {
             return GRet::Succeeded;
         }
 
@@ -93,7 +108,7 @@ namespace win {
     GPtr<ImageFrame> OffscreenBufferWin::onExtractImage(const ImageOptions& options) {
         D2D1_BITMAP_PROPERTIES bmp_prop = mapBitmapProps(options);
 
-        auto tex2d_d3d = static_cast<GPUTexture2DD3D11*>(d3d_tex2d_.get())->getNative();
+        auto tex2d_d3d = d3d_tex2d_.cast<GPUTexture2DD3D11>()->getNative();
 
         utl::win::ComPtr<ID2D1Bitmap> bitmap;
         HRESULT hr = rt_->getNative()->CreateSharedBitmap(
@@ -108,10 +123,8 @@ namespace win {
             return {};
         }
 
-        auto context = Application::getGraphicDeviceManager()->getGPUContext();
-
-        return GPtr<ImageFrame>(new ImageFrameWin(
-            bitmap, rt_->getNative(), context, d3d_tex2d_));
+        return GPtr<ImageFrame>(
+            new ImageFrameWin(options, {}, {}, bitmap));
     }
 
     Size OffscreenBufferWin::getSize() const {

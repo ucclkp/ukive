@@ -62,6 +62,8 @@ namespace win {
         utl::win::ComPtr<ID2D1RenderTarget> createDXGIRenderTarget(
             IDXGISurface* surface, bool gdi_compat, const ImageOptions& options);
 
+        const std::shared_ptr<int>& getGPUDeviceGuard() const { return dev_guard_; }
+
     private:
         bool initPersistance();
         void shutdownPersistance();
@@ -80,6 +82,7 @@ namespace win {
 
         GPtr<GPUDevice> gpu_device_;
         GPtr<GPUContext> gpu_context_;
+        std::shared_ptr<int> dev_guard_;
     };
 
 }
