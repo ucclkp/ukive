@@ -26,15 +26,18 @@ namespace mac {
     GPtr<LcImageFrame> LcImageFactoryMac::create(
         int width, int height, const ImageOptions& options)
     {
-        return create(width, height, nullptr, 0, 0, options);
+        return create(width, height, {}, 0, options);
     }
 
     GPtr<LcImageFrame> LcImageFactoryMac::create(
          int width, int height,
-         void* pixel_data, size_t size, size_t stride,
+         const GPtr<ByteData>& pixel_data, size_t stride,
          const ImageOptions &options)
     {
-        auto context = createCGContext(width, height, pixel_data, size, stride, options);
+        auto context = createCGContext(
+            width, height,
+            pixel_data->getData(), pixel_data->getSize(),
+            stride, options);
         if (!context) {
             return {};
         }
@@ -46,7 +49,7 @@ namespace mac {
             return {};
         }
 
-        auto lc_image_fr = new LcImageFrameMac(image);
+        auto lc_image_fr = new LcImageFrameMac(options, image, pixel_data);
         switch (options.dpi_type) {
             case ImageDPIType::SPECIFIED:
                 lc_image_fr->setDpi(options.dpi_x, options.dpi_y);
@@ -57,6 +60,13 @@ namespace mac {
         }
 
         return GPtr<LcImageFrame>(lc_image_fr);
+    }
+
+    GPtr<LcImageFrame> LcImageFactoryMac::createThumbnail(
+        const std::u16string_view& file_name,
+        int frame_width, int frame_height, ImageOptions* options)
+    {
+        return {};
     }
 
     LcImage LcImageFactoryMac::decodeFile(
@@ -91,16 +101,9 @@ namespace mac {
         return lc_image;
     }
 
-    GPtr<LcImageFrame> LcImageFactoryMac::getThumbnail(
-        const std::u16string_view& file_name,
-        int frame_width, int frame_height, ImageOptions* options)
-    {
-        return {};
-    }
-
     bool LcImageFactoryMac::saveToFile(
         int width, int height,
-        void* data, size_t byte_count, size_t stride,
+        const void* data, size_t byte_count, size_t stride,
         ImageContainer container,
         const ImageOptions& options,
         const std::u16string_view& file_name)
@@ -116,11 +119,11 @@ namespace mac {
 
             LcImageFrameMac* lc_img_fr;
             if (options.pixel_format == ImagePixelFormat::RAW) {
-                lc_img_fr = new LcImageFrameMac(image);
+                lc_img_fr = new LcImageFrameMac(options, image, {});
             } else {
                 auto new_img = convertPixelFormat(image, options);
                 CGImageRelease(image);
-                lc_img_fr = new LcImageFrameMac(new_img);
+                lc_img_fr = new LcImageFrameMac(options, new_img, {});
             }
 
             switch (options.dpi_type) {
@@ -149,9 +152,9 @@ namespace mac {
 
         auto color_space = CGColorSpaceCreateDeviceRGB();
         auto context = CGBitmapContextCreate(
-                                             pixel_data,
-                                             width, height, 8, stride,
-                                             color_space, info);
+            pixel_data,
+            width, height, 8, stride,
+            color_space, info);
         CGColorSpaceRelease(color_space);
         return context;
     }

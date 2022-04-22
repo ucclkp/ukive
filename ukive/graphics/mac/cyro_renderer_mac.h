@@ -25,7 +25,7 @@ namespace mac {
         ~CyroRendererMac();
 
         bool bind(CyroBuffer* buffer, bool owned) override;
-        void release() override;
+        void unbind() override;
 
         CyroBuffer* getBuffer() const override;
 
@@ -34,13 +34,16 @@ namespace mac {
             int width, int height, const ImageOptions& options) override;
         GPtr<ImageFrame> createImage(
             int width, int height,
-            const void* pixel_data, size_t size, size_t stride,
+            const GPtr<ByteData>& pixel_data, size_t stride,
             const ImageOptions& options) override;
 
         void setOpacity(float opacity) override;
         float getOpacity() const override;
 
         Matrix2x3F getMatrix() const override;
+
+        void onBeginDraw() override;
+        GRet onEndDraw() override;
 
         void clear() override;
         void clear(const Color &c) override;
@@ -67,10 +70,10 @@ namespace mac {
             const PointF &c, float rx, float ry, const Paint &paint) override;
         void drawPath(const Path *path, const Paint &paint) override;
         void drawImage(
-            const RectF &src, const RectF &dst, float opacity, const ImageFrame* img) override;
+            const RectF &src, const RectF &dst, float opacity, ImageFrame* img) override;
 
         void fillOpacityMask(
-            float width, float height, const ImageFrame* mask, const ImageFrame* content) override;
+            float width, float height, ImageFrame* mask, ImageFrame* content) override;
 
         void drawText(
             const std::u16string_view &text,

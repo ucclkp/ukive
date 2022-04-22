@@ -40,7 +40,7 @@ namespace mac {
         return true;
     }
 
-    void CyroRendererMac::release() {
+    void CyroRendererMac::unbind() {
     }
 
     CyroBuffer* CyroRendererMac::getBuffer() const {
@@ -63,7 +63,7 @@ namespace mac {
         float dpi_x, dpi_y;
         img->getDpi(&dpi_x, &dpi_y);
 
-        auto image_fr = new ImageFrameMac(ns_img, false, nullptr);
+        auto image_fr = new ImageFrameMac(img->getOptions(), ns_img, false, {});
         image_fr->setDpi(dpi_x, dpi_y);
 
         return GPtr<ImageFrame>(image_fr);
@@ -72,12 +72,12 @@ namespace mac {
     GPtr<ImageFrame> CyroRendererMac::createImage(
         int width, int height, const ImageOptions& options)
     {
-        return createImage(width, height, nullptr, 0, 0, options);
+        return createImage(width, height, {}, 0, options);
     }
 
     GPtr<ImageFrame> CyroRendererMac::createImage(
         int width, int height,
-        const void* pixel_data, size_t size, size_t stride,
+        const GPtr<ByteData>& pixel_data, size_t stride,
         const ImageOptions& options)
     {
         NSBitmapFormat format = NSBitmapFormatAlphaFirst;
@@ -111,8 +111,7 @@ namespace mac {
         unsigned char* buf;
         unsigned char** plane;
         if (pixel_data) {
-            buf = new unsigned char[size];
-            std::memcpy(buf, pixel_data, size);
+            buf = static_cast<unsigned char*>(pixel_data->getData());
             plane = &buf;
         } else {
             buf = nullptr;
@@ -139,7 +138,7 @@ namespace mac {
             return {};
         }
 
-        auto image_fr = new ImageFrameMac(img, false, buf);
+        auto image_fr = new ImageFrameMac(options, img, false, pixel_data);
 
         switch (options.dpi_type) {
             case ImageDPIType::SPECIFIED:
@@ -167,6 +166,19 @@ namespace mac {
 
     Matrix2x3F CyroRendererMac::getMatrix() const {
         return matrix_;
+    }
+
+    void CyroRendererMac::onBeginDraw() {
+        if (buffer_) {
+            buffer_->onBeginDraw();
+        }
+    }
+
+    GRet CyroRendererMac::onEndDraw() {
+        if (!buffer_) {
+            return GRet::Failed;
+        }
+        return buffer_->onEndDraw();
     }
 
     void CyroRendererMac::clear() {
@@ -479,7 +491,7 @@ namespace mac {
     }
 
     void CyroRendererMac::drawImage(
-        const RectF &src, const RectF &dst, float opacity, const ImageFrame* img)
+        const RectF &src, const RectF &dst, float opacity, ImageFrame* img)
     {
         auto img_fr = static_cast<const ImageFrameMac*>(img);
         auto src_rect = NSMakeRect(src.left, src.top, src.width(), src.height());
@@ -494,7 +506,7 @@ namespace mac {
     }
 
     void CyroRendererMac::fillOpacityMask(
-        float width, float height, const ImageFrame* mask, const ImageFrame* content)
+        float width, float height, ImageFrame* mask, ImageFrame* content)
     {
         auto mask_img = static_cast<const ImageFrameMac*>(mask);
         auto content_img = static_cast<const ImageFrameMac*>(content);

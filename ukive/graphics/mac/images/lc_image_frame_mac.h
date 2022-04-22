@@ -21,7 +21,10 @@ namespace mac {
         public GRefCountImpl
     {
     public:
-        explicit LcImageFrameMac(CGImageRef img);
+        LcImageFrameMac(
+            const ImageOptions& options,
+            CGImageRef img,
+            const GPtr<ByteData>& buf);
         ~LcImageFrameMac();
 
         void setDpi(float dpi_x, float dpi_y) override;
@@ -31,7 +34,7 @@ namespace mac {
         SizeU getPixelSize() const override;
 
         bool copyPixels(size_t stride, void* pixels, size_t buf_size) override;
-        void* lockPixels() override;
+        void* lockPixels(unsigned int flags, size_t* stride) override;
         void unlockPixels() override;
 
         CGImageRef getNative() const;
@@ -40,6 +43,7 @@ namespace mac {
         float dpi_x_;
         float dpi_y_;
         CGImageRef img_;
+        GPtr<ByteData> buf_;
     };
 
 }

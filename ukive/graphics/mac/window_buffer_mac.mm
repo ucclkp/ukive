@@ -25,6 +25,10 @@ namespace mac {
         return true;
     }
 
+    bool WindowBufferMac::onRecreate() {
+        return true;
+    }
+
     GRet WindowBufferMac::onResize(int width, int height) {
         return GRet::Succeeded;
     }

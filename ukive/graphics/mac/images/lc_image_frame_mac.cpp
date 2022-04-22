@@ -14,10 +14,15 @@
 namespace ukive {
 namespace mac {
 
-    LcImageFrameMac::LcImageFrameMac(CGImageRef img)
-        : img_(img),
-          dpi_x_(72.f),
-          dpi_y_(72.f) {}
+    LcImageFrameMac::LcImageFrameMac(
+        const ImageOptions& options,
+        CGImageRef img,
+        const GPtr<ByteData>& buf)
+        : LcImageFrame(options),
+          img_(img),
+          dpi_x_(kDefaultDpi),
+          dpi_y_(kDefaultDpi),
+          buf_(buf) {}
 
     LcImageFrameMac::~LcImageFrameMac() {
         CGImageRelease(img_);
@@ -64,7 +69,7 @@ namespace mac {
         return false;
     }
 
-    void* LcImageFrameMac::lockPixels() {
+    void* LcImageFrameMac::lockPixels(unsigned int flags, size_t* stride) {
         return nullptr;
     }
 

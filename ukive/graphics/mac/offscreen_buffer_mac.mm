@@ -69,9 +69,24 @@ namespace mac {
         return createBuffer();
     }
 
+    bool OffscreenBufferMac::onRecreate() {
+        onDestroy();
+
+        if (width_ <= 0 || height_ <= 0) {
+            DLOG(Log::ERR) << "Invalid size value.";
+            return false;
+        }
+
+        return createBuffer();
+    }
+
     GRet OffscreenBufferMac::onResize(int width, int height) {
         if (width <= 0 || height <= 0) {
             DLOG(Log::WARNING) << "Invalid size value.";
+            return GRet::Succeeded;
+        }
+
+        if (width == width_ && height == height_ && cg_context_) {
             return GRet::Succeeded;
         }
 
@@ -90,6 +105,7 @@ namespace mac {
 
     void OffscreenBufferMac::onDestroy() {
         CGContextRelease(cg_context_);
+        cg_context_ = nullptr;
     }
 
     void OffscreenBufferMac::onBeginDraw() {
@@ -154,7 +170,7 @@ namespace mac {
                 break;
         }
 
-        auto img_fr = new ImageFrameMac(ns_img_rep, true, nullptr);
+        auto img_fr = new ImageFrameMac(options, ns_img_rep, true, {});
         return GPtr<ImageFrame>(img_fr);
     }
 

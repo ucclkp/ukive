@@ -9,6 +9,8 @@
 
 #include "utils/mac/objc_utils.hpp"
 
+#include "ukive/graphics/byte_data.h"
+#include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/images/image_frame.h"
 #include "ukive/graphics/gref_count_impl.h"
 
@@ -23,7 +25,11 @@ namespace mac {
         public GRefCountImpl
     {
     public:
-        explicit ImageFrameMac(NSBitmapImageRep* img, bool already_flipped, uint8_t* buf);
+        explicit ImageFrameMac(
+            const ImageOptions& options,
+            NSBitmapImageRep* img,
+            bool already_flipped,
+            const GPtr<ByteData>& buf);
         ~ImageFrameMac();
 
         void setDpi(float dpi_x, float dpi_y) override;
@@ -32,15 +38,11 @@ namespace mac {
         SizeF getSize() const override;
         SizeU getPixelSize() const override;
 
-        bool copyPixels(size_t stride, void *pixels, size_t buf_size) override;
-        void* lockPixels() override;
-        void unlockPixels() override;
-
         bool alreadyFilpped() const;
         NSBitmapImageRep* getNative() const;
 
     private:
-        uint8_t* buf_;
+        GPtr<ByteData> buf_;
         bool already_flipped_;
         NSBitmapImageRep* img_;
     };

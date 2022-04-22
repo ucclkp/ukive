@@ -14,14 +14,18 @@
 namespace ukive {
 namespace mac {
 
-    ImageFrameMac::ImageFrameMac(NSBitmapImageRep* img, bool already_flipped, uint8_t* buf)
-        : img_(img),
+    ImageFrameMac::ImageFrameMac(
+        const ImageOptions& options,
+        NSBitmapImageRep* img,
+        bool already_flipped,
+        const GPtr<ByteData>& buf)
+        : ImageFrame(options),
+          img_(img),
           buf_(buf),
           already_flipped_(already_flipped) {}
 
     ImageFrameMac::~ImageFrameMac() {
         [img_ release];
-        delete buf_;
     }
 
     void ImageFrameMac::setDpi(float dpi_x, float dpi_y) {
@@ -54,17 +58,6 @@ namespace mac {
         return SizeU(
             utl::num_cast<unsigned int>(img_.pixelsWide),
             utl::num_cast<unsigned int>(img_.pixelsHigh));
-    }
-
-    bool ImageFrameMac::copyPixels(size_t stride, void *pixels, size_t buf_size) {
-        return false;
-    }
-
-    void* ImageFrameMac::lockPixels() {
-        return nullptr;
-    }
-
-    void ImageFrameMac::unlockPixels() {
     }
 
     bool ImageFrameMac::alreadyFilpped() const {
