@@ -15,6 +15,14 @@ namespace ukive {
     //  static
     GEcPtr<GPUTexture> GPUTexture::createShaderTex2D(
         uint32_t width, uint32_t height,
+        GPUDataFormat format, bool rt)
+    {
+        return createShaderTex2D(width, height, format, rt, 0, nullptr);
+    }
+
+    //  static
+    GEcPtr<GPUTexture> GPUTexture::createShaderTex2D(
+        uint32_t width, uint32_t height,
         GPUDataFormat format, bool rt,
         uint32_t stride, const void* data)
     {

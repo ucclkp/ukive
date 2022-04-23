@@ -7,11 +7,9 @@
 #ifndef UKIVE_GRAPHICS_WIN_WINDOW_BUFFER_WIN7_H_
 #define UKIVE_GRAPHICS_WIN_WINDOW_BUFFER_WIN7_H_
 
-#include <memory>
-
 #include "ukive/graphics/cyro_buffer.h"
 #include "ukive/graphics/images/image_options.h"
-#include "ukive/graphics/win/cyro_render_target_d2d.h"
+#include "ukive/graphics/win/native_rt_d2d.h"
 
 
 namespace ukive {
@@ -38,7 +36,7 @@ namespace win {
         Size getSize() const override;
         Size getPixelSize() const override;
 
-        CyroRenderTarget* getRT() const override;
+        const NativeRT* getNativeRT() const override;
         const ImageOptions& getImageOptions() const override;
 
     private:
@@ -55,7 +53,7 @@ namespace win {
         bool is_layered_ = false;
         ImageOptions img_options_;
         WindowImplWin* window_ = nullptr;
-        std::unique_ptr<CyroRenderTargetD2D> rt_;
+        NativeRTD2D nrt_;
         utl::win::ComPtr<IDXGISwapChain> swapchain_;
     };
 

@@ -121,6 +121,8 @@ namespace win {
                 //DLOG(Log::INFO) << "VSync normal. interval: " << real_interval << "us";
             }
 
+            cycler_.removeMessages(MSG_VSYNC);
+
             utl::Message msg;
             msg.id = MSG_VSYNC;
             msg.ui1 = after_ts;

@@ -9,10 +9,10 @@
 #include "utils/log.h"
 
 #include "ukive/graphics/canvas.h"
-#include "ukive/graphics/cyro_buffer.h"
-#include "ukive/graphics/win/cyro_renderer_d2d.h"
-#include "ukive/graphics/win/cyro_render_target_d2d.h"
 #include "ukive/graphics/colors/color.h"
+#include "ukive/graphics/cyro_buffer.h"
+#include "ukive/graphics/win/cyro_render_target_d2d.h"
+#include "ukive/graphics/win/native_rt_d2d.h"
 #include "ukive/text/text_custom_drawing.h"
 #include "ukive/text/win/dw_text_drawing_effect.h"
 #include "ukive/window/window_dpi_utils.h"
@@ -62,7 +62,7 @@ namespace win {
         }
 
         auto canvas = static_cast<Canvas*>(clientDrawingContext);
-        auto renderer = static_cast<CyroRendererD2D*>(canvas->getRenderer());
+        auto renderer = static_cast<CyroRenderTargetD2D*>(canvas->getRT());
 
         if (clientDrawingEffect) {
             utl::win::ComPtr<DWTextDrawingEffect> drawing_effect;
@@ -241,7 +241,8 @@ namespace win {
         }
 
         auto canvas = static_cast<Canvas*>(clientDrawingContext);
-        auto rt = static_cast<CyroRenderTargetD2D*>(canvas->getBuffer()->getRT())->getNative();
+        auto rt = static_cast<const NativeRTD2D*>(
+            canvas->getBuffer()->getNativeRT())->getNative();
 
         D2D1_MATRIX_3X2_F m;
         rt->GetTransform(&m);
@@ -274,7 +275,8 @@ namespace win {
         }
 
         auto canvas = static_cast<Canvas*>(clientDrawingContext);
-        auto rt = static_cast<CyroRenderTargetD2D*>(canvas->getBuffer()->getRT())->getNative();
+        auto rt = static_cast<const NativeRTD2D*>(
+            canvas->getBuffer()->getNativeRT())->getNative();
 
         rt->GetDpi(&x, &yUnused);
         *pixelsPerDip = x / kDefaultDpi;

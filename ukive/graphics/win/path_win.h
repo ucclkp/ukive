@@ -8,7 +8,10 @@
 #define UKIVE_GRAPHICS_WIN_PATH_WIN_H_
 
 #include "ukive/graphics/path.h"
-#include "ukive/graphics/win/directx_manager.h"
+
+#include "utils/memory/win/com_ptr.hpp"
+
+#include <d2d1.h>
 
 
 namespace ukive {

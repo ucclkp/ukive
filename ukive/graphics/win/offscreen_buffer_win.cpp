@@ -11,6 +11,7 @@
 
 #include "ukive/app/application.h"
 #include "ukive/graphics/images/image_options.h"
+#include "ukive/graphics/win/directx_manager.h"
 #include "ukive/graphics/win/gpu/d3d11/gpu_context_d3d11.h"
 #include "ukive/graphics/win/gpu/d3d11/gpu_texture_d3d11.h"
 #include "ukive/graphics/win/images/image_options_d2d_utils.h"
@@ -22,8 +23,7 @@ namespace ukive {
 namespace win {
 
     OffscreenBufferWin::OffscreenBufferWin()
-        : width_(0), height_(0),
-          rt_(std::make_unique<CyroRenderTargetD2D>()) {
+        : width_(0), height_(0) {
     }
 
     bool OffscreenBufferWin::onCreate(
@@ -58,7 +58,7 @@ namespace win {
             return GRet::Succeeded;
         }
 
-        if (rt_->getNative() && width == width_ && height == height_) {
+        if (nrt_.getNative() && width == width_ && height == height_) {
             return GRet::Succeeded;
         }
 
@@ -77,7 +77,7 @@ namespace win {
         case ImageDPIType::SPECIFIED:
             img_options_.dpi_x = dpi_x;
             img_options_.dpi_y = dpi_y;
-            rt_->getNative()->SetDpi(dpi_x, dpi_y);
+            nrt_.getNative()->SetDpi(dpi_x, dpi_y);
             break;
         default:
             break;
@@ -85,16 +85,16 @@ namespace win {
     }
 
     void OffscreenBufferWin::onDestroy() {
-        rt_->destroy();
+        nrt_.destroy();
         d3d_tex2d_.reset();
     }
 
     void OffscreenBufferWin::onBeginDraw() {
-        rt_->getNative()->BeginDraw();
+        nrt_.getNative()->BeginDraw();
     }
 
     GRet OffscreenBufferWin::onEndDraw() {
-        HRESULT hr = rt_->getNative()->EndDraw();
+        HRESULT hr = nrt_.getNative()->EndDraw();
         if (FAILED(hr)) {
             if (hr == D2DERR_RECREATE_TARGET) {
                 return GRet::Retry;
@@ -111,7 +111,7 @@ namespace win {
         auto tex2d_d3d = d3d_tex2d_.cast<GPUTexture2DD3D11>()->getNative();
 
         utl::win::ComPtr<ID2D1Bitmap> bitmap;
-        HRESULT hr = rt_->getNative()->CreateSharedBitmap(
+        HRESULT hr = nrt_.getNative()->CreateSharedBitmap(
             __uuidof(IDXGISurface), tex2d_d3d.cast<IDXGISurface>().get(), &bmp_prop, &bitmap);
         if (FAILED(hr)) {
             if (hr == DXGI_ERROR_DEVICE_REMOVED ||
@@ -147,8 +147,8 @@ namespace win {
         return size;
     }
 
-    CyroRenderTarget* OffscreenBufferWin::getRT() const {
-        return rt_.get();
+    const NativeRT* OffscreenBufferWin::getNativeRT() const {
+        return &nrt_;
     }
 
     const ImageOptions& OffscreenBufferWin::getImageOptions() const {
@@ -179,13 +179,13 @@ namespace win {
 
         d3d_tex2d_ = GPUTexture::createShaderTex2D(
             utl::num_cast<uint32_t>(width),
-            utl::num_cast<uint32_t>(height), format, true, 0, nullptr);
+            utl::num_cast<uint32_t>(height), format, true);
         if (!d3d_tex2d_) {
             LOG(Log::WARNING) << "Failed to create offscreen rt!";
             return false;
         }
 
-        auto tex2d_d3d = static_cast<GPUTexture2DD3D11*>(d3d_tex2d_.get())->getNative();
+        auto tex2d_d3d = d3d_tex2d_.cast<GPUTexture2DD3D11>()->getNative();
         auto dxgi_surface = tex2d_d3d.cast<IDXGISurface>();
         if (!dxgi_surface) {
             LOG(Log::WARNING) << "Failed to query DXGI surface.";
@@ -198,7 +198,7 @@ namespace win {
             return false;
         }
 
-        rt_->setNative(rt);
+        nrt_.setNative(rt);
         return true;
     }
 

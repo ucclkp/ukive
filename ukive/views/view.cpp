@@ -1856,23 +1856,6 @@ namespace ukive {
 
     void View::onContextChanged(const Context& context) {
         switch (context.getChanged()) {
-        case Context::DEV_LOST:
-        {
-            if (shadow_effect_) {
-                shadow_effect_->destroy();
-            }
-            break;
-        }
-
-        case Context::DEV_RESTORE:
-        {
-            if (shadow_effect_) {
-                shadow_effect_->initialize();
-                shadow_effect_->setRadius(shadow_radius_ * 2);
-            }
-            break;
-        }
-
         case Context::DPI_CHANGED:
         {
             if (Application::getOptions().is_auto_dpi_scale) {

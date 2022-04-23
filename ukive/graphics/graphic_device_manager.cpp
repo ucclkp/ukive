@@ -10,6 +10,7 @@
 #include "utils/platform_utils.h"
 
 #include "ukive/graphics/graphic_context_change_listener.h"
+#include "ukive/graphics/rebuildable.h"
 
 #ifdef OS_WINDOWS
 #include "ukive/graphics/win/directx_manager.h"
@@ -48,6 +49,24 @@ namespace ukive {
     void GraphicDeviceManager::notifyDeviceRestored() {
         for (auto listener : listeners_) {
             listener->onGraphDeviceRestored();
+        }
+    }
+
+    void GraphicDeviceManager::demolishRbs() {
+        std::lock_guard<std::recursive_mutex> lg(rb_sync_);
+        auto rb = rb_head_;
+        while (rb) {
+            rb->demolish();
+            rb = rb->getRbNext();
+        }
+    }
+
+    void GraphicDeviceManager::rebuildRbs() {
+        std::lock_guard<std::recursive_mutex> lg(rb_sync_);
+        auto rb = rb_head_;
+        while (rb) {
+            rb->rebuild();
+            rb = rb->getRbNext();
         }
     }
 

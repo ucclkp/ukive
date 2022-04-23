@@ -7,6 +7,7 @@
 #ifndef UKIVE_GRAPHIC_GRAPHIC_DEVICE_MANAGER_H_
 #define UKIVE_GRAPHIC_GRAPHIC_DEVICE_MANAGER_H_
 
+#include <mutex>
 #include <vector>
 
 #include "ukive/graphics/gpu/gpu_context.h"
@@ -15,6 +16,7 @@
 
 namespace ukive {
 
+    class Rebuildable;
     class GraphicContextChangeListener;
 
     class GraphicDeviceManager {
@@ -34,12 +36,22 @@ namespace ukive {
         void addListener(GraphicContextChangeListener* l);
         void removeListener(GraphicContextChangeListener* l);
 
-        void notifyDeviceLost();
-        void notifyDeviceRestored();
         void notifyHDRChanged(bool hdr);
         void notifyDPIChanged(float dpi_x, float dpi_y);
 
+        Rebuildable** getRbHead() { return &rb_head_; }
+        std::recursive_mutex* getRbSync() { return &rb_sync_; }
+
+    protected:
+        void notifyDeviceLost();
+        void notifyDeviceRestored();
+
+        void demolishRbs();
+        void rebuildRbs();
+
     private:
+        std::recursive_mutex rb_sync_;
+        Rebuildable* rb_head_ = nullptr;
         std::vector<GraphicContextChangeListener*> listeners_;
     };
 

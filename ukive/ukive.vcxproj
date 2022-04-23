@@ -249,8 +249,8 @@
     <ClInclude Include="graphics\colors\icc\types\icc_type_xyz.h" />
     <ClInclude Include="graphics\cursor.h" />
     <ClInclude Include="graphics\cyro_buffer.h" />
-    <ClInclude Include="graphics\cyro_renderer.h" />
     <ClInclude Include="graphics\cyro_render_target.h" />
+    <ClInclude Include="graphics\native_rt.h" />
     <ClInclude Include="graphics\dirty_region.h" />
     <ClInclude Include="graphics\display.h" />
     <ClInclude Include="graphics\display_manager.h" />
@@ -303,6 +303,7 @@
     <ClInclude Include="graphics\paint.h" />
     <ClInclude Include="graphics\path.h" />
     <ClInclude Include="graphics\point.hpp" />
+    <ClInclude Include="graphics\rebuildable.h" />
     <ClInclude Include="graphics\rect.hpp" />
     <ClInclude Include="graphics\render_node\render_node.h" />
     <ClInclude Include="graphics\render_node\render_tree.h" />
@@ -312,8 +313,8 @@
     <ClInclude Include="graphics\win\3d\assist_configure.h" />
     <ClInclude Include="graphics\win\3d\model_configure.h" />
     <ClInclude Include="graphics\win\colors\color_manager_win.h" />
-    <ClInclude Include="graphics\win\cyro_renderer_d2d.h" />
     <ClInclude Include="graphics\win\cyro_render_target_d2d.h" />
+    <ClInclude Include="graphics\win\native_rt_d2d.h" />
     <ClInclude Include="graphics\win\directx_manager.h" />
     <ClInclude Include="graphics\win\display_manager_win.h" />
     <ClInclude Include="graphics\win\display_win.h" />
@@ -542,7 +543,7 @@
     <ClCompile Include="graphics\colors\icc\types\icc_type_xyz.cpp" />
     <ClCompile Include="graphics\cursor.cpp" />
     <ClCompile Include="graphics\cyro_buffer.cpp" />
-    <ClCompile Include="graphics\cyro_renderer.cpp" />
+    <ClCompile Include="graphics\cyro_render_target.cpp" />
     <ClCompile Include="graphics\dirty_region.cpp" />
     <ClCompile Include="graphics\display.cpp" />
     <ClCompile Include="graphics\display_manager.cpp" />
@@ -572,6 +573,7 @@
     <ClCompile Include="graphics\matrix_2x3_f.cpp" />
     <ClCompile Include="graphics\paint.cpp" />
     <ClCompile Include="graphics\path.cpp" />
+    <ClCompile Include="graphics\rebuildable.cpp" />
     <ClCompile Include="graphics\render_node\render_node.cpp" />
     <ClCompile Include="graphics\render_node\render_tree.cpp" />
     <ClCompile Include="graphics\vsyncable.cpp" />
@@ -579,8 +581,8 @@
     <ClCompile Include="graphics\win\3d\assist_configure.cpp" />
     <ClCompile Include="graphics\win\3d\model_configure.cpp" />
     <ClCompile Include="graphics\win\colors\color_manager_win.cpp" />
-    <ClCompile Include="graphics\win\cyro_renderer_d2d.cpp" />
     <ClCompile Include="graphics\win\cyro_render_target_d2d.cpp" />
+    <ClCompile Include="graphics\win\native_rt_d2d.cpp" />
     <ClCompile Include="graphics\win\directx_manager.cpp" />
     <ClCompile Include="graphics\win\display_manager_win.cpp" />
     <ClCompile Include="graphics\win\display_win.cpp" />

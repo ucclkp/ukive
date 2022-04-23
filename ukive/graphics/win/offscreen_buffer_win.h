@@ -4,16 +4,14 @@
 // This program is licensed under GPLv3 license that can be
 // found in the LICENSE file.
 
-#ifndef UKIVE_GRAPHICS_OFFSCREEN_BUFFER_H_
-#define UKIVE_GRAPHICS_OFFSCREEN_BUFFER_H_
-
-#include <memory>
+#ifndef UKIVE_GRAPHICS_WIN_OFFSCREEN_BUFFER_WIN_H_
+#define UKIVE_GRAPHICS_WIN_OFFSCREEN_BUFFER_WIN_H_
 
 #include "ukive/graphics/cyro_buffer.h"
+#include "ukive/graphics/gpu/gpu_texture.h"
 #include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/images/image_options.h"
-#include "ukive/graphics/win/cyro_render_target_d2d.h"
-#include "ukive/graphics/win/directx_manager.h"
+#include "ukive/graphics/win/native_rt_d2d.h"
 
 
 namespace ukive {
@@ -40,7 +38,7 @@ namespace win {
         Size getSize() const override;
         Size getPixelSize() const override;
 
-        CyroRenderTarget* getRT() const override;
+        const NativeRT* getNativeRT() const override;
         const ImageOptions& getImageOptions() const override;
 
         GPtr<GPUTexture> getTexture() const;
@@ -51,10 +49,10 @@ namespace win {
         int width_, height_;
         ImageOptions img_options_;
         GPtr<GPUTexture> d3d_tex2d_;
-        std::unique_ptr<CyroRenderTargetD2D> rt_;
+        NativeRTD2D nrt_;
     };
 
 }
 }
 
-#endif  // UKIVE_GRAPHICS_OFFSCREEN_BUFFER_H_
+#endif  // UKIVE_GRAPHICS_WIN_OFFSCREEN_BUFFER_WIN_H_

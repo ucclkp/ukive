@@ -10,11 +10,12 @@
 #include <filesystem>
 #include <stack>
 
-#include "ukive/window/window.h"
+#include "ukive/graphics/images/image_frame.h"
 #include "ukive/views/list/list_item.h"
 #include "ukive/views/list/list_view.h"
 #include "ukive/views/list/list_item_event_router.h"
 #include "ukive/views/click_listener.h"
+#include "ukive/window/window.h"
 
 #include "shell/gallery/thumbnail_fetcher.h"
 
@@ -24,7 +25,6 @@ namespace ukive {
     class ListView;
     class TextView;
     class ImageView;
-    class ImageFrame;
 }
 
 namespace shell {

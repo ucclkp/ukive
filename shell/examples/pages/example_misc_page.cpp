@@ -6,8 +6,12 @@
 
 #include "example_misc_page.h"
 
+#include "utils/math/algebra/matrix.hpp"
+#include "utils/math/algebra/optimization.hpp"
+#include "utils/math/algebra/dynamic_optimization.hpp"
 #include "utils/strings/string_utils.hpp"
 
+#include "ukive/animation/interpolator.h"
 #include "ukive/app/application.h"
 #include "ukive/graphics/canvas.h"
 #include "ukive/views/button.h"
@@ -30,17 +34,12 @@
 #include "ukive/elements/color_element.h"
 #include "ukive/elements/texteditor_element.h"
 #include "ukive/graphics/colors/color.h"
-#include "ukive/animation/interpolator.h"
 #include "ukive/window/window.h"
-
-#include "shell/resources/necro_resources_id.h"
-
-#include "utils/math/algebra/optimization.hpp"
-#include "utils/math/algebra/dynamic_optimization.hpp"
-
 #include "ukive/graphics/colors/color_manager.h"
 #include "ukive/graphics/colors/ucmm.h"
-#include "utils/math/algebra/matrix.hpp"
+#include "ukive/system/dialogs/sys_message_dialog.h"
+
+#include "shell/resources/necro_resources_id.h"
 
 #define BEZIER_BASE_VELOCITY  20000
 #define BEZIER_BASE_TIME      6
@@ -287,6 +286,7 @@ namespace shell {
 
     void ExampleMiscPage::onClick(ukive::View* v) {
         if (test_button_ == v) {
+            //ukive::SysMessageDialog::show(getWindow(), u"Title", u"Text", 0);
             //test_button_->setEnabled(false);
             if (director_.isRunning()) {
                 director_.stop();

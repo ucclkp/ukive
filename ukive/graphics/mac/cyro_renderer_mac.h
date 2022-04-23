@@ -11,7 +11,7 @@
 
 #include "utils/mac/objc_utils.hpp"
 
-#include "ukive/graphics/cyro_renderer.h"
+#include "ukive/graphics/cyro_render_target.h"
 #include "ukive/graphics/images/image_frame.h"
 #include "ukive/graphics/matrix_2x3_f.h"
 
@@ -19,10 +19,10 @@
 namespace ukive {
 namespace mac {
 
-    class CyroRendererMac : public CyroRenderer {
+    class CyroRenderTargetMac : public CyroRenderTarget {
     public:
-        CyroRendererMac();
-        ~CyroRendererMac();
+        CyroRenderTargetMac();
+        ~CyroRenderTargetMac();
 
         bool bind(CyroBuffer* buffer, bool owned) override;
         void unbind() override;

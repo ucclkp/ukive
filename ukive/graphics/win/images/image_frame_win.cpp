@@ -9,8 +9,6 @@
 #include "utils/log.h"
 #include "utils/numbers.hpp"
 
-#include "ukive/app/application.h"
-#include "ukive/graphics/win/directx_manager.h"
 #include "ukive/graphics/win/images/image_options_d2d_utils.h"
 #include "ukive/window/window_dpi_utils.h"
 
@@ -26,20 +24,23 @@ namespace win {
         : ImageFrame(options),
           raw_params_(raw_params),
           wic_src_(src),
-          native_bitmap_(bmp)
+          d2d_bmp_(bmp)
     {
         ubassert(bmp);
         initDpiValues();
-
-        dev_guard_ = static_cast<DirectXManager*>(
-            Application::getGraphicDeviceManager())->getGPUDeviceGuard();
     }
 
     ImageFrameWin::~ImageFrameWin() {}
 
+    void ImageFrameWin::onDemolish() {
+        d2d_bmp_.reset();
+    }
+
+    void ImageFrameWin::onRebuild() {}
+
     void ImageFrameWin::initDpiValues() {
-        if (native_bitmap_) {
-            native_bitmap_->GetDpi(&dpi_x_, &dpi_y_);
+        if (d2d_bmp_) {
+            d2d_bmp_->GetDpi(&dpi_x_, &dpi_y_);
             return;
         }
 
@@ -60,16 +61,16 @@ namespace win {
     }
 
     SizeF ImageFrameWin::getSize() const {
-        if (native_bitmap_) {
-            auto size(native_bitmap_->GetSize());
+        if (d2d_bmp_) {
+            auto size(d2d_bmp_->GetSize());
             return SizeF(size.width, size.height);
         }
         return SizeF(0, 0);
     }
 
     SizeU ImageFrameWin::getPixelSize() const {
-        if (native_bitmap_) {
-            auto size(native_bitmap_->GetPixelSize());
+        if (d2d_bmp_) {
+            auto size(d2d_bmp_->GetPixelSize());
             return SizeU(
                 utl::num_cast<SizeU::type>(size.width),
                 utl::num_cast<SizeU::type>(size.height));
@@ -78,12 +79,7 @@ namespace win {
     }
 
     bool ImageFrameWin::prepareForRender(ID2D1RenderTarget* rt) {
-        if (!native_bitmap_) {
-            return false;
-        }
-
-        if (dev_guard_.expired()) {
-            native_bitmap_.reset();
+        if (!d2d_bmp_) {
             if (wic_src_) {
                 D2D1_BITMAP_PROPERTIES props =
                     D2D1::BitmapProperties(D2D1::PixelFormat(), dpi_x_, dpi_y_);
@@ -93,7 +89,7 @@ namespace win {
                 if (FAILED(hr)) {
                     return false;
                 }
-                native_bitmap_ = d2d_bmp;
+                d2d_bmp_ = d2d_bmp;
             } else if (raw_params_.raw_data) {
                 auto prop = mapBitmapProps(getOptions());
 
@@ -105,36 +101,33 @@ namespace win {
                 if (FAILED(hr)) {
                     return false;
                 }
-                native_bitmap_ = d2d_bmp;
+                d2d_bmp_ = d2d_bmp;
             } else {
                 return false;
             }
-
-            dev_guard_ = static_cast<DirectXManager*>(
-                Application::getGraphicDeviceManager())->getGPUDeviceGuard();
             return true;
         }
 
         float dpi_x, dpi_y;
-        native_bitmap_->GetDpi(&dpi_x, &dpi_y);
+        d2d_bmp_->GetDpi(&dpi_x, &dpi_y);
         if (!utl::is_num_equal(dpi_x, dpi_x_) || !utl::is_num_equal(dpi_y, dpi_y_)) {
             D2D1_BITMAP_PROPERTIES bmp_prop =
                 D2D1::BitmapProperties(D2D1::PixelFormat(), dpi_x_, dpi_y_);
 
             utl::win::ComPtr<ID2D1Bitmap> new_bmp;
             HRESULT hr = rt->CreateSharedBitmap(
-                IID_PPV_ARGS(&native_bitmap_), &bmp_prop, &new_bmp);
+                IID_PPV_ARGS(&d2d_bmp_), &bmp_prop, &new_bmp);
             if (FAILED(hr)) {
                 return false;
             }
-            native_bitmap_ = new_bmp;
+            d2d_bmp_ = new_bmp;
         }
 
         return true;
     }
 
     utl::win::ComPtr<ID2D1Bitmap> ImageFrameWin::getNative() const {
-        return native_bitmap_;
+        return d2d_bmp_;
     }
 
 }

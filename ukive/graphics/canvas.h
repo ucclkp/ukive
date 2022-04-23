@@ -25,14 +25,15 @@ namespace ukive {
     class Window;
     class CyroBuffer;
     class TextLayout;
-    class CyroRenderer;
+    class CyroRenderTarget;
     class OffscreenBuffer;
     class ImageOptions;
+    class GPUTexture;
 
     class Canvas {
     public:
         Canvas(int width, int height, const ImageOptions& options);
-        explicit Canvas(const std::shared_ptr<CyroRenderer>& renderer);
+        explicit Canvas(CyroRenderTarget* rt);
         ~Canvas();
 
         GPtr<ImageFrame> createImage(const GPtr<LcImageFrame>& frame);
@@ -46,12 +47,17 @@ namespace ukive {
             int width, int height,
             const GPtr<ByteData>& pixel_data, size_t stride,
             const ImageOptions& options);
+        GPtr<ImageFrame> createImage(const GPtr<GPUTexture>& tex2d);
+        GPtr<ImageFrame> createImage(
+            const GPtr<GPUTexture>& tex2d, const ImageOptions& options);
 
         void setOpacity(float opacity);
         float getOpacity() const;
 
         void clear();
         void clear(const Color& color);
+
+        bool isValid() const;
 
         void beginDraw();
         GRet endDraw();
@@ -64,7 +70,9 @@ namespace ukive {
 
         int getWidth() const;
         int getHeight() const;
-        CyroRenderer* getRenderer() const;
+        Size getSize() const;
+        const ImageOptions& getImageOptions() const;
+        CyroRenderTarget* getRT() const;
         CyroBuffer* getBuffer() const;
         GPtr<ImageFrame> extractImage() const;
         GPtr<ImageFrame> extractImage(const ImageOptions& options) const;
@@ -128,7 +136,7 @@ namespace ukive {
             float x, float y, TextLayout* layout, const Color& color);
 
     private:
-        std::shared_ptr<CyroRenderer> renderer_;
+        CyroRenderTarget* rt_ = nullptr;
     };
 
 }

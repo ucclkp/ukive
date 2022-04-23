@@ -14,6 +14,7 @@
 #include "ukive/graphics/win/offscreen_buffer_win.h"
 #include "ukive/graphics/win/images/image_frame_win.h"
 #include "ukive/graphics/canvas.h"
+#include "ukive/graphics/graphic_device_manager.h"
 #include "ukive/resources/resource_manager.h"
 #include "ukive/window/window.h"
 
@@ -137,22 +138,14 @@ namespace win {
             return true;
         }
 
-        auto buffer = c->getBuffer();
-        if (!buffer || !target_tex2d_) {
-            ubassert(false);
-            return false;
-        }
-
-        auto rt = buffer->getRT();
-        if (!rt) {
+        if (!target_tex2d_) {
             ubassert(false);
             return false;
         }
 
         render();
 
-        auto image =
-            rt->createSharedImageFrame(target_tex2d_, c->getBuffer()->getImageOptions());
+        auto image = c->createImage(target_tex2d_);
         if (!image) {
             return false;
         }
@@ -386,7 +379,7 @@ namespace win {
             format = GPUDataFormat::B8G8B8R8_UNORM;
         }
 
-        tex = GPUTexture::createShaderTex2D(width_, height_, format, true, 0, nullptr);
+        tex = GPUTexture::createShaderTex2D(width_, height_, format, true);
         if (!tex) {
             return false;
         }

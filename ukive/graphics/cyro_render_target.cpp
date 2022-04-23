@@ -4,12 +4,12 @@
 // This program is licensed under GPLv3 license that can be
 // found in the LICENSE file.
 
-#include "ukive/graphics/cyro_renderer.h"
+#include "ukive/graphics/cyro_render_target.h"
 
 #include "utils/platform_utils.h"
 
 #ifdef OS_WINDOWS
-#include "ukive/graphics/win/cyro_renderer_d2d.h"
+#include "ukive/graphics/win/cyro_render_target_d2d.h"
 #elif defined OS_MAC
 #include "ukive/graphics/mac/cyro_renderer_mac.h"
 #endif
@@ -18,11 +18,11 @@
 namespace ukive {
 
     // static
-    CyroRenderer* CyroRenderer::create() {
+    CyroRenderTarget* CyroRenderTarget::create() {
 #ifdef OS_WINDOWS
-        return new win::CyroRendererD2D();
+        return new win::CyroRenderTargetD2D();
 #elif defined OS_MAC
-        return new mac::CyroRendererMac();
+        return new mac::CyroRenderTargetMac();
 #endif
     }
 

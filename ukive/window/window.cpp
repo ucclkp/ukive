@@ -27,7 +27,7 @@
 #include "ukive/graphics/images/image_options.h"
 #include "ukive/graphics/graphic_device_manager.h"
 #include "ukive/graphics/cyro_buffer.h"
-#include "ukive/graphics/cyro_renderer.h"
+#include "ukive/graphics/cyro_render_target.h"
 #include "ukive/diagnostic/statistic_drawer.h"
 #include "ukive/views/size_info.h"
 #include "ukive/window/window_listener.h"
@@ -635,10 +635,10 @@ namespace ukive {
         //options.pixel_format = ImagePixelFormat::HDR;
         buffer_->onCreate(0, 0, options);
 
-        renderer_.reset(CyroRenderer::create());
-        renderer_->bind(buffer_, false);
+        rt_ = CyroRenderTarget::create();
+        rt_->onCreate(buffer_);
 
-        canvas_ = new Canvas(renderer_);
+        canvas_ = new Canvas(rt_);
 
         root_layout_->dispatchAttachedToWindow(this);
     }
@@ -888,14 +888,10 @@ namespace ukive {
         context_.setChanged(Context::DEV_LOST);
         onUpdateContext();
 
-        Application::getGraphicDeviceManager()->notifyDeviceLost();
         Application::getGraphicDeviceManager()->recreate();
-        Application::getGraphicDeviceManager()->notifyDeviceRestored();
 
         context_.setChanged(Context::DEV_RESTORE);
         onUpdateContext();
-
-        requestDraw();
     }
 
     void Window::onMove(int x, int y) {
@@ -906,19 +902,17 @@ namespace ukive {
             return;
         }
 
-        renderer_->unbind();
+        if (rt_) {
+            GRet ret = rt_->onResize(0, 0);
+            if (ret == GRet::Failed) {
+                LOG(Log::ERR) << "Resize canvas failed.";
+                return;
+            }
 
-        GRet ret = buffer_->onResize(0, 0);
-        if (ret == GRet::Failed) {
-            LOG(Log::ERR) << "Resize canvas failed.";
-            return;
-        }
-
-        renderer_->bind(buffer_, false);
-
-        // 处理设备丢失
-        if (ret == GRet::Retry) {
-            processDeviceLost();
+            // 处理设备丢失
+            if (ret == GRet::Retry) {
+                processDeviceLost();
+            }
         }
 
         off_canvas_.reset();
@@ -973,12 +967,8 @@ namespace ukive {
 
         delete canvas_;
         canvas_ = nullptr;
-
-        buffer_->onDestroy();
-        delete buffer_;
+        rt_ = nullptr;
         buffer_ = nullptr;
-
-        renderer_.reset();
 
         delete labour_cycler_;
         labour_cycler_ = nullptr;
@@ -1162,7 +1152,9 @@ namespace ukive {
             Application::getOptions().is_auto_dpi_scale)
         {
             float dpi = context_.getDefaultDpi() * context_.getAutoScale();
-            buffer_->onDPIChange(dpi, dpi);
+            if (buffer_) {
+                buffer_->onDPIChange(dpi, dpi);
+            }
         }
 
         onContextChanged(context_);

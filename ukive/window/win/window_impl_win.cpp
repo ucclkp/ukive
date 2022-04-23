@@ -20,28 +20,28 @@
 #include "utils/time_utils.h"
 
 #include "ukive/app/application.h"
-#include "ukive/event/keyboard.h"
-#include "ukive/window/context.h"
-#include "ukive/window/window_dpi_utils.h"
-#include "ukive/window/window_types.h"
-#include "ukive/window/win/window_class_manager.h"
-#include "ukive/window/win/frame/non_client_frame.h"
-#include "ukive/window/win/frame/native_non_client_frame.h"
-#include "ukive/window/win/frame/custom_non_client_frame.h"
-#include "ukive/window/win/frame/custom_non_client_frame_win7.h"
 #include "ukive/event/input_event.h"
-#include "ukive/system/win/reg_manager.h"
-#include "ukive/system/win/win_app_bar.h"
-#include "ukive/system/win/win10_version.h"
-#include "ukive/system/win/dynamic_windows_api.h"
-#include "ukive/system/win/ui_utils_win.h"
+#include "ukive/event/keyboard.h"
 #include "ukive/graphics/dirty_region.h"
+#include "ukive/graphics/graphic_device_manager.h"
 #include "ukive/graphics/win/colors/color_manager_win.h"
-#include "ukive/graphics/win/directx_manager.h"
 #include "ukive/graphics/win/display_manager_win.h"
 #include "ukive/graphics/win/vsync_provider_win.h"
+#include "ukive/system/win/dynamic_windows_api.h"
+#include "ukive/system/win/reg_manager.h"
+#include "ukive/system/win/ui_utils_win.h"
+#include "ukive/system/win/win_app_bar.h"
+#include "ukive/system/win/win10_version.h"
+#include "ukive/window/context.h"
+#include "ukive/window/window_dpi_utils.h"
 #include "ukive/window/window_listener.h"
 #include "ukive/window/window_native_delegate.h"
+#include "ukive/window/window_types.h"
+#include "ukive/window/win/frame/custom_non_client_frame.h"
+#include "ukive/window/win/frame/custom_non_client_frame_win7.h"
+#include "ukive/window/win/frame/non_client_frame.h"
+#include "ukive/window/win/frame/native_non_client_frame.h"
+#include "ukive/window/win/window_class_manager.h"
 
 #define MI_WP_SIGNATURE  0xFF515700
 #define SIGNATURE_MASK   0xFFFFFF00
@@ -292,7 +292,7 @@ namespace win {
 
     void WindowImplWin::focus() {
         if (is_created_) {
-            ::SetFocus(hWnd_);
+            ::SetForegroundWindow(hWnd_);
         }
     }
 
@@ -1353,7 +1353,7 @@ namespace win {
          * 暂不同步外部的改变
          */
         return;
-        if (normal) {
+        /*if (normal) {
             is_resizable_ = ss->styleNew & WS_THICKFRAME;
             is_maximizable_ = ss->styleNew & WS_MAXIMIZEBOX;
             is_minimizable_ = ss->styleNew & WS_MINIMIZEBOX;
@@ -1361,7 +1361,7 @@ namespace win {
         if (ext) {
             is_show_in_task_bar_ = !(ss->styleNew & WS_EX_TOOLWINDOW);
             is_ignore_mouse_events_ = ss->styleNew & WS_EX_TRANSPARENT;
-        }
+        }*/
     }
 
     bool WindowImplWin::onDataCopy(ULONG_PTR id, DWORD size, void* data) {
@@ -2211,7 +2211,7 @@ namespace win {
              * 鼠标左键在标题栏上按下时，在 DefWindowProc 中进入嵌套消息循环前会先阻塞一段时间。
              * 为消除这段时间，给窗口发个 WM_MOUSEMOVE 消息，可以立刻进入嵌套消息循环。
              */
-            postMouseMove();
+            //postMouseMove();
             auto ret = ::DefWindowProcW(hWnd_, WM_SYSCOMMAND, wParam, lParam);
             pump->setInMoveModalLoop(false);
             return ret;
@@ -2303,6 +2303,9 @@ namespace win {
 
         *handled = false;
         display_ = DisplayWin::fromWindowImpl(this);
+
+        ::InvalidateRect(hWnd_, nullptr, FALSE);
+        ::UpdateWindow(hWnd_);
         return 0;
     }
 

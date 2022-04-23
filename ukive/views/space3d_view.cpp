@@ -16,7 +16,6 @@
 #include "ukive/graphics/cyro_buffer.h"
 #include "ukive/graphics/graphic_device_manager.h"
 #include "ukive/graphics/3d/scene.h"
-#include "ukive/graphics/cyro_render_target.h"
 #include "ukive/graphics/images/image_frame.h"
 #include "ukive/graphics/images/image_options.h"
 
@@ -114,7 +113,6 @@ namespace ukive {
     }
 
     bool Space3DView::createResources(int width, int height) {
-        auto cyro_rt = getWindow()->getCanvas()->getBuffer()->getRT();
         auto gpu_device = Application::getGraphicDeviceManager()->getGPUDevice();
 
         // RTT
@@ -139,9 +137,7 @@ namespace ukive {
             return false;
         }
 
-        auto dpi = getContext().getAutoScale() * getContext().getDefaultDpi();
-
-        content_img_ = cyro_rt->createSharedImageFrame(content_surface_, ImageOptions(dpi, dpi));
+        content_img_ = getWindow()->getCanvas()->createImage(content_surface_);
         if (!content_img_) {
             LOG(Log::WARNING) << "Failed to create content image";
             return false;

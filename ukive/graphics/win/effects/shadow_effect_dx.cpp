@@ -14,6 +14,7 @@
 #include "ukive/graphics/win/offscreen_buffer_win.h"
 #include "ukive/graphics/images/image_frame.h"
 #include "ukive/graphics/canvas.h"
+#include "ukive/graphics/graphic_device_manager.h"
 #include "ukive/resources/resource_manager.h"
 #include "ukive/window/window.h"
 
@@ -154,6 +155,40 @@ namespace win {
         is_initialized_ = false;
     }
 
+    void ShadowEffectGPU::onDemolish() {
+        vs_.reset();
+        input_layout_.reset();
+        vert_ps_.reset();
+        hori_ps_.reset();
+        const_buffer_.reset();
+        rasterizer_state_.reset();
+
+        bg_rtv_.reset();
+        bg_srv_.reset();
+        kernel_tex2d_.reset();
+        kernel_srv_.reset();
+        shadow1_tex2d_.reset();
+        shadow1_rtv_.reset();
+        shadow1_srv_.reset();
+        shadow2_tex2d_.reset();
+        shadow2_rtv_.reset();
+        shadow2_srv_.reset();
+        vert_buffer_.reset();
+        index_buffer_.reset();
+
+        width_ = 0;
+        height_ = 0;
+        is_initialized_ = false;
+    }
+
+    void ShadowEffectGPU::onRebuild() {
+        if (!initialize()) {
+            return;
+        }
+
+        setRadius(radius_);
+    }
+
     bool ShadowEffectGPU::generate(Canvas* c) {
         if (!is_initialized_) {
             return false;
@@ -163,26 +198,19 @@ namespace win {
             return true;
         }
 
-        auto buffer = c->getBuffer();
-        if (!buffer || !shadow2_tex2d_) {
-            assert(false);
-            return false;
-        }
-
-        auto rt = buffer->getRT();
-        if (!rt) {
+        if (!shadow2_tex2d_) {
             assert(false);
             return false;
         }
 
         render();
 
-        cache_ = rt->createSharedImageFrame(
-            shadow2_tex2d_, c->getBuffer()->getImageOptions());
-        if (!cache_) {
+        auto cache = c->createImage(shadow2_tex2d_);
+        if (!cache) {
             return false;
         }
 
+        cache_ = cache;
         return true;
     }
 
@@ -204,7 +232,10 @@ namespace win {
     }
 
     bool ShadowEffectGPU::setSize(int width, int height, bool hdr) {
-        if (width_ == width && height_ == height && is_hdr_enabled_ == hdr) {
+        if (width_ == width &&
+            height_ == height &&
+            is_hdr_enabled_ == hdr)
+        {
             return true;
         }
 
@@ -369,7 +400,9 @@ namespace win {
         if (!is_initialized_) {
             return false;
         }
-        if (radius == radius_ || radius <= 0) {
+        if ((radius == radius_ && kernel_tex2d_ && kernel_srv_) ||
+            radius <= 0)
+        {
             return true;
         }
 
@@ -438,7 +471,7 @@ namespace win {
             format = GPUDataFormat::B8G8B8R8_UNORM;
         }
 
-        tex = GPUTexture::createShaderTex2D(width_, height_, format, true, 0, nullptr);
+        tex = GPUTexture::createShaderTex2D(width_, height_, format, true);
         if (!tex) {
             return false;
         }

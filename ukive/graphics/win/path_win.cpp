@@ -9,6 +9,7 @@
 #include "utils/log.h"
 
 #include "ukive/app/application.h"
+#include "ukive/graphics/win/directx_manager.h"
 
 
 namespace ukive {

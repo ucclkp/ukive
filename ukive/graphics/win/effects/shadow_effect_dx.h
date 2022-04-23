@@ -15,6 +15,7 @@
 #include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/gpu/gpu_shader.h"
 #include "ukive/graphics/gpu/gpu_types.h"
+#include "ukive/graphics/rebuildable.h"
 #include "ukive/window/context.h"
 
 
@@ -30,7 +31,10 @@ namespace ukive {
 
 namespace win {
 
-    class ShadowEffectGPU : public ShadowEffect {
+    class ShadowEffectGPU :
+        public ShadowEffect,
+        public Rebuildable
+    {
     public:
         explicit ShadowEffectGPU(Context context);
         ~ShadowEffectGPU();
@@ -48,6 +52,10 @@ namespace win {
 
         bool setRadius(int radius) override;
         int getRadius() const override;
+
+    protected:
+        void onDemolish() override;
+        void onRebuild() override;
 
     private:
         struct ConstBuffer {

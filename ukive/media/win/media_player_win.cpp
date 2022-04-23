@@ -25,7 +25,6 @@
 #include "ukive/graphics/canvas.h"
 #include "ukive/graphics/cyro_buffer.h"
 #include "ukive/graphics/images/image_options.h"
-#include "ukive/graphics/win/cyro_render_target_d2d.h"
 #include "ukive/graphics/win/images/image_frame_win.h"
 #include "ukive/window/window.h"
 
@@ -350,8 +349,7 @@ namespace win {
 
         video_texture_ = device->openSharedTexture2D(reinterpret_cast<intptr_t>(shared));
         if (video_texture_) {
-            auto rt = window_->getCanvas()->getBuffer()->getRT();
-            video_frame_ = rt->createSharedImageFrame(
+            video_frame_ = window_->getCanvas()->createImage(
                 video_texture_,
                 ImageOptions(ImagePixelFormat::B8G8R8A8_UNORM, ImageAlphaMode::IGNORED));
         }

@@ -13,6 +13,7 @@
 #include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/gref_count_impl.h"
 #include "ukive/graphics/images/image_frame.h"
+#include "ukive/graphics/rebuildable.h"
 
 #include <d2d1.h>
 #include <wincodec.h>
@@ -26,7 +27,8 @@ namespace win {
 
     class ImageFrameWin :
         public ImageFrame,
-        public GRefCountImpl
+        public GRefCountImpl,
+        public Rebuildable
     {
     public:
         struct ImageRawParams {
@@ -53,15 +55,18 @@ namespace win {
 
         utl::win::ComPtr<ID2D1Bitmap> getNative() const;
 
+    protected:
+        void onDemolish() override;
+        void onRebuild() override;
+
     private:
         void initDpiValues();
 
         float dpi_x_ = 0;
         float dpi_y_ = 0;
         ImageRawParams raw_params_;
-        std::weak_ptr<int> dev_guard_;
         utl::win::ComPtr<IWICBitmapSource> wic_src_;
-        utl::win::ComPtr<ID2D1Bitmap> native_bitmap_;
+        utl::win::ComPtr<ID2D1Bitmap> d2d_bmp_;
     };
 
 }

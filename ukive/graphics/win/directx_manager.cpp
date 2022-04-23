@@ -82,7 +82,6 @@ namespace win {
             return false;
         }
 
-        dev_guard_ = std::make_shared<int>(0);
         return true;
     }
 
@@ -92,13 +91,16 @@ namespace win {
             return true;
         }
 
-        shutdownDevice();
+        notifyDeviceLost();
+        demolishRbs();
 
+        shutdownDevice();
         if (!initDevice()) {
             return false;
         }
 
-        dev_guard_ = std::make_shared<int>(0);
+        rebuildRbs();
+        notifyDeviceRestored();
         return true;
     }
 
@@ -242,9 +244,10 @@ namespace win {
     }
 
     void DirectXManager::shutdownDevice() {
+        gpu_device_.reset();
+        gpu_context_.reset();
         d3d_devicecontext_.reset();
         d3d_device_.reset();
-
         dxgi_device_.reset();
     }
 

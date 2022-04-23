@@ -75,13 +75,12 @@ namespace ukive {
         if (has_content) {
             // 绘制底色、alpha 和 ripple。
             if (!content_off_ ||
-                content_off_->getWidth() != bound.width() ||
-                content_off_->getHeight() != bound.height() ||
-                content_off_->getBuffer()->getImageOptions() != canvas->getBuffer()->getImageOptions())
+                content_off_->getSize() != bound.size() ||
+                content_off_->getImageOptions() != canvas->getImageOptions())
             {
                 content_off_ = std::make_unique<Canvas>(
                     bound.width(), bound.height(),
-                    canvas->getBuffer()->getImageOptions());
+                    canvas->getImageOptions());
             }
 
             content_off_->beginDraw();
@@ -112,13 +111,12 @@ namespace ukive {
             } else {
                 // 绘制 mask，以该 mask 确定背景形状以及 ripple 的扩散边界。
                 if (!mask_off_ ||
-                    mask_off_->getWidth() != bound.width() ||
-                    mask_off_->getHeight() != bound.height() ||
-                    mask_off_->getBuffer()->getImageOptions() != canvas->getBuffer()->getImageOptions())
+                    mask_off_->getSize() != bound.size() ||
+                    mask_off_->getImageOptions() != canvas->getImageOptions())
                 {
                     mask_off_ = std::make_unique<Canvas>(
                         bound.width(), bound.height(),
-                        canvas->getBuffer()->getImageOptions());
+                        canvas->getImageOptions());
                 }
                 mask_off_->beginDraw();
                 mask_off_->clear();

@@ -32,7 +32,7 @@ namespace ukive {
     class WindowNative;
     class StatisticDrawer;
     class WindowBuffer;
-    class CyroRenderer;
+    class CyroRenderTarget;
     class TitleBar;
     class RootLayout;
     class ContextMenu;
@@ -230,7 +230,7 @@ namespace ukive {
 
         Canvas* canvas_;
         WindowBuffer* buffer_ = nullptr;
-        std::shared_ptr<CyroRenderer> renderer_;
+        CyroRenderTarget* rt_ = nullptr;
 
         View* mouse_holder_;
         View* touch_holder_;

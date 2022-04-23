@@ -21,16 +21,16 @@
 namespace ukive {
 namespace mac {
 
-    CyroRendererMac::CyroRendererMac() {}
+    CyroRenderTargetMac::CyroRenderTargetMac() {}
 
-    CyroRendererMac::~CyroRendererMac() {
+    CyroRenderTargetMac::~CyroRenderTargetMac() {
         if (is_owned_buffer_ && buffer_) {
             buffer_->onDestroy();
             delete buffer_;
         }
     }
 
-    bool CyroRendererMac::bind(CyroBuffer* buffer, bool owned) {
+    bool CyroRenderTargetMac::bind(CyroBuffer* buffer, bool owned) {
         if (!buffer) {
             return false;
         }
@@ -40,14 +40,14 @@ namespace mac {
         return true;
     }
 
-    void CyroRendererMac::unbind() {
+    void CyroRenderTargetMac::unbind() {
     }
 
-    CyroBuffer* CyroRendererMac::getBuffer() const {
+    CyroBuffer* CyroRenderTargetMac::getBuffer() const {
         return buffer_;
     }
 
-    GPtr<ImageFrame> CyroRendererMac::createImage(const GPtr<LcImageFrame>& img) {
+    GPtr<ImageFrame> CyroRenderTargetMac::createImage(const GPtr<LcImageFrame>& img) {
         if (!img) {
             return {};
         }
@@ -69,13 +69,13 @@ namespace mac {
         return GPtr<ImageFrame>(image_fr);
     }
 
-    GPtr<ImageFrame> CyroRendererMac::createImage(
+    GPtr<ImageFrame> CyroRenderTargetMac::createImage(
         int width, int height, const ImageOptions& options)
     {
         return createImage(width, height, {}, 0, options);
     }
 
-    GPtr<ImageFrame> CyroRendererMac::createImage(
+    GPtr<ImageFrame> CyroRenderTargetMac::createImage(
         int width, int height,
         const GPtr<ByteData>& pixel_data, size_t stride,
         const ImageOptions& options)
@@ -152,7 +152,7 @@ namespace mac {
         return GPtr<ImageFrame>(image_fr);
     }
 
-    void CyroRendererMac::setOpacity(float opacity) {
+    void CyroRenderTargetMac::setOpacity(float opacity) {
         if (opacity == opacity_) {
             return;
         }
@@ -160,28 +160,28 @@ namespace mac {
         opacity_ = opacity;
     }
 
-    float CyroRendererMac::getOpacity() const {
+    float CyroRenderTargetMac::getOpacity() const {
         return opacity_;
     }
 
-    Matrix2x3F CyroRendererMac::getMatrix() const {
+    Matrix2x3F CyroRenderTargetMac::getMatrix() const {
         return matrix_;
     }
 
-    void CyroRendererMac::onBeginDraw() {
+    void CyroRenderTargetMac::onBeginDraw() {
         if (buffer_) {
             buffer_->onBeginDraw();
         }
     }
 
-    GRet CyroRendererMac::onEndDraw() {
+    GRet CyroRenderTargetMac::onEndDraw() {
         if (!buffer_) {
             return GRet::Failed;
         }
         return buffer_->onEndDraw();
     }
 
-    void CyroRendererMac::clear() {
+    void CyroRenderTargetMac::clear() {
         if (buffer_) {
             auto size = buffer_->getSize();
             [[NSColor colorWithRed:0 green:0 blue:0 alpha:0] setFill];
@@ -189,7 +189,7 @@ namespace mac {
         }
     }
 
-    void CyroRendererMac::clear(const Color &c) {
+    void CyroRenderTargetMac::clear(const Color &c) {
         if (buffer_) {
             auto size = buffer_->getSize();
             [[NSColor colorWithRed:c.r green:c.g blue:c.b alpha:c.a] setFill];
@@ -197,22 +197,22 @@ namespace mac {
         }
     }
 
-    void CyroRendererMac::pushClip(const RectF &rect) {
+    void CyroRenderTargetMac::pushClip(const RectF &rect) {
         [NSGraphicsContext saveGraphicsState];
         NSRectClip(NSMakeRect(rect.left, rect.top, rect.width(), rect.height()));
     }
 
-    void CyroRendererMac::popClip() {
+    void CyroRenderTargetMac::popClip() {
         [NSGraphicsContext restoreGraphicsState];
     }
 
-    void CyroRendererMac::save() {
+    void CyroRenderTargetMac::save() {
         [NSGraphicsContext saveGraphicsState];
         matrix_stack_.push(matrix_);
         opacity_stack_.push(opacity_);
     }
 
-    void CyroRendererMac::restore() {
+    void CyroRenderTargetMac::restore() {
         [NSGraphicsContext restoreGraphicsState];
         matrix_ = matrix_stack_.top();
         matrix_stack_.pop();
@@ -221,7 +221,7 @@ namespace mac {
         opacity_stack_.pop();
     }
 
-    void CyroRendererMac::scale(float sx, float sy, const PointF &c) {
+    void CyroRenderTargetMac::scale(float sx, float sy, const PointF &c) {
         matrix_.preScale(sx, sy, c.x(), c.y());
 
         auto xform = [NSAffineTransform transform];
@@ -231,7 +231,7 @@ namespace mac {
         [xform concat];
     }
 
-    void CyroRendererMac::rotate(float angle, const PointF &c) {
+    void CyroRenderTargetMac::rotate(float angle, const PointF &c) {
         matrix_.preRotate(angle, c.x(), c.y());
 
         auto xform = [NSAffineTransform transform];
@@ -241,7 +241,7 @@ namespace mac {
         [xform concat];
     }
 
-    void CyroRendererMac::translate(float dx, float dy) {
+    void CyroRenderTargetMac::translate(float dx, float dy) {
         matrix_.preTranslate(dx, dy);
 
         auto xform = [NSAffineTransform transform];
@@ -249,7 +249,7 @@ namespace mac {
         [xform concat];
     }
 
-    void CyroRendererMac::concat(const Matrix2x3F &matrix) {
+    void CyroRenderTargetMac::concat(const Matrix2x3F &matrix) {
         matrix_ = matrix_ * matrix;
 
         auto xform = [NSAffineTransform transform];
@@ -260,7 +260,7 @@ namespace mac {
         [xform concat];
     }
 
-    void CyroRendererMac::drawPoint(const PointF &p, const Paint &paint) {
+    void CyroRenderTargetMac::drawPoint(const PointF &p, const Paint &paint) {
         auto color = paint.getColor();
         auto ns_color = [NSColor colorWithRed:color.r
                                         green:color.g
@@ -272,7 +272,7 @@ namespace mac {
         NSRectFill(ns_rect);
     }
 
-    void CyroRendererMac::drawLine(
+    void CyroRenderTargetMac::drawLine(
         const PointF &start, const PointF &end, const Paint &paint)
     {
         auto color = paint.getColor();
@@ -291,7 +291,7 @@ namespace mac {
         [path stroke];
     }
 
-    void CyroRendererMac::drawRect(const RectF &rect, const Paint &paint) {
+    void CyroRenderTargetMac::drawRect(const RectF &rect, const Paint &paint) {
         auto color = paint.getColor();
         auto ns_rect = NSMakeRect(rect.left, rect.top, rect.width(), rect.height());
         auto ns_color = [NSColor colorWithRed:color.r
@@ -329,7 +329,7 @@ namespace mac {
         }
     }
 
-    void CyroRendererMac::drawRoundRect(
+    void CyroRenderTargetMac::drawRoundRect(
         const RectF &rect, float radius, const Paint &paint)
     {
         auto color = paint.getColor();
@@ -372,7 +372,7 @@ namespace mac {
         }
     }
 
-    void CyroRendererMac::drawCircle(const PointF &c, float radius, const Paint &paint) {
+    void CyroRenderTargetMac::drawCircle(const PointF &c, float radius, const Paint &paint) {
         auto color = paint.getColor();
         auto ns_color = [NSColor colorWithRed:color.r
                                         green:color.g
@@ -411,7 +411,7 @@ namespace mac {
         }
     }
 
-    void CyroRendererMac::drawEllipse(
+    void CyroRenderTargetMac::drawEllipse(
         const PointF &c, float rx, float ry, const Paint &paint)
     {
         auto color = paint.getColor();
@@ -452,7 +452,7 @@ namespace mac {
         }
     }
 
-    void CyroRendererMac::drawPath(const Path *path, const Paint &paint) {
+    void CyroRenderTargetMac::drawPath(const Path *path, const Paint &paint) {
         auto color = paint.getColor();
         auto ns_color = [NSColor colorWithRed:color.r
                                         green:color.g
@@ -490,7 +490,7 @@ namespace mac {
         }
     }
 
-    void CyroRendererMac::drawImage(
+    void CyroRenderTargetMac::drawImage(
         const RectF &src, const RectF &dst, float opacity, ImageFrame* img)
     {
         auto img_fr = static_cast<const ImageFrameMac*>(img);
@@ -505,7 +505,7 @@ namespace mac {
                      hints:nil];
     }
 
-    void CyroRendererMac::fillOpacityMask(
+    void CyroRenderTargetMac::fillOpacityMask(
         float width, float height, ImageFrame* mask, ImageFrame* content)
     {
         auto mask_img = static_cast<const ImageFrameMac*>(mask);
@@ -528,7 +528,7 @@ namespace mac {
         CGContextRestoreGState(context);
     }
 
-    void CyroRendererMac::drawText(
+    void CyroRenderTargetMac::drawText(
         const std::u16string_view &text,
         const std::u16string_view &font_name, float font_size,
         const RectF &rect, const Paint &paint)
@@ -552,7 +552,7 @@ namespace mac {
         [ns_str release];
     }
 
-    void CyroRendererMac::drawTextLayout(
+    void CyroRenderTargetMac::drawTextLayout(
         float x, float y,
         TextLayout *layout, const Paint &paint)
     {

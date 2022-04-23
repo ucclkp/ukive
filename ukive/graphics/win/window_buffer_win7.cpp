@@ -14,14 +14,14 @@
 #include "ukive/graphics/images/image_frame.h"
 #include "ukive/graphics/images/image_options.h"
 #include "ukive/graphics/win/images/lc_image_frame_win.h"
+#include "ukive/graphics/win/directx_manager.h"
 
 
 namespace ukive {
 namespace win {
 
     WindowBufferWin7::WindowBufferWin7(WindowImplWin* w)
-        : window_(w),
-          rt_(std::make_unique<CyroRenderTargetD2D>()) {}
+        : window_(w) {}
 
     bool WindowBufferWin7::onCreate(
         int width, int height, const ImageOptions& options)
@@ -71,7 +71,7 @@ namespace win {
         case ImageDPIType::SPECIFIED:
             img_options_.dpi_x = dpi_x;
             img_options_.dpi_y = dpi_y;
-            rt_->getNative()->SetDpi(dpi_x, dpi_y);
+            nrt_.getNative()->SetDpi(dpi_x, dpi_y);
             break;
         default:
             break;
@@ -79,12 +79,12 @@ namespace win {
     }
 
     void WindowBufferWin7::onDestroy() {
-        rt_->destroy();
+        nrt_.destroy();
         swapchain_.reset();
     }
 
     void WindowBufferWin7::onBeginDraw() {
-        rt_->getNative()->BeginDraw();
+        nrt_.getNative()->BeginDraw();
     }
 
     GRet WindowBufferWin7::onEndDraw() {
@@ -93,7 +93,7 @@ namespace win {
             ret = drawLayered() ? GRet::Succeeded : GRet::Failed;
         }
 
-        HRESULT hr = rt_->getNative()->EndDraw();
+        HRESULT hr = nrt_.getNative()->EndDraw();
         if (FAILED(hr)) {
             if (hr == D2DERR_RECREATE_TARGET) {
                 return GRet::Retry;
@@ -125,23 +125,23 @@ namespace win {
     }
 
     Size WindowBufferWin7::getSize() const {
-        if (rt_->getNative()) {
-            auto size = rt_->getNative()->GetSize();
+        if (nrt_.getNative()) {
+            auto size = nrt_.getNative()->GetSize();
             return Size(int(std::ceil(size.width)), int(std::ceil(size.height)));
         }
         return {};
     }
 
     Size WindowBufferWin7::getPixelSize() const {
-        if (rt_->getNative()) {
-            auto size = rt_->getNative()->GetPixelSize();
+        if (nrt_.getNative()) {
+            auto size = nrt_.getNative()->GetPixelSize();
             return Size(size.width, size.height);
         }
         return {};
     }
 
-    CyroRenderTarget* WindowBufferWin7::getRT() const {
-        return rt_.get();
+    const NativeRT* WindowBufferWin7::getNativeRT() const {
+        return &nrt_;
     }
 
     const ImageOptions& WindowBufferWin7::getImageOptions() const {
@@ -168,7 +168,7 @@ namespace win {
             return false;
         }
 
-        rt_->setNative(rt);
+        nrt_.setNative(rt);
         return true;
     }
 
@@ -187,7 +187,7 @@ namespace win {
             return false;
         }
 
-        rt_->setNative(rt);
+        nrt_.setNative(rt);
         return true;
     }
 
@@ -242,7 +242,7 @@ namespace win {
             return false;
         }
 
-        rt_->setNative(rt);
+        nrt_.setNative(rt);
         return true;
     }
 
@@ -271,7 +271,7 @@ namespace win {
             return GRet::Succeeded;
         }
 
-        rt_->destroy();
+        nrt_.destroy();
 
         HRESULT hr = swapchain_->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0);
         if (FAILED(hr)) {
@@ -297,12 +297,12 @@ namespace win {
             return GRet::Failed;
         }
 
-        rt_->setNative(rt);
+        nrt_.setNative(rt);
         return GRet::Succeeded;
     }
 
     bool WindowBufferWin7::drawLayered() {
-        auto gdi_rt = rt_->getNative().cast<ID2D1GdiInteropRenderTarget>();
+        auto gdi_rt = nrt_.getNative().cast<ID2D1GdiInteropRenderTarget>();
         if (!gdi_rt) {
             LOG(Log::FATAL) << "Failed to cast ID2D1RenderTarget to GDI RT.";
             return false;

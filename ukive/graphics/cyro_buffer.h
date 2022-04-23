@@ -18,7 +18,7 @@ namespace ukive {
 
     class Window;
     class ImageFrame;
-    class CyroRenderTarget;
+    class NativeRT;
     class ImageOptions;
 
     class CyroBuffer {
@@ -45,7 +45,7 @@ namespace ukive {
         virtual Size getPixelSize() const = 0;
         virtual Type getType() const = 0;
 
-        virtual CyroRenderTarget* getRT() const = 0;
+        virtual const NativeRT* getNativeRT() const = 0;
         virtual const ImageOptions& getImageOptions() const = 0;
 
         virtual GPtr<ImageFrame> onExtractImage(const ImageOptions& options) = 0;

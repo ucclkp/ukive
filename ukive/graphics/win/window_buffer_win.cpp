@@ -16,14 +16,14 @@
 #include "ukive/graphics/images/image_frame.h"
 #include "ukive/graphics/images/image_options.h"
 #include "ukive/graphics/win/images/lc_image_frame_win.h"
+#include "ukive/graphics/win/directx_manager.h"
 
 
 namespace ukive {
 namespace win {
 
     WindowBufferWin::WindowBufferWin(WindowImplWin* w)
-        : window_(w),
-          rt_(std::make_unique<CyroRenderTargetD2D>()) {}
+        : window_(w) {}
 
     bool WindowBufferWin::onCreate(
         int width, int height, const ImageOptions& options)
@@ -51,7 +51,7 @@ namespace win {
         case ImageDPIType::SPECIFIED:
             img_options_.dpi_x = dpi_x;
             img_options_.dpi_y = dpi_y;
-            rt_->getNative()->SetDpi(dpi_x, dpi_y);
+            nrt_.getNative()->SetDpi(dpi_x, dpi_y);
             break;
         default:
             break;
@@ -59,7 +59,7 @@ namespace win {
     }
 
     void WindowBufferWin::onDestroy() {
-        rt_->destroy();
+        nrt_.destroy();
         swapchain_.reset();
 
         dcomp_visual_.reset();
@@ -68,11 +68,11 @@ namespace win {
     }
 
     void WindowBufferWin::onBeginDraw() {
-        rt_->getNative()->BeginDraw();
+        nrt_.getNative()->BeginDraw();
     }
 
     GRet WindowBufferWin::onEndDraw() {
-        HRESULT hr = rt_->getNative()->EndDraw();
+        HRESULT hr = nrt_.getNative()->EndDraw();
         if (FAILED(hr)) {
             if (hr == D2DERR_RECREATE_TARGET) {
                 return GRet::Retry;
@@ -105,23 +105,23 @@ namespace win {
     }
 
     Size WindowBufferWin::getSize() const {
-        if (rt_->getNative()) {
-            auto size = rt_->getNative()->GetSize();
+        if (nrt_.getNative()) {
+            auto size = nrt_.getNative()->GetSize();
             return Size(int(std::ceil(size.width)), int(std::ceil(size.height)));
         }
         return {};
     }
 
     Size WindowBufferWin::getPixelSize() const {
-        if (rt_->getNative()) {
-            auto size = rt_->getNative()->GetPixelSize();
+        if (nrt_.getNative()) {
+            auto size = nrt_.getNative()->GetPixelSize();
             return Size(size.width, size.height);
         }
         return {};
     }
 
-    CyroRenderTarget* WindowBufferWin::getRT() const {
-        return rt_.get();
+    const NativeRT* WindowBufferWin::getNativeRT() const {
+        return &nrt_;
     }
 
     const ImageOptions& WindowBufferWin::getImageOptions() const {
@@ -131,10 +131,10 @@ namespace win {
     bool WindowBufferWin::createSoftwareBRT() {
         auto bounds = window_->getBounds();
         if (bounds.empty()) {
-            return !!rt_->getNative();
+            return !!nrt_.getNative();
         }
 
-        rt_->destroy();
+        nrt_.destroy();
 
         auto ilf =
             LcImageFrame::create(bounds.width(), bounds.height(), ImageOptions());
@@ -149,7 +149,7 @@ namespace win {
             return false;
         }
 
-        rt_->setNative(rt);
+        nrt_.setNative(rt);
         return true;
     }
 
@@ -241,7 +241,7 @@ namespace win {
             return false;
         }
 
-        rt_->setNative(rt);
+        nrt_.setNative(rt);
         return true;
     }
 
@@ -296,7 +296,7 @@ namespace win {
             return true;
         }
 
-        rt_->destroy();
+        nrt_.destroy();
         return createSoftwareBRT();
     }
 
@@ -307,7 +307,7 @@ namespace win {
             return GRet::Succeeded;
         }
 
-        rt_->destroy();
+        nrt_.destroy();
 
         HRESULT hr = swapchain_->ResizeBuffers(
             0, utl::num_cast<UINT>(width), utl::num_cast<UINT>(height), DXGI_FORMAT_UNKNOWN, 0);
@@ -334,7 +334,7 @@ namespace win {
             return GRet::Failed;
         }
 
-        rt_->setNative(rt);
+        nrt_.setNative(rt);
         return GRet::Succeeded;
     }
 
