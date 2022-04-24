@@ -37,7 +37,7 @@ namespace mac {
         Size getSize() const override;
         Size getPixelSize() const override;
 
-        CyroRenderTarget* getRT() const override;
+        const NativeRT* getNativeRT() const override;
         const ImageOptions& getImageOptions() const override;
 
         GPtr<ImageFrame> onExtractImage(const ImageOptions& options) override;

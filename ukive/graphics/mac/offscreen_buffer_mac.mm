@@ -131,7 +131,7 @@ namespace mac {
         return Size(int(px_width), int(px_height));
     }
 
-    CyroRenderTarget* OffscreenBufferMac::getRT() const {
+    const NativeRT* OffscreenBufferMac::getNativeRT() const {
         return nullptr;
     }
 

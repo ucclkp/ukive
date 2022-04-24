@@ -78,7 +78,6 @@
 		670BD66024B229ED00DF5B85 /* matrix_2x3_f.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 670BD51F24B229EC00DF5B85 /* matrix_2x3_f.cpp */; };
 		670BD66624B229ED00DF5B85 /* canvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 670BD52524B229EC00DF5B85 /* canvas.cpp */; };
 		670BD66724B229ED00DF5B85 /* path.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD52624B229EC00DF5B85 /* path.h */; };
-		670BD68224B229ED00DF5B85 /* cyro_renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 670BD54824B229EC00DF5B85 /* cyro_renderer.cpp */; };
 		670BD68324B229ED00DF5B85 /* cyro_buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD54924B229EC00DF5B85 /* cyro_buffer.h */; };
 		670BD68724B229ED00DF5B85 /* cursor.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD54D24B229EC00DF5B85 /* cursor.h */; };
 		670BD68924B229ED00DF5B85 /* paint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 670BD54F24B229EC00DF5B85 /* paint.cpp */; };
@@ -92,7 +91,6 @@
 		670BD69824B229ED00DF5B85 /* cyro_effect.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD55F24B229EC00DF5B85 /* cyro_effect.h */; };
 		670BD69924B229ED00DF5B85 /* shadow_effect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 670BD56024B229EC00DF5B85 /* shadow_effect.cpp */; };
 		670BD69A24B229ED00DF5B85 /* shadow_effect.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD56124B229EC00DF5B85 /* shadow_effect.h */; };
-		670BD69C24B229ED00DF5B85 /* cyro_renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD56324B229EC00DF5B85 /* cyro_renderer.h */; };
 		670BD69D24B229ED00DF5B85 /* paint.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD56424B229EC00DF5B85 /* paint.h */; };
 		670BD6B024B229ED00DF5B85 /* application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 670BD57824B229ED00DF5B85 /* application.cpp */; };
 		670BD6B724B229ED00DF5B85 /* seek_bar.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD58124B229ED00DF5B85 /* seek_bar.h */; };
@@ -163,6 +161,10 @@
 		671374E724DFBA970043047F /* uk_ns_window.mm in Sources */ = {isa = PBXBuildFile; fileRef = 671374E524DFBA970043047F /* uk_ns_window.mm */; };
 		671BEB262812E50F00AA65E6 /* byte_data.h in Headers */ = {isa = PBXBuildFile; fileRef = 671BEB242812E50F00AA65E6 /* byte_data.h */; };
 		671BEB272812E50F00AA65E6 /* byte_data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 671BEB252812E50F00AA65E6 /* byte_data.cpp */; };
+		671BEB2C2815B84100AA65E6 /* rebuildable.h in Headers */ = {isa = PBXBuildFile; fileRef = 671BEB282815B84100AA65E6 /* rebuildable.h */; };
+		671BEB2D2815B84100AA65E6 /* rebuildable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 671BEB292815B84100AA65E6 /* rebuildable.cpp */; };
+		671BEB2E2815B84100AA65E6 /* native_rt.h in Headers */ = {isa = PBXBuildFile; fileRef = 671BEB2A2815B84100AA65E6 /* native_rt.h */; };
+		671BEB2F2815B84100AA65E6 /* cyro_render_target.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 671BEB2B2815B84100AA65E6 /* cyro_render_target.cpp */; };
 		6723A79224FE99B800F3FB53 /* graphics_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 6723A78F24FE99B700F3FB53 /* graphics_utils.h */; };
 		6723A79324FE99B800F3FB53 /* display.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6723A79024FE99B800F3FB53 /* display.cpp */; };
 		6723A79424FE99B800F3FB53 /* display.h in Headers */ = {isa = PBXBuildFile; fileRef = 6723A79124FE99B800F3FB53 /* display.h */; };
@@ -291,8 +293,8 @@
 		6783F3AF24C307C000056DA1 /* uk_root_view.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6783F3AE24C307C000056DA1 /* uk_root_view.mm */; };
 		6783F3D224C317DD00056DA1 /* window_buffer_mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6783F3D024C317DD00056DA1 /* window_buffer_mac.mm */; };
 		6783F3D324C317DD00056DA1 /* window_buffer_mac.h in Headers */ = {isa = PBXBuildFile; fileRef = 6783F3D124C317DD00056DA1 /* window_buffer_mac.h */; };
-		6783F3D624C31B6A00056DA1 /* cyro_renderer_mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6783F3D424C31B6A00056DA1 /* cyro_renderer_mac.mm */; };
-		6783F3D724C31B6A00056DA1 /* cyro_renderer_mac.h in Headers */ = {isa = PBXBuildFile; fileRef = 6783F3D524C31B6A00056DA1 /* cyro_renderer_mac.h */; };
+		6783F3D624C31B6A00056DA1 /* cyro_render_target_mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6783F3D424C31B6A00056DA1 /* cyro_render_target_mac.mm */; };
+		6783F3D724C31B6A00056DA1 /* cyro_render_target_mac.h in Headers */ = {isa = PBXBuildFile; fileRef = 6783F3D524C31B6A00056DA1 /* cyro_render_target_mac.h */; };
 		6783F3EE24C3222C00056DA1 /* text_layout_mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6783F3EC24C3222C00056DA1 /* text_layout_mac.mm */; };
 		6783F3EF24C3222C00056DA1 /* text_layout_mac.h in Headers */ = {isa = PBXBuildFile; fileRef = 6783F3ED24C3222C00056DA1 /* text_layout_mac.h */; };
 		6783F3F324C3577800056DA1 /* shadow_effect_mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6783F3F124C3577800056DA1 /* shadow_effect_mac.mm */; };
@@ -485,7 +487,6 @@
 		670BD51F24B229EC00DF5B85 /* matrix_2x3_f.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matrix_2x3_f.cpp; sourceTree = "<group>"; };
 		670BD52524B229EC00DF5B85 /* canvas.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = canvas.cpp; sourceTree = "<group>"; };
 		670BD52624B229EC00DF5B85 /* path.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = path.h; sourceTree = "<group>"; };
-		670BD54824B229EC00DF5B85 /* cyro_renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyro_renderer.cpp; sourceTree = "<group>"; };
 		670BD54924B229EC00DF5B85 /* cyro_buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cyro_buffer.h; sourceTree = "<group>"; };
 		670BD54D24B229EC00DF5B85 /* cursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cursor.h; sourceTree = "<group>"; };
 		670BD54F24B229EC00DF5B85 /* paint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = paint.cpp; sourceTree = "<group>"; };
@@ -499,7 +500,6 @@
 		670BD55F24B229EC00DF5B85 /* cyro_effect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cyro_effect.h; sourceTree = "<group>"; };
 		670BD56024B229EC00DF5B85 /* shadow_effect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shadow_effect.cpp; sourceTree = "<group>"; };
 		670BD56124B229EC00DF5B85 /* shadow_effect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shadow_effect.h; sourceTree = "<group>"; };
-		670BD56324B229EC00DF5B85 /* cyro_renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cyro_renderer.h; sourceTree = "<group>"; };
 		670BD56424B229EC00DF5B85 /* paint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = paint.h; sourceTree = "<group>"; };
 		670BD57824B229ED00DF5B85 /* application.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = application.cpp; sourceTree = "<group>"; };
 		670BD58124B229ED00DF5B85 /* seek_bar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = seek_bar.h; sourceTree = "<group>"; };
@@ -570,6 +570,10 @@
 		671374E524DFBA970043047F /* uk_ns_window.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = uk_ns_window.mm; sourceTree = "<group>"; };
 		671BEB242812E50F00AA65E6 /* byte_data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = byte_data.h; sourceTree = "<group>"; };
 		671BEB252812E50F00AA65E6 /* byte_data.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = byte_data.cpp; sourceTree = "<group>"; };
+		671BEB282815B84100AA65E6 /* rebuildable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rebuildable.h; sourceTree = "<group>"; };
+		671BEB292815B84100AA65E6 /* rebuildable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rebuildable.cpp; sourceTree = "<group>"; };
+		671BEB2A2815B84100AA65E6 /* native_rt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = native_rt.h; sourceTree = "<group>"; };
+		671BEB2B2815B84100AA65E6 /* cyro_render_target.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyro_render_target.cpp; sourceTree = "<group>"; };
 		6723A78F24FE99B700F3FB53 /* graphics_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graphics_utils.h; sourceTree = "<group>"; };
 		6723A79024FE99B800F3FB53 /* display.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = display.cpp; sourceTree = "<group>"; };
 		6723A79124FE99B800F3FB53 /* display.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = display.h; sourceTree = "<group>"; };
@@ -698,8 +702,8 @@
 		6783F3AE24C307C000056DA1 /* uk_root_view.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = uk_root_view.mm; sourceTree = "<group>"; };
 		6783F3D024C317DD00056DA1 /* window_buffer_mac.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = window_buffer_mac.mm; sourceTree = "<group>"; };
 		6783F3D124C317DD00056DA1 /* window_buffer_mac.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = window_buffer_mac.h; sourceTree = "<group>"; };
-		6783F3D424C31B6A00056DA1 /* cyro_renderer_mac.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = cyro_renderer_mac.mm; sourceTree = "<group>"; };
-		6783F3D524C31B6A00056DA1 /* cyro_renderer_mac.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cyro_renderer_mac.h; sourceTree = "<group>"; };
+		6783F3D424C31B6A00056DA1 /* cyro_render_target_mac.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = cyro_render_target_mac.mm; sourceTree = "<group>"; };
+		6783F3D524C31B6A00056DA1 /* cyro_render_target_mac.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cyro_render_target_mac.h; sourceTree = "<group>"; };
 		6783F3D924C3220300056DA1 /* dw_text_layout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dw_text_layout.h; sourceTree = "<group>"; };
 		6783F3DA24C3220300056DA1 /* tsf_manager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tsf_manager.cpp; sourceTree = "<group>"; };
 		6783F3DB24C3220300056DA1 /* word_breaker.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = word_breaker.cpp; sourceTree = "<group>"; };
@@ -1055,9 +1059,8 @@
 				670BD54D24B229EC00DF5B85 /* cursor.h */,
 				670BD55824B229EC00DF5B85 /* cyro_buffer.cpp */,
 				670BD54924B229EC00DF5B85 /* cyro_buffer.h */,
+				671BEB2B2815B84100AA65E6 /* cyro_render_target.cpp */,
 				6783F44524D1E52600056DA1 /* cyro_render_target.h */,
-				670BD54824B229EC00DF5B85 /* cyro_renderer.cpp */,
-				670BD56324B229EC00DF5B85 /* cyro_renderer.h */,
 				6770CE34256FB914007B49F3 /* dirty_region.cpp */,
 				6770CE33256FB914007B49F3 /* dirty_region.h */,
 				67998E0C27BA84E200B9113C /* display_manager.cpp */,
@@ -1077,12 +1080,15 @@
 				670BD7CD24B4C3F300DF5B85 /* mac */,
 				670BD51F24B229EC00DF5B85 /* matrix_2x3_f.cpp */,
 				670BD55A24B229EC00DF5B85 /* matrix_2x3_f.h */,
+				671BEB2A2815B84100AA65E6 /* native_rt.h */,
 				6773929326076DF800D03228 /* padding.hpp */,
 				670BD54F24B229EC00DF5B85 /* paint.cpp */,
 				670BD56424B229EC00DF5B85 /* paint.h */,
 				670BD55724B229EC00DF5B85 /* path.cpp */,
 				670BD52624B229EC00DF5B85 /* path.h */,
 				6783F45A24DADD4100056DA1 /* point.hpp */,
+				671BEB292815B84100AA65E6 /* rebuildable.cpp */,
+				671BEB282815B84100AA65E6 /* rebuildable.h */,
 				6783F45924DADD4100056DA1 /* rect.hpp */,
 				670BD51A24B229EC00DF5B85 /* render_node */,
 				6783F44424D1E52500056DA1 /* size.hpp */,
@@ -1340,8 +1346,8 @@
 			isa = PBXGroup;
 			children = (
 				678C89C027C14F64008D0B21 /* colors */,
-				6783F3D524C31B6A00056DA1 /* cyro_renderer_mac.h */,
-				6783F3D424C31B6A00056DA1 /* cyro_renderer_mac.mm */,
+				6783F3D524C31B6A00056DA1 /* cyro_render_target_mac.h */,
+				6783F3D424C31B6A00056DA1 /* cyro_render_target_mac.mm */,
 				6723A7C824FEA4A800F3FB53 /* display_mac.h */,
 				6723A7C724FEA4A800F3FB53 /* display_mac.mm */,
 				67998E1427BA868200B9113C /* display_manager_mac.h */,
@@ -1698,7 +1704,6 @@
 				67998E1627BA868200B9113C /* display_manager_mac.h in Headers */,
 				678C89B427C1492D008D0B21 /* ucmm.h in Headers */,
 				670BD65C24B229ED00DF5B85 /* render_node.h in Headers */,
-				670BD69C24B229ED00DF5B85 /* cyro_renderer.h in Headers */,
 				6783F3EF24C3222C00056DA1 /* text_layout_mac.h in Headers */,
 				67998DFF27BA84A800B9113C /* icc_type_lut_ab.h in Headers */,
 				672DD02826EE32F300E49039 /* shade_layout_info.h in Headers */,
@@ -1743,7 +1748,9 @@
 				6783F44F24D1E82A00056DA1 /* lc_image_factory_mac.h in Headers */,
 				6783F43F24D1E4D300056DA1 /* lc_image_factory.h in Headers */,
 				6773929026076DCD00D03228 /* chessboard_element.h in Headers */,
+				671BEB2C2815B84100AA65E6 /* rebuildable.h in Headers */,
 				6783F3F424C3577800056DA1 /* shadow_effect_mac.h in Headers */,
+				671BEB2E2815B84100AA65E6 /* native_rt.h in Headers */,
 				67950D8E261B457A0012DE92 /* list_columns.h in Headers */,
 				670BD6E224B229ED00DF5B85 /* tab_strip_selection_listener.h in Headers */,
 				670BD70524B229ED00DF5B85 /* window_native.h in Headers */,
@@ -1873,7 +1880,7 @@
 				670BD6C424B229ED00DF5B85 /* chart_view.h in Headers */,
 				674721CB270DF5D200478B85 /* vsync_provider_mac.h in Headers */,
 				670BD6D224B229ED00DF5B85 /* restraint_layout.h in Headers */,
-				6783F3D724C31B6A00056DA1 /* cyro_renderer_mac.h in Headers */,
+				6783F3D724C31B6A00056DA1 /* cyro_render_target_mac.h in Headers */,
 				670BD69824B229ED00DF5B85 /* cyro_effect.h in Headers */,
 				67950D8F261B457A0012DE92 /* list_item_event_router.h in Headers */,
 				677392C426076EBB00D03228 /* sequence_layout.h in Headers */,
@@ -1966,6 +1973,7 @@
 				67950D95261B45890012DE92 /* list_layout_info.cpp in Sources */,
 				67950D91261B457A0012DE92 /* list_source.cpp in Sources */,
 				67950D79261B45500012DE92 /* tree_node_button.cpp in Sources */,
+				671BEB2F2815B84100AA65E6 /* cyro_render_target.cpp in Sources */,
 				670BD6F624B229ED00DF5B85 /* linear_list_layouter.cpp in Sources */,
 				67630455280EF8D90097DD20 /* list_item_interact_helper.cpp in Sources */,
 				6783F45724D1E99D00056DA1 /* image_frame_mac.mm in Sources */,
@@ -1977,7 +1985,7 @@
 				670BD63F24B229ED00DF5B85 /* text_key_listener.cpp in Sources */,
 				6770CE3F256FB97F007B49F3 /* effect_span.cpp in Sources */,
 				6773928F26076DCD00D03228 /* element.cpp in Sources */,
-				6783F3D624C31B6A00056DA1 /* cyro_renderer_mac.mm in Sources */,
+				6783F3D624C31B6A00056DA1 /* cyro_render_target_mac.mm in Sources */,
 				67998E0127BA84A800B9113C /* icc_type_xyz.cpp in Sources */,
 				678C89BF27C14949008D0B21 /* icc_type_s15f16_array.cpp in Sources */,
 				678C89C327C14F64008D0B21 /* color_manager_mac.cpp in Sources */,
@@ -2032,6 +2040,7 @@
 				670BD6CC24B229ED00DF5B85 /* non_client_layout.cpp in Sources */,
 				6783F44224D1E4D300056DA1 /* image_frame.cpp in Sources */,
 				677392C126076EBB00D03228 /* title_bar_layout.cpp in Sources */,
+				671BEB2D2815B84100AA65E6 /* rebuildable.cpp in Sources */,
 				677392B226076EAB00D03228 /* restraint_layout_info.cpp in Sources */,
 				670BD69524B229ED00DF5B85 /* cursor.cpp in Sources */,
 				672DD01826EE32A700E49039 /* vsyncable.cpp in Sources */,
@@ -2049,7 +2058,6 @@
 				670BD60824B229ED00DF5B85 /* animation_director.cpp in Sources */,
 				67950D8A261B457A0012DE92 /* list_item_recycler.cpp in Sources */,
 				6783F3EE24C3222C00056DA1 /* text_layout_mac.mm in Sources */,
-				670BD68224B229ED00DF5B85 /* cyro_renderer.cpp in Sources */,
 				6723A7C924FEA4A800F3FB53 /* display_mac.mm in Sources */,
 				676D2CDE24BE1296000F3DAE /* imm_mac.cpp in Sources */,
 				6783F3AF24C307C000056DA1 /* uk_root_view.mm in Sources */,

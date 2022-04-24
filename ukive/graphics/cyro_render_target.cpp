@@ -11,7 +11,7 @@
 #ifdef OS_WINDOWS
 #include "ukive/graphics/win/cyro_render_target_d2d.h"
 #elif defined OS_MAC
-#include "ukive/graphics/mac/cyro_renderer_mac.h"
+#include "ukive/graphics/mac/cyro_render_target_mac.h"
 #endif
 
 

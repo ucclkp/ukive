@@ -60,7 +60,7 @@ namespace mac {
         return Size(int(std::ceil(bounds.width() * scale)), int(std::ceil(bounds.height() * scale)));
     }
 
-    CyroRenderTarget* WindowBufferMac::getRT() const {
+    const NativeRT* WindowBufferMac::getNativeRT() const {
         return nullptr;
     }
 

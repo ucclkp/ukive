@@ -104,7 +104,7 @@ namespace ukive {
         }
 
         SizeF size;
-        for (const auto frame : ontic_->frames) {
+        for (const auto& frame : ontic_->frames) {
             size.setToMax(frame->getSize());
         }
         return size;
@@ -116,7 +116,7 @@ namespace ukive {
         }
 
         SizeU size;
-        for (const auto frame : ontic_->frames) {
+        for (const auto& frame : ontic_->frames) {
             size.setToMax(frame->getPixelSize());
         }
         return size;

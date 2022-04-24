@@ -4,8 +4,8 @@
 // This program is licensed under GPLv3 license that can be
 // found in the LICENSE file.
 
-#ifndef UKIVE_GRAPHICS_MAC_CYRO_RENDERER_MAC_H_
-#define UKIVE_GRAPHICS_MAC_CYRO_RENDERER_MAC_H_
+#ifndef UKIVE_GRAPHICS_MAC_CYRO_RENDER_TARGET_MAC_H_
+#define UKIVE_GRAPHICS_MAC_CYRO_RENDER_TARGET_MAC_H_
 
 #include <stack>
 
@@ -24,8 +24,8 @@ namespace mac {
         CyroRenderTargetMac();
         ~CyroRenderTargetMac();
 
-        bool bind(CyroBuffer* buffer, bool owned) override;
-        void unbind() override;
+        bool onCreate(CyroBuffer *buffer) override;
+        void onDestroy() override;
 
         CyroBuffer* getBuffer() const override;
 
@@ -36,14 +36,19 @@ namespace mac {
             int width, int height,
             const GPtr<ByteData>& pixel_data, size_t stride,
             const ImageOptions& options) override;
+        GPtr<ImageFrame> createImage(
+            const GPtr<GPUTexture> &tex2d, const ImageOptions &options) override;
 
         void setOpacity(float opacity) override;
         float getOpacity() const override;
 
+        Size getSize() const override;
+        Size getPixelSize() const override;
         Matrix2x3F getMatrix() const override;
 
         void onBeginDraw() override;
         GRet onEndDraw() override;
+        GRet onResize(int width, int height) override;
 
         void clear() override;
         void clear(const Color &c) override;
@@ -86,7 +91,6 @@ namespace mac {
     private:
         float opacity_ = 1;
         Matrix2x3F matrix_;
-        bool is_owned_buffer_ = false;
 
         std::stack<float> opacity_stack_;
         std::stack<Matrix2x3F> matrix_stack_;
@@ -96,4 +100,4 @@ namespace mac {
 }
 }
 
-#endif  // UKIVE_GRAPHICS_MAC_CYRO_RENDERER_MAC_H_
+#endif  // UKIVE_GRAPHICS_MAC_CYRO_RENDER_TARGET_MAC_H_

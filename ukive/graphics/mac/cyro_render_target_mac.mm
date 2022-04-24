@@ -4,7 +4,7 @@
 // This program is licensed under GPLv3 license that can be
 // found in the LICENSE file.
 
-#include "ukive/graphics/mac/cyro_renderer_mac.h"
+#include "ukive/graphics/mac/cyro_render_target_mac.h"
 
 #include "ukive/app/application.h"
 #include "ukive/graphics/cyro_buffer.h"
@@ -23,24 +23,23 @@ namespace mac {
 
     CyroRenderTargetMac::CyroRenderTargetMac() {}
 
-    CyroRenderTargetMac::~CyroRenderTargetMac() {
-        if (is_owned_buffer_ && buffer_) {
-            buffer_->onDestroy();
-            delete buffer_;
-        }
-    }
+    CyroRenderTargetMac::~CyroRenderTargetMac() {}
 
-    bool CyroRenderTargetMac::bind(CyroBuffer* buffer, bool owned) {
+    bool CyroRenderTargetMac::onCreate(CyroBuffer *buffer) {
         if (!buffer) {
             return false;
         }
 
         buffer_ = buffer;
-        is_owned_buffer_ = owned;
         return true;
     }
 
-    void CyroRenderTargetMac::unbind() {
+    void CyroRenderTargetMac::onDestroy() {
+        if (buffer_) {
+            buffer_->onDestroy();
+            delete buffer_;
+            buffer_ = nullptr;
+        }
     }
 
     CyroBuffer* CyroRenderTargetMac::getBuffer() const {
@@ -152,6 +151,12 @@ namespace mac {
         return GPtr<ImageFrame>(image_fr);
     }
 
+    GPtr<ImageFrame> CyroRenderTargetMac::createImage(
+        const GPtr<GPUTexture> &tex2d, const ImageOptions &options)
+    {
+        return {};
+    }
+
     void CyroRenderTargetMac::setOpacity(float opacity) {
         if (opacity == opacity_) {
             return;
@@ -162,6 +167,20 @@ namespace mac {
 
     float CyroRenderTargetMac::getOpacity() const {
         return opacity_;
+    }
+
+    Size CyroRenderTargetMac::getSize() const {
+        if (!buffer_) {
+            return {};
+        }
+        return buffer_->getSize();
+    }
+
+    Size CyroRenderTargetMac::getPixelSize() const {
+        if (!buffer_) {
+            return {};
+        }
+        return buffer_->getPixelSize();
     }
 
     Matrix2x3F CyroRenderTargetMac::getMatrix() const {
@@ -179,6 +198,19 @@ namespace mac {
             return GRet::Failed;
         }
         return buffer_->onEndDraw();
+    }
+
+    GRet CyroRenderTargetMac::onResize(int width, int height) {
+        if (!buffer_) {
+            return GRet::Failed;
+        }
+
+        auto ret = buffer_->onResize(width, height);
+        if (ret != GRet::Succeeded) {
+            return ret;
+        }
+
+        return GRet::Succeeded;
     }
 
     void CyroRenderTargetMac::clear() {
