@@ -208,7 +208,7 @@ namespace win {
         utl::win::ComPtr<ID2D1Bitmap> d2d_bmp;
         HRESULT hr = rt_->CreateBitmap(
             D2D1::SizeU(width, height),
-            pixel_data->getData(),
+            pixel_data->getConstData(),
             utl::num_cast<UINT32>(stride), prop, &d2d_bmp);
         if (FAILED(hr)) {
             ubassert(false);
@@ -216,10 +216,17 @@ namespace win {
         }
 
         ImageFrameWin::ImageRawParams params;
-        params.width = width;
-        params.height = height;
-        params.raw_data = pixel_data;
-        params.stride = stride;
+        if (pixel_data->isRef()) {
+            params.width = 0;
+            params.height = 0;
+            params.raw_data = {};
+            params.stride = 0;
+        } else {
+            params.width = width;
+            params.height = height;
+            params.raw_data = pixel_data;
+            params.stride = stride;
+        }
 
         return GPtr<ImageFrame>(
             new ImageFrameWin(options, params, {}, d2d_bmp));

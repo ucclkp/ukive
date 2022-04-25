@@ -31,20 +31,31 @@ namespace ukive {
         static GPtr<ByteData> ownVec(std::vector<unsigned char>&& raw);
         static GPtr<ByteData> ownUni(std::unique_ptr<char[]>&& raw, size_t len);
         static GPtr<ByteData> ownUni(std::unique_ptr<unsigned char[]>&& raw, size_t len);
-        static GPtr<ByteData> ownPtr(char* raw, size_t len);
-        static GPtr<ByteData> ownPtr(unsigned char* raw, size_t len);
+        static GPtr<ByteData> ownPtr(void* raw, size_t len);
+
+        static GPtr<ByteData> refStr(const std::string& raw);
+        static GPtr<ByteData> refVec(const std::vector<char>& raw);
+        static GPtr<ByteData> refVec(const std::vector<unsigned char>& raw);
+        static GPtr<ByteData> refUni(const std::unique_ptr<char[]>& raw, size_t len);
+        static GPtr<ByteData> refUni(const std::unique_ptr<unsigned char[]>& raw, size_t len);
+        static GPtr<ByteData> refPtr(const void* raw, size_t len);
 
         static GPtr<ByteData> copyStr(const std::string& raw);
         static GPtr<ByteData> copyVec(const std::vector<char>& raw);
         static GPtr<ByteData> copyVec(const std::vector<unsigned char>& raw);
-        static GPtr<ByteData> copyPtr(const char* raw, size_t len);
-        static GPtr<ByteData> copyPtr(const unsigned char* raw, size_t len);
+        static GPtr<ByteData> copyUni(const std::unique_ptr<char[]>& raw, size_t len);
+        static GPtr<ByteData> copyUni(const std::unique_ptr<unsigned char[]>& raw, size_t len);
+        static GPtr<ByteData> copyPtr(const void* raw, size_t len);
 
         virtual ~ByteData() = default;
 
+        virtual GPtr<ByteData> substantiate() = 0;
+
+        virtual bool isRef() const = 0;
+
         virtual Type getType() const = 0;
         virtual void* getData() = 0;
-        virtual const void* getData() const = 0;
+        virtual const void* getConstData() const = 0;
         virtual size_t getSize() const = 0;
     };
 

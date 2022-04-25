@@ -107,10 +107,12 @@ namespace mac {
                 break;
         }
 
+        auto owned_data = pixel_data->substantiate();
+
         unsigned char* buf;
         unsigned char** plane;
-        if (pixel_data) {
-            buf = static_cast<unsigned char*>(pixel_data->getData());
+        if (owned_data) {
+            buf = static_cast<unsigned char*>(owned_data->getData());
             plane = &buf;
         } else {
             buf = nullptr;
@@ -137,7 +139,7 @@ namespace mac {
             return {};
         }
 
-        auto image_fr = new ImageFrameMac(options, img, false, pixel_data);
+        auto image_fr = new ImageFrameMac(options, img, false, owned_data);
 
         switch (options.dpi_type) {
             case ImageDPIType::SPECIFIED:

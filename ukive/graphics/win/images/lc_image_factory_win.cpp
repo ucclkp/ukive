@@ -140,12 +140,14 @@ namespace win {
 
         auto format = mapPixelFormat(options);
 
+        auto owned_data = pixel_data->substantiate();
+
         utl::win::ComPtr<IWICBitmap> bmp;
         HRESULT hr = wic_factory_->CreateBitmapFromMemory(
             width, height, format,
             utl::num_cast<UINT>(stride),
-            utl::num_cast<UINT>(pixel_data->getSize()),
-            static_cast<BYTE*>(pixel_data->getData()),
+            utl::num_cast<UINT>(owned_data->getSize()),
+            static_cast<BYTE*>(owned_data->getData()),
             &bmp);
         if (FAILED(hr)) {
             ubassert(false);
@@ -164,7 +166,7 @@ namespace win {
         }
 
         return GPtr<LcImageFrame>(
-            new LcImageFrameWin(options, pixel_data, wic_factory_, bmp));
+            new LcImageFrameWin(options, owned_data, wic_factory_, bmp));
     }
 
     GPtr<LcImageFrame> LcImageFactoryWin::createThumbnail(

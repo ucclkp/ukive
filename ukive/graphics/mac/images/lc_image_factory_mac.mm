@@ -34,9 +34,11 @@ namespace mac {
          const GPtr<ByteData>& pixel_data, size_t stride,
          const ImageOptions &options)
     {
+        auto owned_data = pixel_data->substantiate();
+
         auto context = createCGContext(
             width, height,
-            pixel_data->getData(), pixel_data->getSize(),
+            owned_data->getData(), owned_data->getSize(),
             stride, options);
         if (!context) {
             return {};
@@ -49,7 +51,7 @@ namespace mac {
             return {};
         }
 
-        auto lc_image_fr = new LcImageFrameMac(options, image, pixel_data);
+        auto lc_image_fr = new LcImageFrameMac(options, image, owned_data);
         switch (options.dpi_type) {
             case ImageDPIType::SPECIFIED:
                 lc_image_fr->setDpi(options.dpi_x, options.dpi_y);

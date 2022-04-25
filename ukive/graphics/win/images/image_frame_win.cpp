@@ -96,7 +96,7 @@ namespace win {
                 utl::win::ComPtr<ID2D1Bitmap> d2d_bmp;
                 HRESULT hr = rt->CreateBitmap(
                     D2D1::SizeU(raw_params_.width, raw_params_.height),
-                    raw_params_.raw_data->getData(),
+                    raw_params_.raw_data->getConstData(),
                     utl::num_cast<UINT32>(raw_params_.stride), prop, &d2d_bmp);
                 if (FAILED(hr)) {
                     return false;
