@@ -73,7 +73,7 @@ namespace ukive {
 
                 int child_max_width = columns_[col].getWidth();
                 auto item_size = parent_->determineItemSize(item, child_max_width);
-                row_height = (std::max)(item_size.height, row_height);
+                row_height = (std::max)(item_size.height(), row_height);
 
                 ++view_index;
             }
@@ -94,7 +94,7 @@ namespace ukive {
 
                     int child_max_width = columns_[col].getWidth();
                     auto item_size = parent_->determineItemSize(item, child_max_width);
-                    row_height = (std::max)(item_size.height, row_height);
+                    row_height = (std::max)(item_size.height(), row_height);
                 }
 
                 ++row_index;
@@ -139,8 +139,8 @@ namespace ukive {
         auto item_count = source_->onGetListDataCount(parent_);
         auto bounds = parent_->getContentBounds();
 
-        columns_.setVertical(bounds.top, bounds.bottom);
-        columns_.setHorizontal(bounds.left, bounds.right);
+        columns_.setVertical(bounds.y(), bounds.bottom());
+        columns_.setHorizontal(bounds.x(), bounds.right());
 
         parent_->freezeLayout();
 
@@ -158,11 +158,11 @@ namespace ukive {
                 auto item = columns_[col].getItem(row_index);
                 ubassert(item);
 
-                int width = item->item_view->getDeterminedSize().width + item->getHoriMargins();
-                int height = item->item_view->getDeterminedSize().height + item->getVertMargins();
+                int width = item->item_view->getDeterminedSize().width() + item->getHoriMargins();
+                int height = item->item_view->getDeterminedSize().height() + item->getVertMargins();
                 parent_->layoutItem(
                     item,
-                    columns_[col].getLeft(), bounds.top + total_height - offset,
+                    columns_[col].getLeft(), bounds.y() + total_height - offset,
                     width, height);
                 row_height = (std::max)(height, row_height);
 
@@ -186,11 +186,11 @@ namespace ukive {
             if (is_at_ceil) {
                 auto topmost = columns_.getTopmost();
                 if (topmost) {
-                    can_scroll = (bounds.top - topmost->getMgdTop() > 0);
+                    can_scroll = (bounds.y() - topmost->getMgdTop() > 0);
                 }
             }
             if (can_scroll) {
-                return bounds.bottom - columns_.getBottomost()->getMgdBottom();
+                return bounds.bottom() - columns_.getBottomost()->getMgdBottom();
             }
         }
 
@@ -248,9 +248,9 @@ namespace ukive {
                 auto item_size = parent_->determineItemSize(item, child_max_width);
                 parent_->layoutItem(
                     item,
-                    columns_[col].getLeft(), bounds.top + total_height - offset,
-                    item_size.width, item_size.height);
-                row_height = (std::max)(item_size.height, row_height);
+                    columns_[col].getLeft(), bounds.y() + total_height - offset,
+                    item_size.width(), item_size.height());
+                row_height = (std::max)(item_size.height(), row_height);
 
                 ++view_index;
             }
@@ -259,7 +259,7 @@ namespace ukive {
             total_height += row_height;
             cur_col = col < col_count_ ? col : 0;
 
-            diff = bounds.bottom - (bounds.top + total_height - offset);
+            diff = bounds.bottom() - (bounds.y() + total_height - offset);
             if (total_height >= bounds.height() + offset) {
                 is_filled = true;
                 break;
@@ -309,7 +309,7 @@ namespace ukive {
         parent_->freezeLayout();
 
         int inc_y = 0;
-        int distance_y = getColsTop() + dy - bounds.top;
+        int distance_y = getColsTop() + dy - bounds.y();
         while (cur_data_pos > 0 && !columns_.isTopFilled(dy)) {
             --cur_data_pos;
             auto col = cur_data_pos % col_count_;
@@ -326,7 +326,7 @@ namespace ukive {
 
                 auto item_size = parent_->determineItemSize(new_item, child_max_width);
 
-                max_height = (std::max)(max_height, item_size.height);
+                max_height = (std::max)(max_height, item_size.height());
                 tmps.push_back(new_item);
 
                 --tmp_pos;
@@ -336,7 +336,7 @@ namespace ukive {
             for (size_t i = col_count_; i-- > 0;) {
                 auto new_item = tmps[col_count_ - 1 - i];
                 int child_width = columns_[i].getWidth();
-                int height = new_item->item_view->getDeterminedSize().height + new_item->getVertMargins();
+                int height = new_item->item_view->getDeterminedSize().height() + new_item->getVertMargins();
                 parent_->layoutItem(
                     new_item,
                     columns_[i].getLeft(), cur_top,
@@ -379,7 +379,7 @@ namespace ukive {
         parent_->freezeLayout();
 
         int inc_y = 0;
-        int distance_y = getColsBottom() + dy - bounds.bottom;
+        int distance_y = getColsBottom() + dy - bounds.bottom();
         while (cur_data_pos + 1 < source_->onGetListDataCount(parent_) && !columns_.isBottomOneFilled(dy)) {
             ++cur_data_pos;
             auto row = cur_data_pos / col_count_;
@@ -407,11 +407,11 @@ namespace ukive {
                 parent_->layoutItem(
                     new_item,
                     columns_[i].getLeft(), prev_bottom,
-                    item_size.width, item_size.height);
+                    item_size.width(), item_size.height());
                 columns_[i].addItem(new_item);
 
-                if (item_size.height > max_height) {
-                    max_height = item_size.height;
+                if (item_size.height() > max_height) {
+                    max_height = item_size.height();
                 }
 
                 if (i + 1 < col_count_) {
@@ -554,12 +554,12 @@ namespace ukive {
             if (item) {
                 if (is_first) {
                     tmp_pos = item->data_pos;
-                    tmp_offset = bounds.top - item->getMgdTop();
+                    tmp_offset = bounds.y() - item->getMgdTop();
                     is_first = false;
                 } else {
                     if (item->data_pos < tmp_pos) {
                         tmp_pos = item->data_pos;
-                        tmp_offset = bounds.top - item->getMgdTop();
+                        tmp_offset = bounds.y() - item->getMgdTop();
                     }
                 }
             }

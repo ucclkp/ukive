@@ -24,9 +24,9 @@ namespace ukive {
         int wrapped_width, wrapped_height;
         measureChildren(info, &wrapped_width, &wrapped_height);
 
-        switch (info.width.mode) {
+        switch (info.width().mode) {
         case SizeInfo::CONTENT:
-            final_width = (std::min)(wrapped_width + getPadding().hori(), info.width.val);
+            final_width = (std::min)(wrapped_width + getPadding().hori(), info.width().val);
             break;
 
         case SizeInfo::FREEDOM:
@@ -35,13 +35,13 @@ namespace ukive {
 
         case SizeInfo::DEFINED:
         default:
-            final_width = info.width.val;
+            final_width = info.width().val;
             break;
         }
 
-        switch (info.height.mode) {
+        switch (info.height().mode) {
         case SizeInfo::CONTENT:
-            final_height = (std::min)(wrapped_height + getPadding().vert(), info.height.val);
+            final_height = (std::min)(wrapped_height + getPadding().vert(), info.height().val);
             break;
 
         case SizeInfo::FREEDOM:
@@ -50,7 +50,7 @@ namespace ukive {
 
         case SizeInfo::DEFINED:
         default:
-            final_height = info.height.val;
+            final_height = info.height().val;
             break;
         }
 
@@ -80,16 +80,16 @@ namespace ukive {
 
             auto& size = bar->getDeterminedSize();
 
-            int child_left = getPadding().start + margin.start;
-            int child_top = getPadding().top + margin.top;
+            int child_left = getPadding().start() + margin.start();
+            int child_top = getPadding().top() + margin.top();
 
             bar->layout(
-                Rect(child_left, child_top, size.width, size.height));
+                Rect(child_left, child_top, size.width(), size.height()));
 
             --count;
-            bar_bottom = size.height + child_top;
+            bar_bottom = size.height() + child_top;
         } else {
-            bar_bottom = getPadding().top;
+            bar_bottom = getPadding().top();
         }
 
         // 剩余 View
@@ -100,11 +100,11 @@ namespace ukive {
 
                 auto& size = child->getDeterminedSize();
 
-                int child_left = getPadding().start + margin.start;
-                int child_top = bar_bottom + margin.top;
+                int child_left = getPadding().start() + margin.start();
+                int child_top = bar_bottom + margin.top();
 
                 child->layout(
-                    Rect(child_left, child_top, size.width, size.height));
+                    Rect(child_left, child_top, size.width(), size.height()));
             }
         }
     }
@@ -134,8 +134,8 @@ namespace ukive {
 
             auto& size = bar->getDeterminedSize();
             auto& margin = bar->getLayoutMargin();
-            *wrapped_width = size.width + margin.hori();
-            bar_height = size.height + margin.top;
+            *wrapped_width = size.width() + margin.hori();
+            bar_height = size.height() + margin.top();
         } else {
             bar_height = 0;
         }
@@ -145,17 +145,20 @@ namespace ukive {
             auto child = getChildAt(i);
             if (child->getVisibility() != VANISHED) {
                 auto new_info = parent_info;
-                new_info.setHeight(SizeInfo::Value(parent_info.height.val - bar_height, parent_info.height.mode));
+                new_info.setHeight(
+                    SizeInfo::Value(
+                        parent_info.height().val - bar_height,
+                        parent_info.height().mode));
                 determineChildSize(child, new_info);
 
                 auto& size = child->getDeterminedSize();
                 auto& margin = child->getLayoutMargin();
-                int child_width = size.width + margin.hori();
+                int child_width = size.width() + margin.hori();
                 if (child_width > *wrapped_width) {
                     *wrapped_width = child_width;
                 }
 
-                int child_height = size.height + margin.vert();
+                int child_height = size.height() + margin.vert();
                 if (child_height > *wrapped_height) {
                     *wrapped_height = child_height;
                 }
@@ -165,8 +168,8 @@ namespace ukive {
         // 计算最大包围高度
         if (bar) {
             auto& margin = bar->getLayoutMargin();
-            if (*wrapped_height < margin.bottom) {
-                *wrapped_height = margin.bottom;
+            if (*wrapped_height < margin.bottom()) {
+                *wrapped_height = margin.bottom();
             }
             *wrapped_height += bar_height;
         }

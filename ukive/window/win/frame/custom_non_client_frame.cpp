@@ -40,15 +40,15 @@ namespace win {
     void CustomNonClientFrame::onTranslucentChanged(bool translucent) {
     }
 
-    void CustomNonClientFrame::setExtraSpacingWhenMaximized(const Rect& rect) {
-        if (ext_sp_when_max_ != rect) {
-            ext_sp_when_max_ = rect;
+    void CustomNonClientFrame::setExtraSpacingWhenMaximized(const Padding& spacing) {
+        if (ext_sp_when_max_ != spacing) {
+            ext_sp_when_max_ = spacing;
             window_->sendFrameChanged();
         }
     }
 
-    void CustomNonClientFrame::getClientInsets(RECT* rect, int* bottom_beyond) {
-        ubassert(rect);
+    void CustomNonClientFrame::getClientInsets(Padding* insets, int* bottom_beyond) {
+        ubassert(insets);
         // 从 Windows 7 到 Windows 10 1703，窗口渲染缓冲的大小需要
         // 与窗口客户区的大小完全一致，否则会出现模糊（可能是因为窗口交换缓冲设置的缩放模式为拉伸），
         // 重要的是底边非客户区设置的 -1 需要考虑在内。
@@ -57,18 +57,11 @@ namespace win {
         int beyond = (need_total ? 0 : 1);
 
         if (window_->isMaximized()) {
-            auto ext = getExtraSpacingWhenMaximized();
-            rect->left = ext.left;
-            rect->right = ext.right;
-            rect->top = ext.top;
-            rect->bottom = ext.bottom;
+            *insets = getExtraSpacingWhenMaximized();
             *bottom_beyond = 0;
         } else {
-            rect->left = 0;
-            rect->right = 0;
-            rect->top = 0;
             // 消除底边非客户区设置为 -1 的影响
-            rect->bottom = 1;
+            insets->set(0, 0, 0, 1);
             *bottom_beyond = beyond;
         }
     }
@@ -77,8 +70,8 @@ namespace win {
         ubassert(offset);
         if (window_->isMaximized()) {
             auto ext = getExtraSpacingWhenMaximized();
-            offset->x = ext.left;
-            offset->y = ext.top;
+            offset->x = ext.start();
+            offset->y = ext.top();
         } else {
             offset->x = 0;
             offset->y = 0;
@@ -121,8 +114,8 @@ namespace win {
         *pass_to_window = true;
 
         Point cp;
-        cp.x() = GET_X_LPARAM(lParam);
-        cp.y() = GET_Y_LPARAM(lParam);
+        cp.x(GET_X_LPARAM(lParam));
+        cp.y(GET_Y_LPARAM(lParam));
 
         window_->convScreenToClient(&cp);
 
@@ -159,10 +152,10 @@ namespace win {
              */
             auto ext = getExtraSpacingWhenMaximized();
             int border_thickness = getBorderThickness();
-            rect->left += border_thickness + ext.left;
-            rect->top += border_thickness + ext.top;
-            rect->right -= border_thickness + ext.right;
-            rect->bottom -= border_thickness + ext.bottom;
+            rect->left += border_thickness + ext.start();
+            rect->top += border_thickness + ext.top();
+            rect->right -= border_thickness + ext.end();
+            rect->bottom -= border_thickness + ext.bottom();
         } else {
             rect->left += 0;
             rect->top += 0;
@@ -270,7 +263,7 @@ namespace win {
             + ::GetSystemMetrics(SM_CXPADDEDBORDER);
     }
 
-    Rect CustomNonClientFrame::getExtraSpacingWhenMaximized() const {
+    Padding CustomNonClientFrame::getExtraSpacingWhenMaximized() const {
         if (window_->isFullscreen()) {
             return {};
         }

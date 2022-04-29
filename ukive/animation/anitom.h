@@ -25,6 +25,7 @@ namespace ukive {
         Anitom();
         ~Anitom();
 
+        void setInevitable(bool inevitable);
         void setDuration(nsp duration);
         void setFinalValue(double val);
         void setInterpolator(Interpolator* i);
@@ -40,6 +41,7 @@ namespace ukive {
         bool isStarted() const;
         bool isRunning() const;
         bool isFinished() const;
+        bool isInevitable() const;
 
         double getCurValue(nsp cur_time) const;
 
@@ -62,6 +64,7 @@ namespace ukive {
         ns duration_;
         double init_val_ = 0;
         double final_val_ = 1;
+        bool is_inevitable_ = true;
         std::unique_ptr<Interpolator> interpolator_;
     };
 

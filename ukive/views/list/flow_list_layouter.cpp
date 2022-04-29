@@ -174,7 +174,7 @@ namespace ukive {
 
                 int child_max_width = columns_[col].getWidth();
                 auto item_size = parent_->determineItemSize(item, child_max_width);
-                heights[col] += item_size.height;
+                heights[col] += item_size.height();
 
                 ++v_idx;
                 ++c_ids[col];
@@ -214,8 +214,8 @@ namespace ukive {
         auto item_count = source_->onGetListDataCount(parent_);
         auto bounds = parent_->getContentBounds();
 
-        columns_.setVertical(bounds.top, bounds.bottom);
-        columns_.setHorizontal(bounds.left, bounds.right);
+        columns_.setVertical(bounds.y(), bounds.bottom());
+        columns_.setHorizontal(bounds.x(), bounds.right());
 
         for (size_t i = 0; i < col_count_; ++i) {
             auto& r = cur_records_[i];
@@ -262,11 +262,11 @@ namespace ukive {
                 auto item = columns_[col].getItem(c_ids[col]);
                 ubassert(item);
 
-                int width = item->item_view->getDeterminedSize().width + item->getHoriMargins();
-                int height = item->item_view->getDeterminedSize().height + item->getVertMargins();
+                int width = item->item_view->getDeterminedSize().width() + item->getHoriMargins();
+                int height = item->item_view->getDeterminedSize().height() + item->getVertMargins();
                 parent_->layoutItem(
                     item,
-                    columns_[col].getLeft(), bounds.top + heights[col] - offsets[col],
+                    columns_[col].getLeft(), bounds.y() + heights[col] - offsets[col],
                     width, height);
                 heights[col] += height;
 
@@ -292,11 +292,11 @@ namespace ukive {
             if (is_at_ceil) {
                 auto topmost = columns_.getTopmost();
                 if (topmost) {
-                    can_scroll = (bounds.top - topmost->getMgdTop() > 0);
+                    can_scroll = (bounds.y() - topmost->getMgdTop() > 0);
                 }
             }
             if (can_scroll) {
-                return bounds.bottom - columns_.getBottomost()->getMgdBottom();
+                return bounds.bottom() - columns_.getBottomost()->getMgdBottom();
             }
         }
 
@@ -315,8 +315,8 @@ namespace ukive {
         auto item_count = source_->onGetListDataCount(parent_);
         auto bounds = parent_->getContentBounds();
 
-        columns_.setVertical(bounds.top, bounds.bottom);
-        columns_.setHorizontal(bounds.left, bounds.right);
+        columns_.setVertical(bounds.y(), bounds.bottom());
+        columns_.setHorizontal(bounds.x(), bounds.right());
 
         for (size_t i = 0; i < col_count_; ++i) {
             auto& r = cur_records_[i];
@@ -368,9 +368,9 @@ namespace ukive {
                 auto item_size = parent_->determineItemSize(item, child_max_width);
                 parent_->layoutItem(
                     item,
-                    columns_[col].getLeft(), bounds.top + heights[col] - offsets[col],
-                    item_size.width, item_size.height);
-                heights[col] += item_size.height;
+                    columns_[col].getLeft(), bounds.y() + heights[col] - offsets[col],
+                    item_size.width(), item_size.height());
+                heights[col] += item_size.height();
 
                 ++v_idx;
                 ++c_ids[col];
@@ -402,11 +402,11 @@ namespace ukive {
             if (is_at_ceil) {
                 auto topmost = columns_.getTopmost();
                 if (topmost) {
-                    can_scroll = (bounds.top - topmost->getMgdTop() > 0);
+                    can_scroll = (bounds.y() - topmost->getMgdTop() > 0);
                 }
             }
             if (can_scroll) {
-                return bounds.bottom - columns_.getBottomost()->getMgdBottom();
+                return bounds.bottom() - columns_.getBottomost()->getMgdBottom();
             }
         }
 
@@ -454,8 +454,8 @@ namespace ukive {
                 auto item_size = parent_->determineItemSize(new_item, child_max_width);
                 parent_->layoutItem(
                     new_item,
-                    columns_[col].getLeft(), columns_[col].getItemsTop() - item_size.height,
-                    item_size.width, item_size.height);
+                    columns_[col].getLeft(), columns_[col].getItemsTop() - item_size.height(),
+                    item_size.width(), item_size.height());
                 columns_[col].addItem(new_item, 0);
             }
 
@@ -528,7 +528,7 @@ namespace ukive {
                 parent_->layoutItem(
                     new_item,
                     columns_[col].getLeft(), columns_[col].getItemsBottom(),
-                    item_size.width, item_size.height);
+                    item_size.width(), item_size.height());
                 columns_[col].addItem(new_item);
             }
 
@@ -650,7 +650,7 @@ namespace ukive {
             if (item) {
                 record.is_null = false;
                 record.cur_data_pos = item->data_pos;
-                record.cur_offset = bounds.top - item->getMgdTop();
+                record.cur_offset = bounds.y() - item->getMgdTop();
             }
             cur_records_[i] = record;
         }

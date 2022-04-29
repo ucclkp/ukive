@@ -99,16 +99,18 @@ namespace ukive {
 
         Anitom* findCurAnitom(
             uint64_t local_time, const Anitoms& anitoms) const;
+        void anitomToStart(Anitom* anim, double cur_val);
         void anitomToFinish(Anitom* anim);
         void anitomToReset(Anitom* anim);
 
         bool updateInternal(uint64_t local_time);
         void updateAnitom(uint64_t local_time, Anitom* anim, double& cur_val);
+        void updateAnitomP1(uint64_t local_time, Anitom* anim, double& cur_val);
+        bool updateAnitomP2(uint64_t local_time, Anitom* anim, double& cur_val);
         void restart(uint64_t cur_time);
 
         uint64_t start_time_ = 0;
         uint64_t elapsed_time_ = 0;
-        uint64_t looped_time_ = 0;
         std::optional<LoopItem> cur_loop_;
 
         bool is_repeat_ = false;

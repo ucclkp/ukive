@@ -39,7 +39,7 @@ namespace ukive {
         void autoWrap(bool enable);
         void setIsEditable(bool editable);
         void setIsSelectable(bool selectable);
-        void setSpace(const Rect& space);
+        void setSpace(const Padding& space);
 
         bool isAutoWrap() const;
         bool isEditable() const;
@@ -225,7 +225,7 @@ namespace ukive {
         size_t first_sel_;
         float last_sel_left_;
 
-        Rect space_;
+        Padding space_;
         int vert_offset_ = 0;
         int hori_offset_ = 0;
         size_t text_pos_at_view_top_ = 0;

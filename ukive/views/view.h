@@ -100,8 +100,8 @@ namespace ukive {
         int getCategory() const;
         int getScrollX() const;
         int getScrollY() const;
-        int getLeft() const;
-        int getTop() const;
+        int getX() const;
+        int getY() const;
         int getRight() const;
         int getBottom() const;
         int getWidth() const;
@@ -178,7 +178,7 @@ namespace ukive {
         void scrollTo(int x, int y);
         void scrollBy(int dx, int dy);
 
-        void measure(const SizeInfo& info);
+        void determineSize(const SizeInfo& info);
 
         /**
          * 将该 View 放置于父 View 内的指定位置。

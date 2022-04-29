@@ -177,14 +177,14 @@ namespace ukive {
         if (!rt_) {
             return 0;
         }
-        return rt_->getBuffer()->getSize().width;
+        return rt_->getBuffer()->getSize().width();
     }
 
     int Canvas::getHeight() const {
         if (!rt_) {
             return 0;
         }
-        return rt_->getBuffer()->getSize().height;
+        return rt_->getBuffer()->getSize().height();
     }
 
     Size Canvas::getSize() const {
@@ -494,7 +494,7 @@ namespace ukive {
         }
 
         auto size = img->getSize();
-        RectF src(0.f, 0.f, size.width, size.height);
+        RectF src(0.f, 0.f, size.width(), size.height());
 
         drawImage(src, src, 1.f, img);
     }
@@ -505,8 +505,8 @@ namespace ukive {
         }
 
         auto size = img->getSize();
-        RectF src(0.f, 0.f, size.width, size.height);
-        RectF dst(x, y, size.width, size.height);
+        RectF src(0.f, 0.f, size.width(), size.height());
+        RectF dst(x, y, size.width(), size.height());
 
         drawImage(src, dst, 1.f, img);
     }
@@ -517,7 +517,7 @@ namespace ukive {
         }
 
         auto size = img->getSize();
-        RectF src(0.f, 0.f, size.width, size.height);
+        RectF src(0.f, 0.f, size.width(), size.height());
 
         drawImage(src, src, opacity, img);
     }
@@ -528,7 +528,7 @@ namespace ukive {
         }
 
         auto size = img->getSize();
-        RectF src(0.f, 0.f, size.width, size.height);
+        RectF src(0.f, 0.f, size.width(), size.height());
 
         drawImage(src, dst, opacity, img);
     }

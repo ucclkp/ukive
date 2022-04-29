@@ -37,14 +37,14 @@ namespace ukive {
             return;
         }
 
-        int cur_left = bounds.left;
-        int cur_top = bounds.top;
+        int cur_left = bounds.x();
+        int cur_top = bounds.y();
         bool is_dark_color = false;
         bool is_vert_dark_color = !is_dark_color;
         for (;;) {
             for (;;) {
-                int cur_width = (std::min)(cell_length_, bounds.right - cur_left);
-                int cur_height = (std::min)(cell_length_, bounds.bottom - cur_top);
+                int cur_width = (std::min)(cell_length_, bounds.right() - cur_left);
+                int cur_height = (std::min)(cell_length_, bounds.bottom() - cur_top);
                 if (cur_width <= 0 || cur_height <= 0) {
                     break;
                 }
@@ -53,16 +53,16 @@ namespace ukive {
                 canvas->fillRect(RectF(cell), is_dark_color ? dark_color_ : light_color_);
                 is_dark_color = !is_dark_color;
                 cur_left += cell_length_;
-                if (cur_left >= bounds.right) {
+                if (cur_left >= bounds.right()) {
                     break;
                 }
             }
 
-            cur_left = bounds.left;
+            cur_left = bounds.x();
             is_dark_color = is_vert_dark_color;
             is_vert_dark_color = !is_vert_dark_color;
             cur_top += cell_length_;
-            if (cur_top >= bounds.bottom) {
+            if (cur_top >= bounds.bottom()) {
                 break;
             }
         }

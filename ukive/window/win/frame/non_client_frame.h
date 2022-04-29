@@ -10,6 +10,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+#include "ukive/graphics/padding.hpp"
 #include "ukive/graphics/rect.hpp"
 
 
@@ -26,9 +27,9 @@ namespace win {
         virtual int onNcDestroy(bool* handled) = 0;
         virtual void onTranslucentChanged(bool translucent) = 0;
 
-        virtual void setExtraSpacingWhenMaximized(const Rect& rect) = 0;
+        virtual void setExtraSpacingWhenMaximized(const Padding& spacing) = 0;
 
-        virtual void getClientInsets(RECT* rect, int* bottom_beyond) = 0;
+        virtual void getClientInsets(Padding* insets, int* bottom_beyond) = 0;
         virtual void getClientOffset(POINT* offset) = 0;
 
         virtual LRESULT onSize(WPARAM wParam, LPARAM lParam, bool* handled) = 0;

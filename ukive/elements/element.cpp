@@ -28,16 +28,16 @@ namespace ukive {
         onBoundChanged(bounds_);
     }
 
-    void Element::setBounds(int left, int top, int width, int height) {
-        if (bounds_.left == left
-            && bounds_.top == top
-            && bounds_.right == left + width
-            && bounds_.bottom == top + height)
+    void Element::setBounds(int x, int y, int width, int height) {
+        if (bounds_.x() == x
+            && bounds_.y() == y
+            && bounds_.width() == width
+            && bounds_.height() == height)
         {
             return;
         }
 
-        bounds_.set(left, top, width, height);
+        bounds_.xywh(x, y, width, height);
 
         onBoundChanged(bounds_);
     }

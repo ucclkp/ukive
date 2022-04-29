@@ -27,11 +27,11 @@ namespace ukive {
             if (child->getVisibility() != VANISHED) {
                 auto& size = child->getDeterminedSize();
 
-                int child_left = getPadding().start + child->getLayoutMargin().start;
-                int child_top = getPadding().top + child->getLayoutMargin().top;
+                int child_left = getPadding().start() + child->getLayoutMargin().start();
+                int child_top = getPadding().top() + child->getLayoutMargin().top();
 
                 child->layout(
-                    Rect(child_left, child_top, size.width, size.height));
+                    Rect(child_left, child_top, size.width(), size.height()));
             }
         }
     }

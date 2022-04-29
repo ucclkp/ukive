@@ -44,7 +44,7 @@ namespace ukive {
 
                 if (li->gravity == GV_NONE) {
                     child->layout(
-                        Rect(cp.start, cp.top, size.width, size.height));
+                        Rect(cp.start(), cp.top(), size.width(), size.height()));
                 } else {
                     auto root_bounds = getBoundsInRoot();
                     root_bounds.insets(cp);
@@ -61,7 +61,7 @@ namespace ukive {
 
                     // li->anchor 是 RootLayout 中的坐标，计算出的 bounds 也一样。
                     // 需要转换到 ShadeLayout 中的坐标。
-                    bounds.offset(-getLeft(), -getTop());
+                    bounds.offset(-getX(), -getY());
                     child->layout(bounds);
                 }
             }

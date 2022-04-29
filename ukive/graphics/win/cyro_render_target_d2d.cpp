@@ -346,7 +346,12 @@ namespace win {
     }
 
     void CyroRenderTargetD2D::pushClip(const RectF& rect) {
-        D2D1_RECT_F d2d_rect{ float(rect.left), float(rect.top), float(rect.right), float(rect.bottom) };
+        D2D1_RECT_F d2d_rect{
+            float(rect.x()),
+            float(rect.y()),
+            float(rect.right()),
+            float(rect.bottom())
+        };
         rt_->PushAxisAlignedClip(
             d2d_rect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
     }
@@ -444,7 +449,7 @@ namespace win {
 
     void CyroRenderTargetD2D::drawRect(const RectF& rect, const Paint& paint) {
         D2D1_RECT_F d2d_rect{
-            rect.left, rect.top, rect.right, rect.bottom };
+            rect.x(), rect.y(), rect.right(), rect.bottom() };
 
         switch (paint.getStyle()) {
         case Paint::Style::STROKE:
@@ -486,7 +491,7 @@ namespace win {
 
     void CyroRenderTargetD2D::drawRoundRect(const RectF& rect, float radius, const Paint& paint) {
         D2D1_RECT_F d2d_rect{
-            rect.left, rect.top, rect.right, rect.bottom };
+            rect.x(), rect.y(), rect.right(), rect.bottom() };
 
         switch (paint.getStyle()) {
         case Paint::Style::STROKE:
@@ -626,9 +631,9 @@ namespace win {
         }
 
         D2D1_RECT_F d2d_src_rect{
-            src.left, src.top, src.right, src.bottom };
+            src.x(), src.y(), src.right(), src.bottom() };
         D2D1_RECT_F d2d_dst_rect{
-            dst.left, dst.top, dst.right, dst.bottom };
+            dst.x(), dst.y(), dst.right(), dst.bottom() };
 
         auto img_win = static_cast<ImageFrameWin*>(img);
         if (!img_win->prepareForRender(rt_.get())) {
@@ -683,7 +688,7 @@ namespace win {
         layout->setMaxWidth(rect.width());
         layout->setMaxHeight(rect.height());
 
-        drawTextLayout(rect.left, rect.top, layout.get(), paint);
+        drawTextLayout(rect.x(), rect.y(), layout.get(), paint);
     }
 
     void CyroRenderTargetD2D::drawTextLayout(

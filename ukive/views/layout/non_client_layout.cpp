@@ -30,15 +30,15 @@ namespace ukive {
 
         int row = 1, col = 1;
 
-        if (x >= 0 && x < sh_padding_.start) {
+        if (x >= 0 && x < sh_padding_.start()) {
             col = 0;
-        } else if (x >= getWidth() - sh_padding_.end && x < getWidth()) {
+        } else if (x >= getWidth() - sh_padding_.end() && x < getWidth()) {
             col = 2;
         }
 
-        if (y >= 0 && y < sh_padding_.top) {
+        if (y >= 0 && y < sh_padding_.top()) {
             row = 0;
-        } else if (y >= getHeight() - sh_padding_.bottom && y < getHeight()) {
+        } else if (y >= getHeight() - sh_padding_.bottom() && y < getHeight()) {
             row = 2;
         }
 
@@ -74,15 +74,15 @@ namespace ukive {
         int vert_padding = getPadding().vert() + nc_vert_padding;
 
         auto new_info = info;
-        new_info.width.val = info.width.val - nc_hori_padding;
-        new_info.height.val = info.height.val - nc_vert_padding;
+        new_info.width().val = info.width().val - nc_hori_padding;
+        new_info.height().val = info.height().val - nc_vert_padding;
 
         determineChildrenSize(new_info);
 
-        switch (info.width.mode) {
+        switch (info.width().mode) {
         case SizeInfo::CONTENT:
             final_width = getWrappedWidth();
-            final_width = (std::min)(final_width + hori_padding, info.width.val);
+            final_width = (std::min)(final_width + hori_padding, info.width().val);
             break;
 
         case SizeInfo::FREEDOM:
@@ -91,14 +91,14 @@ namespace ukive {
 
         case SizeInfo::DEFINED:
         default:
-            final_width = info.width.val;
+            final_width = info.width().val;
             break;
         }
 
-        switch (info.height.mode) {
+        switch (info.height().mode) {
         case SizeInfo::CONTENT:
             final_height = getWrappedHeight();
-            final_height = (std::min)(final_height + vert_padding, info.height.val);
+            final_height = (std::min)(final_height + vert_padding, info.height().val);
             break;
 
         case SizeInfo::FREEDOM:
@@ -107,7 +107,7 @@ namespace ukive {
 
         case SizeInfo::DEFINED:
         default:
-            final_height = info.height.val;
+            final_height = info.height().val;
             break;
         }
 
@@ -117,17 +117,19 @@ namespace ukive {
     void NonClientLayout::onLayout(
         const Rect& new_bounds, const Rect& old_bounds)
     {
-        for (auto child : *this) {
+        // layout 里面可能会添加子 View, 这里不要用迭代器
+        for (size_t i = 0; i < getChildCount(); ++i) {
+            auto child = getChildAt(i);
             if (child->getVisibility() != VANISHED) {
                 auto& margin = child->getLayoutMargin();
 
                 auto& size = child->getDeterminedSize();
 
-                int child_left = getPadding().start + nc_padding_.start + margin.start;
-                int child_top = getPadding().top + nc_padding_.top + margin.top;
+                int child_left = getPadding().start() + nc_padding_.start() + margin.start();
+                int child_top = getPadding().top() + nc_padding_.top() + margin.top();
 
                 child->layout(
-                    Rect(child_left, child_top, size.width, size.height));
+                    Rect(child_left, child_top, size.width(), size.height()));
             }
         }
     }
@@ -136,22 +138,22 @@ namespace ukive {
         if (!nc_padding_.empty()) {
             Rect left_rect(
                 0, 0,
-                nc_padding_.start, getHeight() - nc_padding_.bottom);
+                nc_padding_.start(), getHeight() - nc_padding_.bottom());
             canvas->fillRect(RectF(left_rect), border_color);
 
             Rect top_rect(
-                nc_padding_.start, 0,
-                getWidth() - nc_padding_.start, nc_padding_.top);
+                nc_padding_.start(), 0,
+                getWidth() - nc_padding_.start(), nc_padding_.top());
             canvas->fillRect(RectF(top_rect), border_color);
 
             Rect right_rect(
-                getWidth() - nc_padding_.end, nc_padding_.top,
-                nc_padding_.end, getHeight() - nc_padding_.top);
+                getWidth() - nc_padding_.end(), nc_padding_.top(),
+                nc_padding_.end(), getHeight() - nc_padding_.top());
             canvas->fillRect(RectF(right_rect), border_color);
 
             Rect bottom_rect(
-                0, getHeight() - nc_padding_.bottom,
-                getWidth() - nc_padding_.end, nc_padding_.bottom);
+                0, getHeight() - nc_padding_.bottom(),
+                getWidth() - nc_padding_.end(), nc_padding_.bottom());
             canvas->fillRect(RectF(bottom_rect), border_color);
         }
 

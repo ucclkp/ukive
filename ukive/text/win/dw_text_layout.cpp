@@ -293,10 +293,11 @@ namespace win {
             return false;
         }
 
-        tm->rect.left = metrics.left;
-        tm->rect.top = metrics.top;
-        tm->rect.right = metrics.left + metrics.widthIncludingTrailingWhitespace;
-        tm->rect.bottom = metrics.top + metrics.height;
+        tm->rect.xywh(
+            metrics.left,
+            metrics.top,
+            metrics.widthIncludingTrailingWhitespace,
+            metrics.height);
         tm->line_count = metrics.lineCount;
 
         return true;
@@ -351,10 +352,11 @@ namespace win {
         *is_inside = _is_inside == TRUE;
         info->pos = metrics.textPosition;
         info->length = metrics.length;
-        info->rect.left = metrics.left;
-        info->rect.top = metrics.top;
-        info->rect.right = metrics.left + metrics.width;
-        info->rect.bottom = metrics.top + metrics.height;
+        info->rect.xywh(
+            metrics.left,
+            metrics.top,
+            metrics.width,
+            metrics.height);
 
         return true;
     }
@@ -374,10 +376,11 @@ namespace win {
                     HitTestInfo ht;
                     ht.pos = metrics[i].textPosition;
                     ht.length = metrics[i].length;
-                    ht.rect.left = metrics[i].left;
-                    ht.rect.top = metrics[i].top;
-                    ht.rect.right = metrics[i].left + metrics[i].width;
-                    ht.rect.bottom = metrics[i].top + metrics[i].height;
+                    ht.rect.xywh(
+                        metrics[i].left,
+                        metrics[i].top,
+                        metrics[i].width,
+                        metrics[i].height);
                     info->push_back(std::move(ht));
                 }
                 return true;
@@ -401,16 +404,17 @@ namespace win {
         }
 
         if (pt) {
-            pt->x() = x;
-            pt->y() = y;
+            pt->x(x);
+            pt->y(y);
         }
 
         info->pos = metrics.textPosition;
         info->length = metrics.length;
-        info->rect.left = metrics.left;
-        info->rect.top = metrics.top;
-        info->rect.right = metrics.left + metrics.width;
-        info->rect.bottom = metrics.top + metrics.height;
+        info->rect.xywh(
+            metrics.left,
+            metrics.top,
+            metrics.width,
+            metrics.height);
 
         return true;
     }

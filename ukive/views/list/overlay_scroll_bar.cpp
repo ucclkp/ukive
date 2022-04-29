@@ -26,7 +26,7 @@ namespace ukive {
 
         int view_height = view_bounds_.height();
         if (view_height >= content_height_) {
-            thumb_bounds_.set(0, 0, 0, 0);
+            thumb_bounds_.xywh(0, 0, 0, 0);
             return;
         }
 
@@ -38,10 +38,10 @@ namespace ukive {
 
         int thumb_width = scrollbar_bounds_.width();
         int thumb_height = (std::max)(static_cast<int>(view_height * scale), scrollbar_min_height_);
-        int thumb_y = int(scrollbar_bounds_.top + percent * (view_height - thumb_height));
+        int thumb_y = int(scrollbar_bounds_.y() + percent * (view_height - thumb_height));
 
         thumb_bounds_ = Rect(
-            view_bounds_.right - thumb_width,
+            view_bounds_.right() - thumb_width,
             thumb_y,
             thumb_width, thumb_height);
     }
@@ -51,16 +51,16 @@ namespace ukive {
     }
 
     void OverlayScrollBar::setBounds(int x, int y, int width, int height) {
-        view_bounds_.set(x, y, width, height);
-        scrollbar_bounds_.set(
+        view_bounds_.xywh(x, y, width, height);
+        scrollbar_bounds_.xywh(
             x + width - scrollbar_width_, y, scrollbar_width_, height);
     }
 
     void OverlayScrollBar::setBounds(const Rect& bounds) {
         view_bounds_ = bounds;
-        scrollbar_bounds_.set(
-            bounds.right - scrollbar_width_,
-            bounds.top,
+        scrollbar_bounds_.xywh(
+            bounds.right() - scrollbar_width_,
+            bounds.y(),
             scrollbar_width_, bounds.height());
     }
 
@@ -90,9 +90,9 @@ namespace ukive {
                 dragging_start_ = p;
             } else {
                 int distance_y = 0;
-                if (p.y() < thumb_bounds_.top) {
+                if (p.y() < thumb_bounds_.y()) {
                     distance_y = -thumb_bounds_.height();
-                } else if (p.y() >= thumb_bounds_.bottom) {
+                } else if (p.y() >= thumb_bounds_.bottom()) {
                     distance_y = thumb_bounds_.height();
                 }
 
@@ -121,13 +121,13 @@ namespace ukive {
     void OverlayScrollBar::moveScroller(int distance_y) {
         int view_height = view_bounds_.height();
 
-        int thumb_y = (std::max)(0 - thumb_bounds_start_.top, distance_y);
-        thumb_y = (std::min)(view_height - thumb_bounds_start_.height() - thumb_bounds_start_.top, thumb_y);
+        int thumb_y = (std::max)(0 - thumb_bounds_start_.y(), distance_y);
+        thumb_y = (std::min)(view_height - thumb_bounds_start_.height() - thumb_bounds_start_.y(), thumb_y);
 
         thumb_bounds_ = thumb_bounds_start_;
         thumb_bounds_.offset(0, thumb_y);
 
-        float scale = thumb_bounds_.top / static_cast<float>(view_height - thumb_bounds_.height());
+        float scale = thumb_bounds_.y() / static_cast<float>(view_height - thumb_bounds_.height());
         int to_y = int((content_height_ - view_height) * scale);
 
         if (scroll_handler_) {

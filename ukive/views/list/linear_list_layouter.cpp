@@ -57,7 +57,7 @@ namespace ukive {
             }
 
             auto item_size = parent_->determineItemSize(item, width);
-            total_height += item_size.height;
+            total_height += item_size.height();
         }
 
         if (!is_filled && total_height < height) {
@@ -66,7 +66,7 @@ namespace ukive {
                 column_.addItem(item, 0);
 
                 auto item_size = parent_->determineItemSize(item, width);
-                total_height += item_size.height;
+                total_height += item_size.height();
 
                 ++index;
                 if (total_height >= height) {
@@ -105,7 +105,7 @@ namespace ukive {
         size_t pos = cur ? cur_pos_ : 0;
         int offset = cur ? cur_offset_ : 0;
 
-        column_.setVertical(bounds.top, bounds.bottom);
+        column_.setVertical(bounds.y(), bounds.bottom());
 
         for (auto i = pos; i < item_count; ++i, ++index) {
             if (total_height >= bounds.height() + offset) {
@@ -118,9 +118,9 @@ namespace ukive {
             auto item_size = parent_->determineItemSize(item, bounds.width());
             parent_->layoutItem(
                 item,
-                bounds.left,  bounds.top + total_height - offset,
-                item_size.width, item_size.height);
-            total_height += item_size.height;
+                bounds.x(),  bounds.y() + total_height - offset,
+                item_size.width(), item_size.height());
+            total_height += item_size.height();
         }
 
         parent_->unfreezeLayout();
@@ -130,9 +130,9 @@ namespace ukive {
         auto first_item = column_.getFirstVisible();
         if (last_item && first_item && last_item->data_pos + 1 == item_count) {
             bool can_scroll = (first_item->data_pos > 0 ||
-                bounds.top - first_item->getMgdTop() > 0);
+                bounds.y() - first_item->getMgdTop() > 0);
             if (can_scroll) {
-                return bounds.bottom - last_item->getMgdBottom();
+                return bounds.bottom() - last_item->getMgdBottom();
             }
         }
 
@@ -176,11 +176,11 @@ namespace ukive {
             auto item_size = parent_->determineItemSize(item, bounds.width());
             parent_->layoutItem(
                 item,
-                bounds.left, bounds.top + total_height - offset,
-                item_size.width, item_size.height);
-            total_height += item_size.height;
+                bounds.x(), bounds.y() + total_height - offset,
+                item_size.width(), item_size.height());
+            total_height += item_size.height();
 
-            diff = bounds.bottom - item->getMgdBottom();
+            diff = bounds.bottom() - item->getMgdBottom();
             if (total_height >= bounds.height() + offset) {
                 full_child_reached = true;
                 ++index;
@@ -243,32 +243,32 @@ namespace ukive {
             auto item_size = parent_->determineItemSize(item, bounds.width());
             parent_->layoutItem(
                 item,
-                bounds.left, bounds.top + total_height + (front ? -offset : offset),
-                item_size.width, item_size.height);
+                bounds.x(), bounds.y() + total_height + (front ? -offset : offset),
+                item_size.width(), item_size.height());
 
             if (front) {
                 if (i == terminate_pos) {
-                    item_size.height = terminate_pos_offset;
+                    item_size.height(terminate_pos_offset);
                 }
                 if (i == start_pos) {
-                    item_size.height -= start_pos_offset;
+                    item_size.height(item_size.height() - start_pos_offset);
                 }
                 if (i != start_pos && i != terminate_pos) {
-                    item_size.height = front ? item_size.height : -item_size.height;
+                    item_size.height(front ? item_size.height() : -item_size.height());
                 }
             } else {
                 if (i == start_pos) {
-                    item_size.height = start_pos_offset;
+                    item_size.height(start_pos_offset);
                 }
                 if (i == terminate_pos) {
-                    item_size.height -= terminate_pos_offset;
+                    item_size.height(item_size.height() - terminate_pos_offset);
                 }
                 if (i != start_pos && i != terminate_pos) {
-                    item_size.height = front ? item_size.height : -item_size.height;
+                    item_size.height(front ? item_size.height() : -item_size.height());
                 }
             }
 
-            total_height += item_size.height;
+            total_height += item_size.height();
         }
 
         parent_->unfreezeLayout();
@@ -292,7 +292,7 @@ namespace ukive {
         auto cur_data_pos = top_item->data_pos;
 
         int inc_y = 0;
-        int distance_y = top_item->getMgdTop() + dy - bounds.top;
+        int distance_y = top_item->getMgdTop() + dy - bounds.y();
         while (cur_data_pos > 0 && !column_.isTopFilled(dy)) {
             --cur_data_pos;
 
@@ -301,12 +301,12 @@ namespace ukive {
             auto item_size = parent_->determineItemSize(new_item, bounds.width());
             parent_->layoutItem(
                 new_item,
-                bounds.left, column_.getItemsTop() - item_size.height,
-                item_size.width, item_size.height);
+                bounds.x(), column_.getItemsTop() - item_size.height(),
+                item_size.width(), item_size.height());
             column_.addItem(new_item, 0);
 
             // 先行回收，防止用户快速拖动滚动条时创建出大量的 ListItem
-            inc_y += item_size.height;
+            inc_y += item_size.height();
             if (inc_y <= distance_y) {
                 recycleBottomChildren(inc_y);
             }
@@ -336,7 +336,7 @@ namespace ukive {
         auto cur_data_pos = bottom_item->data_pos;
 
         int inc_y = 0;
-        int distance_y = bottom_item->getMgdBottom() + dy - bounds.bottom;
+        int distance_y = bottom_item->getMgdBottom() + dy - bounds.bottom();
         while (cur_data_pos + 1 < source_->onGetListDataCount(parent_) && !column_.isBottomFilled(dy)) {
             ++cur_data_pos;
 
@@ -345,12 +345,12 @@ namespace ukive {
             auto item_size = parent_->determineItemSize(new_item, bounds.width());
             parent_->layoutItem(
                 new_item,
-                bounds.left, column_.getItemsBottom(),
-                item_size.width, item_size.height);
+                bounds.x(), column_.getItemsBottom(),
+                item_size.width(), item_size.height());
             column_.addItem(new_item);
 
             // 先行回收，防止用户快速拖动滚动条时创建出大量的 ListItem
-            inc_y += item_size.height;
+            inc_y += item_size.height();
             if (inc_y <= -distance_y) {
                 recycleTopChildren(-inc_y);
             }
@@ -386,7 +386,7 @@ namespace ukive {
         auto item = column_.getFirstVisible();
         if (item) {
             cur_pos_ = item->data_pos;
-            cur_offset_ = parent_->getContentBounds().top - item->getMgdTop();
+            cur_offset_ = parent_->getContentBounds().y() - item->getMgdTop();
         } else {
             cur_pos_ = 0;
             cur_offset_ = 0;

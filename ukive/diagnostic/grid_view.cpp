@@ -260,8 +260,8 @@ namespace ukive {
                 result = true;
                 if (!is_moving_) {
                     makeGridTextLayout(
-                        e->getX() - getPadding().start,
-                        e->getY() - getPadding().top);
+                        e->getX() - getPadding().start(),
+                        e->getY() - getPadding().top());
                 }
                 is_moving_ = false;
             }
@@ -469,11 +469,11 @@ namespace ukive {
         rect.insets(inset, inset, inset, inset);
 
         canvas->drawTextLayout(
-            float(rect.left), float(rect.top),
+            float(rect.x()), float(rect.y()),
             coord_tl_.get(), Color::Yellow700);
 
         canvas->drawTextLayout(
-            float(rect.left), rect.top + coord_tl_->getMaxHeight(),
+            float(rect.x()), rect.y() + coord_tl_->getMaxHeight(),
             color_tl_.get(), Color::Yellow700);
     }
 
@@ -584,11 +584,11 @@ namespace ukive {
         float scale = std::pow(1.3f, level);
         length_ = int(init_length_ * scale);
 
-        off.width = int(off.width * float(length_) / prev_length);
-        off.height = int(off.height * float(length_) / prev_length);
+        off.width(int(off.width() * float(length_) / prev_length));
+        off.height(int(off.height() * float(length_) / prev_length));
 
         Point pos;
-        getGridPoint(grid_pos.x(), grid_pos.y(), off.width, off.height, &pos);
+        getGridPoint(grid_pos.x(), grid_pos.y(), off.width(), off.height(), &pos);
 
         translate(sx - pos.x(), sy - pos.y());
     }
@@ -598,9 +598,9 @@ namespace ukive {
         getGridPoint(col, row, &p);
 
         if (flipped_y_) {
-            rect->set(p.x(), p.y() - length_, length_, length_);
+            rect->xywh(p.x(), p.y() - length_, length_, length_);
         } else {
-            rect->set(p.x(), p.y(), length_, length_);
+            rect->xywh(p.x(), p.y(), length_, length_);
         }
     }
 
@@ -609,11 +609,11 @@ namespace ukive {
     }
 
     void GridView::getGridPoint(int col, int row, int off_col, int off_row, Point* p) {
-        p->x() = start_col_offset_ + off_col + (col + start_col_) * length_;
-        p->y() = start_row_offset_ + off_row + (row + start_row_) * length_;
+        p->x(start_col_offset_ + off_col + (col + start_col_) * length_);
+        p->y(start_row_offset_ + off_row + (row + start_row_) * length_);
 
         if (flipped_y_) {
-            p->y() = getContentBounds().height() - p->y();
+            p->y(getContentBounds().height() - p->y());
         }
     }
 
@@ -624,11 +624,11 @@ namespace ukive {
         Rect rect;
         getGridRect(int_col, int_row, &rect);
 
-        p->x() = int(rect.left + (col - double(int_col)) * length_);
+        p->x(int(rect.x() + (col - double(int_col)) * length_));
         if (flipped_y_) {
-            p->y() = int(rect.bottom - (row - double(int_row)) * length_);
+            p->y(int(rect.bottom() - (row - double(int_row)) * length_));
         } else {
-            p->y() = int(rect.top + (row - double(int_row)) * length_);
+            p->y(int(rect.y() + (row - double(int_row)) * length_));
         }
     }
 
@@ -637,10 +637,10 @@ namespace ukive {
             y = getContentBounds().height() - y;
         }
 
-        off->width = (x - start_col_offset_) % length_;
-        off->height = (y - start_row_offset_) % length_;
-        pos->x() = (x - start_col_offset_) / length_ - start_col_;
-        pos->y() = (y - start_row_offset_) / length_ - start_row_;
+        off->width((x - start_col_offset_) % length_);
+        off->height((y - start_row_offset_) % length_);
+        pos->x((x - start_col_offset_) / length_ - start_col_);
+        pos->y((y - start_row_offset_) / length_ - start_row_);
     }
 
     bool GridView::getGridColor(int col, int row, Color* color) {

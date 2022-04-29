@@ -26,7 +26,7 @@ namespace ukive {
 
             if (!rect1.empty() && rect0.intersect(rect1)) {
                 rect0.join(rect1);
-                rect1.set(0, 0, 0, 0);
+                rect1.xywh(0, 0, 0, 0);
             }
             return;
         }
@@ -41,7 +41,7 @@ namespace ukive {
 
             if (rect0.intersect(rect1)) {
                 rect0.join(rect1);
-                rect1.set(0, 0, 0, 0);
+                rect1.xywh(0, 0, 0, 0);
             }
             return;
         }
@@ -49,18 +49,18 @@ namespace ukive {
         rect0.join(rect);
         if (rect0.intersect(rect1)) {
             rect0.join(rect1);
-            rect1.set(0, 0, 0, 0);
+            rect1.xywh(0, 0, 0, 0);
         }
     }
 
     void DirtyRegion::setOne(const Rect& rect) {
         rect0 = rect;
-        rect1.set(0, 0, 0, 0);
+        rect1.xywh(0, 0, 0, 0);
     }
 
     void DirtyRegion::clear() {
-        rect0.set(0, 0, 0, 0);
-        rect1.set(0, 0, 0, 0);
+        rect0.xywh(0, 0, 0, 0);
+        rect1.xywh(0, 0, 0, 0);
     }
 
     bool DirtyRegion::empty() const {

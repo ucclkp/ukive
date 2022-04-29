@@ -59,10 +59,10 @@ namespace win {
             msg = ABM_GETAUTOHIDEBAREX;
 
             auto bounds = display->getPixelBounds();
-            data.rc.left = bounds.left;
-            data.rc.top = bounds.top;
-            data.rc.right = bounds.right;
-            data.rc.bottom = bounds.bottom;
+            data.rc.left = bounds.x();
+            data.rc.top = bounds.y();
+            data.rc.right = bounds.right();
+            data.rc.bottom = bounds.bottom();
         } else {
             /**
              * Windows 7 只有主显示器才会显示 AppBar，且使用

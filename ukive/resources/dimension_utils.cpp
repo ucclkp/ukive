@@ -193,30 +193,41 @@ namespace ukive {
         if (!padding_str.empty()) {
             auto paddings = utl::split(padding_str, ",");
             if (paddings.size() > 0) {
+                int val;
                 auto padding_start = paddings[0];
                 utl::trim(&padding_start);
-                if (resolveDimension(c, padding_start, &padding->start)) {
+                if (resolveDimension(c, padding_start, &val)) {
+                    padding->start(val);
                     if (paddings.size() == 1) {
-                        padding->top = padding->start;
-                        padding->end = padding->start;
-                        padding->bottom = padding->start;
+                        padding->top(padding->start());
+                        padding->end(padding->start());
+                        padding->bottom(padding->start());
                     }
                 }
             }
             if (paddings.size() > 1) {
+                int val;
                 auto padding_top = paddings[1];
                 utl::trim(&padding_top);
-                resolveDimension(c, padding_top, &padding->top);
+                if (resolveDimension(c, padding_top, &val)) {
+                    padding->top(val);
+                }
             }
             if (paddings.size() > 2) {
+                int val;
                 auto padding_end = paddings[2];
                 utl::trim(&padding_end);
-                resolveDimension(c, padding_end, &padding->end);
+                if (resolveDimension(c, padding_end, &val)) {
+                    padding->end(val);
+                }
             }
             if (paddings.size() > 3) {
+                int val;
                 auto padding_bottom = paddings[3];
                 utl::trim(&padding_bottom);
-                resolveDimension(c, padding_bottom, &padding->bottom);
+                if (resolveDimension(c, padding_bottom, &val)) {
+                    padding->bottom(val);
+                }
             }
             return true;
         }
@@ -230,30 +241,41 @@ namespace ukive {
         if (!margin_str.empty()) {
             auto margins = utl::split(margin_str, ",");
             if (margins.size() > 0) {
+                int val;
                 auto margin_start = margins[0];
                 utl::trim(&margin_start);
-                if (resolveDimension(c, margin_start, &margin->start)) {
+                if (resolveDimension(c, margin_start, &val)) {
+                    margin->start(val);
                     if (margins.size() == 1) {
-                        margin->top = margin->start;
-                        margin->end = margin->start;
-                        margin->bottom = margin->start;
+                        margin->top(val);
+                        margin->end(val);
+                        margin->bottom(val);
                     }
                 }
             }
             if (margins.size() > 1) {
+                int val;
                 auto margin_top = margins[1];
                 utl::trim(&margin_top);
-                resolveDimension(c, margin_top, &margin->top);
+                if (resolveDimension(c, margin_top, &val)) {
+                    margin->top(val);
+                }
             }
             if (margins.size() > 2) {
+                int val;
                 auto margin_end = margins[2];
                 utl::trim(&margin_end);
-                resolveDimension(c, margin_end, &margin->end);
+                if (resolveDimension(c, margin_end, &val)) {
+                    margin->end(val);
+                }
             }
             if (margins.size() > 3) {
+                int val;
                 auto margin_bottom = margins[3];
                 utl::trim(&margin_bottom);
-                resolveDimension(c, margin_bottom, &margin->bottom);
+                if (resolveDimension(c, margin_bottom, &val)) {
+                    margin->bottom(val);
+                }
             }
             return true;
         }
@@ -267,40 +289,46 @@ namespace ukive {
             attrs, necro::kAttrLayoutWidth, necro::kAttrValLayoutAuto);
         utl::tolatl(&width_attr);
 
-        if (!resolveDimension(c, width_attr, &size->width)) {
+        int width;
+        if (!resolveDimension(c, width_attr, &width)) {
             if (width_attr == necro::kAttrValLayoutAuto) {
-                size->width = View::LS_AUTO;
+                size->width(View::LS_AUTO);
             }
             else if (width_attr == necro::kAttrValLayoutFill) {
-                size->width = View::LS_FILL;
+                size->width(View::LS_FILL);
             }
             else if (width_attr == necro::kAttrValLayoutFree) {
-                size->width = View::LS_FREE;
+                size->width(View::LS_FREE);
             }
             else {
                 DLOG(Log::ERR) << "Unknown attr: " << width_attr;
-                size->width = View::LS_AUTO;
+                size->width(View::LS_AUTO);
             }
+        } else {
+            size->width(width);
         }
 
         auto height_attr = resolveAttrString(
             attrs, necro::kAttrLayoutHeight, necro::kAttrValLayoutAuto);
         utl::tolatl(&height_attr);
 
-        if (!resolveDimension(c, height_attr, &size->height)) {
+        int height;
+        if (!resolveDimension(c, height_attr, &height)) {
             if (height_attr == necro::kAttrValLayoutAuto) {
-                size->height = View::LS_AUTO;
+                size->height(View::LS_AUTO);
             }
             else if (height_attr == necro::kAttrValLayoutFill) {
-                size->height = View::LS_FILL;
+                size->height(View::LS_FILL);
             }
             else if (height_attr == necro::kAttrValLayoutFree) {
-                size->height = View::LS_FREE;
+                size->height(View::LS_FREE);
             }
             else {
                 DLOG(Log::ERR) << "Unknown attr: " << width_attr;
-                size->height = View::LS_AUTO;
+                size->height(View::LS_AUTO);
             }
+        } else {
+            size->height(height);
         }
     }
 

@@ -96,8 +96,8 @@ namespace ukive {
             break;
         }
         case OVAL: {
-            float cx = (bound.right - bound.left) / 2.f;
-            float cy = (bound.bottom - bound.top) / 2.f;
+            float cx = bound.width() / 2.f;
+            float cy = bound.height() / 2.f;
 
             if (has_solid_) {
                 canvas->fillOval(PointF{ cx, cy }, cx, cy, solid_color_);

@@ -33,7 +33,7 @@ namespace ukive {
 
         if (max_progress_ > 0) {
             float percent = (std::min)(1.f, float(cur_progress_) / max_progress_);
-            bounds.right = bounds.left + int(bounds.width() * percent);
+            bounds.right(bounds.x() + int(bounds.width() * percent));
             canvas->fillRect(RectF(bounds), Color::Blue400);
         }
     }

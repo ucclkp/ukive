@@ -23,6 +23,10 @@ namespace ukive {
         start_time_ = start;
     }
 
+    void Anitom::setInevitable(bool inevitable) {
+        is_inevitable_ = inevitable;
+    }
+
     void Anitom::setDuration(nsp duration) {
         duration_ = duration;
     }
@@ -104,6 +108,10 @@ namespace ukive {
 
     bool Anitom::isFinished() const {
         return is_finished_;
+    }
+
+    bool Anitom::isInevitable() const {
+        return is_inevitable_;
     }
 
 }

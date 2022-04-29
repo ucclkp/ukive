@@ -16,24 +16,24 @@ namespace ukive {
     SizeInfo::SizeInfo() {}
 
     SizeInfo::SizeInfo(const Value& w, const Value& h)
-        : width(w), height(h) {}
+        : width_(w), height_(h) {}
 
     bool SizeInfo::operator==(const SizeInfo& rhs) const {
-        return width == rhs.width &&
-            height == rhs.height;
+        return width_ == rhs.width_ &&
+            height_ == rhs.height_;
     }
 
     void SizeInfo::set(const Value& w, const Value& h) {
-        width = w;
-        height = h;
+        width_ = w;
+        height_ = h;
     }
 
     void SizeInfo::setWidth(const Value& w) {
-        width = w;
+        width_ = w;
     }
 
     void SizeInfo::setHeight(const Value& h) {
-        height = h;
+        height_ = h;
     }
 
 

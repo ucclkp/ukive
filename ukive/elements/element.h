@@ -44,7 +44,7 @@ namespace ukive {
         virtual ~Element() = default;
 
         void setBounds(const Rect& rect);
-        void setBounds(int left, int top, int width, int height);
+        void setBounds(int x, int y, int width, int height);
         void setCallback(ElementCallback* callback);
 
         bool setState(int state);

@@ -288,10 +288,10 @@ namespace win {
             }
 
             RECT dst_rect;
-            dst_rect.left = dest_rect_.left;
-            dst_rect.top = dest_rect_.top;
-            dst_rect.right = dest_rect_.right;
-            dst_rect.bottom = dest_rect_.bottom;
+            dst_rect.left = dest_rect_.x();
+            dst_rect.top = dest_rect_.y();
+            dst_rect.right = dest_rect_.right();
+            dst_rect.bottom = dest_rect_.bottom();
 
             hr = swapchain->Present(nullptr, &dst_rect, nullptr, nullptr, 0);
             if (SUCCEEDED(hr)) {

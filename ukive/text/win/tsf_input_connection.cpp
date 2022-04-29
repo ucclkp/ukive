@@ -306,10 +306,10 @@ namespace win {
         bool clipped;
         client_->getTICSelectionBounds(start, end, &bounds, &clipped);
 
-        prc->left = bounds.left;
-        prc->top = bounds.top;
-        prc->right = bounds.right;
-        prc->bottom = bounds.bottom;
+        prc->left = bounds.x();
+        prc->top = bounds.y();
+        prc->right = bounds.right();
+        prc->bottom = bounds.bottom();
 
         return true;
     }
@@ -318,10 +318,10 @@ namespace win {
         Rect bounds;
         client_->getTICBounds(&bounds);
 
-        prc->left = bounds.left;
-        prc->top = bounds.top;
-        prc->right = bounds.right;
-        prc->bottom = bounds.bottom;
+        prc->left = bounds.x();
+        prc->top = bounds.y();
+        prc->right = bounds.right();
+        prc->bottom = bounds.bottom();
     }
 
     void TsfInputConnection::insertTextAtSelection(

@@ -35,7 +35,7 @@ namespace ukive {
     bool ScrollView::canScroll() const {
         View* child = getChildAt(0);
         if (child && child->getVisibility() != VANISHED) {
-            if (getDeterminedSize().height < child->getDeterminedSize().height) {
+            if (getDeterminedSize().height() < child->getDeterminedSize().height()) {
                 return true;
             }
         }
@@ -60,7 +60,7 @@ namespace ukive {
     int ScrollView::computeScrollRange() const {
         View* child = getChildAt(0);
         if (child && child->getVisibility() != VANISHED) {
-            return child->getDeterminedSize().height;
+            return child->getDeterminedSize().height();
         }
         return 0;
     }
@@ -68,7 +68,7 @@ namespace ukive {
     int ScrollView::computeScrollExtend() const {
         View* child = getChildAt(0);
         if (child && child->getVisibility() != VANISHED) {
-            return child->getDeterminedSize().height - getDeterminedSize().height;
+            return child->getDeterminedSize().height() - getDeterminedSize().height();
         }
         return 0;
     }
@@ -104,13 +104,13 @@ namespace ukive {
         new_info.setHeight(SizeInfo::Value(0, SizeInfo::FREEDOM));
         determineChildrenSize(new_info);
 
-        switch (info.width.mode) {
+        switch (info.width().mode) {
         case SizeInfo::CONTENT: {
             View* child = getChildAt(0);
             if (child && child->getVisibility() != VANISHED) {
                 auto& margin = child->getLayoutMargin();
-                int child_width = child->getDeterminedSize().width + margin.hori();
-                final_width = (std::min)(child_width + getPadding().hori(), info.width.val);
+                int child_width = child->getDeterminedSize().width() + margin.hori();
+                final_width = (std::min)(child_width + getPadding().hori(), info.width().val);
             }
             break;
         }
@@ -119,7 +119,7 @@ namespace ukive {
             View* child = getChildAt(0);
             if (child && child->getVisibility() != VANISHED) {
                 auto& margin = child->getLayoutMargin();
-                int child_width = child->getDeterminedSize().width + margin.hori();
+                int child_width = child->getDeterminedSize().width() + margin.hori();
                 final_width = child_width + getPadding().hori();
             }
             break;
@@ -127,17 +127,17 @@ namespace ukive {
 
         case SizeInfo::DEFINED:
         default:
-            final_width = info.width.val;
+            final_width = info.width().val;
             break;
         }
 
-        switch (info.height.mode) {
+        switch (info.height().mode) {
         case SizeInfo::CONTENT: {
             View* child = getChildAt(0);
             if (child && child->getVisibility() != VANISHED) {
                 auto& margin = child->getLayoutMargin();
-                int child_height = child->getDeterminedSize().height + margin.vert();
-                final_height = (std::min)(child_height + getPadding().vert(), info.height.val);
+                int child_height = child->getDeterminedSize().height() + margin.vert();
+                final_height = (std::min)(child_height + getPadding().vert(), info.height().val);
             }
             break;
         }
@@ -146,7 +146,7 @@ namespace ukive {
             View* child = getChildAt(0);
             if (child && child->getVisibility() != VANISHED) {
                 auto& margin = child->getLayoutMargin();
-                int child_height = child->getDeterminedSize().height + margin.vert();
+                int child_height = child->getDeterminedSize().height() + margin.vert();
                 final_height = child_height + getPadding().vert();
             }
             break;
@@ -154,7 +154,7 @@ namespace ukive {
 
         case SizeInfo::DEFINED:
         default:
-            final_height = info.height.val;
+            final_height = info.height().val;
             break;
         }
 
@@ -170,14 +170,14 @@ namespace ukive {
 
             auto& size = child->getDeterminedSize();
 
-            int child_left = getPadding().start + margin.start;
-            int child_top = getPadding().top + margin.top;
+            int child_left = getPadding().start() + margin.start();
+            int child_top = getPadding().top() + margin.top();
 
             child->layout(
-                Rect(child_left, child_top, size.width, size.height));
+                Rect(child_left, child_top, size.width(), size.height()));
 
             // 在内容高度缩小时填充下部可能的空白区域
-            int detect_bottom = getBounds().height() - getPadding().bottom - margin.bottom;
+            int detect_bottom = getBounds().height() - getPadding().bottom() - margin.bottom();
             if (child->getBottom() - getScrollY() < detect_bottom && canScroll()) {
                 scrollBy(0, child->getBottom() - getScrollY() - detect_bottom);
             }

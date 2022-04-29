@@ -76,7 +76,7 @@ namespace win {
     }
 
     DisplayManager::DisplayPtr DisplayManagerWin::fromRect(const Rect& r) {
-        RECT win_rect{ r.left, r.top, r.right, r.bottom };
+        RECT win_rect{ r.x(), r.y(), r.right(), r.bottom() };
         HMONITOR monitor = ::MonitorFromRect(&win_rect, MONITOR_DEFAULTTONEAREST);
         if (!monitor) {
             LOG(Log::WARNING) << "Failed to get monitor handle!";
@@ -116,10 +116,10 @@ namespace win {
         } else {
             auto bounds = win->getBounds();
             RECT win_rect;
-            win_rect.left = bounds.left;
-            win_rect.top = bounds.top;
-            win_rect.right = bounds.right;
-            win_rect.bottom = bounds.bottom;
+            win_rect.left = bounds.x();
+            win_rect.top = bounds.y();
+            win_rect.right = bounds.right();
+            win_rect.bottom = bounds.bottom();
             monitor = ::MonitorFromRect(&win_rect, MONITOR_DEFAULTTONEAREST);
             if (!monitor) {
                 LOG(Log::WARNING) << "Failed to get monitor handle!";

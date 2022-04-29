@@ -52,8 +52,8 @@ namespace ukive {
     }
 
     Size ListView::onDetermineSize(const SizeInfo& info) {
-        if (info.width.mode == SizeInfo::FREEDOM ||
-            info.height.mode == SizeInfo::FREEDOM)
+        if (info.width().mode == SizeInfo::FREEDOM ||
+            info.height().mode == SizeInfo::FREEDOM)
         {
             return {};
         }
@@ -61,23 +61,23 @@ namespace ukive {
         int width;
         int height;
 
-        switch (info.width.mode) {
+        switch (info.width().mode) {
         case SizeInfo::CONTENT:
-            width = (std::max)(info.width.val, getMinimumSize().width);
+            width = (std::max)(info.width().val, getMinimumSize().width());
             break;
         case SizeInfo::DEFINED:
         default:
-            width = info.width.val;
+            width = info.width().val;
             break;
         }
 
-        switch (info.height.mode) {
+        switch (info.height().mode) {
         case SizeInfo::CONTENT:
-            height = (std::max)(info.height.val, getMinimumSize().height);
+            height = (std::max)(info.height().val, getMinimumSize().height());
             break;
         case SizeInfo::DEFINED:
         default:
-            height = info.height.val;
+            height = info.height().val;
             break;
         }
 
@@ -88,12 +88,12 @@ namespace ukive {
 
         if (layouter_) {
             return layouter_->onDetermineSize(
-                width, height, info.width.mode, info.height.mode);
+                width, height, info.width().mode, info.height().mode);
         }
 
         return Size(
             width,
-            info.height.mode == SizeInfo::CONTENT ? 0 : height);
+            info.height().mode == SizeInfo::CONTENT ? 0 : height);
     }
 
     void ListView::onLayout(
@@ -505,16 +505,16 @@ namespace ukive {
         auto child_width = SizeInfo::getChildSizeInfo(
             SizeInfo::Value(max_width, is_sec_dim_unknown_ ? SizeInfo::FREEDOM : SizeInfo::DEFINED),
             width_margin,
-            child_size.width);
+            child_size.width());
 
         auto child_height = SizeInfo::getChildSizeInfo(
             SizeInfo::Value(0, SizeInfo::FREEDOM), 0,
-            child_size.height);
+            child_size.height());
 
-        item->item_view->measure(SizeInfo(child_width, child_height));
+        item->item_view->determineSize(SizeInfo(child_width, child_height));
 
-        int t_width = item->item_view->getDeterminedSize().width + width_margin;
-        int t_height = item->item_view->getDeterminedSize().height + height_margin;
+        int t_width = item->item_view->getDeterminedSize().width() + width_margin;
+        int t_height = item->item_view->getDeterminedSize().height() + height_margin;
         return Size(t_width, t_height);
     }
 

@@ -92,13 +92,13 @@ namespace ukive {
         int track_width = getWidth() - thumb_max_diameter_ - getPadding().hori();
 
         float thumb_center_x_in_track = track_width * seek_percent_ + thumb_radius;
-        float thumb_center_y_in_track = getPadding().top + thumb_radius;
+        float thumb_center_y_in_track = getPadding().top() + thumb_radius;
 
-        if (((x - getPadding().start) >= (thumb_center_x_in_track - thumb_radius))
-            && ((x - getPadding().start) <= (thumb_center_x_in_track + thumb_radius)))
+        if (((x - getPadding().start()) >= (thumb_center_x_in_track - thumb_radius))
+            && ((x - getPadding().start()) <= (thumb_center_x_in_track + thumb_radius)))
         {
-            if ((y - getPadding().top) >= (thumb_center_y_in_track - thumb_radius)
-                && (y - getPadding().top) <= (thumb_center_y_in_track + thumb_radius))
+            if ((y - getPadding().top()) >= (thumb_center_y_in_track - thumb_radius)
+                && (y - getPadding().top()) <= (thumb_center_y_in_track + thumb_radius))
                 return true;
         }
 
@@ -106,13 +106,13 @@ namespace ukive {
     }
 
     bool SeekBar::isPointerInTrack(int x, int y) {
-        int trackSpace = getWidth() - getPadding().start - getPadding().end;
+        int trackSpace = getWidth() - getPadding().hori();
 
-        if ((x - getPadding().start) >= 0 &&
-            (x - getPadding().start) <= trackSpace)
+        if ((x - getPadding().start()) >= 0 &&
+            (x - getPadding().start()) <= trackSpace)
         {
-            if ((y - getPadding().top) >= 0 &&
-                (y - getPadding().top) <= thumb_max_diameter_)
+            if ((y - getPadding().top()) >= 0 &&
+                (y - getPadding().top()) <= thumb_max_diameter_)
             {
                 return true;
             }
@@ -122,7 +122,7 @@ namespace ukive {
     }
 
     void SeekBar::computePercent(int x, int y) {
-        float mouse_in_track = x - getPadding().start - thumb_max_diameter_ / 2.f;
+        float mouse_in_track = x - getPadding().start() - thumb_max_diameter_ / 2.f;
         int track_width = getWidth() - thumb_max_diameter_ - getPadding().hori();
         seek_percent_ = (std::max)(0.f, mouse_in_track / track_width);
         seek_percent_ = (std::min)(1.f, seek_percent_);
@@ -167,9 +167,9 @@ namespace ukive {
         int final_width = 0;
         int final_height = 0;
 
-        switch (info.width.mode) {
+        switch (info.width().mode) {
         case SizeInfo::CONTENT:
-            final_width = info.width.val;
+            final_width = info.width().val;
             break;
 
         case SizeInfo::FREEDOM:
@@ -178,13 +178,13 @@ namespace ukive {
 
         case SizeInfo::DEFINED:
         default:
-            final_width = info.width.val;
+            final_width = info.width().val;
             break;
         }
 
-        switch (info.height.mode) {
+        switch (info.height().mode) {
         case SizeInfo::CONTENT:
-            final_height = (std::min)(info.height.val, thumb_max_diameter_ + getPadding().vert());
+            final_height = (std::min)(info.height().val, thumb_max_diameter_ + getPadding().vert());
             break;
 
         case SizeInfo::FREEDOM:
@@ -193,7 +193,7 @@ namespace ukive {
 
         case SizeInfo::DEFINED:
         default:
-            final_height = info.height.val;
+            final_height = info.height().val;
             break;
         }
 

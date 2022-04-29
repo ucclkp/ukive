@@ -93,8 +93,8 @@ namespace win {
         getDpi(&dpi_x, &dpi_y);
         auto size = getPixelSize();
         return SizeF(
-            size.width / (dpi_x / kDefaultDpi),
-            size.height / (dpi_y / kDefaultDpi));
+            size.width() / (dpi_x / kDefaultDpi),
+            size.height() / (dpi_y / kDefaultDpi));
     }
 
     SizeU LcImageFrameWin::getPixelSize() const {

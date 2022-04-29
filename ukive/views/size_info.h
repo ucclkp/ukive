@@ -50,8 +50,15 @@ namespace ukive {
         static Value getChildSizeInfo(
             const Value& parent_val, int inset, int child_layout_size);
 
-        Value width;
-        Value height;
+        const Value& width() const { return width_; }
+        Value& width() { return width_; }
+
+        const Value& height() const { return height_; }
+        Value& height() { return height_; }
+
+    private:
+        Value width_;
+        Value height_;
     };
 
 }

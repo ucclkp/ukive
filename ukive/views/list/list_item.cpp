@@ -25,23 +25,23 @@ namespace ukive {
     }
 
     int ListItem::getMgdLeft() const {
-        return item_view->getLeft() -
-            item_view->getLayoutMargin().start - ex_margins.start;
+        return item_view->getX() -
+            item_view->getLayoutMargin().start() - ex_margins.start();
     }
 
     int ListItem::getMgdTop() const {
-        return item_view->getTop() -
-            item_view->getLayoutMargin().top - ex_margins.top;
+        return item_view->getY() -
+            item_view->getLayoutMargin().top() - ex_margins.top();
     }
 
     int ListItem::getMgdRight() const {
         return item_view->getRight() +
-            item_view->getLayoutMargin().end + ex_margins.end;
+            item_view->getLayoutMargin().end() + ex_margins.end();
     }
 
     int ListItem::getMgdBottom() const {
         return item_view->getBottom() +
-            item_view->getLayoutMargin().bottom + ex_margins.bottom;
+            item_view->getLayoutMargin().bottom() + ex_margins.bottom();
     }
 
     int ListItem::getMgdWidth() const {

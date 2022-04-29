@@ -133,15 +133,16 @@ namespace win {
         if (Application::getOptions().is_auto_dpi_scale) {
             float sx, sy;
             getUserScale(&sx, &sy);
-            auto x = bounds.left / sx;
-            auto y = bounds.left / sy;
+            auto x = bounds.x() / sx;
+            auto y = bounds.y() / sy;
             auto width = bounds.width() / sx;
             auto height = bounds.height() / sy;
 
-            bounds.left = int(std::floor(x));
-            bounds.top = int(std::floor(y));
-            bounds.right = int(std::ceil(x + width));
-            bounds.bottom = int(std::ceil(y + height));
+            bounds.xywh(
+                int(std::floor(x)),
+                int(std::floor(y)),
+                int(std::ceil(width)),
+                int(std::ceil(height)));
         }
         return bounds;
     }
@@ -151,15 +152,16 @@ namespace win {
         if (Application::getOptions().is_auto_dpi_scale) {
             float sx, sy;
             getUserScale(&sx, &sy);
-            auto x = bounds.left / sx;
-            auto y = bounds.left / sy;
+            auto x = bounds.x() / sx;
+            auto y = bounds.y() / sy;
             auto width = bounds.width() / sx;
             auto height = bounds.height() / sy;
 
-            bounds.left = int(std::floor(x));
-            bounds.top = int(std::floor(y));
-            bounds.right = int(std::ceil(x + width));
-            bounds.bottom = int(std::ceil(y + height));
+            bounds.xywh(
+                int(std::floor(x)),
+                int(std::floor(y)),
+                int(std::ceil(width)),
+                int(std::ceil(height)));
         }
         return bounds;
     }

@@ -66,11 +66,11 @@ namespace ukive {
             Rect rect(item->getBounds());
             if (!prev_rect_.empty()) {
                 int width = int((rect.width() - prev_rect_.width()) * animator_.getCurValue()) + prev_rect_.width();
-                int left = int((rect.left - prev_rect_.left) * animator_.getCurValue()) + prev_rect_.left;
-                Rect cur_rect(left, rect.bottom - nav_height, width, nav_height);
+                int left = int((rect.x() - prev_rect_.x()) * animator_.getCurValue()) + prev_rect_.x();
+                Rect cur_rect(left, rect.bottom() - nav_height, width, nav_height);
                 canvas->fillRect(RectF(cur_rect), Color::Blue400);
             } else {
-                rect.top = rect.bottom - nav_height;
+                rect.y(rect.bottom() - nav_height);
                 canvas->fillRect(RectF(rect), Color::Blue400);
             }
         }

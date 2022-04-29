@@ -18,7 +18,7 @@
 #include "shell/examples/example_window.h"
 #include "shell/text/text_window.h"
 //#include "shell/effects/effect_window.h"
-//#include "shell/grid/grid_window.h"
+#include "shell/grid/grid_window.h"
 //#include "shell/visualize/visualization_window.h"
 
 

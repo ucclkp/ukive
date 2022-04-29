@@ -28,14 +28,14 @@ namespace ukive {
         int final_width = 0;
         int final_height = 0;
 
-        switch (info.width.mode) {
+        switch (info.width().mode) {
         case SizeInfo::CONTENT:
             if (img_element_) {
                 final_width = img_element_->getContentWidth();
             }
 
             final_width = final_width + getPadding().hori();
-            final_width = (std::min)(info.width.val, final_width);
+            final_width = (std::min)(info.width().val, final_width);
             break;
 
         case SizeInfo::FREEDOM:
@@ -47,21 +47,21 @@ namespace ukive {
             break;
 
         case SizeInfo::DEFINED:
-            final_width = info.width.val;
+            final_width = info.width().val;
             break;
 
         default:
             break;
         }
 
-        switch (info.height.mode) {
+        switch (info.height().mode) {
         case SizeInfo::CONTENT:
             if (img_element_) {
                 final_height = img_element_->getContentHeight();
             }
 
             final_height = final_height + getPadding().vert();
-            final_height = (std::min)(info.height.val, final_height);
+            final_height = (std::min)(info.height().val, final_height);
             break;
 
         case SizeInfo::FREEDOM:
@@ -73,7 +73,7 @@ namespace ukive {
             break;
 
         case SizeInfo::DEFINED:
-            final_height = info.height.val;
+            final_height = info.height().val;
             break;
 
         default:

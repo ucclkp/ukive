@@ -30,8 +30,8 @@ namespace ukive {
         anim_.setInterpolator(new LinearInterpolator());
         anim_.setValueRange(0, 1);
 
-        Rect space;
-        space.left = c.dp2pxi(24);
+        Padding space;
+        space.start(c.dp2pxi(24));
         setSpace(space);
 
         setClickable(true);
@@ -87,13 +87,13 @@ namespace ukive {
             auto value = float(anim_.getCurValue());
 
             auto line1s = PointF{
-                check_bounds.left + stroke_width, check_bounds.top + inner_length / 2.f };
+                check_bounds.x() + stroke_width, check_bounds.y() + inner_length / 2.f };
             auto line1e = PointF{
-                check_bounds.left + inner_length / 2.f, check_bounds.top + inner_length - stroke_width };
+                check_bounds.x() + inner_length / 2.f, check_bounds.y() + inner_length - stroke_width };
             auto line2s = PointF{
-                check_bounds.left + inner_length / 2.f, check_bounds.top + inner_length - stroke_width };
+                check_bounds.x() + inner_length / 2.f, check_bounds.y() + inner_length - stroke_width };
             auto line2e = PointF{
-                check_bounds.left + inner_length - stroke_width, check_bounds.top + stroke_width };
+                check_bounds.x() + inner_length - stroke_width, check_bounds.y() + stroke_width };
 
             auto vec1 = line1e - line1s;
             auto vec2 = line2e - line2s;

@@ -127,15 +127,15 @@ namespace ukive {
     RectD ViewRevealTVals::getStart(View* v) const {
         RectD out;
         if (type_ == Type::Circle) {
-            out.setPos(
+            out.pos(
                 resolveX(v, x_.getStartTVal(), 0),
                 resolveY(v, y_.getStartTVal(), 0));
-            out.setSize(resolveRadius(v, width_.getStartTVal()), 0);
+            out.size(resolveRadius(v, width_.getStartTVal()), 0);
         } else {
-            out.setSize(
+            out.size(
                 resolveWidth(v, width_.getStartTVal()),
                 resolveHeight(v, height_.getStartTVal()));
-            out.setPos(
+            out.pos(
                 resolveX(v, x_.getStartTVal(), out.width()),
                 resolveY(v, y_.getStartTVal(), out.height()));
         }
@@ -145,15 +145,15 @@ namespace ukive {
     RectD ViewRevealTVals::getEnd(View* v) const {
         RectD out;
         if (type_ == Type::Circle) {
-            out.setPos(
+            out.pos(
                 resolveX(v, x_.getEndTVal(), 0),
                 resolveY(v, y_.getEndTVal(), 0));
-            out.setSize(resolveRadius(v, width_.getEndTVal()), 0);
+            out.size(resolveRadius(v, width_.getEndTVal()), 0);
         } else {
-            out.setSize(
+            out.size(
                 resolveWidth(v, width_.getEndTVal()),
                 resolveHeight(v, height_.getEndTVal()));
-            out.setPos(
+            out.pos(
                 resolveX(v, x_.getEndTVal(), out.width()),
                 resolveY(v, y_.getEndTVal(), out.height()));
         }
@@ -165,10 +165,10 @@ namespace ukive {
         auto e = getEnd(v);
 
         RectD out;
-        out.left   = s.left   + (e.left   - s.left)   * interpolation;
-        out.top    = s.top    + (e.top    - s.top)    * interpolation;
-        out.right  = s.right  + (e.right  - s.right)  * interpolation;
-        out.bottom = s.bottom + (e.bottom - s.bottom) * interpolation;
+        out.x(s.x() + (e.x() - s.x()) * interpolation);
+        out.y(s.y() + (e.y() - s.y()) * interpolation);
+        out.width(s.width()  + (e.width()  - s.width())  * interpolation);
+        out.height(s.height() + (e.height() - s.height()) * interpolation);
         return out;
     }
 

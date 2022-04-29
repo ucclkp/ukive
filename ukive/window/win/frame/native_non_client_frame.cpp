@@ -28,34 +28,33 @@ namespace win {
         return FALSE;
     }
 
-    void NativeNonClientFrame::setExtraSpacingWhenMaximized(const Rect& rect) {
-        if (rect != ext_sp_when_max_) {
-            ext_sp_when_max_ = rect;
+    void NativeNonClientFrame::setExtraSpacingWhenMaximized(const Padding& spacing) {
+        if (spacing != ext_sp_when_max_) {
+            ext_sp_when_max_ = spacing;
             window_->sendFrameChanged();
         }
     }
 
-    void NativeNonClientFrame::getClientInsets(RECT* rect, int* bottom_beyond) {
-        ubassert(rect);
+    void NativeNonClientFrame::getClientInsets(Padding* insets, int* bottom_beyond) {
+        ubassert(insets);
         if (window_->isLayered()) {
             int border_thickness = getBorderThickness();
             if (window_->isMaximized()) {
                 auto ext = getExtraSpacingWhenMaximized();
-                rect->left = border_thickness + ext.left;
-                rect->right = border_thickness + ext.right;
-                rect->top = border_thickness + ext.top;
-                rect->bottom = border_thickness + ext.bottom;
+                insets->set(
+                    border_thickness + ext.start(),
+                    border_thickness + ext.top(),
+                    border_thickness + ext.end(),
+                    border_thickness + ext.bottom());
             } else {
-                rect->left = border_thickness;
-                rect->right = border_thickness;
-                rect->top = border_thickness;
-                rect->bottom = border_thickness;
+                insets->set(
+                    border_thickness,
+                    border_thickness,
+                    border_thickness,
+                    border_thickness);
             }
         } else {
-            rect->left = 0;
-            rect->right = 0;
-            rect->top = 0;
-            rect->bottom = 0;
+            insets->set(0, 0, 0, 0);
         }
 
         *bottom_beyond = 0;
@@ -68,8 +67,8 @@ namespace win {
         {
             auto ext = getExtraSpacingWhenMaximized();
             int border_thickness = getBorderThickness();
-            offset->x = border_thickness + ext.left;
-            offset->y = border_thickness + ext.top;
+            offset->x = border_thickness + ext.start();
+            offset->y = border_thickness + ext.top();
         } else {
             offset->x = 0;
             offset->y = 0;
@@ -110,8 +109,8 @@ namespace win {
             *pass_to_window = true;
 
             Point cp;
-            cp.x() = GET_X_LPARAM(lParam);
-            cp.y() = GET_Y_LPARAM(lParam);
+            cp.x(GET_X_LPARAM(lParam));
+            cp.y(GET_Y_LPARAM(lParam));
 
             window_->convScreenToClient(&cp);
 
@@ -133,10 +132,10 @@ namespace win {
                 auto ncp = reinterpret_cast<NCCALCSIZE_PARAMS*>(lParam);
                 if (window_->isMaximized()) {
                     auto ext = getExtraSpacingWhenMaximized();
-                    ncp->rgrc[0].left += ext.left;
-                    ncp->rgrc[0].top += ext.top;
-                    ncp->rgrc[0].right -= ext.right;
-                    ncp->rgrc[0].bottom -= ext.bottom;
+                    ncp->rgrc[0].left += ext.start();
+                    ncp->rgrc[0].top += ext.top();
+                    ncp->rgrc[0].right -= ext.end();
+                    ncp->rgrc[0].bottom -= ext.bottom();
                 } else {
                     ncp->rgrc[0].left += 0;
                     ncp->rgrc[0].top += 0;
@@ -189,7 +188,7 @@ namespace win {
         return border_thickness;
     }
 
-    Rect NativeNonClientFrame::getExtraSpacingWhenMaximized() const {
+    Padding NativeNonClientFrame::getExtraSpacingWhenMaximized() const {
         if (window_->isFullscreen()) {
             return {};
         }

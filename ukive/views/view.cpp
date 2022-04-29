@@ -347,13 +347,13 @@ namespace ukive {
     {
         int final_width, final_height;
 
-        switch (info.width.mode) {
+        switch (info.width().mode) {
         case SizeInfo::CONTENT:
-            final_width = (std::min)(info.width.val, pref_width + padding_.hori());
+            final_width = (std::min)(info.width().val, pref_width + padding_.hori());
             break;
 
         case SizeInfo::DEFINED:
-            final_width = info.width.val;
+            final_width = info.width().val;
             break;
 
         case SizeInfo::FREEDOM:
@@ -362,13 +362,13 @@ namespace ukive {
             break;
         }
 
-        switch (info.height.mode) {
+        switch (info.height().mode) {
         case SizeInfo::CONTENT:
-            final_height = (std::min)(info.height.val, pref_height + padding_.vert());
+            final_height = (std::min)(info.height().val, pref_height + padding_.vert());
             break;
 
         case SizeInfo::DEFINED:
-            final_height = info.height.val;
+            final_height = info.height().val;
             break;
 
         case SizeInfo::FREEDOM:
@@ -381,25 +381,23 @@ namespace ukive {
     }
 
     void View::offsetVertical(int dy) {
-        bounds_.top += dy;
-        bounds_.bottom += dy;
+        bounds_.offset(0, dy);
 
         requestDraw();
     }
 
     void View::offsetHorizontal(int dx) {
-        bounds_.left += dx;
-        bounds_.right += dx;
+        bounds_.offset(dx, 0);
 
         requestDraw();
     }
 
     void View::setMinimumWidth(int width) {
-        min_size_.width = width;
+        min_size_.width(width);
     }
 
     void View::setMinimumHeight(int height) {
-        min_size_.height = height;
+        min_size_.height(height);
     }
 
     void View::setOnClickListener(OnClickListener* l) {
@@ -419,8 +417,8 @@ namespace ukive {
     }
 
     void View::setLayoutSize(int width, int height) {
-        bool changed = layout_size_.width != width ||
-            layout_size_.height != height;
+        bool changed = layout_size_.width() != width ||
+            layout_size_.height() != height;
         if (!changed) {
             return;
         }
@@ -432,10 +430,10 @@ namespace ukive {
     }
 
     void View::setLayoutMargin(int start, int top, int end, int bottom) {
-        bool changed = layout_margin_.start != start ||
-            layout_margin_.top != top ||
-            layout_margin_.end != end ||
-            layout_margin_.bottom != bottom;
+        bool changed = layout_margin_.start() != start ||
+            layout_margin_.top() != top ||
+            layout_margin_.end() != end ||
+            layout_margin_.bottom() != bottom;
         if (!changed) {
             return;
         }
@@ -475,20 +473,20 @@ namespace ukive {
         return scroll_y_;
     }
 
-    int View::getLeft() const {
-        return bounds_.left;
+    int View::getX() const {
+        return bounds_.x();
     }
 
-    int View::getTop() const {
-        return bounds_.top;
+    int View::getY() const {
+        return bounds_.y();
     }
 
     int View::getRight() const {
-        return bounds_.right;
+        return bounds_.right();
     }
 
     int View::getBottom() const {
-        return bounds_.bottom;
+        return bounds_.bottom();
     }
 
     int View::getWidth() const {
@@ -585,8 +583,8 @@ namespace ukive {
         auto parent = parent_;
         while (parent) {
             auto p_bounds = parent->getBounds();
-            auto dx = p_bounds.left - parent->getScrollX();
-            auto dy = p_bounds.top - parent->getScrollY();
+            auto dx = p_bounds.x() - parent->getScrollX();
+            auto dy = p_bounds.y() - parent->getScrollY();
             parent = parent->getParent();
             if (parent) {
                 bounds.offset(dx, dy);
@@ -603,8 +601,8 @@ namespace ukive {
         while (parent) {
             auto p_bounds = parent->getBounds();
             bounds.offset(
-                p_bounds.left - parent->getScrollX(),
-                p_bounds.top - parent->getScrollY());
+                p_bounds.x() - parent->getScrollX(),
+                p_bounds.y() - parent->getScrollY());
             parent = parent->getParent();
         }
 
@@ -618,14 +616,12 @@ namespace ukive {
             return bound;
         }
 
-        Point pt;
-        pt.x() = bound.left;
-        pt.y() = bound.top;
+        Point pt = bound.pos();
 
         w->convClientToScreen(&pt);
 
-        int dx = pt.x() - bound.left;
-        int dy = pt.y() - bound.top;
+        int dx = pt.x() - bound.x();
+        int dy = pt.y() - bound.y();
 
         bound.offset(dx, dy);
 
@@ -636,7 +632,7 @@ namespace ukive {
         int content_width = bounds_.width() - padding_.hori();
         int content_height = bounds_.height() - padding_.vert();
         return Rect(
-            padding_.start, padding_.top,
+            padding_.start(), padding_.top(),
             content_width, content_height);
     }
 
@@ -652,8 +648,8 @@ namespace ukive {
             dy += parent->getScrollY();
             pc_bounds.offset(dx, dy);
             bounds.same(pc_bounds);
-            dx -= parent->bounds_.left;
-            dy -= parent->bounds_.top;
+            dx -= parent->bounds_.x();
+            dy -= parent->bounds_.y();
             parent = parent->getParent();
         }
 
@@ -678,15 +674,16 @@ namespace ukive {
 
     void View::transformBounds(Rect* bounds) const {
         Matrix2x3F matrix;
-        anime_params_.generateMatrix(bounds->left, bounds->top, &matrix);
+        anime_params_.generateMatrix(bounds->x(), bounds->y(), &matrix);
 
         PointF lt, tr, rb, bl;
         matrix.transformRect(RectF(*bounds), &lt, &tr, &rb, &bl);
 
-        bounds->left = int(std::floor((std::min)({  lt.x(), tr.x(), rb.x(), bl.x() })));
-        bounds->top = int(std::floor((std::min)({   lt.y(), tr.y(), rb.y(), bl.y() })));
-        bounds->right = int(std::ceil((std::max)({  lt.x(), tr.x(), rb.x(), bl.x() })));
-        bounds->bottom = int(std::ceil((std::max)({ lt.y(), tr.y(), rb.y(), bl.y() })));
+        bounds->xyrb(
+            int(std::floor((std::min)({ lt.x(), tr.x(), rb.x(), bl.x() }))),
+            int(std::floor((std::min)({ lt.y(), tr.y(), rb.y(), bl.y() }))),
+            int(std::ceil((std::max)( { lt.x(), tr.x(), rb.x(), bl.x() }))),
+            int(std::ceil((std::max)( { lt.y(), tr.y(), rb.y(), bl.y() }))));
     }
 
     bool View::isEnabled() const {
@@ -746,7 +743,7 @@ namespace ukive {
 
     bool View::isLocalPointerInThisVisible(InputEvent* e) const {
         auto bounds = getVisibleBounds();
-        bounds.offset(-bounds_.left, -bounds_.top);
+        bounds.offset(-bounds_.x(), -bounds_.y());
 
         switch (outline_) {
         case OUTLINE_OVAL:
@@ -769,8 +766,8 @@ namespace ukive {
         {
             float a = bounds_.width() / 2.f;
             float b = bounds_.height() / 2.f;
-            return std::pow((e->getX() - bounds_.left) / a - 1, 2)
-                + std::pow((e->getY() - bounds_.top) / b - 1, 2) <= 1;
+            return std::pow((e->getX() - bounds_.x()) / a - 1, 2)
+                + std::pow((e->getY() - bounds_.y()) / b - 1, 2) <= 1;
         }
 
         case OUTLINE_RECT:
@@ -945,12 +942,12 @@ namespace ukive {
     void View::drawContent(Canvas* c) {
         // 裁剪出可用区
         c->pushClip(RectF(
-            float(padding_.start), float(padding_.top),
+            float(padding_.start()), float(padding_.top()),
             float(getWidth() - padding_.hori()),
             float(getHeight() - padding_.vert())));
         {
             c->save();
-            c->translate(float(padding_.start), float(padding_.top));
+            c->translate(float(padding_.start()), float(padding_.top()));
             c->translate(-float(scroll_x_), -float(scroll_y_));
 
             // 绘制自身
@@ -970,7 +967,7 @@ namespace ukive {
         }
         {
             c->save();
-            c->translate(float(padding_.start), float(padding_.top));
+            c->translate(float(padding_.start()), float(padding_.top()));
 
             // 绘制盖在孩子之上的内容
             onDrawOverChildren(c);
@@ -1076,8 +1073,8 @@ namespace ukive {
                     auto cur_bounds = getBoundsInRoot();
                     auto prev_bounds = prev_target->getBoundsInRoot();
                     prev.offsetInputPos(
-                        cur_bounds.left - prev_bounds.left,
-                        cur_bounds.top - prev_bounds.top);
+                        cur_bounds.x() - prev_bounds.x(),
+                        cur_bounds.y() - prev_bounds.y());
                     send_leave = !prev_target->isLocalPointerInThisVisible(&prev);
                 }
 
@@ -1127,8 +1124,8 @@ namespace ukive {
                     auto cur_bounds = getBoundsInRoot();
                     auto prev_bounds = prev_target->getBoundsInRoot();
                     prev.offsetInputPos(
-                        cur_bounds.left - prev_bounds.left,
-                        cur_bounds.top - prev_bounds.top);
+                        cur_bounds.x() - prev_bounds.x(),
+                        cur_bounds.y() - prev_bounds.y());
                     send_leave = !prev_target->isLocalPointerInThisVisible(&prev);
                 }
 
@@ -1481,11 +1478,11 @@ namespace ukive {
         return consumed;
     }
 
-    void View::measure(const SizeInfo& info) {
+    void View::determineSize(const SizeInfo& info) {
         if (is_measured_) {
             bool is_defined_size =
-                (info.width.mode == SizeInfo::DEFINED &&
-                    info.height.mode == SizeInfo::DEFINED);
+                (info.width().mode == SizeInfo::DEFINED &&
+                    info.height().mode == SizeInfo::DEFINED);
 
             if (!request_layout_ &&
                 is_defined_size &&
@@ -1496,7 +1493,7 @@ namespace ukive {
         }
 
         determined_size_ = onDetermineSize(info);
-        determined_size_.setToMax(min_size_);
+        determined_size_.join(min_size_);
 
         is_measured_ = true;
         need_layout_ = true;
@@ -1546,7 +1543,7 @@ namespace ukive {
 
     void View::requestDraw(const Rect& rect) {
         Rect bounds(rect);
-        bounds.offset(bounds_.left, bounds_.top);
+        bounds.offset(bounds_.x(), bounds_.y());
         requestDrawRelParent(bounds);
     }
 
@@ -1565,8 +1562,8 @@ namespace ukive {
         }
 
         if (parent_) {
-            int off_x = parent_->getLeft() - parent_->getScrollX();
-            int off_y = parent_->getTop() - parent_->getScrollY();
+            int off_x = parent_->getX() - parent_->getScrollX();
+            int off_y = parent_->getY() - parent_->getScrollY();
             bounds.offset(off_x, off_y);
 
             transformBounds(&bounds);
@@ -1675,7 +1672,7 @@ namespace ukive {
     }
 
     bool View::dispatchInputEvent(InputEvent* e) {
-        e->offsetInputPos(-bounds_.left, -bounds_.top);
+        e->offsetInputPos(-bounds_.x(), -bounds_.y());
         return sendInputEvent(e);
     }
 

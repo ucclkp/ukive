@@ -214,8 +214,8 @@ namespace win {
         void onActivate(int param);
         void onMove(int x, int y);
         void onResize(int param, int width, int height);
-        bool onMoving(Rect* rect);
-        bool onResizing(WPARAM edge, Rect* rect);
+        bool onMoving(RECT* rect);
+        bool onResizing(WPARAM edge, RECT* rect);
         bool onTouch(const TOUCHINPUT* inputs, int size);
         bool onInputEvent(InputEvent* e);
         void onDpiChanged(int dpi_x, int dpi_y);

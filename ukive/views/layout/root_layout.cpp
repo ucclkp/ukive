@@ -48,7 +48,7 @@ namespace {
             }
 
             determineChildSize(title_bar, info);
-            content_view->setLayoutMargin(0, title_bar->getDeterminedSize().height, 0, 0);
+            content_view->setLayoutMargin(0, title_bar->getDeterminedSize().height(), 0, 0);
 
             determineChildSize(content_view, info);
             return getWrappedSize(info);
@@ -211,7 +211,7 @@ namespace ukive {
         {
             auto bounds = shade_layout_->getBounds();
             if (bounds.hit(x, y)) {
-                if (shade_layout_->hitChildren(x - bounds.left, y - bounds.top)) {
+                if (shade_layout_->hitChildren(x - bounds.x(), y - bounds.y())) {
                     return HitPoint::CLIENT;
                 }
             }
@@ -220,11 +220,11 @@ namespace ukive {
         if (title_bar_ &&
             title_bar_->getVisibility() == SHOW)
         {
-            x -= content_layout_->getLeft();
-            y -= content_layout_->getTop();
+            x -= content_layout_->getX();
+            y -= content_layout_->getY();
             auto bounds = title_bar_->getBounds();
             if (bounds.hit(x, y)) {
-                hit_point = title_bar_->onNCHitTest(x - bounds.left, y - bounds.top);
+                hit_point = title_bar_->onNCHitTest(x - bounds.x(), y - bounds.y());
             }
         }
         return hit_point;

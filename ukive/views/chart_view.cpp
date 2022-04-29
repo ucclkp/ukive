@@ -54,7 +54,7 @@ namespace ukive {
             return;
         }
 
-        Point prev;
+        Point prev{};
         bool has_prev = false;
         for (const auto& d : data_) {
             int vx = int(node_radius + width / dw * (d.x - left));

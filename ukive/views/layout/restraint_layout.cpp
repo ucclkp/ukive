@@ -169,7 +169,7 @@ namespace ukive {
             SizeInfo::Value child_width;
             getRestrainedChildWidth(
                 child, li,
-                parent_info.width,
+                parent_info.width(),
                 &child_width);
 
             li->is_width_determined = true;
@@ -186,7 +186,7 @@ namespace ukive {
             if (!li->is_height_determined) {
                 getRestrainedChildHeight(
                     child, li,
-                    parent_info.height,
+                    parent_info.height(),
                     &child_height);
 
                 li->is_height_determined = true;
@@ -197,7 +197,7 @@ namespace ukive {
             }
 
             if (isAttended(child)) {
-                child->measure(SizeInfo(li->width_info, child_height));
+                child->determineSize(SizeInfo(li->width_info, child_height));
             }
         }
     }
@@ -217,9 +217,9 @@ namespace ukive {
                 parent_width.val - getPadding().hori() - hori_margins);
 
             // child 有固定的大小。
-            if (layout_size.width >= 0 || !isAttended(child)) {
+            if (layout_size.width() >= 0 || !isAttended(child)) {
                 child_width = SizeInfo::Value(
-                    isAttended(child) ? layout_size.width : 0, SizeInfo::DEFINED);
+                    isAttended(child) ? layout_size.width() : 0, SizeInfo::DEFINED);
                 rli->hori_couple_handler_type = RestraintLayoutInfo::CH_FIXED;
             }
             // child 将填充 handler couple 之间的区域。
@@ -231,10 +231,10 @@ namespace ukive {
                     switch (parent_width.mode) {
                     case SizeInfo::CONTENT:
                     {
-                        if (layout_size.width == LS_FILL) {
+                        if (layout_size.width() == LS_FILL) {
                             child_width = SizeInfo::Value(size, SizeInfo::CONTENT);
                             rli->hori_couple_handler_type = RestraintLayoutInfo::CH_FILL;
-                        } else if (layout_size.width == LS_AUTO) {
+                        } else if (layout_size.width() == LS_AUTO) {
                             child_width = SizeInfo::Value(size, SizeInfo::CONTENT);
                             rli->hori_couple_handler_type = RestraintLayoutInfo::CH_WRAP;
                         } else {
@@ -245,10 +245,10 @@ namespace ukive {
                     }
                     case SizeInfo::DEFINED:
                     {
-                        if (layout_size.width == LS_FILL) {
+                        if (layout_size.width() == LS_FILL) {
                             child_width = SizeInfo::Value(size, SizeInfo::DEFINED);
                             rli->hori_couple_handler_type = RestraintLayoutInfo::CH_FILL;
-                        } else if (layout_size.width == LS_AUTO) {
+                        } else if (layout_size.width() == LS_AUTO) {
                             child_width = SizeInfo::Value(size, SizeInfo::CONTENT);
                             rli->hori_couple_handler_type = RestraintLayoutInfo::CH_WRAP;
                         } else {
@@ -303,18 +303,18 @@ namespace ukive {
                         if (isAttended(target)) {
                             // 让 target view 测量自身。
                             // 这将会使 target view 的 onDetermineSize() 方法多调用一次。
-                            target->measure(SizeInfo(target_width, target_height));
-                            measured_target_width = target->getDeterminedSize().width;
+                            target->determineSize(SizeInfo(target_width, target_height));
+                            measured_target_width = target->getDeterminedSize().width();
                         }
 
                         child_width.val = (std::max)(0, measured_target_width - hori_margins);
 
-                        if (layout_size.width == LS_FILL)
+                        if (layout_size.width() == LS_FILL)
                         {
                             child_width.mode = SizeInfo::DEFINED;
                             rli->hori_couple_handler_type = RestraintLayoutInfo::CH_FILL;
                         }
-                        else if (layout_size.width == LS_AUTO)
+                        else if (layout_size.width() == LS_AUTO)
                         {
                             child_width.mode = SizeInfo::CONTENT;
                             rli->hori_couple_handler_type = RestraintLayoutInfo::CH_WRAP;
@@ -331,7 +331,7 @@ namespace ukive {
                             || parent_width.mode == SizeInfo::CONTENT)
                         {
                             // 前向遍历。
-                            int measured_start_margin = margin.start;
+                            int measured_start_margin = margin.start();
                             RestraintLayoutInfo* child_li = rli;
                             while (child_li->hasStart()
                                 && child_li->start_handle_id != this->getId())
@@ -363,18 +363,18 @@ namespace ukive {
                                 if (isAttended(target)) {
                                     // 让 target view 测量自身。
                                     // 这将会使 target view 的 onDetermineSize() 方法多调用一次。
-                                    target->measure(SizeInfo(target_width, target_height));
+                                    target->determineSize(SizeInfo(target_width, target_height));
                                     auto& target_margin = target->getLayoutMargin();
 
                                     if (child_li->start_handle_edge == RestraintLayoutInfo::END)
                                     {
-                                        measured_start_margin += target->getDeterminedSize().width
-                                            + (target_li->hasStart() ? target_margin.start : 0);
+                                        measured_start_margin += target->getDeterminedSize().width()
+                                            + (target_li->hasStart() ? target_margin.start() : 0);
                                     }
                                     else if (child_li->start_handle_edge == RestraintLayoutInfo::START)
                                     {
                                         measured_start_margin +=
-                                            (target_li->hasStart() ? target_margin.start : 0);
+                                            (target_li->hasStart() ? target_margin.start() : 0);
                                     }
                                 }
 
@@ -382,7 +382,7 @@ namespace ukive {
                             }
 
                             // 后向遍历。
-                            int measured_end_margin = margin.end;
+                            int measured_end_margin = margin.end();
                             child_li = rli;
                             while (child_li->hasEnd()
                                 && child_li->end_handle_id != this->getId())
@@ -414,19 +414,19 @@ namespace ukive {
                                 if (isAttended(target)) {
                                     // 让 target view 测量自身。
                                     // 这将会使 target view 的 onDetermineSize() 方法多调用一次。
-                                    target->measure(SizeInfo(target_width, target_height));
+                                    target->determineSize(SizeInfo(target_width, target_height));
                                     auto& target_margin = target->getLayoutMargin();
 
                                     if (child_li->end_handle_edge
                                         == RestraintLayoutInfo::START)
                                     {
-                                        measured_end_margin += target->getDeterminedSize().width
-                                            + (target_li->hasEnd() ? target_margin.end : 0);
+                                        measured_end_margin += target->getDeterminedSize().width()
+                                            + (target_li->hasEnd() ? target_margin.end() : 0);
                                     } else if (child_li->end_handle_edge
                                         == RestraintLayoutInfo::END)
                                     {
                                         measured_end_margin +=
-                                            (target_li->hasEnd() ? target_margin.end : 0);
+                                            (target_li->hasEnd() ? target_margin.end() : 0);
                                     }
                                 }
 
@@ -436,7 +436,7 @@ namespace ukive {
                             child_width.val = (std::max)(0, parent_width.val - getPadding().hori()
                                 - measured_start_margin - measured_end_margin);
 
-                            if (layout_size.width == LS_FILL)
+                            if (layout_size.width() == LS_FILL)
                             {
                                 if (parent_width.mode == SizeInfo::CONTENT)
                                 {
@@ -449,7 +449,7 @@ namespace ukive {
                                     rli->hori_couple_handler_type = RestraintLayoutInfo::CH_FILL;
                                 }
                             }
-                            else if (layout_size.width == LS_AUTO)
+                            else if (layout_size.width() == LS_AUTO)
                             {
                                 child_width.mode = SizeInfo::CONTENT;
                                 rli->hori_couple_handler_type = RestraintLayoutInfo::CH_WRAP;
@@ -475,7 +475,7 @@ namespace ukive {
                 child_width = SizeInfo::getChildSizeInfo(
                     new_parent_width,
                     hori_margins + getPadding().hori(),
-                    layout_size.width);
+                    layout_size.width());
             } else {
                 child_width = SizeInfo::Value(0, SizeInfo::DEFINED);
             }
@@ -498,8 +498,8 @@ namespace ukive {
             int size = (std::max)(0, parent_height.val - getPadding().vert() - vert_margins);
 
             // child 有固定的大小。
-            if (layout_size.height >= 0 || !isAttended(child)) {
-                child_height.val = isAttended(child) ? layout_size.height : 0;
+            if (layout_size.height() >= 0 || !isAttended(child)) {
+                child_height.val = isAttended(child) ? layout_size.height() : 0;
                 child_height.mode = SizeInfo::DEFINED;
                 rli->vert_couple_handler_type = RestraintLayoutInfo::CH_FIXED;
             }
@@ -511,13 +511,13 @@ namespace ukive {
                     switch (parent_height.mode) {
                     case SizeInfo::CONTENT:
                     {
-                        if (layout_size.height == LS_FILL)
+                        if (layout_size.height() == LS_FILL)
                         {
                             child_height.val = size;
                             child_height.mode = SizeInfo::CONTENT;
                             rli->vert_couple_handler_type = RestraintLayoutInfo::CH_FILL;
                         }
-                        else if (layout_size.height == LS_AUTO)
+                        else if (layout_size.height() == LS_AUTO)
                         {
                             child_height.val = size;
                             child_height.mode = SizeInfo::CONTENT;
@@ -533,13 +533,13 @@ namespace ukive {
                     }
                     case SizeInfo::DEFINED:
                     {
-                        if (layout_size.height == LS_FILL)
+                        if (layout_size.height() == LS_FILL)
                         {
                             child_height.val = size;
                             child_height.mode = SizeInfo::DEFINED;
                             rli->vert_couple_handler_type = RestraintLayoutInfo::CH_FILL;
                         }
-                        else if (layout_size.height == LS_AUTO)
+                        else if (layout_size.height() == LS_AUTO)
                         {
                             child_height.val = size;
                             child_height.mode = SizeInfo::CONTENT;
@@ -600,18 +600,18 @@ namespace ukive {
                         if (isAttended(target)) {
                             // 让 target view 测量自身。
                             // 这将会使 target view 的 onDetermineSize() 方法多调用一次。
-                            target->measure(SizeInfo(target_width, targetHeight));
-                            measured_target_height = target->getDeterminedSize().height;
+                            target->determineSize(SizeInfo(target_width, targetHeight));
+                            measured_target_height = target->getDeterminedSize().height();
                         }
 
                         child_height.val = (std::max)(0, measured_target_height - vert_margins);
 
-                        if (layout_size.height == LS_FILL)
+                        if (layout_size.height() == LS_FILL)
                         {
                             child_height.mode = SizeInfo::DEFINED;
                             rli->vert_couple_handler_type = RestraintLayoutInfo::CH_FILL;
                         }
-                        else if (layout_size.height == LS_AUTO)
+                        else if (layout_size.height() == LS_AUTO)
                         {
                             child_height.mode = SizeInfo::CONTENT;
                             rli->vert_couple_handler_type = RestraintLayoutInfo::CH_WRAP;
@@ -626,7 +626,7 @@ namespace ukive {
                             parent_height.mode == SizeInfo::CONTENT)
                         {
                             // 上向遍历。
-                            int measured_top_margin = margin.top;
+                            int measured_top_margin = margin.top();
                             auto child_li = rli;
                             while (child_li->hasTop()
                                 && child_li->top_handle_id != this->getId())
@@ -658,15 +658,15 @@ namespace ukive {
                                 if (isAttended(target)) {
                                     // 让 target view 测量自身。
                                     // 这将会使 target view 的 onDetermineSize() 方法多调用一次。
-                                    target->measure(SizeInfo(target_width, target_height));
+                                    target->determineSize(SizeInfo(target_width, target_height));
                                     auto& target_margin = target->getLayoutMargin();
 
                                     if (child_li->top_handle_edge == RestraintLayoutInfo::BOTTOM) {
-                                        measured_top_margin += target->getDeterminedSize().height
-                                            + (target_li->hasTop() ? target_margin.top : 0);
+                                        measured_top_margin += target->getDeterminedSize().height()
+                                            + (target_li->hasTop() ? target_margin.top() : 0);
                                     } else if (child_li->top_handle_edge == RestraintLayoutInfo::TOP) {
                                         measured_top_margin +=
-                                            (target_li->hasTop() ? target_margin.top : 0);
+                                            (target_li->hasTop() ? target_margin.top() : 0);
                                     }
                                 }
 
@@ -674,7 +674,7 @@ namespace ukive {
                             }
 
                             // 下向遍历。
-                            int measured_bottom_margin = margin.bottom;
+                            int measured_bottom_margin = margin.bottom();
                             child_li = rli;
                             while (child_li->hasBottom() && child_li->bottom_handle_id != getId())
                             {
@@ -705,15 +705,15 @@ namespace ukive {
                                 if (isAttended(target)) {
                                     // 让 target view 测量自身。
                                     // 这将会使 target view 的 onDetermineSize() 方法多调用一次。
-                                    target->measure(SizeInfo(target_width, target_height));
+                                    target->determineSize(SizeInfo(target_width, target_height));
                                     auto& target_margin = target->getLayoutMargin();
 
                                     if (child_li->bottom_handle_edge == RestraintLayoutInfo::TOP) {
-                                        measured_bottom_margin += target->getDeterminedSize().height
-                                            + (target_li->hasBottom() ? target_margin.bottom : 0);
+                                        measured_bottom_margin += target->getDeterminedSize().height()
+                                            + (target_li->hasBottom() ? target_margin.bottom() : 0);
                                     } else if (child_li->bottom_handle_edge == RestraintLayoutInfo::BOTTOM) {
                                         measured_bottom_margin +=
-                                            (target_li->hasBottom() ? target_margin.bottom : 0);
+                                            (target_li->hasBottom() ? target_margin.bottom() : 0);
                                     }
                                 }
 
@@ -725,7 +725,7 @@ namespace ukive {
                             child_height.val = (std::max)(0, parent_height.val - getPadding().vert()
                                 - measured_top_margin - measured_bottom_margin);
 
-                            if (layout_size.height == LS_FILL) {
+                            if (layout_size.height() == LS_FILL) {
                                 if (parent_height.mode == SizeInfo::CONTENT) {
                                     child_height.mode = SizeInfo::CONTENT;
                                     rli->vert_couple_handler_type = RestraintLayoutInfo::CH_WRAP;
@@ -733,7 +733,7 @@ namespace ukive {
                                     child_height.mode = SizeInfo::DEFINED;
                                     rli->vert_couple_handler_type = RestraintLayoutInfo::CH_FILL;
                                 }
-                            } else if (layout_size.height == LS_AUTO) {
+                            } else if (layout_size.height() == LS_AUTO) {
                                 child_height.mode = SizeInfo::CONTENT;
                                 rli->vert_couple_handler_type = RestraintLayoutInfo::CH_WRAP;
                             } else {
@@ -753,7 +753,7 @@ namespace ukive {
                 auto new_parent_height = parent_height;
                 new_parent_height.mode = SizeInfo::FREEDOM;
                 child_height = SizeInfo::getChildSizeInfo(
-                    new_parent_height, vert_margins + getPadding().vert(), layout_size.height);
+                    new_parent_height, vert_margins + getPadding().vert(), layout_size.height());
             } else {
                 child_height.val = 0;
                 child_height.mode = SizeInfo::DEFINED;
@@ -773,11 +773,11 @@ namespace ukive {
 
             if (isAttended(target)) {
                 if (child_li->start_handle_edge == RestraintLayoutInfo::END) {
-                    left_spacing += target->getDeterminedSize().width
-                        + (target_li->hasStart() ? margin.start : 0);
+                    left_spacing += target->getDeterminedSize().width()
+                        + (target_li->hasStart() ? margin.start() : 0);
                 } else if (child_li->start_handle_edge == RestraintLayoutInfo::START) {
                     left_spacing +=
-                        (target_li->hasStart() ? margin.start : 0);
+                        (target_li->hasStart() ? margin.start() : 0);
                 }
             }
 
@@ -797,11 +797,11 @@ namespace ukive {
 
             if (isAttended(target)) {
                 if (child_li->top_handle_edge == RestraintLayoutInfo::BOTTOM) {
-                    top_spacing += target->getDeterminedSize().height
-                        + (target_li->hasTop() ? margin.top : 0);
+                    top_spacing += target->getDeterminedSize().height()
+                        + (target_li->hasTop() ? margin.top() : 0);
                 } else if (child_li->top_handle_edge == RestraintLayoutInfo::TOP) {
                     top_spacing +=
-                        (target_li->hasTop() ? margin.top : 0);
+                        (target_li->hasTop() ? margin.top() : 0);
                 }
             }
 
@@ -821,11 +821,11 @@ namespace ukive {
 
             if (isAttended(target)) {
                 if (child_li->end_handle_edge == RestraintLayoutInfo::START) {
-                    right_spacing += target->getDeterminedSize().width
-                        + (target_li->hasEnd() ? margin.end : 0);
+                    right_spacing += target->getDeterminedSize().width()
+                        + (target_li->hasEnd() ? margin.end() : 0);
                 } else if (child_li->end_handle_edge == RestraintLayoutInfo::END) {
                     right_spacing +=
-                        (target_li->hasEnd() ? margin.end : 0);
+                        (target_li->hasEnd() ? margin.end() : 0);
                 }
             }
 
@@ -845,11 +845,11 @@ namespace ukive {
 
             if (isAttended(target)) {
                 if (child_li->bottom_handle_edge == RestraintLayoutInfo::TOP) {
-                    bottom_spacing += target->getDeterminedSize().height
-                        + (target_li->hasBottom() ? margin.bottom : 0);
+                    bottom_spacing += target->getDeterminedSize().height()
+                        + (target_li->hasBottom() ? margin.bottom() : 0);
                 } else if (child_li->bottom_handle_edge == RestraintLayoutInfo::BOTTOM) {
                     bottom_spacing +=
-                        (target_li->hasBottom() ? margin.bottom : 0);
+                        (target_li->hasBottom() ? margin.bottom() : 0);
                 }
             }
 
@@ -871,9 +871,9 @@ namespace ukive {
 
             int chain_width = start_spacing + end_spacing;
             if (isAttended(child)) {
-                chain_width += child->getDeterminedSize().width
-                    + (li->hasStart() ? margin.start : 0)
-                    + (li->hasEnd() ? margin.end : 0);
+                chain_width += child->getDeterminedSize().width()
+                    + (li->hasStart() ? margin.start() : 0)
+                    + (li->hasEnd() ? margin.end() : 0);
             }
 
             wrapped_width = (std::max)(wrapped_width, chain_width);
@@ -894,9 +894,9 @@ namespace ukive {
 
             int chain_height = top_spacing + bottom_spacing;
             if (isAttended(child)) {
-                chain_height += child->getDeterminedSize().height
-                    + (li->hasTop() ? margin.top : 0)
-                    + (li->hasBottom() ? margin.bottom : 0);
+                chain_height += child->getDeterminedSize().height()
+                    + (li->hasTop() ? margin.top() : 0)
+                    + (li->hasBottom() ? margin.bottom() : 0);
             }
             wrapped_height = (std::max)(wrapped_height, chain_height);
         }
@@ -916,10 +916,11 @@ namespace ukive {
         }
 
         Rect bounds;
-        bounds.left = rli->left;
-        bounds.top = rli->top;
-        bounds.right = rli->right;
-        bounds.bottom = rli->bottom;
+        bounds.xyrb(
+            rli->left,
+            rli->top,
+            rli->right,
+            rli->bottom);
         child->layout(bounds);
     }
 
@@ -927,7 +928,7 @@ namespace ukive {
         View* child, RestraintLayoutInfo* rli, int top, int bottom)
     {
         auto& margin = child->getLayoutMargin();
-        int child_top = top + getPadding().top;
+        int child_top = top + getPadding().top();
         if (rli->hasTop() && rli->top_handle_id != getId()) {
             auto target = getChildById(rli->top_handle_id);
             auto target_li = static_cast<RestraintLayoutInfo*>(target->getExtraLayoutInfo());
@@ -943,7 +944,7 @@ namespace ukive {
             }
         }
 
-        int child_bottom = bottom - getPadding().bottom;
+        int child_bottom = bottom - getPadding().bottom();
         if (rli->hasBottom() && rli->bottom_handle_id != getId()) {
             auto target = getChildById(rli->bottom_handle_id);
             auto target_li = static_cast<RestraintLayoutInfo*>(target->getExtraLayoutInfo());
@@ -961,8 +962,8 @@ namespace ukive {
 
         if (rli->hasVertCouple()) {
             if (isAttended(child)) {
-                child_top += margin.top;
-                child_bottom -= margin.bottom;
+                child_top += margin.top();
+                child_bottom -= margin.bottom();
             }
 
             switch (rli->vert_couple_handler_type) {
@@ -972,8 +973,8 @@ namespace ukive {
             case RestraintLayoutInfo::CH_FIXED:
                 if (isAttended(child)) {
                     child_top += int(
-                        (child_bottom - child_top - child->getDeterminedSize().height)*rli->vert_percent);
-                    child_bottom = child_top + child->getDeterminedSize().height;
+                        (child_bottom - child_top - child->getDeterminedSize().height())*rli->vert_percent);
+                    child_bottom = child_top + child->getDeterminedSize().height();
                 } else {
                     child_top += int((child_bottom - child_top)*rli->vert_percent);
                     child_bottom = child_top;
@@ -983,13 +984,13 @@ namespace ukive {
         } else {
             if (isAttended(child)) {
                 if (rli->hasTop()) {
-                    child_top += margin.top;
-                    child_bottom = child_top + child->getDeterminedSize().height;
+                    child_top += margin.top();
+                    child_bottom = child_top + child->getDeterminedSize().height();
                 } else if (rli->hasBottom()) {
-                    child_bottom -= margin.bottom;
-                    child_top = child_bottom - child->getDeterminedSize().height;
+                    child_bottom -= margin.bottom();
+                    child_top = child_bottom - child->getDeterminedSize().height();
                 } else
-                    child_bottom = child_top + child->getDeterminedSize().height;
+                    child_bottom = child_top + child->getDeterminedSize().height();
             } else {
                 if (rli->hasTop()) {
                     child_bottom = child_top;
@@ -1011,7 +1012,7 @@ namespace ukive {
     {
         auto& margin = child->getLayoutMargin();
 
-        int child_left = left + getPadding().start;
+        int child_left = left + getPadding().start();
         if (rli->hasStart() && rli->start_handle_id != getId()) {
             View* target = getChildById(rli->start_handle_id);
             auto target_li = static_cast<RestraintLayoutInfo*>(target->getExtraLayoutInfo());
@@ -1027,7 +1028,7 @@ namespace ukive {
             }
         }
 
-        int child_right = right - getPadding().end;
+        int child_right = right - getPadding().end();
         if (rli->hasEnd() && rli->end_handle_id != getId()) {
             View* target = getChildById(rli->end_handle_id);
             auto target_li = static_cast<RestraintLayoutInfo*>(target->getExtraLayoutInfo());
@@ -1045,8 +1046,8 @@ namespace ukive {
 
         if (rli->hasHoriCouple()) {
             if (isAttended(child)) {
-                child_left += margin.start;
-                child_right -= margin.end;
+                child_left += margin.start();
+                child_right -= margin.end();
             }
 
             switch (rli->hori_couple_handler_type) {
@@ -1056,8 +1057,8 @@ namespace ukive {
             case RestraintLayoutInfo::CH_FIXED:
                 if (isAttended(child)) {
                     child_left += int(
-                        (child_right - child_left - child->getDeterminedSize().width)*rli->hori_percent);
-                    child_right = child_left + child->getDeterminedSize().width;
+                        (child_right - child_left - child->getDeterminedSize().width())*rli->hori_percent);
+                    child_right = child_left + child->getDeterminedSize().width();
                 } else {
                     child_left += int((child_right - child_left)*rli->hori_percent);
                     child_right = child_left;
@@ -1067,13 +1068,13 @@ namespace ukive {
         } else {
             if (isAttended(child)) {
                 if (rli->hasStart()) {
-                    child_left += margin.start;
-                    child_right = child_left + child->getDeterminedSize().width;
+                    child_left += margin.start();
+                    child_right = child_left + child->getDeterminedSize().width();
                 } else if (rli->hasEnd()) {
-                    child_right -= margin.end;
-                    child_left = child_right - child->getDeterminedSize().width;
+                    child_right -= margin.end();
+                    child_left = child_right - child->getDeterminedSize().width();
                 } else {
-                    child_right = child_left + child->getDeterminedSize().width;
+                    child_right = child_left + child->getDeterminedSize().width();
                 }
             } else {
                 if (rli->hasStart()) {
@@ -1098,14 +1099,14 @@ namespace ukive {
         clearMeasureFlag();
         measureRestrainedChildren(info);
 
-        switch (info.width.mode) {
+        switch (info.width().mode) {
         case SizeInfo::CONTENT:
             final_width = measureWrappedWidth() + getPadding().hori();
-            final_width = (std::min)(info.width.val, final_width);
+            final_width = (std::min)(info.width().val, final_width);
             break;
 
         case SizeInfo::DEFINED:
-            final_width = info.width.val;
+            final_width = info.width().val;
             break;
 
         case SizeInfo::FREEDOM:
@@ -1114,14 +1115,14 @@ namespace ukive {
             break;
         }
 
-        switch (info.height.mode) {
+        switch (info.height().mode) {
         case SizeInfo::CONTENT:
             final_height = measureWrappedHeight() + getPadding().vert();
-            final_height = (std::min)(info.height.val, final_height);
+            final_height = (std::min)(info.height().val, final_height);
             break;
 
         case SizeInfo::DEFINED:
-            final_height = info.height.val;
+            final_height = info.height().val;
             break;
 
         case SizeInfo::FREEDOM:

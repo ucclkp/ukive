@@ -52,13 +52,13 @@ namespace ukive {
 
     Size CircleColorButton::onDetermineSize(const SizeInfo& info) {
         int final_w, final_h;
-        switch (info.width.mode) {
+        switch (info.width().mode) {
         case SizeInfo::CONTENT:
-            final_w = (std::min)(info.width.val, size_ + getPadding().hori());
+            final_w = (std::min)(info.width().val, size_ + getPadding().hori());
             break;
 
         case SizeInfo::DEFINED:
-            final_w = info.width.val;
+            final_w = info.width().val;
             break;
 
         case SizeInfo::FREEDOM:
@@ -67,13 +67,13 @@ namespace ukive {
             break;
         }
 
-        switch (info.height.mode) {
+        switch (info.height().mode) {
         case SizeInfo::CONTENT:
-            final_h = (std::min)(info.height.val, size_ + getPadding().vert());
+            final_h = (std::min)(info.height().val, size_ + getPadding().vert());
             break;
 
         case SizeInfo::DEFINED:
-            final_h = info.height.val;
+            final_h = info.height().val;
             break;
 
         case SizeInfo::FREEDOM:

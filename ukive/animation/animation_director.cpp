@@ -21,7 +21,7 @@ namespace ukive {
     Anitom* AnimationDirector::add(int id, bool continuous) {
         ns start_time;
         if (continuous && is_started_ && !is_finished_) {
-            start_time = ns(Animator::now() - start_time_ - looped_time_);
+            start_time = ns(Animator::now() - start_time_);
         } else {
             start_time = ns(0);
         }
@@ -158,6 +158,10 @@ namespace ukive {
     }
 
     void AnimationDirector::addLoop(nsp start, nsp duration, uint32_t count) {
+        if (duration.count() <= 0 || count == 0) {
+            return;
+        }
+
         for (auto it = loops_.begin(); it != loops_.end(); ++it) {
             if (it->start == start.count()) {
                 it->duration = duration.count();
@@ -214,7 +218,6 @@ namespace ukive {
         is_running_ = true;
         is_finished_ = false;
         start_time_ = Animator::now() - elapsed_time_;
-        looped_time_ = 0;
 
         if (listener_) {
             listener_->onDirectorStarted(this);
@@ -227,7 +230,7 @@ namespace ukive {
         }
 
         is_running_ = false;
-        elapsed_time_ = Animator::now() - start_time_ - looped_time_;
+        elapsed_time_ = Animator::now() - start_time_;
 
         for (auto& pair : channels_) {
             auto& channel = pair.second;
@@ -267,7 +270,9 @@ namespace ukive {
                     end_a = a.get();
                 }
 
-                anitomToFinish(a.get());
+                if (!a->isFinished() && a->isStarted()) {
+                    anitomToFinish(a.get());
+                }
             }
 
             if (end_a) {
@@ -293,7 +298,9 @@ namespace ukive {
         for (auto& pair : channels_) {
             pair.second.cur_val = pair.second.init_val;
             for (auto& anim : pair.second.anitoms) {
-                anitomToReset(anim.get());
+                if (anim->isStarted()) {
+                    anitomToReset(anim.get());
+                }
             }
         }
 
@@ -308,22 +315,18 @@ namespace ukive {
         }
 
         bool in_loop = false;
-        auto local_time = cur_time - start_time_ - looped_time_;
+        auto local_time = cur_time - start_time_;
 
         if (cur_loop_.has_value()) {
             auto& loop = cur_loop_.value();
             if (loop.start <= local_time) {
-                // 当前有正在进行的循环动画
-                in_loop = true;
-                auto loop_end_time = loop.start + loop.duration;
-                if (local_time > loop_end_time) {
-                    if (loop.count > 0) {
-                        --loop.count;
-                        looped_time_ = cur_time - (start_time_ + loop.start);
-                    } else {
-                        cur_loop_.reset();
-                        in_loop = false;
-                    }
+                auto elapsed_loop_count = uint32_t((local_time - loop.start) / loop.duration);
+                if (elapsed_loop_count > loop.count) {
+                    in_loop = false;
+                    local_time -= loop.count * loop.duration;
+                } else {
+                    in_loop = true;
+                    local_time -= elapsed_loop_count * loop.duration;
                 }
             } else {
                 cur_loop_.reset();
@@ -372,38 +375,22 @@ namespace ukive {
     void AnimationDirector::updateAnitom(
         uint64_t local_time, Anitom* anim, double& cur_val)
     {
-        if (anim->getEndTime() <= ns(local_time)) {
-            cur_val = anim->getCurValue(ns(local_time));
-            anitomToFinish(anim);
-            return;
-        }
-
-        if (anim->getStartTime() > ns(local_time)) {
-            anitomToReset(anim);
-            return;
-        }
-
-        if (anim->isFinished()) {
-            anim->setStarted(false);
-            anim->setRunning(false);
-            anim->setFinished(false);
-
-            if (listener_) {
-                listener_->onDirectorAnitomReset(this, anim);
+        if (anim->isInevitable()) {
+            updateAnitomP1(local_time, anim, cur_val);
+            updateAnitomP2(local_time, anim, cur_val);
+        } else {
+            if (!updateAnitomP2(local_time, anim, cur_val)) {
+                return;
             }
+            updateAnitomP1(local_time, anim, cur_val);
         }
+    }
 
+    void AnimationDirector::updateAnitomP1(
+        uint64_t local_time, Anitom* anim, double& cur_val)
+    {
         if (!anim->isStarted() || !anim->isRunning()) {
-            if (!anim->isStarted()) {
-                anim->setInitValue(cur_val);
-            }
-            anim->setStarted(true);
-            anim->setRunning(true);
-            anim->setFinished(false);
-
-            if (listener_) {
-                listener_->onDirectorAnitomStarted(this, anim);
-            }
+            anitomToStart(anim, cur_val);
         }
 
         anim->setRunning(true);
@@ -412,6 +399,30 @@ namespace ukive {
         if (listener_) {
             listener_->onDirectorAnitomProgress(this, anim);
         }
+    }
+
+    bool AnimationDirector::updateAnitomP2(
+        uint64_t local_time, Anitom* anim, double& cur_val)
+    {
+        if (anim->getEndTime() <= ns(local_time)) {
+            cur_val = anim->getCurValue(ns(local_time));
+            if (!anim->isFinished() && anim->isStarted()) {
+                anitomToFinish(anim);
+            }
+            return false;
+        }
+
+        if (anim->getStartTime() > ns(local_time)) {
+            if (anim->isStarted()) {
+                anitomToReset(anim);
+            }
+            return false;
+        }
+
+        if (anim->isFinished()) {
+            anitomToReset(anim);
+        }
+        return true;
     }
 
     Anitom* AnimationDirector::findCurAnitom(
@@ -427,25 +438,34 @@ namespace ukive {
         return nullptr;
     }
 
+    void AnimationDirector::anitomToStart(Anitom* anim, double cur_val) {
+        if (!anim->isStarted()) {
+            anim->setInitValue(cur_val);
+        }
+        anim->setStarted(true);
+        anim->setRunning(true);
+        anim->setFinished(false);
+
+        if (listener_) {
+            listener_->onDirectorAnitomStarted(this, anim);
+        }
+    }
+
     void AnimationDirector::anitomToFinish(Anitom* anim) {
-        if (!anim->isFinished() && anim->isStarted()) {
-            anim->setRunning(false);
-            anim->setFinished(true);
-            if (listener_) {
-                listener_->onDirectorAnitomFinished(this, anim);
-            }
+        anim->setRunning(false);
+        anim->setFinished(true);
+        if (listener_) {
+            listener_->onDirectorAnitomFinished(this, anim);
         }
     }
 
     void AnimationDirector::anitomToReset(Anitom* anim) {
-        if (anim->isStarted()) {
-            anim->setStarted(false);
-            anim->setRunning(false);
-            anim->setFinished(false);
+        anim->setStarted(false);
+        anim->setRunning(false);
+        anim->setFinished(false);
 
-            if (listener_) {
-                listener_->onDirectorAnitomReset(this, anim);
-            }
+        if (listener_) {
+            listener_->onDirectorAnitomReset(this, anim);
         }
     }
 
@@ -456,7 +476,6 @@ namespace ukive {
 
         elapsed_time_ = 0;
         start_time_ = cur_time;
-        looped_time_ = 0;
     }
 
     void AnimationDirector::setRepeat(bool repeat) {

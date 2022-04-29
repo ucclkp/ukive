@@ -174,12 +174,12 @@ namespace ukive {
         auto& db_margin = button_->getLayoutMargin();
 
         int db_margin_w = db_margin.hori();
-        auto db_width = SizeInfo::getChildSizeInfo(info.width, padding_w + db_margin_w, LS_AUTO);
+        auto db_width = SizeInfo::getChildSizeInfo(info.width(), padding_w + db_margin_w, LS_AUTO);
 
-        int db_margin_h = db_margin.top + db_margin.bottom;
-        auto db_height = SizeInfo::getChildSizeInfo(info.height, padding_h + db_margin_h, LS_AUTO);
+        int db_margin_h = db_margin.vert();
+        auto db_height = SizeInfo::getChildSizeInfo(info.height(), padding_h + db_margin_h, LS_AUTO);
 
-        button_->measure(SizeInfo(db_width, db_height));
+        button_->determineSize(SizeInfo(db_width, db_height));
 
         // TextView
         auto& tv_margin = text_view_->getLayoutMargin();
@@ -187,13 +187,13 @@ namespace ukive {
         int tv_margin_w = tv_margin.hori();
         auto tv_width = SizeInfo::getChildSizeInfo(
             SizeInfo::Value(
-                info.width.val - button_->getDeterminedSize().width - db_margin_w, info.width.mode),
+                info.width().val - button_->getDeterminedSize().width() - db_margin_w, info.width().mode),
             padding_w + tv_margin_w, LS_FILL);
 
         int tv_margin_h = tv_margin.vert();
-        auto tv_height = SizeInfo::getChildSizeInfo(info.height, padding_h + tv_margin_h, LS_AUTO);
+        auto tv_height = SizeInfo::getChildSizeInfo(info.height(), padding_h + tv_margin_h, LS_AUTO);
 
-        text_view_->measure(SizeInfo(tv_width, tv_height));
+        text_view_->determineSize(SizeInfo(tv_width, tv_height));
     }
 
     Size ComboBox::onDetermineSize(const SizeInfo& info) {
@@ -205,21 +205,21 @@ namespace ukive {
 
         auto& db_size = button_->getDeterminedSize();
         auto& db_margin = button_->getLayoutMargin();
-        int db_w = db_size.width + db_margin.hori();
-        int db_h = db_size.height + db_margin.vert();
+        int db_w = db_size.width() + db_margin.hori();
+        int db_h = db_size.height() + db_margin.vert();
 
         auto& tv_size = text_view_->getDeterminedSize();
         auto& tv_margin = text_view_->getLayoutMargin();
-        int tv_w = tv_size.width + tv_margin.hori();
-        int tv_h = tv_size.height + tv_margin.vert();
+        int tv_w = tv_size.width() + tv_margin.hori();
+        int tv_h = tv_size.height() + tv_margin.vert();
 
-        switch (info.width.mode) {
+        switch (info.width().mode) {
         case SizeInfo::DEFINED:
-            f_width = info.width.val;
+            f_width = info.width().val;
             break;
 
         case SizeInfo::CONTENT:
-            f_width = (std::min)(info.width.val, padding_w + db_w + tv_w);
+            f_width = (std::min)(info.width().val, padding_w + db_w + tv_w);
             break;
 
         case SizeInfo::FREEDOM:
@@ -228,13 +228,13 @@ namespace ukive {
             break;
         }
 
-        switch (info.height.mode) {
+        switch (info.height().mode) {
         case SizeInfo::DEFINED:
-            f_height = info.height.val;
+            f_height = info.height().val;
             break;
 
         case SizeInfo::CONTENT:
-            f_height = (std::min)(info.height.val, padding_h + (std::max)(tv_h, db_h));
+            f_height = (std::min)(info.height().val, padding_h + (std::max)(tv_h, db_h));
             break;
 
         case SizeInfo::FREEDOM:
@@ -249,32 +249,32 @@ namespace ukive {
     void ComboBox::onLayout(const Rect& new_bounds, const Rect& old_bounds) {
         auto& tv_size = text_view_->getDeterminedSize();
         auto& tv_margin = text_view_->getLayoutMargin();
-        int tv_h = tv_size.height + tv_margin.vert();
-        int tv_x = tv_margin.start + getPadding().start;
+        int tv_h = tv_size.height() + tv_margin.vert();
+        int tv_x = tv_margin.start() + getPadding().start();
 
         auto& db_size = button_->getDeterminedSize();
         auto& db_margin = button_->getLayoutMargin();
-        int db_h = db_size.height + db_margin.vert();
-        int db_x = tv_x + tv_size.width + db_margin.start;
+        int db_h = db_size.height() + db_margin.vert();
+        int db_x = tv_x + tv_size.width() + db_margin.start();
 
         if (tv_h >= db_h) {
-            int tv_y = tv_margin.top + getPadding().top;
+            int tv_y = tv_margin.top() + getPadding().top();
             text_view_->layout(
-                Rect(tv_x, tv_y, tv_size.width, tv_size.height));
+                Rect(tv_x, tv_y, tv_size.width(), tv_size.height()));
 
-            int db_y = getPadding().top + (tv_h - db_h) / 2;
+            int db_y = getPadding().top() + (tv_h - db_h) / 2;
             button_->layout(
                 Rect(db_x, db_y,
-                    db_size.width,
-                    db_margin.top + db_size.height));
+                    db_size.width(),
+                    db_margin.top() + db_size.height()));
         } else {
-            int db_y = db_margin.top + getPadding().top;
+            int db_y = db_margin.top() + getPadding().top();
             button_->layout(
-                Rect(db_x, db_y, db_size.width, db_size.height));
+                Rect(db_x, db_y, db_size.width(), db_size.height()));
 
-            int tv_y = getPadding().top + (db_h - tv_h) / 2;
+            int tv_y = getPadding().top() + (db_h - tv_h) / 2;
             text_view_->layout(
-                Rect(tv_x, tv_y, tv_size.width, tv_margin.top + tv_size.height));
+                Rect(tv_x, tv_y, tv_size.width(), tv_margin.top() + tv_size.height()));
         }
     }
 
@@ -346,7 +346,7 @@ namespace ukive {
             if (is_finished_) {
                 auto bounds = getBoundsInRoot();
                 auto width = (std::max)(bounds.width(), min_dropdown_width_);
-                show(bounds.left, bounds.bottom, width);
+                show(bounds.x(), bounds.bottom(), width);
             } else {
                 close();
             }

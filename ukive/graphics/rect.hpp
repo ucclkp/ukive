@@ -22,22 +22,32 @@ namespace ukive {
         using type = Ty;
 
         RectT()
-            : left(0), top(0), right(0), bottom(0) {}
+            : pos_{ 0, 0 } {}
         RectT(Ty x, Ty y, Ty width, Ty height)
-            : left(x), top(y), right(x + width), bottom(y + height) {}
+            : pos_{ x, y }, size_(width, height) {}
+        RectT(const PointT<Ty>& pos, const SizeT<Ty>& size)
+            : pos_(pos), size_(size) {}
 
         template <typename C>
         explicit operator RectT<C>() const {
-            return RectT<C>(
-                static_cast<C>(left), static_cast<C>(top),
-                static_cast<C>(right - left), static_cast<C>(bottom - top));
+            return RectT<C>(PointT<C>(pos_), SizeT<C>(size_));
         }
 
-        RectT& operator&(const RectT& rhs) {
+        RectT operator&(const RectT& rhs) const {
+            RectT out(*this);
+            out.same(rhs);
+            return out;
+        }
+        RectT operator|(const RectT& rhs) const {
+            RectT out(*this);
+            out.join(rhs);
+            return out;
+        }
+        RectT& operator&=(const RectT& rhs) {
             same(rhs);
             return *this;
         }
-        RectT& operator|(const RectT& rhs) {
+        RectT& operator|=(const RectT& rhs) {
             join(rhs);
             return *this;
         }
@@ -48,156 +58,207 @@ namespace ukive {
             return !equal(rhs);
         }
 
-        PointT<Ty> pos() const {
-            return PointT<Ty>{left, top};
-        }
-        SizeT<Ty> size() const {
-            return SizeT<Ty>(width(), height());
-        }
-        Ty width() const {
-            if constexpr (std::is_unsigned<Ty>::value) {
-                return right >= left ? right - left : left - right;
-            } else {
-                return right - left;
-            }
-        }
-        Ty height() const {
-            if constexpr (std::is_unsigned<Ty>::value) {
-                return bottom >= top ? bottom - top : top - bottom;
-            } else {
-                return bottom - top;
-            }
-        }
+        const PointT<Ty>& pos() const { return pos_; }
+        const SizeT<Ty>& size() const { return size_; }
+        Ty x() const { return pos_.x(); }
+        Ty y() const { return pos_.y(); }
+        Ty width() const { return size_.width(); }
+        Ty height() const { return size_.height(); }
+        Ty right() const { return pos_.x() + size_.width(); }
+        Ty bottom() const { return pos_.y() + size_.height(); }
+
+        PointT<Ty> pos_rt() const { return { right(), y() }; }
+        PointT<Ty> pos_rb() const { return { right(), bottom() }; }
+        PointT<Ty> pos_lb() const { return { x(), bottom() }; }
 
         bool empty() const {
-            return (right <= left) || (bottom <= top);
+            return size_.empty();
         }
         bool equal(const RectT& rhs) const {
-            return (left == rhs.left
-                && top == rhs.top
-                && right == rhs.right
-                && bottom == rhs.bottom);
+            return pos_ == rhs.pos_ && size_ == rhs.size_;
         }
         bool hit(Ty x, Ty y) const {
-            return (x >= left && x < right
-                && y >= top && y < bottom);
+            return (x >= this->x() && x < this->right()
+                && y >= this->y() && y < this->bottom());
         }
         bool hit(const PointT<Ty>& p) const {
-            return (p.x() >= left && p.x() < right
-                && p.y() >= top && p.y() < bottom);
+            return (p.x() >= x() && p.x() < right()
+                && p.y() >= y() && p.y() < bottom());
         }
         bool contains(const RectT& rect) const {
-            return (rect.left >= left && rect.right <= right)
-                && (rect.top >= top && rect.bottom <= bottom);
+            return (rect.x() >= x() && rect.right() <= right())
+                && (rect.y() >= y() && rect.bottom() <= bottom());
         }
         bool intersect(const RectT& rect) const {
-            return (rect.right > left && rect.left < right)
-                && (rect.bottom > top && rect.top < bottom);
+            return (rect.right() > x() && rect.x() < right())
+                && (rect.bottom() > y() && rect.y() < bottom());
         }
-        void join(const RectT& rhs) {
+
+        RectT& join(const RectT& rhs) {
             if (empty()) {
-                left = rhs.left;
-                top = rhs.top;
-                right = rhs.right;
-                bottom = rhs.bottom;
+                pos_ = rhs.pos_;
+                size_ = rhs.size_;
             } else {
-                left = (std::min)(left, rhs.left);
-                top = (std::min)(top, rhs.top);
-                right = (std::max)(right, rhs.right);
-                bottom = (std::max)(bottom, rhs.bottom);
+                auto l = (std::min)(x(), rhs.x());
+                auto t = (std::min)(y(), rhs.y());
+                auto r = (std::max)(right(), rhs.right());
+                auto b = (std::max)(bottom(), rhs.bottom());
 
-                if (right < left) left = right;
-                if (bottom < top) top = bottom;
+                if (r < l) r = l;
+                if (b < t) b = t;
+
+                xywh(l, t, r - l, b - t);
             }
+            return *this;
         }
-        void same(const RectT& rhs) {
-            left = (std::max)(left, rhs.left);
-            top = (std::max)(top, rhs.top);
-            right = (std::min)(right, rhs.right);
-            bottom = (std::min)(bottom, rhs.bottom);
+        RectT& same(const RectT& rhs) {
+            auto l = (std::max)(x(), rhs.x());
+            auto t = (std::max)(y(), rhs.y());
+            auto r = (std::min)(right(), rhs.right());
+            auto b = (std::min)(bottom(), rhs.bottom());
 
-            if (right < left) left = right;
-            if (bottom < top) top = bottom;
-        }
+            if (r < l) r = l;
+            if (b < t) b = t;
 
-        void setPos(const PointT<Ty>& pos) {
-            setPos(pos.x, pos.y);
-        }
-        void setPos(Ty x, Ty y) {
-            auto w = width();
-            auto h = height();
-
-            left = x;
-            top = y;
-            right = x + w;
-            bottom = y + h;
-        }
-        void setSize(const SizeT<Ty>& size) {
-            setSize(size.width, size.height);
-        }
-        void setSize(Ty width, Ty height) {
-            right = left + width;
-            bottom = top + height;
-        }
-        void set(const PointT<Ty>& pos, const SizeT<Ty>& size) {
-            this->left = pos.x;
-            this->top = pos.y;
-            this->right = left + size.width;
-            this->bottom = top + size.height;
-        }
-        void set(Ty left, Ty top, Ty width, Ty height) {
-            this->left = left;
-            this->top = top;
-            this->right = left + width;
-            this->bottom = top + height;
-        }
-        void insets(const PaddingT<Ty>& insets) {
-            left += insets.start;
-            top += insets.top;
-            right -= insets.end;
-            bottom -= insets.bottom;
-
-            if (right < left) left = right;
-            if (bottom < top) top = bottom;
-        }
-        void insets(Ty left, Ty top, Ty right, Ty bottom) {
-            this->left += left;
-            this->top += top;
-            this->right -= right;
-            this->bottom -= bottom;
-
-            if (right < left) left = right;
-            if (bottom < top) top = bottom;
-        }
-        void extend(const PaddingT<Ty>& ext) {
-            left -= ext.start;
-            top -= ext.top;
-            right += ext.end;
-            bottom += ext.bottom;
-
-            if (right < left) left = right;
-            if (bottom < top) top = bottom;
-        }
-        void extend(Ty left, Ty top, Ty right, Ty bottom) {
-            this->left -= left;
-            this->top -= top;
-            this->right += right;
-            this->bottom += bottom;
-
-            if (right < left) left = right;
-            if (bottom < top) top = bottom;
-        }
-        void offset(Ty dx, Ty dy) {
-            left += dx;
-            right += dx;
-            top += dy;
-            bottom += dy;
+            return xywh(l, t, r - l, b - t);
         }
 
-        Ty left;
-        Ty top;
-        Ty right;
-        Ty bottom;
+        RectT& x(Ty x) {
+            pos_.x(x);
+            return *this;
+        }
+        RectT& y(Ty y) {
+            pos_.y(y);
+            return *this;
+        }
+        RectT& pos(const PointT<Ty>& pos) {
+            pos_ = pos;
+            return *this;
+        }
+        RectT& pos(Ty x, Ty y) {
+            pos_ = { x, y };
+            return *this;
+        }
+        RectT& width(Ty width) {
+            size_.width(width);
+            return *this;
+        }
+        RectT& height(Ty height) {
+            size_.height(height);
+            return *this;
+        }
+        RectT& size(const SizeT<Ty>& size) {
+            size_ = size;
+            return *this;
+        }
+        RectT& size(Ty width, Ty height) {
+            size_.set(width, height);
+            return *this;
+        }
+        RectT& set(const PointT<Ty>& pos, const SizeT<Ty>& size) {
+            pos_ = pos;
+            size_ = size;
+            return *this;
+        }
+        RectT& xywh(Ty x, Ty y, Ty width, Ty height) {
+            pos_ = { x, y };
+            size_.set(width, height);
+            return *this;
+        }
+        RectT& right(Ty r) {
+            if (r < pos_.x()) {
+                size_.width(0);
+            } else {
+                size_.width(r - pos_.x());
+            }
+            return *this;
+        }
+        RectT& bottom(Ty b) {
+            if (b < pos_.y()) {
+                size_.height(0);
+            } else {
+                size_.height(b - pos_.y());
+            }
+            return *this;
+        }
+        RectT& xyrb(Ty x, Ty y, Ty r, Ty b) {
+            pos_ = { x, y };
+            right(r);
+            bottom(b);
+            return *this;
+        }
+
+        RectT& insets(const PaddingT<Ty>& insets) {
+            pos_.x() += insets.start();
+            pos_.y() += insets.top();
+
+            if (insets.hori() > size_.width()) {
+                size_.width(0);
+            } else {
+                size_.width(size_.width() - insets.hori());
+            }
+
+            if (insets.vert() > size_.height()) {
+                size_.height(0);
+            } else {
+                size_.height(size_.height() - insets.vert());
+            }
+            return *this;
+        }
+        RectT& insets(Ty x, Ty y, Ty r, Ty b) {
+            pos_.x() += x;
+            pos_.y() += y;
+
+            if (x + r > size_.width()) {
+                size_.width(0);
+            } else {
+                size_.width(size_.width() - x + r);
+            }
+
+            if (y + b > size_.height()) {
+                size_.height(0);
+            } else {
+                size_.height(size_.height() - y + b);
+            }
+            return *this;
+        }
+        RectT& extend(const PaddingT<Ty>& ext) {
+            pos_.x() -= ext.start();
+            pos_.y() -= ext.top();
+            size_.width(size_.width() + ext.hori());
+            size_.height(size_.height() + ext.vert());
+
+            if (size_.width() < 0) {
+                size_.width(0);
+            }
+            if (size_.height() < 0) {
+                size_.height(0);
+            }
+            return *this;
+        }
+        RectT& extend(Ty x, Ty y, Ty r, Ty b) {
+            pos_.x() -= x;
+            pos_.y() -= y;
+            size_.width(size_.width() + x + r);
+            size_.height(size_.height() + y + b);
+
+            if (size_.width() < 0) {
+                size_.width(0);
+            }
+            if (size_.height() < 0) {
+                size_.height(0);
+            }
+            return *this;
+        }
+        RectT& offset(Ty dx, Ty dy) {
+            pos_.x() += dx;
+            pos_.y() += dy;
+            return *this;
+        }
+
+    private:
+        PointT<Ty> pos_;
+        SizeT<Ty> size_;
     };
 
     using Rect = RectT<int>;

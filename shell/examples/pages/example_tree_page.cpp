@@ -125,7 +125,7 @@ namespace shell {
         tree_item->expand_button_->setOnClickListener(this);
         tree_item->text_label->setOnClickListener(this);
 
-        tree_item->ex_margins.start = int(node->getLevel() * 16);
+        tree_item->ex_margins.start(int(node->getLevel() * 16));
         tree_item->text_label->setText(node->text);
 
         if (node->getChildCount() == 0) {

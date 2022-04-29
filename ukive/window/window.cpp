@@ -123,13 +123,13 @@ namespace ukive {
     void Window::setX(int x) {
         auto bounds = impl_->getBounds();
         scaleToNative(impl_.get(), &x);
-        impl_->setBounds(x, bounds.top, bounds.width(), bounds.height());
+        impl_->setBounds(x, bounds.y(), bounds.width(), bounds.height());
     }
 
     void Window::setY(int y) {
         auto bounds = impl_->getBounds();
         scaleToNative(impl_.get(), &y);
-        impl_->setBounds(bounds.left, y, bounds.width(), bounds.height());
+        impl_->setBounds(bounds.x(), y, bounds.width(), bounds.height());
     }
 
     void Window::setPosition(int x, int y) {
@@ -142,13 +142,13 @@ namespace ukive {
     void Window::setWidth(int width) {
         auto bounds = impl_->getBounds();
         scaleToNative(impl_.get(), &width);
-        impl_->setBounds(bounds.left, bounds.top, width, bounds.height());
+        impl_->setBounds(bounds.x(), bounds.y(), width, bounds.height());
     }
 
     void Window::setHeight(int height) {
         auto bounds = impl_->getBounds();
         scaleToNative(impl_.get(), &height);
-        impl_->setBounds(bounds.left, bounds.top, bounds.width(), height);
+        impl_->setBounds(bounds.x(), bounds.y(), bounds.width(), height);
     }
 
     void Window::setBounds(int x, int y, int width, int height) {
@@ -704,15 +704,15 @@ namespace ukive {
         auto bounds = getContentBounds();
         auto& layout_size = root_layout_->getLayoutSize();
 
-        int left = bounds.left;
-        int top = bounds.top;
+        int x = bounds.x();
+        int y = bounds.y();
         int width = bounds.width();
         int height = bounds.height();
 
         SizeInfo::Mode width_mode;
         SizeInfo::Mode height_mode;
-        if (layout_size.width < 0) {
-            switch (layout_size.width) {
+        if (layout_size.width() < 0) {
+            switch (layout_size.width()) {
             case View::LS_AUTO:
                 width_mode = SizeInfo::CONTENT;
                 break;
@@ -725,12 +725,12 @@ namespace ukive {
                 break;
             }
         } else {
-            width = layout_size.width;
+            width = layout_size.width();
             width_mode = SizeInfo::DEFINED;
         }
 
-        if (layout_size.height < 0) {
-            switch (layout_size.height) {
+        if (layout_size.height() < 0) {
+            switch (layout_size.height()) {
             case View::LS_AUTO:
                 height_mode = SizeInfo::CONTENT;
                 break;
@@ -743,7 +743,7 @@ namespace ukive {
                 break;
             }
         } else {
-            height = layout_size.height;
+            height = layout_size.height();
             height_mode = SizeInfo::DEFINED;
         }
 
@@ -756,11 +756,11 @@ namespace ukive {
         SizeInfo size_info;
         size_info.setWidth(SizeInfo::Value(width, width_mode));
         size_info.setHeight(SizeInfo::Value(height, height_mode));
-        root_layout_->measure(size_info);
+        root_layout_->determineSize(size_info);
 
         auto& determined_size = root_layout_->getDeterminedSize();
 
-        root_layout_->layout(Rect(left, top, determined_size.width, determined_size.height));
+        root_layout_->layout(Rect(x, y, determined_size.width(), determined_size.height()));
 
         if (enable_ui_debug) {
             auto duration = utl::TimeUtils::upTimeMicros() - micro;
@@ -837,7 +837,7 @@ namespace ukive {
             canvas_->fillRect(RectF(region.rect1), color);
 
             debug_drawer_->draw(
-                bounds.left, bounds.top,
+                bounds.x(), bounds.y(),
                 bounds.width(), bounds.height(), canvas_);
         }
 
@@ -860,7 +860,7 @@ namespace ukive {
 
         // 平移画布，避开超出窗口可见区的部分
         canvas->save();
-        canvas->translate(float(bounds.left), float(bounds.top));
+        canvas->translate(float(bounds.x()), float(bounds.y()));
 
         onPreDrawCanvas(canvas);
 
@@ -874,7 +874,7 @@ namespace ukive {
         {
             Rect dirty(rect);
             dirty.same(rl_bounds);
-            dirty.offset(-root_layout_->getLeft(), -root_layout_->getTop());
+            dirty.offset(-root_layout_->getX(), -root_layout_->getY());
             root_layout_->draw(canvas, dirty);
         }
 
@@ -936,8 +936,8 @@ namespace ukive {
     }
 
     bool Window::onResizing(Size* new_size) {
-        new_size->width = (std::max)(new_size->width, min_width_);
-        new_size->height = (std::max)(new_size->height, min_height_);
+        new_size->width((std::max)(new_size->width(), min_width_));
+        new_size->height((std::max)(new_size->height(), min_height_));
         return true;
     }
 
@@ -1005,8 +1005,8 @@ namespace ukive {
             int total_top = 0;
             auto parent = holder->getParent();
             while (parent) {
-                total_left += (parent->getLeft() - parent->getScrollX());
-                total_top += (parent->getTop() - parent->getScrollY());
+                total_left += (parent->getX() - parent->getScrollX());
+                total_top += (parent->getY() - parent->getScrollY());
 
                 parent = parent->getParent();
             }
@@ -1096,8 +1096,8 @@ namespace ukive {
     }
 
     HitPoint Window::onNCHitTest(int x, int y) {
-        x -= root_layout_->getLeft();
-        y -= root_layout_->getTop();
+        x -= root_layout_->getX();
+        y -= root_layout_->getY();
         return root_layout_->onNCHitTest(x, y);
     }
 

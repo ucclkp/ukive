@@ -135,13 +135,13 @@ namespace win {
         Size size;
         switch (img_options_.dpi_type) {
         case ImageDPIType::SPECIFIED:
-            size.width = int(std::ceil(width_ * img_options_.dpi_x / kDefaultDpi));
-            size.height = int(std::ceil(height_ * img_options_.dpi_y / kDefaultDpi));
+            size.width(int(std::ceil(width_ * img_options_.dpi_x / kDefaultDpi)));
+            size.height(int(std::ceil(height_ * img_options_.dpi_y / kDefaultDpi)));
             break;
         case ImageDPIType::DEFAULT:
         default:
-            size.width = width_;
-            size.height = height_;
+            size.width(width_);
+            size.height(height_);
             break;
         }
         return size;

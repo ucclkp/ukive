@@ -23,9 +23,9 @@ namespace win {
         int onNcDestroy(bool* handled) override;
         void onTranslucentChanged(bool translucent) override {}
 
-        void setExtraSpacingWhenMaximized(const Rect& rect) override;
+        void setExtraSpacingWhenMaximized(const Padding& spacing) override;
 
-        void getClientInsets(RECT* rect, int* bottom_beyond) override;
+        void getClientInsets(Padding* insets, int* bottom_beyond) override;
         void getClientOffset(POINT* offset) override;
 
         LRESULT onSize(WPARAM wParam, LPARAM lParam, bool* handled) override;
@@ -49,9 +49,9 @@ namespace win {
 
     private:
         int getBorderThickness() const;
-        Rect getExtraSpacingWhenMaximized() const;
+        Padding getExtraSpacingWhenMaximized() const;
 
-        Rect ext_sp_when_max_;
+        Padding ext_sp_when_max_;
         WindowImplWin* window_ = nullptr;
     };
 

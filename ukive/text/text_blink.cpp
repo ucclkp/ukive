@@ -57,8 +57,8 @@ namespace ukive {
 
         Rect bounds(blink_rect_);
         bounds.offset(
-            target_view_->getPadding().start - target_view_->getScrollX(),
-            target_view_->getPadding().top - target_view_->getScrollY());
+            target_view_->getPadding().start() - target_view_->getScrollX(),
+            target_view_->getPadding().top() - target_view_->getScrollY());
         target_view_->requestDraw(bounds);
     }
 
@@ -72,11 +72,11 @@ namespace ukive {
         auto new_rect = rect;
 
         // 防止光标被截断
-        if (new_rect.left < 0) {
-            new_rect.offset(-new_rect.left, 0);
+        if (new_rect.x() < 0) {
+            new_rect.offset(-new_rect.x(), 0);
         }
-        if (new_rect.right > target_view_->getContentBounds().width() + target_view_->getScrollX()) {
-            new_rect.offset(target_view_->getContentBounds().width() + target_view_->getScrollX() - new_rect.right, 0);
+        if (new_rect.right() > target_view_->getContentBounds().width() + target_view_->getScrollX()) {
+            new_rect.offset(target_view_->getContentBounds().width() + target_view_->getScrollX() - new_rect.right(), 0);
         }
 
         if (blink_rect_ == new_rect) {
@@ -98,11 +98,14 @@ namespace ukive {
         }
     }
 
-    void TextBlink::calculateRect(float x_center, float top, float bottom, Rect* out) const {
-        out->left = int(std::round(x_center - thickness_ / 2.f));
-        out->top = int(std::floor(top));
-        out->right = int(out->left + std::round(thickness_));
-        out->bottom = int(std::ceil(bottom));
+    void TextBlink::calculateRect(
+        float x_center, float top, float bottom, Rect* out) const
+    {
+        out->xywh(
+            int(std::round(x_center - thickness_ / 2.f)),
+            int(std::floor(top)),
+            int(std::round(thickness_)),
+            int(std::ceil(bottom - top)));
     }
 
     void TextBlink::setColor(const Color& color) {
@@ -132,8 +135,8 @@ namespace ukive {
         // 和 View 的原点相差一个 padding
         Rect bounds(blink_rect_);
         bounds.offset(
-            target_view_->getPadding().start - target_view_->getScrollX(),
-            target_view_->getPadding().top - target_view_->getScrollY());
+            target_view_->getPadding().start() - target_view_->getScrollX(),
+            target_view_->getPadding().top() - target_view_->getScrollY());
         target_view_->requestDraw(bounds);
     }
 

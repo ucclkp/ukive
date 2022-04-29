@@ -42,7 +42,7 @@ namespace ukive {
 
         canvas->fillRect(
             RectF(Rect(
-                bound.left, bound.bottom - panel_line_width_,
+                bound.x(), bound.bottom() - panel_line_width_,
                 bound.width(), panel_line_width_)),
             panel_line_color_);
     }

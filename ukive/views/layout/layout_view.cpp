@@ -51,7 +51,7 @@ namespace ukive {
         int wrapped_width = 0;
         for (auto view : views_) {
             if (view->getVisibility() != VANISHED) {
-                int child_width = view->getDeterminedSize().width + view->getLayoutMargin().hori();
+                int child_width = view->getDeterminedSize().width() + view->getLayoutMargin().hori();
                 if (child_width > wrapped_width) {
                     wrapped_width = child_width;
                 }
@@ -65,7 +65,7 @@ namespace ukive {
         int wrapped_height = 0;
         for (auto view : views_) {
             if (view->getVisibility() != VANISHED) {
-                int child_height = view->getDeterminedSize().height + view->getLayoutMargin().vert();
+                int child_height = view->getDeterminedSize().height() + view->getLayoutMargin().vert();
                 if (child_height > wrapped_height) {
                     wrapped_height = child_height;
                 }
@@ -79,10 +79,10 @@ namespace ukive {
         int final_width = 0;
         int final_height = 0;
 
-        switch (info.width.mode) {
+        switch (info.width().mode) {
         case SizeInfo::CONTENT:
             final_width = getWrappedWidth();
-            final_width = (std::min)(final_width + getPadding().hori(), info.width.val);
+            final_width = (std::min)(final_width + getPadding().hori(), info.width().val);
             break;
 
         case SizeInfo::FREEDOM:
@@ -92,14 +92,14 @@ namespace ukive {
 
         case SizeInfo::DEFINED:
         default:
-            final_width = info.width.val;
+            final_width = info.width().val;
             break;
         }
 
-        switch (info.height.mode) {
+        switch (info.height().mode) {
         case SizeInfo::CONTENT:
             final_height = getWrappedHeight();
-            final_height = (std::min)(final_height + getPadding().vert(), info.height.val);
+            final_height = (std::min)(final_height + getPadding().vert(), info.height().val);
             break;
 
         case SizeInfo::FREEDOM:
@@ -109,7 +109,7 @@ namespace ukive {
 
         case SizeInfo::DEFINED:
         default:
-            final_height = info.height.val;
+            final_height = info.height().val;
             break;
         }
 
@@ -317,7 +317,7 @@ namespace ukive {
         bool consumed = false;
         std::weak_ptr<InputEvent> wptr = cur_ev_;
 
-        e->offsetInputPos(-getLeft(), -getTop());
+        e->offsetInputPos(-getX(), -getY());
 
         /**
          * 在一次输入流程中，拦截一次之后，其余事件将不会再进入
@@ -555,11 +555,11 @@ namespace ukive {
             Rect dirty(dirty_rect_);
             dirty.same(bounds);
             dirty.offset(
-                -child->getLeft() + getScrollX(),
-                -child->getTop() + getScrollY());
+                -child->getX() + getScrollX(),
+                -child->getY() + getScrollY());
 
             canvas->save();
-            canvas->translate(float(child->getLeft()), float(child->getTop()));
+            canvas->translate(float(child->getX()), float(child->getY()));
             child->draw(canvas, dirty);
             canvas->restore();
         }
@@ -577,12 +577,12 @@ namespace ukive {
         auto& ls = child->getLayoutSize();
 
         auto child_w = SizeInfo::getChildSizeInfo(
-            parent_info.width, hori_margin + getPadding().hori(), ls.width);
+            parent_info.width(), hori_margin + getPadding().hori(), ls.width());
 
         auto child_h = SizeInfo::getChildSizeInfo(
-            parent_info.height, vert_margin + getPadding().vert(), ls.height);
+            parent_info.height(), vert_margin + getPadding().vert(), ls.height());
 
-        child->measure(SizeInfo(child_w, child_h));
+        child->determineSize(SizeInfo(child_w, child_h));
     }
 
     void LayoutView::determineChildrenSize(const SizeInfo& parent_info) {

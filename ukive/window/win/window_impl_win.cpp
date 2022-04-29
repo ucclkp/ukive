@@ -634,8 +634,9 @@ namespace win {
         }
 
         int bb;
-        non_client_frame_->getClientInsets(&rect, &bb);
-        width -= (rect.left + rect.right);
+        Padding insets;
+        non_client_frame_->getClientInsets(&insets, &bb);
+        width -= insets.hori();
 
         return (std::max)(width, 0);
     }
@@ -653,8 +654,9 @@ namespace win {
         }
 
         int bb;
-        non_client_frame_->getClientInsets(&rect, &bb);
-        height -= (rect.top + rect.bottom);
+        Padding insets;
+        non_client_frame_->getClientInsets(&insets, &bb);
+        height -= insets.vert();
 
         return (std::max)(height, 0);
     }
@@ -708,7 +710,8 @@ namespace win {
         int height = rect.bottom - rect.top;
 
         int bb;
-        non_client_frame_->getClientInsets(&rect, &bb);
+        Padding insets;
+        non_client_frame_->getClientInsets(&insets, &bb);
         height -= bb;
 
         return (std::max)(height, 0);
@@ -934,15 +937,15 @@ namespace win {
     void WindowImplWin::convScreenToClient(Point* p) const {
         POINT raw_p { p->x(), p->y() };
         ::ScreenToClient(hWnd_, &raw_p);
-        p->x() = raw_p.x;
-        p->y() = raw_p.y;
+        p->x(raw_p.x);
+        p->y(raw_p.y);
     }
 
     void WindowImplWin::convClientToScreen(Point* p) const {
         POINT raw_p { p->x(), p->y() };
         ::ClientToScreen(hWnd_, &raw_p);
-        p->x() = raw_p.x;
-        p->y() = raw_p.y;
+        p->x(raw_p.x);
+        p->y(raw_p.y);
     }
 
     float WindowImplWin::scaleToNative(float val) const {
@@ -1038,13 +1041,13 @@ namespace win {
             return;
         }
 
-        Rect rect;
+        Padding rect;
         auto edge = win::WinAppBar::findAutoHideEdge(display.get());
         switch (edge) {
-        case win::WinAppBar::Bottom: rect.bottom = thickness; break;
-        case win::WinAppBar::Left:   rect.left = thickness;   break;
-        case win::WinAppBar::Right:  rect.right = thickness;  break;
-        case win::WinAppBar::Top:    rect.top = thickness;    break;
+        case win::WinAppBar::Bottom: rect.bottom(thickness); break;
+        case win::WinAppBar::Left:   rect.start(thickness);   break;
+        case win::WinAppBar::Right:  rect.end(thickness);  break;
+        case win::WinAppBar::Top:    rect.top(thickness);    break;
         case win::WinAppBar::None:   break;
         }
         non_client_frame_->setExtraSpacingWhenMaximized(rect);
@@ -1187,12 +1190,12 @@ namespace win {
         }
     }
 
-    bool WindowImplWin::onMoving(Rect* rect) {
+    bool WindowImplWin::onMoving(RECT* rect) {
         delegate_->onMoving();
         return false;
     }
 
-    bool WindowImplWin::onResizing(WPARAM edge, Rect* rect) {
+    bool WindowImplWin::onResizing(WPARAM edge, RECT* rect) {
         Size new_size(
             rect->right - rect->left,
             rect->bottom - rect->top);
@@ -1208,26 +1211,26 @@ namespace win {
         switch (edge) {
         case WMSZ_TOP:
         case WMSZ_TOPLEFT:
-            rect->top = rect->bottom - new_size.height;
-            rect->left = rect->right - new_size.width;
+            rect->top = rect->bottom - new_size.height();
+            rect->left = rect->right - new_size.width();
             break;
         case WMSZ_BOTTOM:
         case WMSZ_BOTTOMLEFT:
-            rect->bottom = rect->top + new_size.height;
-            rect->left = rect->right - new_size.width;
+            rect->bottom = rect->top + new_size.height();
+            rect->left = rect->right - new_size.width();
             break;
         case WMSZ_LEFT:
-            rect->left = rect->right - new_size.width;
-            rect->top = rect->bottom - new_size.height;
+            rect->left = rect->right - new_size.width();
+            rect->top = rect->bottom - new_size.height();
             break;
         case WMSZ_RIGHT:
         case WMSZ_TOPRIGHT:
-            rect->right = rect->left + new_size.width;
-            rect->top = rect->bottom - new_size.height;
+            rect->right = rect->left + new_size.width();
+            rect->top = rect->bottom - new_size.height();
             break;
         case WMSZ_BOTTOMRIGHT:
-            rect->bottom = rect->top + new_size.height;
-            rect->right = rect->left + new_size.width;
+            rect->bottom = rect->top + new_size.height();
+            rect->right = rect->left + new_size.width();
             break;
         default:
             break;
@@ -2048,17 +2051,7 @@ namespace win {
 
     LRESULT WindowImplWin::onMoving(WPARAM wParam, LPARAM lParam, bool* handled) {
         auto raw_rect = reinterpret_cast<RECT*>(lParam);
-        Rect rect(
-            raw_rect->left, raw_rect->top,
-            raw_rect->right - raw_rect->left,
-            raw_rect->bottom - raw_rect->top);
-
-        *handled = onMoving(&rect);
-        raw_rect->left = rect.left;
-        raw_rect->top = rect.top;
-        raw_rect->right = rect.right;
-        raw_rect->bottom = rect.bottom;
-
+        *handled = onMoving(raw_rect);
         if (*handled) {
             return TRUE;
         }
@@ -2067,17 +2060,7 @@ namespace win {
 
     LRESULT WindowImplWin::onSizing(WPARAM wParam, LPARAM lParam, bool* handled) {
         auto raw_rect = reinterpret_cast<RECT*>(lParam);
-        Rect rect(
-            raw_rect->left, raw_rect->top,
-            raw_rect->right - raw_rect->left,
-            raw_rect->bottom - raw_rect->top);
-
-        *handled = onResizing(wParam, &rect);
-        raw_rect->left = rect.left;
-        raw_rect->top = rect.top;
-        raw_rect->right = rect.right;
-        raw_rect->bottom = rect.bottom;
-
+        *handled = onResizing(wParam, raw_rect);
         if (*handled) {
             return TRUE;
         }
@@ -2776,7 +2759,7 @@ namespace win {
         ::SetWindowLongPtr(hWnd_, GWL_STYLE, cur_style & ~WS_OVERLAPPEDWINDOW);
         ::SetWindowPos(
             hWnd_, HWND_TOP,
-            bounds.left, bounds.top, bounds.width(), bounds.height(),
+            bounds.x(), bounds.y(), bounds.width(), bounds.height(),
             SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
     }
 

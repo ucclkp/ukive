@@ -52,34 +52,38 @@ namespace ukive {
 
     void GridNavigator::showNav(const Rect& rect) {
         auto bounds = parent_view_->getContentBounds();
-        bounds.offset(-bounds.left, -bounds.top);
+        if (bounds.empty()) {
+            return;
+        }
+
+        bounds.offset(-bounds.x(), -bounds.y());
         if (bounds.intersect(rect)) {
             close();
             return;
         }
 
         int x, y;
-        if (rect.left < bounds.left) {
-            x = bounds.left;
-        } else if (rect.left > bounds.right) {
-            x = bounds.right;
+        if (rect.x() < bounds.x()) {
+            x = bounds.x();
+        } else if (rect.x() > bounds.right()) {
+            x = bounds.right();
         } else {
-            x = rect.left;
+            x = rect.x();
         }
 
-        if (rect.top < bounds.top) {
-            y = bounds.top;
-        } else if (rect.top > bounds.bottom) {
-            y = bounds.bottom;
+        if (rect.y() < bounds.y()) {
+            y = bounds.y();
+        } else if (rect.y() > bounds.bottom()) {
+            y = bounds.bottom();
         } else {
-            y = rect.top;
+            y = rect.y();
         }
 
         bounds = parent_view_->getBoundsInRoot();
         if (is_finished_) {
-            show(x + bounds.left, y + bounds.top);
+            show(x + bounds.x(), y + bounds.y());
         } else {
-            inner_window_->update(x + bounds.left, y + bounds.top);
+            inner_window_->update(x + bounds.x(), y + bounds.y());
         }
     }
 
@@ -100,27 +104,27 @@ namespace ukive {
             auto content_bounds = parent_view_->getContentBounds();
 
             Rect bounds;
-            bounds.set(
-                root_bounds.left + content_bounds.left,
-                root_bounds.top + content_bounds.top,
+            bounds.xywh(
+                root_bounds.x() + content_bounds.x(),
+                root_bounds.y() + content_bounds.y(),
                 content_bounds.width(), content_bounds.height());
 
             auto& margin = v->getLayoutMargin();
-            if (margin.start < bounds.left + padding) {
-                margin.start = bounds.left + padding;
+            if (margin.start() < bounds.x() + padding) {
+                margin.start(bounds.x() + padding);
             }
-            if (margin.start > bounds.right - padding - width) {
-                margin.start = bounds.right - padding - width;
-            }
-
-            if (margin.top < bounds.top + padding) {
-                margin.top = bounds.top + padding;
-            }
-            if (margin.top > bounds.bottom - padding - height) {
-                margin.top = bounds.bottom - padding - height;
+            if (margin.start() > bounds.right() - padding - width) {
+                margin.start(bounds.right() - padding - width);
             }
 
-            new_bounds->setPos(margin.start, margin.top);
+            if (margin.top() < bounds.y() + padding) {
+                margin.top(bounds.y() + padding);
+            }
+            if (margin.top() > bounds.bottom() - padding - height) {
+                margin.top(bounds.bottom() - padding - height);
+            }
+
+            new_bounds->pos(margin.start(), margin.top());
         }
     }
 

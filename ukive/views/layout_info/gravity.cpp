@@ -21,23 +21,23 @@ namespace ukive {
             int gravity;
         };
 
-        if (x + target_max_width > root.right || x < root.left) {
+        if (x + target_max_width > root.right() || x < root.x()) {
             if (is_discretized) {
                 auto mid_x = (std::max)((
-                    anchor.left - (target_max_width - anchor.width()) / 2), root.left);
-                auto mid_r_x = (std::max)(anchor.right - target_max_width, root.left);
-                auto left_x = (std::max)(anchor.left - target_max_width, root.left);
+                    anchor.x() - (target_max_width - anchor.width()) / 2), root.x());
+                auto mid_r_x = (std::max)(anchor.right() - target_max_width, root.x());
+                auto left_x = (std::max)(anchor.x() - target_max_width, root.x());
 
                 /**
                  * 事先计算好这几种离散的位置的容纳空间、y 值和 gravity。
                  * 最后一种情况用于稳定计算结果，防止 target 不断减小的过程中出现的跳变。
                  */
-                Info i_END{       root.right - anchor.right, anchor.right, GV_END };
-                Info i_MID_START{ root.right - anchor.left,  anchor.left,  GV_MID_START };
-                Info i_MID_HORI{  root.right - mid_x,        mid_x,        GV_MID_HORI };
-                Info i_MID_END{   anchor.right - root.left,  mid_r_x,      GV_MID_END };
-                Info i_START{     anchor.left - root.left,   left_x,       GV_START };
-                Info i_FULL{      root.right - root.left,    root.left,    GV_NONE };
+                Info i_END{       root.right() - anchor.right(), anchor.right(), GV_END };
+                Info i_MID_START{ root.right() - anchor.x(),     anchor.x(),     GV_MID_START };
+                Info i_MID_HORI{  root.right() - mid_x,          mid_x,          GV_MID_HORI };
+                Info i_MID_END{   anchor.right() - root.x(),     mid_r_x,        GV_MID_END };
+                Info i_START{     anchor.x() - root.x(),         left_x,         GV_START };
+                Info i_FULL{      root.right() - root.x(),       root.x(),       GV_NONE };
 
                 size_t space_c = 0, occup_c = 0;
                 std::array<Info, 6> space;
@@ -80,15 +80,15 @@ namespace ukive {
                     }
                 }
             } else {
-                auto d1 = root.right - root.left;
+                auto d1 = root.width();
                 if (d1 >= target_max_width) {
-                    if (x < root.left) {
-                        x = root.left;
+                    if (x < root.x()) {
+                        x = root.x();
                     } else {
-                        x = root.right - target_max_width;
+                        x = root.right() - target_max_width;
                     }
                 } else {
-                    x = root.left;
+                    x = root.x();
                 }
             }
         }
@@ -106,19 +106,19 @@ namespace ukive {
             int gravity;
         };
 
-        if (y + target_max_height > root.bottom || y < root.top) {
+        if (y + target_max_height > root.bottom() || y < root.y()) {
             if (is_discretized) {
                 auto mid_y = (std::max)((
-                    anchor.top - (target_max_height - anchor.height()) / 2), root.top);
-                auto mid_b_y = (std::max)(anchor.bottom - target_max_height, root.top);
-                auto top_y = (std::max)(anchor.top - target_max_height, root.top);
+                    anchor.y() - (target_max_height - anchor.height()) / 2), root.y());
+                auto mid_b_y = (std::max)(anchor.bottom() - target_max_height, root.y());
+                auto top_y = (std::max)(anchor.y() - target_max_height, root.y());
 
-                Info i_BOTTOM{     root.bottom - anchor.bottom, anchor.bottom, GV_BOTTOM };
-                Info i_MID_TOP{    root.bottom - anchor.top,    anchor.top,    GV_MID_TOP };
-                Info i_MID_VERT{   root.bottom - mid_y,         mid_y,         GV_MID_VERT };
-                Info i_MID_BOTTOM{ anchor.bottom - root.top,    mid_b_y,       GV_MID_BOTTOM };
-                Info i_TOP{        anchor.top - root.top,       top_y,         GV_TOP };
-                Info i_FULL{       root.bottom - root.top,      root.top,      GV_NONE };
+                Info i_BOTTOM{     root.bottom() - anchor.bottom(), anchor.bottom(), GV_BOTTOM };
+                Info i_MID_TOP{    root.bottom() - anchor.y(),      anchor.y(),      GV_MID_TOP };
+                Info i_MID_VERT{   root.bottom() - mid_y,           mid_y,           GV_MID_VERT };
+                Info i_MID_BOTTOM{ anchor.bottom() - root.y(),      mid_b_y,         GV_MID_BOTTOM };
+                Info i_TOP{        anchor.y() - root.y(),           top_y,           GV_TOP };
+                Info i_FULL{       root.bottom() - root.y(),        root.y(),        GV_NONE };
 
                 size_t space_c = 0, occup_c = 0;
                 std::array<Info, 6> space;
@@ -152,15 +152,15 @@ namespace ukive {
                     }
                 }
             } else {
-                auto d1 = root.bottom - root.top;
+                auto d1 = root.height();
                 if (d1 >= target_max_height) {
-                    if (y < root.top) {
-                        y = root.top;
+                    if (y < root.y()) {
+                        y = root.y();
                     } else {
-                        y = root.bottom - target_max_height;
+                        y = root.bottom() - target_max_height;
                     }
                 } else {
-                    y = root.top;
+                    y = root.y();
                 }
             }
         }
@@ -178,50 +178,50 @@ namespace ukive {
 
         int x, adj_gravity_x;
         if (gravity & GV_START) {
-            x = anchor.left - target_max_size.width;
+            x = anchor.x() - target_max_size.width();
             adj_gravity_x = GV_START;
         } else if (gravity & GV_MID_START) {
-            x = anchor.left;
+            x = anchor.x();
             adj_gravity_x = GV_MID_START;
         } else if (gravity & GV_MID_HORI) {
-            x = anchor.left + (anchor.width() - target_max_size.width) / 2;
+            x = anchor.x() + (anchor.width() - target_max_size.width()) / 2;
             adj_gravity_x = GV_MID_HORI;
         } else if (gravity & GV_MID_END) {
-            x = anchor.right - target_max_size.width;
+            x = anchor.right() - target_max_size.width();
             adj_gravity_x = GV_MID_END;
         } else {
-            x = anchor.right;
+            x = anchor.right();
             adj_gravity_x = GV_END;
         }
 
         if (is_max_visible) {
-            x = adjustX(root, anchor, target_max_size.width, x, is_discretized, &adj_gravity_x);
+            x = adjustX(root, anchor, target_max_size.width(), x, is_discretized, &adj_gravity_x);
         }
 
         int y, adj_gravity_y;
         if (gravity & GV_TOP) {
-            y = anchor.top - target_max_size.height;
+            y = anchor.y() - target_max_size.height();
             adj_gravity_y = GV_TOP;
         } else if (gravity & GV_MID_TOP) {
-            y = anchor.top;
+            y = anchor.y();
             adj_gravity_y = GV_MID_TOP;
         } else if (gravity & GV_MID_VERT) {
-            y = anchor.top + (anchor.height() - target_max_size.height) / 2;
+            y = anchor.y() + (anchor.height() - target_max_size.height()) / 2;
             adj_gravity_y = GV_MID_VERT;
         } else if (gravity & GV_MID_BOTTOM) {
-            y = anchor.bottom - target_max_size.height;
+            y = anchor.bottom() - target_max_size.height();
             adj_gravity_y = GV_MID_BOTTOM;
         } else {
-            y = anchor.bottom;
+            y = anchor.bottom();
             adj_gravity_y = GV_BOTTOM;
         }
 
         if (is_max_visible) {
-            y = adjustY(root, anchor, target_max_size.height, y, is_discretized, &adj_gravity_y);
+            y = adjustY(root, anchor, target_max_size.height(), y, is_discretized, &adj_gravity_y);
         }
 
-        out->setPos(x, y);
-        out->setSize(target_max_size);
+        out->pos(x, y);
+        out->size(target_max_size);
 
         if (adj_gravity) {
             *adj_gravity = adj_gravity_x | adj_gravity_y;

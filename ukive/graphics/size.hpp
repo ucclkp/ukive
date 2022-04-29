@@ -9,6 +9,8 @@
 
 #include <cstddef>
 
+#include "utils/numbers.hpp"
+
 
 namespace ukive {
 
@@ -18,69 +20,109 @@ namespace ukive {
         using type = Ty;
 
         SizeT()
-            : width(0), height(0) {}
-
+            : w_(0), h_(0) {}
         SizeT(Ty w, Ty h)
-            : width(w), height(h) {}
+            : w_(w), h_(h) {}
 
+        SizeT operator&(const SizeT& rhs) const {
+            SizeT out(*this);
+            out.same(rhs);
+            return out;
+        }
+        SizeT operator|(const SizeT& rhs) const {
+            SizeT out(*this);
+            out.join(rhs);
+            return out;
+        }
+        SizeT& operator&=(const SizeT& rhs) {
+            same(rhs);
+            return *this;
+        }
+        SizeT& operator|=(const SizeT& rhs) {
+            join(rhs);
+            return *this;
+        }
         bool operator==(const SizeT& rhs) const {
-            return width == rhs.width && height == rhs.height;
+            return equal(rhs);
         }
         bool operator!=(const SizeT& rhs) const {
-            return width != rhs.width || height != rhs.height;
+            return !equal(rhs);
         }
 
         template<typename C>
         explicit operator SizeT<C>() const {
-            return SizeT<C>(static_cast<C>(width), static_cast<C>(height));
+            return SizeT<C>(static_cast<C>(w_), static_cast<C>(h_));
         }
 
-        bool empty() {
-            return width <= 0 || height <= 0;
+        bool empty() const {
+            return w_ <= 0 || h_ <= 0;
         }
 
-        void set(Ty w, Ty h) {
-            width = w;
-            height = h;
+        bool equal(const SizeT& rhs) const {
+            return utl::is_num_equal(w_, rhs.w_) &&
+                utl::is_num_equal(h_, rhs.h_);
         }
 
-        void setToMax(const SizeT& rhs) {
-            if (rhs.width > width) {
-                width = rhs.width;
+        SizeT& set(Ty w, Ty h) {
+            w_ = w;
+            h_ = h;
+            return *this;
+        }
+
+        SizeT& join(const SizeT& rhs) {
+            if (rhs.w_ > w_) {
+                w_ = rhs.w_;
             }
-            if (rhs.height > height) {
-                height = rhs.height;
+            if (rhs.h_ > h_) {
+                h_ = rhs.h_;
             }
+            return *this;
         }
 
-        void setToMin(const SizeT& rhs) {
-            if (rhs.width < width) {
-                width = rhs.width;
+        SizeT& same(const SizeT& rhs) {
+            if (rhs.w_ < w_) {
+                w_ = rhs.w_;
             }
-            if (rhs.height < height) {
-                height = rhs.height;
+            if (rhs.h_ < h_) {
+                h_ = rhs.h_;
             }
+            return *this;
         }
 
-        void insets(const SizeT& rhs) {
-            insets(rhs.width, rhs.height);
+        SizeT& insets(const SizeT& rhs) {
+            insets(rhs.w_, rhs.h_);
+            return *this;
         }
 
-        void insets(Ty w, Ty h) {
-            if (w < width) {
-                width = width - w;
+        SizeT& insets(Ty w, Ty h) {
+            if (w < w_) {
+                w_ = w_ - w;
             } else {
-                width = 0;
+                w_ = 0;
             }
 
-            if (h < height) {
-                height = height - h;
+            if (h < h_) {
+                h_ = h_ - h;
             } else {
-                height = 0;
+                h_ = 0;
             }
+            return *this;
         }
 
-        Ty width, height;
+        SizeT& width(Ty w) {
+            w_ = w;
+            return *this;
+        }
+        SizeT& height(Ty h) {
+            h_ = h;
+            return *this;
+        }
+
+        Ty width() const { return w_; }
+        Ty height() const { return h_; }
+
+    private:
+        Ty w_, h_;
     };
 
     using Size = SizeT<int>;

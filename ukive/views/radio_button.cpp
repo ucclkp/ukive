@@ -45,8 +45,8 @@ namespace ukive {
         anim_.setInterpolator(new LinearInterpolator());
         anim_.setValueRange(0, 1);
 
-        Rect space;
-        space.left = c.dp2pxi(24);
+        Padding space;
+        space.start(c.dp2pxi(24));
         setSpace(space);
 
         setClickable(true);

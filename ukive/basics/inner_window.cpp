@@ -54,7 +54,7 @@ namespace ukive {
         width_ = width;
         if (decor_view_) {
             auto& size = decor_view_->getLayoutSize();
-            decor_view_->setLayoutSize(width_, size.height);
+            decor_view_->setLayoutSize(width_, size.height());
         }
     }
 
@@ -62,7 +62,7 @@ namespace ukive {
         height_ = height;
         if (decor_view_) {
             auto& size = decor_view_->getLayoutSize();
-            decor_view_->setLayoutSize(size.width, height_);
+            decor_view_->setLayoutSize(size.width(), height_);
         }
     }
 

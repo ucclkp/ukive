@@ -50,14 +50,14 @@ namespace ukive {
         if (!image_) {
             return 0;
         }
-        return int(std::ceil(image_->getSize().width));
+        return int(std::ceil(image_->getSize().width()));
     }
 
     int ImageElement::getContentHeight() const {
         if (!image_) {
             return 0;
         }
-        return int(std::ceil(image_->getSize().height));
+        return int(std::ceil(image_->getSize().height()));
     }
 
     GPtr<ImageFrame> ImageElement::getImage() const {

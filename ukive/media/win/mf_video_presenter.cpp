@@ -108,7 +108,7 @@ namespace win {
             display_size_ = size;
 
             Rect dst;
-            dst.setSize(display_size_);
+            dst.size(display_size_);
             setDestRect(dst);
         }
     }
@@ -433,11 +433,11 @@ namespace win {
         if (prcDest) {
             Rect dst;
             if (display_size_.empty()) {
-                dst.set(
+                dst.xywh(
                     prcDest->left, prcDest->top,
                     prcDest->right - prcDest->left, prcDest->bottom - prcDest->top);
             } else {
-                dst.setSize(display_size_);
+                dst.size(display_size_);
             }
             hr = setDestRect(dst);
         }
@@ -455,10 +455,10 @@ namespace win {
         *pnrcSource = src_rect_;
 
         auto dst = render_engine_->getDestinationRect();
-        prcDest->left = dst.left;
-        prcDest->top = dst.top;
-        prcDest->right = dst.right;
-        prcDest->bottom = dst.bottom;
+        prcDest->left = dst.x();
+        prcDest->top = dst.y();
+        prcDest->right = dst.right();
+        prcDest->bottom = dst.bottom();
 
         return S_OK;
     }
@@ -712,7 +712,8 @@ namespace win {
         }
 
         // 设置目标大小
-        hr = MFSetAttributeSize(optimal.get(), MF_MT_FRAME_SIZE, out_rect.right, out_rect.bottom);
+        hr = MFSetAttributeSize(
+            optimal.get(), MF_MT_FRAME_SIZE, out_rect.width(), out_rect.height());
         if (FAILED(hr)) {
             return hr;
         }
@@ -720,8 +721,8 @@ namespace win {
         // 设置显示位置
         display_area.OffsetX = makeOffset(0);
         display_area.OffsetY = makeOffset(0);
-        display_area.Area.cx = out_rect.right;
-        display_area.Area.cy = out_rect.bottom;
+        display_area.Area.cx = out_rect.width();
+        display_area.Area.cy = out_rect.height();
 
         hr = optimal->SetUINT32(MF_MT_PAN_SCAN_ENABLED, FALSE);
         if (FAILED(hr)) {
@@ -804,9 +805,9 @@ namespace win {
             offset_x + display_area.Area.cx <= LONG(src_width) &&
             offset_y + display_area.Area.cy <= LONG(src_height))
         {
-            out.set(offset_x, offset_y, display_area.Area.cx, display_area.Area.cy);
+            out.xywh(offset_x, offset_y, display_area.Area.cx, display_area.Area.cy);
         } else {
-            out.set(0, 0, src_width, src_height);
+            out.xywh(0, 0, src_width, src_height);
         }
 
         MFRatio input_par;
@@ -1419,15 +1420,15 @@ namespace win {
             src_par.Denominator != dst_par.Denominator)
         {
             if (src_par.Numerator > src_par.Denominator) {
-                rect.right = MulDiv(rect.right, src_par.Numerator, src_par.Denominator);
+                rect.right(MulDiv(rect.right(), src_par.Numerator, src_par.Denominator));
             } else if (src_par.Numerator < src_par.Denominator) {
-                rect.bottom = MulDiv(rect.bottom, src_par.Denominator, src_par.Numerator);
+                rect.bottom(MulDiv(rect.bottom(), src_par.Denominator, src_par.Numerator));
             }
 
             if (dst_par.Numerator > dst_par.Denominator) {
-                rect.bottom = MulDiv(rect.bottom, dst_par.Numerator, dst_par.Denominator);
+                rect.bottom(MulDiv(rect.bottom(), dst_par.Numerator, dst_par.Denominator));
             } else if (dst_par.Numerator < dst_par.Denominator) {
-                rect.right = MulDiv(rect.right, dst_par.Denominator, dst_par.Numerator);
+                rect.right(MulDiv(rect.right(), dst_par.Denominator, dst_par.Numerator));
             }
         }
 
