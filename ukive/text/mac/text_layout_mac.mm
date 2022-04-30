@@ -300,7 +300,7 @@ namespace mac {
     bool TextLayoutMac::getTextMetrics(TextMetrics *tm) {
         calculateGlyphRange();
         auto rect = [layout_mgr_ usedRectForTextContainer:text_container_];
-        tm->rect.set(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
+        tm->rect.xywh(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
 
         NSUInteger index = 0;
         NSUInteger line_count = 0;
@@ -407,11 +407,11 @@ namespace mac {
             if (NSEqualRanges(fragment_range, line_glyph_range) == NO) {
                 auto fragment_rect = [layout_mgr_ boundingRectForGlyphRange:fragment_range
                                                             inTextContainer:text_container_];
-                if (fragment_rect.origin.x > rect.left) {
-                    rect.left = fragment_rect.origin.x;
+                if (fragment_rect.origin.x > rect.x()) {
+                    rect.x(fragment_rect.origin.x);
                 }
-                if (fragment_rect.origin.x + fragment_rect.size.width < rect.right) {
-                    rect.right = fragment_rect.origin.x + fragment_rect.size.width;
+                if (fragment_rect.origin.x + fragment_rect.size.width < rect.right()) {
+                    rect.right(fragment_rect.origin.x + fragment_rect.size.width);
                 }
             }
 
@@ -452,8 +452,8 @@ namespace mac {
                   ns_rect.origin.x, ns_rect.origin.y,
                   ns_rect.size.width, ns_rect.size.height);
 
-        pt->x() = is_trailing ? rect.right : rect.left;
-        pt->y() = rect.top;
+        pt->x(is_trailing ? rect.right() : rect.x());
+        pt->y(rect.y());
         info->pos = uint32_t(act_ch_range.location);
         info->length = uint32_t(act_ch_range.length);
         info->rect = rect;

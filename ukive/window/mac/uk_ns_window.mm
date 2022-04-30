@@ -72,7 +72,7 @@
     if (impl) {
         ukive::Size new_size(frameSize.width, frameSize.height);
         impl->onResizing(&new_size);
-        return NSMakeSize(new_size.width, new_size.height);
+        return NSMakeSize(new_size.width(), new_size.height());
     }
     return frameSize;
 }

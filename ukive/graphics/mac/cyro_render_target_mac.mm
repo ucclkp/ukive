@@ -219,7 +219,7 @@ namespace mac {
         if (buffer_) {
             auto size = buffer_->getSize();
             [[NSColor colorWithRed:0 green:0 blue:0 alpha:0] setFill];
-            NSRectFill(NSMakeRect(0, 0, size.width, size.height));
+            NSRectFill(NSMakeRect(0, 0, size.width(), size.height()));
         }
     }
 
@@ -227,13 +227,13 @@ namespace mac {
         if (buffer_) {
             auto size = buffer_->getSize();
             [[NSColor colorWithRed:c.r green:c.g blue:c.b alpha:c.a] setFill];
-            NSRectFill(NSMakeRect(0, 0, size.width, size.height));
+            NSRectFill(NSMakeRect(0, 0, size.width(), size.height()));
         }
     }
 
     void CyroRenderTargetMac::pushClip(const RectF &rect) {
         [NSGraphicsContext saveGraphicsState];
-        NSRectClip(NSMakeRect(rect.left, rect.top, rect.width(), rect.height()));
+        NSRectClip(NSMakeRect(rect.x(), rect.y(), rect.width(), rect.height()));
     }
 
     void CyroRenderTargetMac::popClip() {
@@ -327,7 +327,7 @@ namespace mac {
 
     void CyroRenderTargetMac::drawRect(const RectF &rect, const Paint &paint) {
         auto color = paint.getColor();
-        auto ns_rect = NSMakeRect(rect.left, rect.top, rect.width(), rect.height());
+        auto ns_rect = NSMakeRect(rect.x(), rect.y(), rect.width(), rect.height());
         auto ns_color = [NSColor colorWithRed:color.r
                                         green:color.g
                                          blue:color.b
@@ -367,7 +367,7 @@ namespace mac {
         const RectF &rect, float radius, const Paint &paint)
     {
         auto color = paint.getColor();
-        auto ns_rect = NSMakeRect(rect.left, rect.top, rect.width(), rect.height());
+        auto ns_rect = NSMakeRect(rect.x(), rect.y(), rect.width(), rect.height());
         auto ns_color = [NSColor colorWithRed:color.r
                                         green:color.g
                                          blue:color.b
@@ -528,8 +528,8 @@ namespace mac {
         const RectF &src, const RectF &dst, float opacity, ImageFrame* img)
     {
         auto img_fr = static_cast<const ImageFrameMac*>(img);
-        auto src_rect = NSMakeRect(src.left, src.top, src.width(), src.height());
-        auto dst_rect = NSMakeRect(dst.left, dst.top, dst.width(), dst.height());
+        auto src_rect = NSMakeRect(src.x(), src.y(), src.width(), src.height());
+        auto dst_rect = NSMakeRect(dst.x(), dst.y(), dst.width(), dst.height());
 
         [img_fr->getNative() drawInRect:dst_rect
                   fromRect:src_rect
@@ -576,7 +576,7 @@ namespace mac {
         std::basic_string<unichar> u_text(text.begin(), text.end());
         auto ns_str =[[NSString alloc] initWithCharacters:
             u_text.c_str() length:u_text.length()];
-        auto ns_rect = NSMakeRect(rect.left, rect.top, rect.width(), rect.height());
+        auto ns_rect = NSMakeRect(rect.x(), rect.y(), rect.width(), rect.height());
 
         NSDictionary* ns_dict = nil;
         if (ns_font) {

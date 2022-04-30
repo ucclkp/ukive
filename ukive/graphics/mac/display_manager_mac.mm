@@ -61,7 +61,7 @@ namespace mac {
         uint32_t actual_count = 0;
         CGDirectDisplayID display;
         auto ret = CGGetDisplaysWithRect(
-                        CGRectMake(r.left, r.top, r.width(), r.height()),
+                        CGRectMake(r.x(), r.y(), r.width(), r.height()),
                         1, &display, &actual_count);
         if (ret != kCGErrorSuccess || actual_count != 1) {
             return {};

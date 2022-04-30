@@ -162,7 +162,7 @@ namespace mac {
     void WindowImplMac::onResizing(Size* new_size) {
         Size size(*new_size);
         if (delegate_->onResizing(&size)) {
-            new_size->set(size.width, size.height);
+            new_size->set(size.width(), size.height());
         }
     }
 
@@ -281,8 +281,8 @@ namespace mac {
 
     void WindowImplMac::center() {
         auto display_bounds = DisplayMac::fromWindowImpl(this)->getBounds();
-        x_ = display_bounds.left + std::round((display_bounds.width() - width_) / 2.f);
-        y_ = display_bounds.top + std::round((display_bounds.height() - height_) / 2.f);
+        x_ = display_bounds.x() + std::round((display_bounds.width() - width_) / 2.f);
+        y_ = display_bounds.y() + std::round((display_bounds.height() - height_) / 2.f);
 
         if (native_) {
             [native_ setFrameTopLeftPoint:NSMakePoint(x_, display_bounds.height() - y_)];
@@ -301,13 +301,13 @@ namespace mac {
         if (native_view_) {
             if (!region.rect0.empty()) {
                 auto& rect = region.rect0;
-                [native_view_ setNeedsDisplayInRect:NSMakeRect(rect.left, rect.top, rect.width(), rect.height())];
-                LOG(Log::INFO) << "displayRect1: [" << rect.left << ", " << rect.top << ", " << rect.width() << ", " << rect.height() << "]";
+                [native_view_ setNeedsDisplayInRect:NSMakeRect(rect.x(), rect.y(), rect.width(), rect.height())];
+                LOG(Log::INFO) << "displayRect1: [" << rect.x() << ", " << rect.y() << ", " << rect.width() << ", " << rect.height() << "]";
             }
             if (!region.rect1.empty()) {
                 auto& rect = region.rect1;
-                [native_view_ displayRect:NSMakeRect(rect.left, rect.top, rect.width(), rect.height())];
-                LOG(Log::INFO) << "displayRect2: [" << rect.left << ", " << rect.top << ", " << rect.width() << ", " << rect.height() << "]";
+                [native_view_ displayRect:NSMakeRect(rect.x(), rect.y(), rect.width(), rect.height())];
+                LOG(Log::INFO) << "displayRect2: [" << rect.x() << ", " << rect.y() << ", " << rect.width() << ", " << rect.height() << "]";
             }
         }
     }
