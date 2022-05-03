@@ -240,13 +240,6 @@ namespace ukive {
         return true;
     }
 
-    void RippleElement::onContextChanged(const Context& context) {
-        switch (context.getChanged()) {
-        default:
-            break;
-        }
-    }
-
     Element::Opacity RippleElement::getOpacity() const {
         return OPA_OPAQUE;
     }

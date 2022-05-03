@@ -100,7 +100,7 @@ namespace mac {
         WindowNativeDelegate* getDelegate() const;
 
     private:
-        bool initialization();
+        bool initialize();
 
         WindowNativeDelegate* delegate_;
 

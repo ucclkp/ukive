@@ -30,7 +30,7 @@ namespace win {
     TsfInputConnection::~TsfInputConnection() {
     }
 
-    bool TsfInputConnection::initialization() {
+    bool TsfInputConnection::initialize() {
         if (is_initialized_) {
             return true;
         }

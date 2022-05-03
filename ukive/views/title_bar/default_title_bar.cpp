@@ -164,11 +164,11 @@ namespace ukive {
         title_tv_->setText(getWindow()->getTitle());
     }
 
-    void DefaultTitleBar::onContextChanged(const Context& context) {
-        super::onContextChanged(context);
+    void DefaultTitleBar::onContextChanged(Context::Type type, const Context& context) {
+        super::onContextChanged(type, context);
 
         if (!is_theme_color_enabled_ ||
-            context.getChanged() != Context::THEME_CHANGED)
+            type != Context::THEME_CHANGED)
         {
             return;
         }

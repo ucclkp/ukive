@@ -247,12 +247,10 @@ namespace ukive {
         case SizeInfo::CONTENT:
             final_height = getWrappedHeight();
             final_height = (std::min)(final_height + getPadding().vert(), info.height().val);
-            final_height = (std::max)(getDeterminedSize().height(), final_height);
             break;
 
         case SizeInfo::FREEDOM:
             final_height = getWrappedHeight() + getPadding().vert();
-            final_height = (std::max)(getDeterminedSize().height(), final_height);
             break;
 
         case SizeInfo::DEFINED:

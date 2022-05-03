@@ -130,8 +130,10 @@ namespace shell {
         return Window::onInputEvent(e);
     }
 
-    void EffectWindow::onContextChanged(const ukive::Context& context) {
-        switch (context.getChanged()) {
+    void EffectWindow::onContextChanged(
+        ukive::Context::Type type, const ukive::Context& context)
+    {
+        switch (type) {
         case ukive::Context::DEV_LOST:
         {
             shadow_img_ = nullptr;

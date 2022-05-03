@@ -55,7 +55,7 @@ namespace ukive {
           is_touch_down_(false),
           context_(c),
           parent_(nullptr),
-          input_connection_(nullptr)
+          input_conn_(nullptr)
     {
         bool has_id = false;
         auto it = attrs.find(necro::kAttrViewId);
@@ -81,25 +81,25 @@ namespace ukive {
     }
 
     View::~View() {
-        if (input_connection_) {
-            input_connection_->popEditor();
-            delete input_connection_;
+        if (input_conn_) {
+            input_conn_->popEditor();
+            delete input_conn_;
         }
 
         resetBackground();
         resetForeground();
     }
 
-    ViewAnimator* View::animate() {
+    ViewAnimator& View::animate() {
         if (!animator_) {
             animator_ = std::make_unique<ViewAnimator>(this);
         }
 
-        return animator_.get();
+        return *animator_;
     }
 
-    ViewAnimatorParams* View::animeParams() {
-        return &anime_params_;
+    ViewAnimatorParams& View::animeParams() {
+        return anime_params_;
     }
 
     void View::setId(int id) {
@@ -255,11 +255,15 @@ namespace ukive {
 
     void View::setPadding(int lead, int top, int trail, int bottom) {
         Padding new_padding(lead, top, trail, bottom);
-        if (padding_ == new_padding) {
+        setPadding(new_padding);
+    }
+
+    void View::setPadding(const Padding& p) {
+        if (padding_ == p) {
             return;
         }
 
-        padding_ = new_padding;
+        padding_ = p;
 
         requestLayout();
         requestDraw();
@@ -430,15 +434,15 @@ namespace ukive {
     }
 
     void View::setLayoutMargin(int start, int top, int end, int bottom) {
-        bool changed = layout_margin_.start() != start ||
-            layout_margin_.top() != top ||
-            layout_margin_.end() != end ||
-            layout_margin_.bottom() != bottom;
-        if (!changed) {
+        setLayoutMargin({ start , top, end, bottom });
+    }
+
+    void View::setLayoutMargin(const Margin& m) {
+        if (layout_margin_ == m) {
             return;
         }
 
-        layout_margin_.set(start, top, end, bottom);
+        layout_margin_ = m;
 
         requestLayout();
         requestDraw();
@@ -517,10 +521,6 @@ namespace ukive {
         return determined_size_;
     }
 
-    Padding& View::getPadding() {
-        return padding_;
-    }
-
     const Padding& View::getPadding() const {
         return padding_;
     }
@@ -537,16 +537,8 @@ namespace ukive {
         return parent_;
     }
 
-    Size& View::getLayoutSize() {
-        return layout_size_;
-    }
-
     const Size& View::getLayoutSize() const {
         return layout_size_;
-    }
-
-    Margin& View::getLayoutMargin() {
-        return layout_margin_;
     }
 
     const Margin& View::getLayoutMargin() const {
@@ -634,6 +626,13 @@ namespace ukive {
         return Rect(
             padding_.start(), padding_.top(),
             content_width, content_height);
+    }
+
+    Rect View::getContentBoundsInRoot() const {
+        auto bounds = getContentBounds();
+        auto root = getBoundsInRoot();
+        bounds.offset(root.x(), root.y());
+        return bounds;
     }
 
     Rect View::getVisibleBounds() const {
@@ -1680,8 +1679,8 @@ namespace ukive {
         onWindowFocusChanged(focus);
     }
 
-    void View::dispatchContextChanged(const Context& context) {
-        onContextChanged(context);
+    void View::dispatchContextChanged(Context::Type type, const Context& context) {
+        onContextChanged(type, context);
     }
 
     void View::dispatchAncestorVisibilityChanged(View* ancestor, int visibility) {
@@ -1700,8 +1699,8 @@ namespace ukive {
         window_ = w;
         is_attached_to_window_ = true;
 
-        if (input_connection_) {
-            input_connection_->pushEditor();
+        if (input_conn_) {
+            input_conn_->pushEditor();
         }
 
         if (bg_element_) {
@@ -1722,8 +1721,8 @@ namespace ukive {
     void View::dispatchDetachFromWindow() {
         onDetachFromWindow();
 
-        if (input_connection_) {
-            input_connection_->discardFocus();
+        if (input_conn_) {
+            input_conn_->discardFocus();
         }
 
         if (animator_) {
@@ -1791,20 +1790,20 @@ namespace ukive {
     void View::onFocusChanged(bool get_focus) {
         if (get_focus) {
             if (onCheckIsTextEditor()) {
-                if (!input_connection_) {
-                    input_connection_ = onCreateInputConnection();
+                if (!input_conn_) {
+                    input_conn_ = onCreateInputConnection();
                 }
 
-                if (input_connection_) {
-                    input_connection_->initialization();
-                    input_connection_->pushEditor();
-                    input_connection_->requestFocus();
+                if (input_conn_) {
+                    input_conn_->initialize();
+                    input_conn_->pushEditor();
+                    input_conn_->requestFocus();
                 }
             }
         } else {
-            if (input_connection_) {
-                input_connection_->discardFocus();
-                input_connection_->terminateComposition();
+            if (input_conn_) {
+                input_conn_->discardFocus();
+                input_conn_->terminateComposition();
             }
         }
 
@@ -1829,30 +1828,30 @@ namespace ukive {
 
         if (window_focus) {
             if (onCheckIsTextEditor()) {
-                if (!input_connection_) {
-                    input_connection_ = onCreateInputConnection();
+                if (!input_conn_) {
+                    input_conn_ = onCreateInputConnection();
                 }
 
-                if (input_connection_) {
-                    bool ret = input_connection_->initialization();
+                if (input_conn_) {
+                    bool ret = input_conn_->initialize();
                     ubassert(ret);
-                    input_connection_->pushEditor();
-                    input_connection_->requestFocus();
+                    input_conn_->pushEditor();
+                    input_conn_->requestFocus();
                 }
             }
         } else {
-            if (input_connection_) {
-                bool ret = input_connection_->terminateComposition();
+            if (input_conn_) {
+                bool ret = input_conn_->terminateComposition();
                 ubassert(ret);
 
-                ret = input_connection_->discardFocus();
+                ret = input_conn_->discardFocus();
                 ubassert(ret);
             }
         }
     }
 
-    void View::onContextChanged(const Context& context) {
-        switch (context.getChanged()) {
+    void View::onContextChanged(Context::Type type, const Context& context) {
+        switch (type) {
         case Context::DPI_CHANGED:
         {
             if (Application::getOptions().is_auto_dpi_scale) {
@@ -1873,10 +1872,10 @@ namespace ukive {
         }
 
         if (bg_element_) {
-            bg_element_->notifyContextChanged(context);
+            bg_element_->notifyContextChanged(type, context);
         }
         if (fg_element_) {
-            fg_element_->notifyContextChanged(context);
+            fg_element_->notifyContextChanged(type, context);
         }
     }
 

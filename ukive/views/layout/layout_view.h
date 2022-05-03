@@ -29,7 +29,7 @@ namespace ukive {
 
         bool dispatchInputEvent(InputEvent* e) override;
         void dispatchWindowFocusChanged(bool focus) override;
-        void dispatchContextChanged(const Context& context) override;
+        void dispatchContextChanged(Context::Type type, const Context& context) override;
         void dispatchAttachedToWindow(Window* w) override;
         void dispatchDetachFromWindow() override;
 

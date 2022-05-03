@@ -33,6 +33,10 @@ namespace ukive {
         const Rect& root, bool is_max_visible, bool is_discretized,
         const Rect& anchor, int gravity, const Size& target_max_size, Rect* out, int* adj_gravity);
 
+    void calculateCornerBounds(
+        const Rect& root, bool is_max_visible, bool is_evaded,
+        const Point& pos, const Padding& pp, int corner, const Size& size, Rect* out, int* adj_corner);
+
 }
 
 #endif  // UKIVE_VIEWS_LAYOUT_INFO_GRAVITY_H_

@@ -72,13 +72,13 @@ namespace ukive {
         LayoutInstantiator::init();
 
         ilf_.reset(LcImageFactory::create());
-        bool ret = ilf_->initialization();
+        bool ret = ilf_->initialize();
         if (!ret) {
             LOG(Log::ERR) << "Failed to initialize LcImageFactory";
         }
 
         imm_.reset(InputMethodManager::create());
-        ret = imm_->initialization();
+        ret = imm_->initialize();
         if (!ret) {
             LOG(Log::ERR) << "Failed to initialize InputMethodManager";
         }

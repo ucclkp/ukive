@@ -10,6 +10,7 @@
 
 namespace ukive {
 
+    class View;
     class Menu;
     class MenuItem;
     class TextActionMenu;
@@ -23,8 +24,14 @@ namespace ukive {
         virtual bool onActionItemClicked(TextActionMenu* mode, MenuItem* item) = 0;
         virtual void onDestroyActionMode(TextActionMenu* mode) = 0;
 
-        // 获取相对于当前窗口的坐标
-        virtual void onGetContentPosition(int* x, int* y) = 0;
+        /**
+         * 获取菜单显示的位置坐标。
+         * @param v 参考 View。如果返回的指针为空，则坐标相对于 RootLayout；
+         *          如果不为空，则坐标相对于该 View。
+         * @param x 横坐标。
+         * @param y 纵坐标。
+         */
+        virtual void onGetContentPosition(View** v, int* x, int* y) = 0;
     };
 
 }

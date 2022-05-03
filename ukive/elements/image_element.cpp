@@ -64,7 +64,7 @@ namespace ukive {
         return image_;
     }
 
-    void ImageElement::onContextChanged(const Context& context) {
+    void ImageElement::onContextChanged(Context::Type type, const Context& context) {
     }
 
 }

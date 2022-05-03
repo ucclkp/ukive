@@ -17,7 +17,7 @@ namespace mac {
     public:
         IMMMac() = default;
 
-        bool initialization() override;
+        bool initialize() override;
         void destroy() override;
 
         bool updateIMEStatus() override;

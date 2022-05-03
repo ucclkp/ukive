@@ -41,7 +41,6 @@ namespace ukive {
     protected:
         bool onStateChanged(int new_state, int prev_state) override;
         bool onStateReset() override;
-        void onContextChanged(const Context& context) override;
 
     private:
         double alpha_;

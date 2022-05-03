@@ -29,8 +29,8 @@ namespace ukive {
 
     Anitom* AnimationDirector::add(int id, bool continuous) {
         ns start_time;
-        if (continuous && is_started_ && !is_finished_) {
-            start_time = ns(Animator::now() - start_time_);
+        if (continuous && is_started_ && !is_finished_ && !is_preparing_) {
+            start_time = ns(uns_sub(Animator::now(), start_time_));
         } else {
             start_time = ns(0);
         }

@@ -16,7 +16,7 @@
 namespace ukive {
 namespace mac {
 
-    bool LcImageFactoryMac::initialization() {
+    bool LcImageFactoryMac::initialize() {
         return true;
     }
 

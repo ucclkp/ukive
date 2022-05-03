@@ -17,29 +17,29 @@ namespace ukive {
     class Window;
     class InputEvent;
     class Element;
-    class InnerWindow;
+    class Levitator;
 
     class OnInnerWindowEventListener {
     public:
         virtual ~OnInnerWindowEventListener() = default;
 
         virtual void onBeforeInnerWindowLayout(
-            InnerWindow* iw, Rect* new_bounds, const Rect& old_bounds) {}
-        virtual void onRequestDismissByTouchOutside(InnerWindow* iw) {}
+            Levitator* lev, Rect* new_bounds, const Rect& old_bounds) {}
+        virtual void onRequestDismissByTouchOutside(Levitator* lev) {}
     };
 
     /**
      * 模拟窗口。
      */
-    class InnerWindow {
-    public:
-        class InnerDecorView : public SimpleLayout {
+    class Levitator {
+        class LevFrameView : public SimpleLayout {
         public:
-            explicit InnerDecorView(InnerWindow* inner, Context c);
-            ~InnerDecorView();
+            explicit LevFrameView(Levitator* lev, Context c);
+            ~LevFrameView();
 
             Size onDetermineSize(const SizeInfo& info) override;
             void onBeforeLayout(Rect* new_bounds, const Rect& old_bounds) override;
+            void onLayout(const Rect& new_bounds, const Rect& old_bounds) override;
 
             bool dispatchInputEvent(InputEvent* e) override;
 
@@ -49,15 +49,43 @@ namespace ukive {
         private:
             using super = SimpleLayout;
 
-            InnerWindow* inner_window_;
+            Levitator* levitator_;
         };
 
-        InnerWindow();
-        virtual ~InnerWindow();
+    public:
+        struct PosInfo {
+            int corner;
+            bool is_evaded;
+            bool is_max_visible;
+            Padding pp;
+            Rect limit_range;
+            View* limit_view;
+            View* rel_view;
 
-        void setWidth(int width);
-        void setHeight(int height);
-        void setSize(int width, int height);
+            PosInfo()
+                : corner(GV_NONE),
+                  is_evaded(false),
+                  is_max_visible(true),
+                  limit_view(nullptr),
+                  rel_view(nullptr) {}
+        };
+
+        struct SnapInfo {
+            bool is_max_visible;
+            bool is_discretized;
+
+            SnapInfo()
+                : is_max_visible(true),
+                  is_discretized(true) {}
+        };
+
+        Levitator();
+        virtual ~Levitator();
+
+        void setLayoutWidth(int width);
+        void setLayoutHeight(int height);
+        void setLayoutSize(int width, int height);
+        void setLayoutMargin(const Margin& margin);
         void setShadowRadius(int radius);
         void setBackground(Element* element);
         void setOutsideTouchable(bool touchable);
@@ -73,37 +101,40 @@ namespace ukive {
         void setContentView(View* v);
         void setEventListener(OnInnerWindowEventListener* l);
 
-        int getWidth() const;
-        int getHeight() const;
+        int getLayoutWidth() const;
+        int getLayoutHeight() const;
         int getShadowRadius() const;
         Element* getBackground() const;
         bool isOutsideTouchable() const;
         bool isDismissByTouchOutside() const;
         View* getContentView() const;
-        View* getDecorView() const;
+        View* getFrameView() const;
 
         bool isShowing() const;
 
-        void show(Window* w, int x, int y);
-        void show(View* anchor, int gravity);
+        void show(Window* w, int x, int y, const PosInfo& info = {});
+        void show(View* anchor, int gravity, const SnapInfo& info = {});
         void update(int x, int y);
+        void update(int x, int y, const PosInfo& info);
         void update(View* anchor, int gravity);
-        void markDismissing();
+        void update(View* anchor, int gravity, const SnapInfo& info);
+        void dismissing();
         void dismiss();
 
     private:
-        void createDecorView(Context c);
+        void createFrameView(Context c);
 
         int width_;
         int height_;
         int shadow_radius_;
         bool outside_touchable_;
         bool dismiss_by_touch_outside_;
+        Margin margin_;
         Element* background_;
 
         Window* window_ = nullptr;
         View* content_view_;
-        InnerDecorView* decor_view_;
+        LayoutView* frame_view_;
         OnInnerWindowEventListener* listener_ = nullptr;
         bool is_showing_;
         bool is_marked_as_dismissing_ = false;

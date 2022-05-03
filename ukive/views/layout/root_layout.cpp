@@ -10,7 +10,6 @@
 
 #include "ukive/views/layout/simple_layout.h"
 #include "ukive/views/layout/shade_layout.h"
-#include "ukive/views/layout_info/shade_layout_info.h"
 #include "ukive/window/window.h"
 #include "ukive/views/title_bar/default_title_bar.h"
 #include "ukive/resources/layout_instantiator.h"
@@ -108,10 +107,9 @@ namespace ukive {
         }
     }
 
-    void RootLayout::addShade(View* shade, const Rect& anchor, int gravity) {
+    void RootLayout::addShade(View* shade, const ShadeParams& params) {
         auto li = new ShadeLayoutInfo();
-        li->anchor = anchor;
-        li->gravity = gravity;
+        li->params = params;
         shade->setExtraLayoutInfo(li);
 
         shade_layout_->addView(shade);
@@ -121,19 +119,30 @@ namespace ukive {
         }
     }
 
-    void RootLayout::updateShade(View* shade, const Rect& anchor, int gravity) {
+    bool RootLayout::updateShade(View* shade, const ShadeParams& params) {
         for (auto v : *shade_layout_) {
             if (v == shade) {
                 auto li = static_cast<ShadeLayoutInfo*>(v->getExtraLayoutInfo());
-                if (li->anchor != anchor || li->gravity == gravity) {
-                    li->anchor = anchor;
-                    li->gravity = gravity;
-                    requestLayout();
+                if (li->params != params) {
+                    li->params = params;
+                    shade_layout_->requestLayout();
                     requestDraw();
                 }
-                return;
+                return true;
             }
         }
+        return false;
+    }
+
+    bool RootLayout::getShadeParams(View* shade, ShadeParams* params) {
+        for (auto v : *shade_layout_) {
+            if (v == shade) {
+                auto li = static_cast<ShadeLayoutInfo*>(v->getExtraLayoutInfo());
+                *params = li->params;
+                return true;
+            }
+        }
+        return false;
     }
 
     void RootLayout::removeShade(View* shade) {

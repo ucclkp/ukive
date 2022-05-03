@@ -40,50 +40,38 @@ namespace ukive {
         shape_element->setSolidEnable(true);
         shape_element->setSolidColor(bg_color);
 
-        inner_window_ = std::make_shared<InnerWindow>();
-        inner_window_->setSize(View::LS_FREE, View::LS_FREE);
-        inner_window_->setShadowRadius(c.dp2pxi(4.f));
-        inner_window_->setContentView(view);
-        inner_window_->setOutsideTouchable(true);
-        inner_window_->setDismissByTouchOutside(false);
-        inner_window_->setBackground(shape_element);
-        inner_window_->setEventListener(this);
+        levitator_ = std::make_shared<Levitator>();
+        levitator_->setLayoutSize(View::LS_FREE, View::LS_FREE);
+        levitator_->setShadowRadius(c.dp2pxi(4.f));
+        levitator_->setContentView(view);
+        levitator_->setOutsideTouchable(true);
+        levitator_->setDismissByTouchOutside(false);
+        levitator_->setBackground(shape_element);
+        levitator_->setEventListener(this);
+        levitator_->setLayoutMargin(
+            { c.dp2pxi(4), c.dp2pxi(4), c.dp2pxi(4), c.dp2pxi(4) });
     }
 
-    void GridNavigator::showNav(const Rect& rect) {
+    void GridNavigator::showNav(const Point& center_pos) {
         auto bounds = parent_view_->getContentBounds();
         if (bounds.empty()) {
             return;
         }
 
-        bounds.offset(-bounds.x(), -bounds.y());
-        if (bounds.intersect(rect)) {
+        Point cp(center_pos);
+        cp.x() += bounds.x();
+        cp.y() += bounds.y();
+
+        if (bounds.hit(cp)) {
             close();
             return;
         }
 
-        int x, y;
-        if (rect.x() < bounds.x()) {
-            x = bounds.x();
-        } else if (rect.x() > bounds.right()) {
-            x = bounds.right();
-        } else {
-            x = rect.x();
-        }
-
-        if (rect.y() < bounds.y()) {
-            y = bounds.y();
-        } else if (rect.y() > bounds.bottom()) {
-            y = bounds.bottom();
-        } else {
-            y = rect.y();
-        }
-
-        bounds = parent_view_->getBoundsInRoot();
+        auto root = parent_view_->getBoundsInRoot();
         if (is_finished_) {
-            show(x + bounds.x(), y + bounds.y());
+            show(cp.x() + root.x(), cp.y() + root.y());
         } else {
-            inner_window_->update(x + bounds.x(), y + bounds.y());
+            levitator_->update(cp.x() + root.x(), cp.y() + root.y());
         }
     }
 
@@ -92,41 +80,7 @@ namespace ukive {
     }
 
     void GridNavigator::onBeforeInnerWindowLayout(
-        InnerWindow* iw, Rect* new_bounds, const Rect& old_bounds)
-    {
-        if (iw->isShowing()) {
-            auto v = iw->getDecorView();
-            int width = new_bounds->width();
-            int height = new_bounds->height();
-
-            int padding = v->getContext().dp2pxi(6);
-            auto root_bounds = parent_view_->getBoundsInRoot();
-            auto content_bounds = parent_view_->getContentBounds();
-
-            Rect bounds;
-            bounds.xywh(
-                root_bounds.x() + content_bounds.x(),
-                root_bounds.y() + content_bounds.y(),
-                content_bounds.width(), content_bounds.height());
-
-            auto& margin = v->getLayoutMargin();
-            if (margin.start() < bounds.x() + padding) {
-                margin.start(bounds.x() + padding);
-            }
-            if (margin.start() > bounds.right() - padding - width) {
-                margin.start(bounds.right() - padding - width);
-            }
-
-            if (margin.top() < bounds.y() + padding) {
-                margin.top(bounds.y() + padding);
-            }
-            if (margin.top() > bounds.bottom() - padding - height) {
-                margin.top(bounds.bottom() - padding - height);
-            }
-
-            new_bounds->pos(margin.start(), margin.top());
-        }
-    }
+        Levitator* lev, Rect* new_bounds, const Rect& old_bounds) {}
 
     void GridNavigator::show(int x, int y) {
         auto w = parent_view_->getWindow();
@@ -138,11 +92,18 @@ namespace ukive {
 
         using namespace std::chrono_literals;
 
-        inner_window_->dismiss();
-        inner_window_->show(w, x, y);
-        inner_window_->getDecorView()->animeParams()->setAlpha(0);
-        inner_window_->getDecorView()->animate()->setDuration(150ms)->
-            alpha(1)->start();
+        auto root = parent_view_->getBoundsInRoot();
+
+        Levitator::PosInfo info;
+        info.corner = GV_MID_HORI | GV_MID_VERT;
+        info.limit_view = parent_view_;
+        info.limit_range = parent_view_->getContentBoundsInRoot();
+
+        levitator_->dismiss();
+        levitator_->show(w, x, y, info);
+        levitator_->getFrameView()->animeParams().setAlpha(0);
+        levitator_->getFrameView()->animate()
+            .alpha(1, 150ms).start();
         //list_view_->setEnabled(true);
     }
 
@@ -154,21 +115,21 @@ namespace ukive {
         is_finished_ = true;
 
         //list_view_->setEnabled(false);
-        inner_window_->markDismissing();
+        levitator_->dismissing();
 
-        std::weak_ptr<InnerWindow> ptr = inner_window_;
-        auto dec_view = inner_window_->getDecorView();
-        if (dec_view) {
+        std::weak_ptr<Levitator> ptr = levitator_;
+        auto frame_view = levitator_->getFrameView();
+        if (frame_view) {
             using namespace std::chrono_literals;
-            dec_view->animate()->
-                setDuration(100ms)->alpha(0)->setFinishedHandler(
+            frame_view->animate()
+                .alpha(0, 150ms).setFinishedHandler(
                     [ptr](AnimationDirector* director)
             {
                 auto window = ptr.lock();
                 if (window) {
                     window->dismiss();
                 }
-            })->start();
+            }).start();
         }
     }
 

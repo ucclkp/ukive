@@ -885,13 +885,9 @@ namespace ukive {
     }
 
     void Window::processDeviceLost() {
-        context_.setChanged(Context::DEV_LOST);
-        onUpdateContext();
-
+        onUpdateContext(Context::DEV_LOST);
         Application::getGraphicDeviceManager()->recreate();
-
-        context_.setChanged(Context::DEV_RESTORE);
-        onUpdateContext();
+        onUpdateContext(Context::DEV_RESTORE);
     }
 
     void Window::onMove(int x, int y) {
@@ -1143,12 +1139,12 @@ namespace ukive {
         return context_;
     }
 
-    void Window::onUpdateContext() {
-        if (context_.getChanged() == Context::NONE) {
+    void Window::onUpdateContext(Context::Type type) {
+        if (type == Context::NONE) {
             return;
         }
 
-        if (context_.getChanged() == Context::DPI_CHANGED &&
+        if (type == Context::DPI_CHANGED &&
             Application::getOptions().is_auto_dpi_scale)
         {
             float dpi = context_.getDefaultDpi() * context_.getAutoScale();
@@ -1157,9 +1153,8 @@ namespace ukive {
             }
         }
 
-        onContextChanged(context_);
-        root_layout_->dispatchContextChanged(context_);
-        context_.setChanged(Context::NONE);
+        onContextChanged(type, context_);
+        root_layout_->dispatchContextChanged(type, context_);
 
         requestLayout();
         requestDraw();

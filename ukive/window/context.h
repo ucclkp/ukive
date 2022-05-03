@@ -40,7 +40,6 @@ namespace ukive {
         void setDefaultDpi(uint32_t dpi);
         void setHDREnabled(bool enabled);
         void setTranslucentType(TranslucentType type);
-        void setChanged(Type type);
 
         float getScale() const;
         float getAutoScale() const;
@@ -49,7 +48,6 @@ namespace ukive {
         ThemeConfig& getDefaultThemeConfig() const;
         ThemeConfig& getCurrentThemeConfig() const;
         TranslucentType getTranslucentType() const;
-        Type getChanged() const;
 
         float dp2px(int dp) const;
         float dp2px(float dp) const;

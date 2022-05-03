@@ -17,7 +17,7 @@ namespace mac {
     public:
         explicit InputConnectionMac(TextInputClient* tic);
 
-        bool initialization() override;
+        bool initialize() override;
 
         bool pushEditor() override;
         bool popEditor() override;

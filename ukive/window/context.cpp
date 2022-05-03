@@ -32,14 +32,9 @@ namespace ukive {
             return;
         }
 
-        ubassert(impl_->changed == NONE);
-        impl_->changed = type;
-
         for (auto l : impl_->ccl) {
-            l->onContextChanged(*this);
+            l->onContextChanged(type, *this);
         }
-
-        impl_->changed = NONE;
     }
 
     void Context::setScale(float s) {
@@ -60,10 +55,6 @@ namespace ukive {
 
     void Context::setTranslucentType(TranslucentType type) {
         impl_->trans_type = type;
-    }
-
-    void Context::setChanged(Type type) {
-        impl_->changed = type;
     }
 
     float Context::getScale() const {
@@ -92,10 +83,6 @@ namespace ukive {
 
     TranslucentType Context::getTranslucentType() const {
         return impl_->trans_type;
-    }
-
-    Context::Type Context::getChanged() const {
-        return impl_->changed;
     }
 
     float Context::dp2px(int dp) const {

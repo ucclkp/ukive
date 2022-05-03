@@ -9,7 +9,7 @@
 
 #include <memory>
 
-#include "ukive/basics/inner_window.h"
+#include "ukive/basics/levitator.h"
 #include "ukive/menu/menu_callback.h"
 
 
@@ -39,7 +39,7 @@ namespace ukive {
 
     protected:
         // OnInnerWindowEventListener
-        void onRequestDismissByTouchOutside(InnerWindow* iw) override;
+        void onRequestDismissByTouchOutside(Levitator* lev) override;
 
     private:
         int menu_width_;
@@ -50,7 +50,7 @@ namespace ukive {
 
         Window* window_;
         MenuImpl* menu_;
-        std::shared_ptr<InnerWindow> inner_window_;
+        std::shared_ptr<Levitator> levitator_;
     };
 
 }

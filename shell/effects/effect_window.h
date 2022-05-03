@@ -36,7 +36,8 @@ namespace shell {
         void onDestroy() override;
         bool onInputEvent(ukive::InputEvent* e) override;
 
-        void onContextChanged(const ukive::Context& context) override;
+        void onContextChanged(
+            ukive::Context::Type type, const ukive::Context& context) override;
 
         // ukive::AnimationListener
         void onAnimationProgress(ukive::Animator* animator) override;

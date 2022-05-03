@@ -8,12 +8,13 @@
 #define UKIVE_ELEMENTS_ELEMENT_H_
 
 #include "ukive/graphics/rect.hpp"
+#include "ukive/window/context.h"
+#include "ukive/graphics/gref_count.h"
 
 
 namespace ukive {
 
     class Canvas;
-    class Context;
     class Element;
     class Window;
 
@@ -54,7 +55,7 @@ namespace ukive {
         bool resetState();
         void notifyAttachedToWindow(Window* w);
         void notifyDetachedFromWindow();
-        void notifyContextChanged(const Context& context);
+        void notifyContextChanged(Context::Type type, const Context& context);
 
         int getState() const;
         int getPrevState() const;
@@ -81,7 +82,7 @@ namespace ukive {
 
         virtual void onAttachedToWindow(Window* w) {}
         virtual void onDetachedFromWindow() {}
-        virtual void onContextChanged(const Context& context) {}
+        virtual void onContextChanged(Context::Type type, const Context& context) {}
 
         int start_x_, start_y_;
 

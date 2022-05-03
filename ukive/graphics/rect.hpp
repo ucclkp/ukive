@@ -70,6 +70,26 @@ namespace ukive {
         PointT<Ty> pos_rt() const { return { right(), y() }; }
         PointT<Ty> pos_rb() const { return { right(), bottom() }; }
         PointT<Ty> pos_lb() const { return { x(), bottom() }; }
+        PointT<Ty> pos_center() const { return { x() + width() / 2, y() + height() / 2 }; }
+
+        PointT<Ty> siege(Ty x, Ty y) const {
+            if (x < pos_.x()) {
+                x = pos_.x();
+            } else if (x > right()) {
+                x = right();
+            }
+
+            if (y < pos_.y()) {
+                y = pos_.y();
+            } else if (y > bottom()) {
+                y = bottom();
+            }
+
+            return { x, y };
+        }
+        PointT<Ty> siege(const PointT<Ty>& p) const {
+            return siege(p.x(), p.y());
+        }
 
         bool empty() const {
             return size_.empty();
@@ -82,8 +102,7 @@ namespace ukive {
                 && y >= this->y() && y < this->bottom());
         }
         bool hit(const PointT<Ty>& p) const {
-            return (p.x() >= x() && p.x() < right()
-                && p.y() >= y() && p.y() < bottom());
+            return hit(p.x(), p.y());
         }
         bool contains(const RectT& rect) const {
             return (rect.x() >= x() && rect.right() <= right())
@@ -212,13 +231,13 @@ namespace ukive {
             if (x + r > size_.width()) {
                 size_.width(0);
             } else {
-                size_.width(size_.width() - x + r);
+                size_.width(size_.width() - x - r);
             }
 
             if (y + b > size_.height()) {
                 size_.height(0);
             } else {
-                size_.height(size_.height() - y + b);
+                size_.height(size_.height() - y - b);
             }
             return *this;
         }

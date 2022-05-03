@@ -34,7 +34,7 @@ namespace ukive {
         bool onStateChanged(int new_state, int prev_state) override;
         void onAttachedToWindow(Window* w) override;
         void onDetachedFromWindow() override;
-        void onContextChanged(const Context& context) override;
+        void onContextChanged(Context::Type type, const Context& context) override;
 
         std::vector<std::shared_ptr<Element>> list_;
     };

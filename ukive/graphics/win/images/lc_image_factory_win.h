@@ -22,7 +22,7 @@ namespace win {
     public:
         LcImageFactoryWin();
 
-        bool initialization() override;
+        bool initialize() override;
         void destroy() override;
 
         GPtr<LcImageFrame> create(

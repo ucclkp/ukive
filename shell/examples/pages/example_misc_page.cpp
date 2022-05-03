@@ -239,7 +239,7 @@ namespace shell {
         auto img_path = rm->getResRootPath() / u"freshpaint.png";
         auto img = ukive::ImageFrame::decodeFile(getWindow()->getCanvas(), img_path.u16string());
         image_view_->setImage(img);
-        image_view_->animeParams()->setOrder(ukive::ViewAnimatorParams::RST);
+        image_view_->animeParams().setOrder(ukive::ViewAnimatorParams::RST);
 
         test_button_ = findView<ukive::Button>(v, Res::Id::bt_misc_button);
         test_button_->setOnClickListener(this);
@@ -273,14 +273,14 @@ namespace shell {
 
     void ExampleMiscPage::onDirectorProgress(ukive::AnimationDirector* director) {
         image_view_->requestDraw();
-        image_view_->animeParams()->setTranslateX(director->getCurValue(0));
-        image_view_->animeParams()->setScaleX(director->getCurValue(0) / 400);
-        image_view_->animeParams()->setScaleY(director->getCurValue(0) / 400);
-        image_view_->animeParams()->setRotate(director->getCurValue(0) / 400 * 360);
-        image_view_->animeParams()->setRPivotX(image_view_->getWidth() / 2.0);
-        image_view_->animeParams()->setRPivotY(image_view_->getHeight() / 2.0);
-        image_view_->animeParams()->setSPivotX(image_view_->getWidth() / 2.0);
-        image_view_->animeParams()->setSPivotY(image_view_->getHeight() / 2.0);
+        image_view_->animeParams().setTranslateX(director->getCurValue(0));
+        image_view_->animeParams().setScaleX(director->getCurValue(0) / 400);
+        image_view_->animeParams().setScaleY(director->getCurValue(0) / 400);
+        image_view_->animeParams().setRotate(director->getCurValue(0) / 400 * 360);
+        image_view_->animeParams().setRPivotX(image_view_->getWidth() / 2.0);
+        image_view_->animeParams().setRPivotY(image_view_->getHeight() / 2.0);
+        image_view_->animeParams().setSPivotX(image_view_->getWidth() / 2.0);
+        image_view_->animeParams().setSPivotY(image_view_->getHeight() / 2.0);
         image_view_->requestDraw();
     }
 

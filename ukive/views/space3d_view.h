@@ -32,7 +32,7 @@ namespace ukive {
         void onDraw(Canvas* canvas) override;
         bool onInputEvent(InputEvent* e) override;
 
-        void onContextChanged(const Context& context) override;
+        void onContextChanged(Context::Type type, const Context& context) override;
 
     private:
         bool createResources(int width, int height);

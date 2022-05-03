@@ -32,14 +32,16 @@ namespace ukive {
         menu_->setCallback(this);
         menu_->setMenuItemHeight(menu_item_height_);
 
-        inner_window_ = std::make_shared<InnerWindow>();
-        inner_window_->setShadowRadius(c.dp2pxi(1.5f));
-        inner_window_->setContentView(menu_);
-        inner_window_->setOutsideTouchable(false);
-        inner_window_->setDismissByTouchOutside(true);
-        inner_window_->setBackground(new ColorElement(Color::White));
-        inner_window_->setWidth(menu_width_);
-        inner_window_->setEventListener(this);
+        levitator_ = std::make_shared<Levitator>();
+        levitator_->setShadowRadius(c.dp2pxi(1.5f));
+        levitator_->setContentView(menu_);
+        levitator_->setOutsideTouchable(false);
+        levitator_->setDismissByTouchOutside(true);
+        levitator_->setBackground(new ColorElement(Color::White));
+        levitator_->setLayoutWidth(menu_width_);
+        levitator_->setEventListener(this);
+        levitator_->setLayoutMargin(
+            { c.dp2pxi(8), c.dp2pxi(8), c.dp2pxi(8), c.dp2pxi(8) });
     }
 
     ContextMenu::~ContextMenu() {}
@@ -67,8 +69,8 @@ namespace ukive {
 
         is_finished_ = false;
 
-        inner_window_->dismiss();
-        inner_window_->show(window_, x, y);
+        levitator_->dismiss();
+        levitator_->show(window_, x, y);
     }
 
     void ContextMenu::show(View* anchor, int gravity) {
@@ -76,8 +78,8 @@ namespace ukive {
 
         is_finished_ = false;
 
-        inner_window_->dismiss();
-        inner_window_->show(anchor, gravity);
+        levitator_->dismiss();
+        levitator_->show(anchor, gravity);
     }
 
     void ContextMenu::close() {
@@ -86,25 +88,25 @@ namespace ukive {
 
         is_finished_ = true;
         callback_->onDestroyContextMenu(this);
-        inner_window_->markDismissing();
+        levitator_->dismissing();
 
         using namespace std::chrono_literals;
 
         // 异步关闭 ContextMenu，以防止在输入事件处理流程中
         // 关闭菜单时出现问题。
-        std::weak_ptr<InnerWindow> ptr = inner_window_;
-        inner_window_->getDecorView()->animate()->
-            setDuration(100ms)->alpha(0.f)->setFinishedHandler(
+        std::weak_ptr<Levitator> ptr = levitator_;
+        levitator_->getFrameView()->animate()
+            .alpha(0.f, 100ms).setFinishedHandler(
                 [ptr](AnimationDirector* director)
         {
             auto window = ptr.lock();
             if (window) {
                 window->dismiss();
             }
-        })->start();
+        }).start();
     }
 
-    void ContextMenu::onRequestDismissByTouchOutside(InnerWindow* iw) {
+    void ContextMenu::onRequestDismissByTouchOutside(Levitator* lev) {
         close();
     }
 

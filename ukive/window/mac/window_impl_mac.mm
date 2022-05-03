@@ -54,7 +54,7 @@ namespace mac {
 
     WindowImplMac::~WindowImplMac() {}
 
-    bool WindowImplMac::initialization() {
+    bool WindowImplMac::initialize() {
         NSWindowStyleMask mask = 0;
         if (is_resizable_) {
             mask |= NSWindowStyleMaskResizable;
@@ -191,7 +191,7 @@ namespace mac {
         }
 
         init_params_ = params;
-        return initialization();
+        return initialize();
     }
 
     void WindowImplMac::show() {

@@ -39,12 +39,15 @@ namespace ukive {
         shape_element->setSolidEnable(true);
         shape_element->setSolidColor(Color::White);
 
-        inner_window_ = std::make_shared<InnerWindow>();
-        inner_window_->setShadowRadius(c.dp2pxi(2.f));
-        inner_window_->setContentView(menu_impl_);
-        inner_window_->setOutsideTouchable(true);
-        inner_window_->setBackground(shape_element);
-        inner_window_->setWidth(menu_width_);
+        levitator_ = std::make_shared<Levitator>();
+        levitator_->setLayoutSize(View::LS_FREE, View::LS_FREE);
+        levitator_->setShadowRadius(c.dp2pxi(2.f));
+        levitator_->setContentView(menu_impl_);
+        levitator_->setOutsideTouchable(true);
+        levitator_->setBackground(shape_element);
+        levitator_->setLayoutWidth(menu_width_);
+        levitator_->setLayoutMargin(
+            { c.dp2pxi(8), c.dp2pxi(8), c.dp2pxi(8), c.dp2pxi(8) });
     }
 
     TextActionMenu::~TextActionMenu() {
@@ -69,15 +72,10 @@ namespace ukive {
     }
 
     void TextActionMenu::invalidatePosition() {
+        View* rel;
         int x = 0, y = 0;
-        callback_->onGetContentPosition(&x, &y);
-
-        auto bounds = window_->getContentBounds();
-        if (x + menu_width_ > bounds.width()) {
-            x -= menu_width_;
-        }
-
-        inner_window_->update(x, y);
+        callback_->onGetContentPosition(&rel, &x, &y);
+        levitator_->update(x, y);
     }
 
     void TextActionMenu::show() {
@@ -87,29 +85,26 @@ namespace ukive {
 
         is_finished_ = false;
 
+        View* rel;
         int x = 0, y = 0;
-        callback_->onGetContentPosition(&x, &y);
+        callback_->onGetContentPosition(&rel, &x, &y);
 
-        int center_x = 0, center_y = 0;
-        auto bounds = window_->getContentBounds();
-        if (x + menu_width_ > bounds.width()) {
-            center_x = menu_width_;
-            center_y = 0;
-            x -= menu_width_;
-        }
-
-        inner_window_->dismiss();
+        levitator_->dismiss();
 
         using namespace std::chrono_literals;
 
-        inner_window_->show(window_, x, y);
-        inner_window_->getDecorView()->animate()->
-            setDuration(100ms)->
-            circleReveal(
-                tval::ofReal(center_x),
-                tval::ofReal(center_y),
+        Levitator::PosInfo info;
+        info.is_evaded = true;
+        info.pp = Padding(1, 1, 1, 1);
+        info.rel_view = rel;
+
+        levitator_->show(window_, x, y, info);
+        levitator_->getFrameView()->animate()
+            .circleReveal(
+                tval::ofAuto(),
+                tval::ofAuto(),
                 tval::ofReal(0),
-                tval::ofAuto())->start();
+                tval::ofAuto(), 100ms).start();
     }
 
     void TextActionMenu::close() {
@@ -121,21 +116,21 @@ namespace ukive {
 
         menu_impl_->setEnabled(false);
         callback_->onDestroyActionMode(this);
-        inner_window_->markDismissing();
+        levitator_->dismissing();
 
-        std::weak_ptr<InnerWindow> ptr = inner_window_;
-        auto dec_view = inner_window_->getDecorView();
-        if (dec_view) {
+        std::weak_ptr<Levitator> ptr = levitator_;
+        auto frame_view = levitator_->getFrameView();
+        if (frame_view) {
             using namespace std::chrono_literals;
-            dec_view->animate()->
-                setDuration(100ms)->alpha(0.f)->setFinishedHandler(
+            frame_view->animate()
+                .alpha(0.f, 100ms).setFinishedHandler(
                     [ptr](AnimationDirector* director)
             {
                 auto window = ptr.lock();
                 if (window) {
                     window->dismiss();
                 }
-            })->start();
+            }).start();
         }
     }
 

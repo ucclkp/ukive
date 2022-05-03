@@ -7,7 +7,7 @@
 #ifndef UKIVE_DIALOGS_DIALOG_H_
 #define UKIVE_DIALOGS_DIALOG_H_
 
-#include "ukive/basics/inner_window.h"
+#include "ukive/basics/levitator.h"
 
 
 namespace ukive {
@@ -28,11 +28,11 @@ namespace ukive {
         virtual void onDestroy() {}
 
         // OnInnerWindowEventListener
-        void onRequestDismissByTouchOutside(InnerWindow* iw) override;
+        void onRequestDismissByTouchOutside(Levitator* lev) override;
 
     private:
         Window* window_;
-        std::shared_ptr<InnerWindow> inner_window_;
+        std::shared_ptr<Levitator> levitator_;
         bool is_own_by_myself_ = false;
     };
 

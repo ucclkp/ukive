@@ -35,28 +35,28 @@ namespace ukive {
 
         void start();
         void cancel();
-        ViewAnimator* setDuration(nsp duration);
 
-        ViewAnimator* alpha(double value);
-        ViewAnimator* scaleX(double value);
-        ViewAnimator* scaleY(double value);
-        ViewAnimator* rotate(double value);
-        ViewAnimator* translateX(double value);
-        ViewAnimator* translateY(double value);
-        ViewAnimator* rectReveal(
+        ViewAnimator& alpha(double value, nsp duration);
+        ViewAnimator& scaleX(double value, nsp duration);
+        ViewAnimator& scaleY(double value, nsp duration);
+        ViewAnimator& rotate(double value, nsp duration);
+        ViewAnimator& translateX(double value, nsp duration);
+        ViewAnimator& translateY(double value, nsp duration);
+        ViewAnimator& rectReveal(
             tvalcr x, tvalcr y,
             tvalcr start_width, tvalcr end_width,
-            tvalcr start_height, tvalcr end_height);
-        ViewAnimator* circleReveal(
+            tvalcr start_height, tvalcr end_height, nsp duration);
+        ViewAnimator& circleReveal(
             tvalcr center_x, tvalcr center_y,
-            tvalcr start_radius, tvalcr end_radius);
+            tvalcr start_radius, tvalcr end_radius, nsp duration);
 
-        ViewAnimator* setListener(AnimationDirectorListener* l);
-        ViewAnimator* setFinishedHandler(const FinishedHandler& h);
+        ViewAnimator& setListener(AnimationDirectorListener* l);
+        ViewAnimator& setFinishedHandler(const FinishedHandler& h);
 
         void onPreViewDraw();
         void onPostViewDraw();
 
+    protected:
         // VSyncable
         void onVSync(
             uint64_t start_time, uint32_t display_freq, uint32_t real_interval) override;
@@ -91,7 +91,6 @@ namespace ukive {
             VIEW_ANIM_CIRCLE_REVEAL_R,
         };
 
-        ns duration_;
         View* owner_view_;
         AnimationDirector director_;
 

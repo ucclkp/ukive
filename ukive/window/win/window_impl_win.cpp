@@ -95,7 +95,7 @@ namespace win {
         }
     }
 
-    bool WindowImplWin::initialization(HWND parent) {
+    bool WindowImplWin::initialize(HWND parent) {
         auto context = delegate_->onGetContext();
         getThemeConfig(&context.getCurrentThemeConfig());
 
@@ -200,7 +200,7 @@ namespace win {
 
         init_params_ = params;
 
-        if (!initialization(parent_hwnd)) {
+        if (!initialize(parent_hwnd)) {
             init_params_ = InitParams();
             return false;
         }
@@ -414,9 +414,8 @@ namespace win {
             disablePrevTranslucent(type);
             enableCurTranslucent(type);
 
-            context.setChanged(Context::TRANSLUCENT_CHANGED);
             context.setTranslucentType(type);
-            delegate_->onUpdateContext();
+            delegate_->onUpdateContext(Context::TRANSLUCENT_CHANGED);
         } else {
             context.setTranslucentType(type);
         }
@@ -1338,7 +1337,6 @@ namespace win {
 
     void WindowImplWin::onDpiChanged(int dpi_x, int dpi_y) {
         auto context = delegate_->onGetContext();
-        context.setChanged(Context::DPI_CHANGED);
         if (Application::getOptions().is_auto_dpi_scale) {
             context.setScale(1);
             context.setAutoScale(float(dpi_x) / kDefaultDpi);
@@ -1346,7 +1344,7 @@ namespace win {
             context.setAutoScale(1);
             context.setScale(float(dpi_x) / kDefaultDpi);
         }
-        delegate_->onUpdateContext();
+        delegate_->onUpdateContext(Context::DPI_CHANGED);
 
         Application::getGraphicDeviceManager()->notifyDPIChanged(float(dpi_x), float(dpi_y));
     }
@@ -2302,7 +2300,6 @@ namespace win {
         }
 
         auto context = delegate_->onGetContext();
-        context.setChanged(Context::THEME_CHANGED);
 
         auto& config = context.getCurrentThemeConfig();
         config.type = ThemeConfig::COLOR_EXISTANCE;
@@ -2318,7 +2315,7 @@ namespace win {
 
         forceResize();
 
-        delegate_->onUpdateContext();
+        delegate_->onUpdateContext(Context::THEME_CHANGED);
         return 0;
     }
 
@@ -2327,13 +2324,12 @@ namespace win {
         //BOOL opaque_blend = BOOL(lParam);
 
         auto context = delegate_->onGetContext();
-        context.setChanged(Context::THEME_CHANGED);
 
         auto& config = context.getCurrentThemeConfig();
         config.type = ThemeConfig::COLOR_CHANGED;
         config.primary_color = Color::ofARGB(color);
 
-        delegate_->onUpdateContext();
+        delegate_->onUpdateContext(Context::THEME_CHANGED);
         return 0;
     }
 
@@ -2346,7 +2342,6 @@ namespace win {
                 RegManager::SysThemeConfig info;
                 if (RegManager::getSysThemeConfig(&info)) {
                     auto context = delegate_->onGetContext();
-                    context.setChanged(Context::THEME_CHANGED);
 
                     if (context.getTranslucentType() & TRANS_SYSTEM) {
                         setTranslucent(info.transparency_enabled);
@@ -2357,7 +2352,7 @@ namespace win {
                     config.light_theme = info.apps_use_light_theme;
                     config.transparency_enabled = info.transparency_enabled;
 
-                    delegate_->onUpdateContext();
+                    delegate_->onUpdateContext(Context::THEME_CHANGED);
                 }
             }
             break;

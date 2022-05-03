@@ -680,7 +680,7 @@ namespace ukive {
         Rect rect;
         getGridRect(col, row, &rect);
         rect.insets(inset, inset, inset, inset);
-        new_nav_.showNav(rect);
+        new_nav_.showNav(rect.pos_center());
     }
 
     void GridView::showOrgNav() {
@@ -691,8 +691,9 @@ namespace ukive {
         Point p;
         getGridPoint(0, 0, &p);
 
-        Rect rect(p.x(), p.y(), 1, 1);
-        org_nav_.showNav(rect);
+        jour_di("[Grid] Point: [%d, %d]", p.x(), p.y());
+
+        org_nav_.showNav(p);
     }
 
 }

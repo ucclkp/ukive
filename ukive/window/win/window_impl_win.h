@@ -113,7 +113,7 @@ namespace win {
         float scaleToNative(float val) const override;
         float scaleFromNative(float val) const override;
 
-        bool initialization(HWND parent = nullptr);
+        bool initialize(HWND parent = nullptr);
         void setWindowStyle(int style, bool ex, bool enabled);
         void sendFrameChanged();
         void forceResize();

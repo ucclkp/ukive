@@ -93,7 +93,7 @@ namespace ukive {
         bool onPrepareActionMode(TextActionMenu* mode, Menu* menu) override;
         bool onActionItemClicked(TextActionMenu* mode, MenuItem* item) override;
         void onDestroyActionMode(TextActionMenu* mode) override;
-        void onGetContentPosition(int* x, int* y) override;
+        void onGetContentPosition(View** v, int* x, int* y) override;
 
         // View
         void onDraw(Canvas* canvas) override;

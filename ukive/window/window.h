@@ -200,9 +200,9 @@ namespace ukive {
         void onPostLayout() override;
         void onPostRender() override;
         Context onGetContext() const override;
-        void onUpdateContext() override;
+        void onUpdateContext(Context::Type type) override;
 
-        virtual void onContextChanged(const Context& context) {}
+        virtual void onContextChanged(Context::Type type, const Context& context) {}
         virtual void onPreDrawCanvas(Canvas* canvas) {}
         virtual void onPostDrawCanvas(Canvas* canvas) {}
 

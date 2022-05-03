@@ -57,8 +57,8 @@ namespace ukive {
         View(Context c, AttrsRef attrs);
         virtual ~View();
 
-        ViewAnimator* animate();
-        ViewAnimatorParams* animeParams();
+        ViewAnimator& animate();
+        ViewAnimatorParams& animeParams();
 
         void setId(int id);
         void setTag(int tag);
@@ -70,6 +70,7 @@ namespace ukive {
         void setBackground(Element* element, bool owned = true);
         void setForeground(Element* element, bool owned = true);
         void setPadding(int lead, int top, int trail, int bottom);
+        void setPadding(const Padding& p);
         void setPressed(bool pressed);
         void setCurrentCursor(Cursor cursor);
         void setClickable(bool clickable);
@@ -86,6 +87,7 @@ namespace ukive {
 
         void setLayoutSize(int width, int height);
         void setLayoutMargin(int start, int top, int end, int bottom);
+        void setLayoutMargin(const Margin& m);
         void setExtraLayoutInfo(LayoutInfo* info);
 
         // 一般由框架调用
@@ -113,13 +115,10 @@ namespace ukive {
         const Size& getMinimumSize() const;
         const Size& getDeterminedSize() const;
 
-        Padding& getPadding();
         const Padding& getPadding() const;
         LayoutView* getParent() const;
 
-        Size& getLayoutSize();
         const Size& getLayoutSize() const;
-        Margin& getLayoutMargin();
         const Margin& getLayoutMargin() const;
 
         LayoutInfo* getExtraLayoutInfo() const;
@@ -143,6 +142,8 @@ namespace ukive {
 
         // 相对于自身的内容区坐标
         Rect getContentBounds() const;
+
+        Rect getContentBoundsInRoot() const;
 
         Rect getVisibleBounds() const;
 
@@ -204,7 +205,7 @@ namespace ukive {
         virtual View* findView(int id);
         virtual bool dispatchInputEvent(InputEvent* e);
         virtual void dispatchWindowFocusChanged(bool focus);
-        virtual void dispatchContextChanged(const Context& context);
+        virtual void dispatchContextChanged(Context::Type type, const Context& context);
         virtual void dispatchAncestorVisibilityChanged(View* ancestor, int visibility);
         virtual void dispatchAncestorEnableChanged(View* ancestor, bool enabled);
         virtual void dispatchAttachedToWindow(Window* w);
@@ -280,7 +281,7 @@ namespace ukive {
         virtual void onAncestorEnableChanged(View* ancestor, bool enabled);
         virtual void onFocusChanged(bool get_focus);
         virtual void onWindowFocusChanged(bool window_focus);
-        virtual void onContextChanged(const Context& context);
+        virtual void onContextChanged(Context::Type type, const Context& context);
         virtual void onScrollChanged(
             int scroll_x, int scroll_y, int old_scroll_x, int old_scroll_y) {}
 
@@ -359,7 +360,7 @@ namespace ukive {
         LayoutView* parent_;
         OnClickListener* click_listener_ = nullptr;
         OnInputEventDelegate* ie_delegate_ = nullptr;
-        InputMethodConnection* input_connection_;
+        InputMethodConnection* input_conn_;
     };
 
 }

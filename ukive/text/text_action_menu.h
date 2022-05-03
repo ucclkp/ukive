@@ -9,7 +9,7 @@
 
 #include <memory>
 
-#include "ukive/basics/inner_window.h"
+#include "ukive/basics/levitator.h"
 #include "ukive/menu/menu_callback.h"
 
 
@@ -46,7 +46,7 @@ namespace ukive {
         TextActionMenuCallback* callback_;
 
         MenuImpl* menu_impl_;
-        std::shared_ptr<InnerWindow> inner_window_;
+        std::shared_ptr<Levitator> levitator_;
     };
 
 }

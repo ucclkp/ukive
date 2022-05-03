@@ -8,6 +8,7 @@
 #define UKIVE_VIEWS_LAYOUT_BASE_LAYOUT_H_
 
 #include "ukive/views/layout/non_client_layout.h"
+#include "ukive/views/layout_info/shade_layout_info.h"
 
 
 namespace ukive {
@@ -30,8 +31,9 @@ namespace ukive {
         void hideTitleBar();
         void removeTitleBar();
 
-        void addShade(View* shade, const Rect& anchor, int gravity);
-        void updateShade(View* shade, const Rect& anchor, int gravity);
+        void addShade(View* shade, const ShadeParams& params);
+        bool updateShade(View* shade, const ShadeParams& params);
+        bool getShadeParams(View* shade, ShadeParams* params);
         void removeShade(View* shade);
         void setShadeBackground(Element* element, bool owned = true);
 

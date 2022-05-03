@@ -16,7 +16,7 @@ namespace ukive {
     public:
         virtual ~ContextChangedListener() = default;
 
-        virtual void onContextChanged(Context c) = 0;
+        virtual void onContextChanged(Context::Type type, Context c) = 0;
     };
 
 }

@@ -12,7 +12,7 @@ namespace mac {
 
     InputConnectionMac::InputConnectionMac(TextInputClient* tic) {}
 
-    bool InputConnectionMac::initialization() {
+    bool InputConnectionMac::initialize() {
         return true;
     }
 

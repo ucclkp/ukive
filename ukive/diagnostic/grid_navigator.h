@@ -7,7 +7,7 @@
 #ifndef UKIVE_DIAGNOSTIC_GRID_NAVIGATOR_H_
 #define UKIVE_DIAGNOSTIC_GRID_NAVIGATOR_H_
 
-#include "ukive/basics/inner_window.h"
+#include "ukive/basics/levitator.h"
 
 
 namespace ukive {
@@ -25,12 +25,12 @@ namespace ukive {
             const Color& text_color,
             const Color& bg_color);
 
-        void showNav(const Rect& rect);
+        void showNav(const Point& center_pos);
         void closeNav();
 
         // OnInnerWindowEventListener
         void onBeforeInnerWindowLayout(
-            InnerWindow* iw, Rect* new_bounds, const Rect& old_bounds) override;
+            Levitator* lev, Rect* new_bounds, const Rect& old_bounds) override;
 
     private:
         void show(int x, int y);
@@ -39,7 +39,7 @@ namespace ukive {
         View* parent_view_;
 
         bool is_finished_ = true;
-        std::shared_ptr<InnerWindow> inner_window_;
+        std::shared_ptr<Levitator> levitator_;
     };
 
 }

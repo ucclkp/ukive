@@ -9,7 +9,7 @@
 
 #include "utils/weak_ref_nest.hpp"
 
-#include "ukive/basics/inner_window.h"
+#include "ukive/basics/levitator.h"
 #include "ukive/views/click_listener.h"
 #include "ukive/views/layout/layout_view.h"
 #include "ukive/views/list/list_item_event_router.h"
@@ -69,7 +69,7 @@ namespace ukive {
         void onItemClicked(ListView* list_view, ListItem* item, View* v) override;
 
         // OnInnerWindowEventListener
-        void onRequestDismissByTouchOutside(InnerWindow* iw) override;
+        void onRequestDismissByTouchOutside(Levitator* lev) override;
 
         // ListSource
         ListItem* onCreateListItem(
@@ -82,7 +82,7 @@ namespace ukive {
         void initViews();
         void determineViewsSize(const SizeInfo& info);
 
-        void show(int x, int y, int width);
+        void show(int width);
         void close();
 
         TextView* text_view_;
@@ -96,7 +96,7 @@ namespace ukive {
         bool is_finished_ = true;
         int min_dropdown_width_ = 0;
         ComboBoxSelectedListener* listener_ = nullptr;
-        std::shared_ptr<InnerWindow> inner_window_;
+        std::shared_ptr<Levitator> levitator_;
         utl::WeakRefNest<ComboBox> weak_ref_nest_;
     };
 

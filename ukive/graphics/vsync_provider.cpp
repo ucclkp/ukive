@@ -73,7 +73,7 @@ namespace ukive {
 #else
             auto val = lagged_.exchange(0, std::memory_order_relaxed);
             if (val > 1) {
-                jour_dw("*** VSync lagged! Count: %d", val - 1);
+                //jour_dw("*** VSync lagged! Count: %d", val - 1);
             }
 #endif
             if (isRunning()) {

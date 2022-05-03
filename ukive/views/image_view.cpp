@@ -206,10 +206,10 @@ namespace ukive {
         return img_element_->getImage();
     }
 
-    void ImageView::onContextChanged(const Context& context) {
-        View::onContextChanged(context);
+    void ImageView::onContextChanged(Context::Type type, const Context& context) {
+        View::onContextChanged(type, context);
         if (img_element_) {
-            img_element_->notifyContextChanged(context);
+            img_element_->notifyContextChanged(type, context);
         }
     }
 

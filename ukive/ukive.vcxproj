@@ -200,7 +200,7 @@
     <ClInclude Include="animation\view_animator_params.h" />
     <ClInclude Include="animation\view_tval.h" />
     <ClInclude Include="app\application.h" />
-    <ClInclude Include="basics\inner_window.h" />
+    <ClInclude Include="basics\levitator.h" />
     <ClInclude Include="diagnostic\grid_navigator.h" />
     <ClInclude Include="diagnostic\grid_view.h" />
     <ClInclude Include="diagnostic\statistic_drawer.h" />
@@ -465,6 +465,7 @@
     <ClInclude Include="views\tree\tree_node.h" />
     <ClInclude Include="views\tree\tree_node_button.h" />
     <ClInclude Include="views\view.h" />
+    <ClInclude Include="views\view_ref.h" />
     <ClInclude Include="window\context.h" />
     <ClInclude Include="window\context_changed_listener.h" />
     <ClInclude Include="window\context_impl.h" />
@@ -496,7 +497,7 @@
     <ClCompile Include="animation\view_tval.cpp" />
     <ClCompile Include="app\application.cpp" />
     <ClCompile Include="app\win\application_win.cpp" />
-    <ClCompile Include="basics\inner_window.cpp" />
+    <ClCompile Include="basics\levitator.cpp" />
     <ClCompile Include="diagnostic\grid_navigator.cpp" />
     <ClCompile Include="diagnostic\grid_view.cpp" />
     <ClCompile Include="diagnostic\statistic_drawer.cpp" />
@@ -708,6 +709,7 @@
     <ClCompile Include="views\tree\tree_node.cpp" />
     <ClCompile Include="views\tree\tree_node_button.cpp" />
     <ClCompile Include="views\view.cpp" />
+    <ClCompile Include="views\view_ref.cpp" />
     <ClCompile Include="window\context.cpp" />
     <ClCompile Include="window\context_impl.cpp" />
     <ClCompile Include="window\window.cpp" />

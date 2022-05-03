@@ -75,7 +75,7 @@ namespace win {
     LcImageFactoryWin::LcImageFactoryWin()
     {}
 
-    bool LcImageFactoryWin::initialization() {
+    bool LcImageFactoryWin::initialize() {
         static bool is_win8 = ::IsWindows8OrGreater();
 
         HRESULT hr = CoCreateInstance(

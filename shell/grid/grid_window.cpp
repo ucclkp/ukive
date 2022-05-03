@@ -26,7 +26,7 @@ namespace shell {
 
         showTitleBar();
 
-        int padding = getContext().dp2pxi(8);
+        int padding = getContext().dp2pxi(0);
 
         grid_view_ = new ukive::GridView(getContext());
         grid_view_->setFlippedY(true);

@@ -208,6 +208,13 @@ namespace ukive {
         if (sli->adj_gravity & GV_MID_END) {
             return v->getWidth() - width;
         }
+
+        if (sli->adj_corner & GV_START) {
+            return 0;
+        }
+        if (sli->adj_corner & GV_END) {
+            return v->getWidth() - width;
+        }
         return 0;
     }
 
@@ -234,6 +241,13 @@ namespace ukive {
         }
         if (sli->adj_gravity & GV_MID_BOTTOM) {
             return v->getHeight() - height;
+        }
+
+        if (sli->adj_corner & GV_TOP) {
+            return 0;
+        }
+        if (sli->adj_corner & GV_BOTTOM) {
+            return v->getWidth() - height;
         }
         return 0;
     }

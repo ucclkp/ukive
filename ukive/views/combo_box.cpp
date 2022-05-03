@@ -46,38 +46,41 @@ namespace ukive {
     void ComboBox::initViews() {
         default_title_ = u"ComboBox";
 
+        auto c = getContext();
+
         // TextView
-        text_view_ = new TextView(getContext());
+        text_view_ = new TextView(c);
         text_view_->setText(default_title_);
         text_view_->setLayoutSize(LS_AUTO, LS_AUTO);
         addView(text_view_);
 
         // DropdownButton
-        button_ = new DropdownButton(getContext());
+        button_ = new DropdownButton(c);
         button_->setOnClickListener(this);
         button_->setLayoutSize(LS_AUTO, LS_FILL);
         addView(button_);
 
-        list_view_ = new ListView(getContext());
+        list_view_ = new ListView(c);
         list_view_->setLayouter(new LinearListLayouter());
         list_view_->setSource(this);
         list_view_->setItemEventRouter(new ListItemEventRouter(this));
 
         auto shape_element = new ShapeElement(ShapeElement::RECT);
-        shape_element->setRadius(2.f);
+        shape_element->setRadius(c.dp2pxi(2.f));
         shape_element->setSolidEnable(true);
         shape_element->setSolidColor(Color::White);
 
-        inner_window_ = std::make_shared<InnerWindow>();
-        inner_window_->setShadowRadius(getContext().dp2pxi(2.f));
-        inner_window_->setContentView(list_view_);
-        inner_window_->setOutsideTouchable(false);
-        inner_window_->setDismissByTouchOutside(true);
-        inner_window_->setBackground(shape_element);
-        inner_window_->setHeight(LS_AUTO);
-        inner_window_->setEventListener(this);
-
-        min_dropdown_width_ = getContext().dp2pxi(100);
+        levitator_ = std::make_shared<Levitator>();
+        levitator_->setShadowRadius(c.dp2pxi(2.f));
+        levitator_->setContentView(list_view_);
+        levitator_->setOutsideTouchable(false);
+        levitator_->setDismissByTouchOutside(true);
+        levitator_->setBackground(shape_element);
+        levitator_->setLayoutHeight(LS_AUTO);
+        levitator_->setEventListener(this);
+        levitator_->setLayoutMargin(
+            { c.dp2pxi(8), c.dp2pxi(8), c.dp2pxi(8), c.dp2pxi(8) });
+        min_dropdown_width_ = c.dp2pxi(100);
     }
 
     void ComboBox::addItem(const std::u16string_view& title) {
@@ -278,7 +281,7 @@ namespace ukive {
         }
     }
 
-    void ComboBox::show(int x, int y, int width) {
+    void ComboBox::show(int width) {
         auto w = getWindow();
         if (!is_finished_ || !w) {
             return;
@@ -286,24 +289,16 @@ namespace ukive {
 
         is_finished_ = false;
 
-        int center_x = 0, center_y = 0;
-        auto bounds = w->getContentBounds();
-        if (x + width > bounds.width()) {
-            center_x = width;
-            center_y = 0;
-            x -= width;
-        }
-
         using namespace std::chrono_literals;
 
-        inner_window_->dismiss();
-        inner_window_->setWidth(width);
-        inner_window_->show(w, x, y);
-        inner_window_->getDecorView()->animate()->setDuration(150ms)->
-            rectReveal(
-                tval::ofReal(center_x), tval::ofReal(center_y),
-                tval::ofReal(width), tval::ofReal(width),
-                tval::ofReal(0), tval::ofAuto())->start();
+        levitator_->dismiss();
+        levitator_->setLayoutWidth(width);
+        levitator_->show(this, GV_MID_HORI | GV_BOTTOM);
+        levitator_->getFrameView()->animate()
+            .rectReveal(
+                tval::ofReal(0), tval::ofReal(0),
+                tval::ofAuto(), tval::ofAuto(),
+                tval::ofReal(0), tval::ofAuto(), 150ms).start();
         list_view_->setEnabled(true);
 
         auto last_input_view = w->getLastInputView();
@@ -323,21 +318,21 @@ namespace ukive {
         is_finished_ = true;
 
         list_view_->setEnabled(false);
-        inner_window_->markDismissing();
+        levitator_->dismissing();
 
-        std::weak_ptr<InnerWindow> ptr = inner_window_;
-        auto dec_view = inner_window_->getDecorView();
-        if (dec_view) {
+        std::weak_ptr<Levitator> ptr = levitator_;
+        auto frame_view = levitator_->getFrameView();
+        if (frame_view) {
             using namespace std::chrono_literals;
-            dec_view->animate()->
-                setDuration(100ms)->alpha(0.f)->setFinishedHandler(
+            frame_view->animate()
+                .alpha(0.f, 100ms).setFinishedHandler(
                     [ptr](AnimationDirector* director)
             {
                 auto window = ptr.lock();
                 if (window) {
                     window->dismiss();
                 }
-            })->start();
+            }).start();
         }
     }
 
@@ -346,7 +341,7 @@ namespace ukive {
             if (is_finished_) {
                 auto bounds = getBoundsInRoot();
                 auto width = (std::max)(bounds.width(), min_dropdown_width_);
-                show(bounds.x(), bounds.bottom(), width);
+                show(width);
             } else {
                 close();
             }
@@ -365,7 +360,7 @@ namespace ukive {
         }
     }
 
-    void ComboBox::onRequestDismissByTouchOutside(InnerWindow* iw) {
+    void ComboBox::onRequestDismissByTouchOutside(Levitator* lev) {
         close();
     }
 

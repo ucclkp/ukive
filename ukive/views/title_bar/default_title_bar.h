@@ -44,7 +44,7 @@ namespace ukive {
         void onWindowButtonChanged(WindowButton button) override;
 
         void onAttachedToWindow(Window* w) override;
-        void onContextChanged(const Context& context) override;
+        void onContextChanged(Context::Type type, const Context& context) override;
 
         HitPoint onNCHitTest(int x, int y) override;
 

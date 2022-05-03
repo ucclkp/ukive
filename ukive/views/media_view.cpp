@@ -68,10 +68,10 @@ namespace ukive {
         media_player_->setDisplaySize(Size(content_width, content_height));
     }
 
-    void MediaView::onContextChanged(const Context& context) {
-        View::onContextChanged(context);
+    void MediaView::onContextChanged(Context::Type type, const Context& context) {
+        View::onContextChanged(type, context);
 
-        switch (context.getChanged()) {
+        switch (type) {
         case Context::DEV_LOST:
         {
             // 通知场景，要把设备资源释放掉

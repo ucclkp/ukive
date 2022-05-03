@@ -20,7 +20,7 @@ namespace mac {
    public:
        LcImageFactoryMac() = default;
 
-       bool initialization() override;
+       bool initialize() override;
        void destroy() override;
 
        GPtr<LcImageFrame> create(

@@ -33,7 +33,7 @@ namespace ukive {
 
         virtual ~InputMethodConnection() = default;
 
-        virtual bool initialization() = 0;
+        virtual bool initialize() = 0;
 
         virtual bool pushEditor() = 0;
         virtual bool popEditor() = 0;

@@ -21,7 +21,7 @@ namespace win {
 
     TsfManager::~TsfManager() {}
 
-    bool TsfManager::initialization() {
+    bool TsfManager::initialize() {
         HRESULT hr = ::CoCreateInstance(
             CLSID_TF_ThreadMgr,
             nullptr,

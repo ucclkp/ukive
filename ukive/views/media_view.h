@@ -31,7 +31,7 @@ namespace ukive {
         void onDraw(Canvas* canvas) override;
         bool onInputEvent(InputEvent* e) override;
 
-        void onContextChanged(const Context& context) override;
+        void onContextChanged(Context::Type type, const Context& context) override;
         void onAttachedToWindow(Window* w) override;
         void onDetachFromWindow() override;
 

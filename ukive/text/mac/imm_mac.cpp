@@ -10,7 +10,7 @@
 namespace ukive {
 namespace mac {
 
-    bool IMMMac::initialization() {
+    bool IMMMac::initialize() {
         return true;
     }
 

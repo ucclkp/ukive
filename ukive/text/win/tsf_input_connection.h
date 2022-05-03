@@ -31,7 +31,7 @@ namespace win {
         explicit TsfInputConnection(TextInputClient* tic);
         ~TsfInputConnection();
 
-        bool initialization() override;
+        bool initialize() override;
 
         bool pushEditor() override;
         bool popEditor() override;

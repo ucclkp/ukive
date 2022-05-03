@@ -14,25 +14,26 @@
 namespace ukive {
 
     Dialog::Dialog(Context c) {
-        inner_window_ = std::make_shared<InnerWindow>();
-        inner_window_->setShadowRadius(c.dp2pxi(8.f));
-        inner_window_->setOutsideTouchable(false);
-        inner_window_->setDismissByTouchOutside(false);
-        inner_window_->setBackground(new ColorElement(Color::White));
-        inner_window_->setWidth(View::LS_AUTO);
-        inner_window_->setHeight(View::LS_AUTO);
-        inner_window_->setEventListener(this);
+        levitator_ = std::make_shared<Levitator>();
+        levitator_->setShadowRadius(c.dp2pxi(8.f));
+        levitator_->setOutsideTouchable(false);
+        levitator_->setDismissByTouchOutside(false);
+        levitator_->setBackground(new ColorElement(Color::White));
+        levitator_->setLayoutSize(View::LS_AUTO, View::LS_AUTO);
+        levitator_->setEventListener(this);
+        levitator_->setLayoutMargin(
+            { c.dp2pxi(8), c.dp2pxi(8), c.dp2pxi(8), c.dp2pxi(8) });
     }
 
     Dialog::~Dialog() {}
 
     void Dialog::show(Window* parent, int x, int y) {
-        if (inner_window_->isShowing()) {
+        if (levitator_->isShowing()) {
             return;
         }
 
         auto v = onCreate(parent->getContext());
-        inner_window_->setContentView(v);
+        levitator_->setContentView(v);
 
         Color bg = Color::Black;
         bg.a = 0.25f;
@@ -40,33 +41,36 @@ namespace ukive {
         auto anchor = parent->getRootLayout();
         anchor->setShadeBackground(new ColorElement(bg));
 
-        inner_window_->show(parent, x, y);
+        levitator_->show(parent, x, y);
     }
 
     void Dialog::show(Window* parent, int gravity) {
-        if (inner_window_->isShowing()) {
+        if (levitator_->isShowing()) {
             return;
         }
 
         auto v = onCreate(parent->getContext());
-        inner_window_->setContentView(v);
+        levitator_->setContentView(v);
 
         Color bg = Color::Black;
         bg.a = 0.25f;
 
+        Levitator::SnapInfo info;
+        info.is_discretized = false;
+
         auto anchor = parent->getRootLayout();
         anchor->setShadeBackground(new ColorElement(bg));
-        inner_window_->show(anchor, gravity);
+        levitator_->show(anchor, gravity, info);
     }
 
     void Dialog::close() {
-        if (!inner_window_->isShowing()) {
+        if (!levitator_->isShowing()) {
             return;
         }
 
         onDestroy();
 
-        inner_window_->dismiss();
+        levitator_->dismiss();
 
         if (is_own_by_myself_) {
             delete this;
@@ -77,7 +81,7 @@ namespace ukive {
         is_own_by_myself_ = myself;
     }
 
-    void Dialog::onRequestDismissByTouchOutside(InnerWindow* iw) {
+    void Dialog::onRequestDismissByTouchOutside(Levitator* lev) {
         close();
     }
 

@@ -28,8 +28,6 @@ namespace ukive {
         float dp2px(float dp) const;
         float px2dp(int px) const;
 
-        Context::Type changed = Context::NONE;
-
         float scale = 1.f;
         float auto_scale = 1.f;
         uint32_t def_dpi = 96;

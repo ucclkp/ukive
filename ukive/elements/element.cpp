@@ -95,8 +95,8 @@ namespace ukive {
         is_attached_to_window_ = false;
     }
 
-    void Element::notifyContextChanged(const Context& context) {
-        onContextChanged(context);
+    void Element::notifyContextChanged(Context::Type type, const Context& context) {
+        onContextChanged(type, context);
     }
 
     int Element::getState() const {

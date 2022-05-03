@@ -36,7 +36,7 @@ namespace ukive {
         GPtr<ImageFrame> getImage() const;
 
     protected:
-        void onContextChanged(const Context& context) override;
+        void onContextChanged(Context::Type type, const Context& context) override;
 
     private:
         float opacity_ = 1.f;

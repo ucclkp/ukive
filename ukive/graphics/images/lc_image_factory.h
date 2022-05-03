@@ -25,7 +25,7 @@ namespace ukive {
 
         virtual ~LcImageFactory() = default;
 
-        virtual bool initialization() = 0;
+        virtual bool initialize() = 0;
         virtual void destroy() = 0;
 
         virtual GPtr<LcImageFrame> create(

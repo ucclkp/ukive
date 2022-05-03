@@ -83,10 +83,10 @@ namespace ukive {
         scene_->onSceneResize(content_width, content_height);
     }
 
-    void Space3DView::onContextChanged(const Context& context) {
-        View::onContextChanged(context);
+    void Space3DView::onContextChanged(Context::Type type, const Context& context) {
+        View::onContextChanged(type, context);
 
-        switch (context.getChanged()) {
+        switch (type) {
         case Context::DEV_LOST:
         {
             // 通知场景，要把设备资源释放掉

@@ -1734,11 +1734,13 @@ namespace ukive {
         text_action_mode_ = nullptr;
     }
 
-    void TextView::onGetContentPosition(int* x, int* y) {
-        auto bounds = getBoundsInRoot();
+    void TextView::onGetContentPosition(View** v, int* x, int* y) {
+        auto bounds = getBounds();
+        bounds.pos({ 0, 0 });
 
-        *x = bounds.x() + prev_x_ + 1;
-        *y = bounds.y() + prev_y_ + 1;
+        *v = this;
+        *x = bounds.x() + prev_x_;
+        *y = bounds.y() + prev_y_;
     }
 
 }

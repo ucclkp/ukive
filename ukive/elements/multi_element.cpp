@@ -79,9 +79,9 @@ namespace ukive {
         }
     }
 
-    void MultiElement::onContextChanged(const Context& context) {
+    void MultiElement::onContextChanged(Context::Type type, const Context& context) {
         for (auto& e : list_) {
-            e->notifyContextChanged(context);
+            e->notifyContextChanged(type, context);
         }
     }
 

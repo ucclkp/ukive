@@ -466,11 +466,11 @@ namespace ukive {
         }
     }
 
-    void LayoutView::dispatchContextChanged(const Context& context) {
-        onContextChanged(context);
+    void LayoutView::dispatchContextChanged(Context::Type type, const Context& context) {
+        onContextChanged(type, context);
 
         for (auto view : views_) {
-            view->dispatchContextChanged(context);
+            view->dispatchContextChanged(type, context);
         }
     }
 

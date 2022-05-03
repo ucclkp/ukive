@@ -11,13 +11,13 @@
 
 #include "ukive/graphics/cursor.h"
 #include "ukive/graphics/size.hpp"
+#include "ukive/window/context.h"
 #include "ukive/window/window_listener.h"
 #include "ukive/window/window_types.h"
 
 
 namespace ukive {
 
-    class Context;
     class DirtyRegion;
     class InputEvent;
 
@@ -52,7 +52,7 @@ namespace ukive {
         virtual void onPostRender() {}
 
         virtual Context onGetContext() const = 0;
-        virtual void onUpdateContext() {}
+        virtual void onUpdateContext(Context::Type type) {}
     };
 
 }
