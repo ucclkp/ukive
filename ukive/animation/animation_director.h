@@ -91,10 +91,13 @@ namespace ukive {
         ns getTotalDuration() const;
 
     private:
+        static constexpr auto npos = (std::numeric_limits<size_t>::max)();
+
         struct LoopItem {
             uint64_t start;
             uint64_t duration;
             uint32_t count;
+            bool is_finished;
         };
 
         Anitom* findCurAnitom(
@@ -111,12 +114,14 @@ namespace ukive {
 
         uint64_t start_time_ = 0;
         uint64_t elapsed_time_ = 0;
-        std::optional<LoopItem> cur_loop_;
+        uint64_t looped_time_ = 0;
+        size_t cur_loop_idx_ = npos;
 
         bool is_repeat_ = false;
         bool is_started_ = false;
         bool is_running_ = false;
         bool is_finished_ = false;
+        bool is_preparing_ = false;
         AnimationDirectorListener* listener_;
         std::map<int, Channel> channels_;
         std::vector<LoopItem> loops_;

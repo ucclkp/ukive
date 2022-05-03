@@ -75,7 +75,6 @@
 		670BD65D24B229ED00DF5B85 /* render_tree.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD51C24B229EC00DF5B85 /* render_tree.h */; };
 		670BD65E24B229ED00DF5B85 /* render_tree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 670BD51D24B229EC00DF5B85 /* render_tree.cpp */; };
 		670BD65F24B229ED00DF5B85 /* render_node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 670BD51E24B229EC00DF5B85 /* render_node.cpp */; };
-		670BD66024B229ED00DF5B85 /* matrix_2x3_f.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 670BD51F24B229EC00DF5B85 /* matrix_2x3_f.cpp */; };
 		670BD66624B229ED00DF5B85 /* canvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 670BD52524B229EC00DF5B85 /* canvas.cpp */; };
 		670BD66724B229ED00DF5B85 /* path.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD52624B229EC00DF5B85 /* path.h */; };
 		670BD68324B229ED00DF5B85 /* cyro_buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD54924B229EC00DF5B85 /* cyro_buffer.h */; };
@@ -84,7 +83,6 @@
 		670BD68C24B229ED00DF5B85 /* graphic_device_manager.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD55224B229EC00DF5B85 /* graphic_device_manager.h */; };
 		670BD69124B229ED00DF5B85 /* path.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 670BD55724B229EC00DF5B85 /* path.cpp */; };
 		670BD69224B229ED00DF5B85 /* cyro_buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 670BD55824B229EC00DF5B85 /* cyro_buffer.cpp */; };
-		670BD69424B229ED00DF5B85 /* matrix_2x3_f.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD55A24B229EC00DF5B85 /* matrix_2x3_f.h */; };
 		670BD69524B229ED00DF5B85 /* cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 670BD55B24B229EC00DF5B85 /* cursor.cpp */; };
 		670BD69624B229ED00DF5B85 /* graphic_device_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 670BD55C24B229EC00DF5B85 /* graphic_device_manager.cpp */; };
 		670BD69724B229ED00DF5B85 /* canvas.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD55D24B229EC00DF5B85 /* canvas.h */; };
@@ -165,6 +163,7 @@
 		671BEB2D2815B84100AA65E6 /* rebuildable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 671BEB292815B84100AA65E6 /* rebuildable.cpp */; };
 		671BEB2E2815B84100AA65E6 /* native_rt.h in Headers */ = {isa = PBXBuildFile; fileRef = 671BEB2A2815B84100AA65E6 /* native_rt.h */; };
 		671BEB2F2815B84100AA65E6 /* cyro_render_target.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 671BEB2B2815B84100AA65E6 /* cyro_render_target.cpp */; };
+		671BEB33282120D100AA65E6 /* matrix_2x3.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 671BEB32282120D100AA65E6 /* matrix_2x3.hpp */; };
 		6723A79224FE99B800F3FB53 /* graphics_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 6723A78F24FE99B700F3FB53 /* graphics_utils.h */; };
 		6723A79324FE99B800F3FB53 /* display.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6723A79024FE99B800F3FB53 /* display.cpp */; };
 		6723A79424FE99B800F3FB53 /* display.h in Headers */ = {isa = PBXBuildFile; fileRef = 6723A79124FE99B800F3FB53 /* display.h */; };
@@ -484,7 +483,6 @@
 		670BD51C24B229EC00DF5B85 /* render_tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = render_tree.h; sourceTree = "<group>"; };
 		670BD51D24B229EC00DF5B85 /* render_tree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = render_tree.cpp; sourceTree = "<group>"; };
 		670BD51E24B229EC00DF5B85 /* render_node.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = render_node.cpp; sourceTree = "<group>"; };
-		670BD51F24B229EC00DF5B85 /* matrix_2x3_f.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matrix_2x3_f.cpp; sourceTree = "<group>"; };
 		670BD52524B229EC00DF5B85 /* canvas.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = canvas.cpp; sourceTree = "<group>"; };
 		670BD52624B229EC00DF5B85 /* path.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = path.h; sourceTree = "<group>"; };
 		670BD54924B229EC00DF5B85 /* cyro_buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cyro_buffer.h; sourceTree = "<group>"; };
@@ -493,7 +491,6 @@
 		670BD55224B229EC00DF5B85 /* graphic_device_manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graphic_device_manager.h; sourceTree = "<group>"; };
 		670BD55724B229EC00DF5B85 /* path.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = path.cpp; sourceTree = "<group>"; };
 		670BD55824B229EC00DF5B85 /* cyro_buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyro_buffer.cpp; sourceTree = "<group>"; };
-		670BD55A24B229EC00DF5B85 /* matrix_2x3_f.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = matrix_2x3_f.h; sourceTree = "<group>"; };
 		670BD55B24B229EC00DF5B85 /* cursor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cursor.cpp; sourceTree = "<group>"; };
 		670BD55C24B229EC00DF5B85 /* graphic_device_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = graphic_device_manager.cpp; sourceTree = "<group>"; };
 		670BD55D24B229EC00DF5B85 /* canvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canvas.h; sourceTree = "<group>"; };
@@ -574,6 +571,7 @@
 		671BEB292815B84100AA65E6 /* rebuildable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rebuildable.cpp; sourceTree = "<group>"; };
 		671BEB2A2815B84100AA65E6 /* native_rt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = native_rt.h; sourceTree = "<group>"; };
 		671BEB2B2815B84100AA65E6 /* cyro_render_target.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyro_render_target.cpp; sourceTree = "<group>"; };
+		671BEB32282120D100AA65E6 /* matrix_2x3.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = matrix_2x3.hpp; sourceTree = "<group>"; };
 		6723A78F24FE99B700F3FB53 /* graphics_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graphics_utils.h; sourceTree = "<group>"; };
 		6723A79024FE99B800F3FB53 /* display.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = display.cpp; sourceTree = "<group>"; };
 		6723A79124FE99B800F3FB53 /* display.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = display.h; sourceTree = "<group>"; };
@@ -1078,8 +1076,7 @@
 				67630476280EFB7D0097DD20 /* gref_count.h */,
 				6783F42D24D1E4D200056DA1 /* images */,
 				670BD7CD24B4C3F300DF5B85 /* mac */,
-				670BD51F24B229EC00DF5B85 /* matrix_2x3_f.cpp */,
-				670BD55A24B229EC00DF5B85 /* matrix_2x3_f.h */,
+				671BEB32282120D100AA65E6 /* matrix_2x3.hpp */,
 				671BEB2A2815B84100AA65E6 /* native_rt.h */,
 				6773929326076DF800D03228 /* padding.hpp */,
 				670BD54F24B229EC00DF5B85 /* paint.cpp */,
@@ -1733,7 +1730,6 @@
 				678C89BE27C14949008D0B21 /* icc_type_s15f16_array.h in Headers */,
 				6783F40324C4554400056DA1 /* input_connection_mac.h in Headers */,
 				67630479280EFB7D0097DD20 /* gerror_code.hpp in Headers */,
-				670BD69424B229ED00DF5B85 /* matrix_2x3_f.h in Headers */,
 				6783F45C24DADD4100056DA1 /* point.hpp in Headers */,
 				67950D7B261B45500012DE92 /* tree_node_button.h in Headers */,
 				670BD64224B229ED00DF5B85 /* input_method_manager.h in Headers */,
@@ -1755,6 +1751,7 @@
 				670BD6E224B229ED00DF5B85 /* tab_strip_selection_listener.h in Headers */,
 				670BD70524B229ED00DF5B85 /* window_native.h in Headers */,
 				67CAAADF2528AE0C00965E68 /* check_listener.h in Headers */,
+				671BEB33282120D100AA65E6 /* matrix_2x3.hpp in Headers */,
 				67950D89261B457A0012DE92 /* list_item.h in Headers */,
 				67950D8B261B457A0012DE92 /* list_item_recycler.h in Headers */,
 				6723A79424FE99B800F3FB53 /* display.h in Headers */,
@@ -1956,7 +1953,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				670BD66024B229ED00DF5B85 /* matrix_2x3_f.cpp in Sources */,
 				67998DFE27BA84A800B9113C /* icc_type_param_curve.cpp in Sources */,
 				670BD71124B229ED00DF5B85 /* window_native.cpp in Sources */,
 				670BD6F724B229ED00DF5B85 /* flow_list_layouter.cpp in Sources */,

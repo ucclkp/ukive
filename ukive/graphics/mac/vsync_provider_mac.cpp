@@ -18,8 +18,6 @@ namespace ukive {
 namespace mac {
 
     VSyncProviderMac::VSyncProviderMac() {
-        cycler_.setListener(this);
-
         auto display_id = CGMainDisplayID();
 
         /**
@@ -75,19 +73,11 @@ namespace mac {
         return true;
     }
 
-    void VSyncProviderMac::onHandleMessage(const utl::Message& msg) {
-        switch(msg.id) {
-        case MSG_VSYNC:
-        {
-            if (display_link_ && CVDisplayLinkIsRunning(display_link_)) {
-                notifyCallbacks(msg.ui1, uint32_t(msg.ui2 >> 32), uint32_t(msg.ui2));
-            }
-            break;
+    bool VSyncProviderMac::isRunning() const {
+        if (!display_link_) {
+            return false;
         }
-
-        default:
-            break;
-        }
+        return CVDisplayLinkIsRunning(display_link_);
     }
 
     // static
@@ -103,12 +93,7 @@ namespace mac {
         auto real_interval = cur_time - This->req_time_;
         auto refresh_rate = This->refresh_rate_ > 0 ? This->refresh_rate_ : 60;
 
-        utl::Message msg;
-        msg.id = MSG_VSYNC;
-        msg.ui1 = cur_time;
-        msg.ui2 = (uint64_t(refresh_rate) << 32) | uint32_t(real_interval);
-        This->cycler_.post(&msg);
-
+        This->sendVSyncToUI(cur_time, refresh_rate, uint32_t(real_interval));
         return kCVReturnSuccess;
     }
 

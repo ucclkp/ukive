@@ -6,8 +6,6 @@
 
 #include "ukive/animation/view_animator_params.h"
 
-#include "ukive/graphics/matrix_2x3_f.h"
-
 
 namespace ukive {
 

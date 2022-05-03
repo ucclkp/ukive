@@ -8,11 +8,10 @@
 #define UKIVE_ANIMATION_VIEW_ANIMATOR_PARAMS_H_
 
 #include "ukive/animation/view_tval.h"
+#include "ukive/graphics/matrix_2x3.hpp"
 
 
 namespace ukive {
-
-    class Matrix2x3F;
 
     class ViewAnimatorParams {
     public:

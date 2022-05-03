@@ -250,6 +250,7 @@
     <ClInclude Include="graphics\cursor.h" />
     <ClInclude Include="graphics\cyro_buffer.h" />
     <ClInclude Include="graphics\cyro_render_target.h" />
+    <ClInclude Include="graphics\matrix_2x3.hpp" />
     <ClInclude Include="graphics\native_rt.h" />
     <ClInclude Include="graphics\dirty_region.h" />
     <ClInclude Include="graphics\display.h" />
@@ -298,7 +299,6 @@
     <ClInclude Include="graphics\mac\gpu\metal\gpu_shader_metal.h" />
     <ClInclude Include="graphics\mac\gpu\metal\gpu_shader_resource_metal.h" />
     <ClInclude Include="graphics\mac\gpu\metal\gpu_texture_metal.h" />
-    <ClInclude Include="graphics\matrix_2x3_f.h" />
     <ClInclude Include="graphics\padding.hpp" />
     <ClInclude Include="graphics\paint.h" />
     <ClInclude Include="graphics\path.h" />
@@ -570,7 +570,6 @@
     <ClCompile Include="graphics\mac\gpu\metal\gpu_shader_metal.cpp" />
     <ClCompile Include="graphics\mac\gpu\metal\gpu_shader_resource_metal.cpp" />
     <ClCompile Include="graphics\mac\gpu\metal\gpu_texture_metal.cpp" />
-    <ClCompile Include="graphics\matrix_2x3_f.cpp" />
     <ClCompile Include="graphics\paint.cpp" />
     <ClCompile Include="graphics\path.cpp" />
     <ClCompile Include="graphics\rebuildable.cpp" />

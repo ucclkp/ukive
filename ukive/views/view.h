@@ -8,7 +8,6 @@
 #define UKIVE_VIEWS_VIEW_H_
 
 #include <memory>
-#include <string>
 
 #include "ukive/animation/view_animator_params.h"
 #include "ukive/elements/element.h"

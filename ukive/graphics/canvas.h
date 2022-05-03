@@ -7,13 +7,11 @@
 #ifndef UKIVE_GRAPHICS_CANVAS_H_
 #define UKIVE_GRAPHICS_CANVAS_H_
 
-#include <memory>
-
 #include "ukive/graphics/byte_data.h"
 #include "ukive/graphics/colors/color.h"
 #include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/graphics_utils.h"
-#include "ukive/graphics/matrix_2x3_f.h"
+#include "ukive/graphics/matrix_2x3.hpp"
 
 
 namespace ukive {

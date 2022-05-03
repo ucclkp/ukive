@@ -12,6 +12,7 @@
 #include "ukive/graphics/byte_data.h"
 #include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/graphics_utils.h"
+#include "ukive/graphics/matrix_2x3.hpp"
 #include "ukive/graphics/point.hpp"
 #include "ukive/graphics/rect.hpp"
 
@@ -25,7 +26,6 @@ namespace ukive {
     class ImageFrame;
     class LcImageFrame;
     class TextLayout;
-    class Matrix2x3F;
     class CyroBuffer;
     class ImageOptions;
     class GPUTexture;

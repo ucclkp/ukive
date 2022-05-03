@@ -355,7 +355,7 @@
         ukive::DirtyRegion region;
         region.setOne(u_rect);
         windowImpl->getDelegate()->onDraw(region);
-        LOG(Log::INFO) << "drawRect: [" << u_rect.x() << ", " << u_rect.y() << ", " << u_rect.width() << ", " << u_rect.height() << "]";
+        //LOG(Log::INFO) << "drawRect: [" << u_rect.x() << ", " << u_rect.y() << ", " << u_rect.width() << ", " << u_rect.height() << "]";
     }
 }
 

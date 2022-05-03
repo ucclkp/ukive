@@ -8,8 +8,15 @@
 
 #include "ukive/animation/interpolator.h"
 
-#define NANO_RATIO   1000000000
 
+namespace {
+
+    template <typename Ty>
+    Ty uns_sub(Ty lhs, Ty rhs) {
+        return (lhs >= rhs) ? (lhs - rhs) : 0;
+    }
+
+}
 
 namespace ukive {
 
@@ -59,7 +66,7 @@ namespace ukive {
         is_running_ = false;
 
         if (!is_preparing_) {
-            elapsed_duration_ = now() - start_time_;
+            elapsed_duration_ = uns_sub(now(), start_time_);
         }
 
         if (listener_) {
@@ -109,11 +116,11 @@ namespace ukive {
 
         if (is_preparing_) {
             is_preparing_ = false;
-            start_time_ = cur_time - (NANO_RATIO / display_freq) - elapsed_duration_;
+            start_time_ = uns_sub(cur_time, (std::nano::den / display_freq) + elapsed_duration_);
         }
 
         bool finished = cur_time >= start_time_ + duration_;
-        double progress = finished ? 1 : double(cur_time - start_time_) / duration_;
+        double progress = finished ? 1.0 : double(uns_sub(cur_time, start_time_)) / duration_;
         cur_val_ = interpolator_->interpolate(init_val_, final_val_, progress);
 
         if (listener_) {

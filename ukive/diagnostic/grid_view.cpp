@@ -161,6 +161,16 @@ namespace ukive {
         requestDraw();
     }
 
+    void GridView::showOverlay(bool show) {
+        if (show) {
+            showNewNav();
+            showOrgNav();
+        } else {
+            new_nav_.closeNav();
+            org_nav_.closeNav();
+        }
+    }
+
     Size GridView::onDetermineSize(const SizeInfo& info) {
         return getPreferredSize(info, 0, 0);
     }
@@ -336,14 +346,7 @@ namespace ukive {
 
     void GridView::onVisibilityChanged(int visibility) {
         super::onVisibilityChanged(visibility);
-
-        if (visibility == SHOW) {
-            showNewNav();
-            showOrgNav();
-        } else {
-            new_nav_.closeNav();
-            org_nav_.closeNav();
-        }
+        showOverlay(visibility == SHOW);
     }
 
     void GridView::onVSync(

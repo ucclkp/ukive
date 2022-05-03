@@ -302,12 +302,12 @@ namespace mac {
             if (!region.rect0.empty()) {
                 auto& rect = region.rect0;
                 [native_view_ setNeedsDisplayInRect:NSMakeRect(rect.x(), rect.y(), rect.width(), rect.height())];
-                LOG(Log::INFO) << "displayRect1: [" << rect.x() << ", " << rect.y() << ", " << rect.width() << ", " << rect.height() << "]";
+                //LOG(Log::INFO) << "displayRect1: [" << rect.x() << ", " << rect.y() << ", " << rect.width() << ", " << rect.height() << "]";
             }
             if (!region.rect1.empty()) {
                 auto& rect = region.rect1;
                 [native_view_ displayRect:NSMakeRect(rect.x(), rect.y(), rect.width(), rect.height())];
-                LOG(Log::INFO) << "displayRect2: [" << rect.x() << ", " << rect.y() << ", " << rect.width() << ", " << rect.height() << "]";
+                //LOG(Log::INFO) << "displayRect2: [" << rect.x() << ", " << rect.y() << ", " << rect.width() << ", " << rect.height() << "]";
             }
         }
     }

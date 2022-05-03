@@ -6,6 +6,7 @@
 
 #include "vsync_provider.h"
 
+#include "utils/message/message.h"
 #include "utils/multi_callbacks.hpp"
 #include "utils/platform_utils.h"
 
@@ -25,6 +26,12 @@ namespace ukive {
 #elif defined OS_MAC
         return new mac::VSyncProviderMac();
 #endif
+    }
+
+    VSyncProvider::VSyncProvider()
+        : lagged_(0)
+    {
+        cycler_.setListener(this);
     }
 
     void VSyncProvider::addCallback(VSyncCallback* cb) {
@@ -55,6 +62,44 @@ namespace ukive {
             return onStopVSync();
         }
         return true;
+    }
+
+    void VSyncProvider::onHandleMessage(const utl::Message& msg) {
+        switch (msg.id) {
+        case MSG_VSYNC:
+        {
+#ifdef NDEBUG
+            lagged_.store(0, std::memory_order_relaxed);
+#else
+            auto val = lagged_.exchange(0, std::memory_order_relaxed);
+            if (val > 1) {
+                jour_dw("*** VSync lagged! Count: %d", val - 1);
+            }
+#endif
+            if (isRunning()) {
+                notifyCallbacks(msg.ui1, uint32_t(msg.ui2 >> 32), uint32_t(msg.ui2));
+            }
+            break;
+        }
+
+        default:
+            break;
+        }
+    }
+
+    void VSyncProvider::sendVSyncToUI(
+        uint64_t after_ts, uint32_t refresh_rate, uint32_t real_interval)
+    {
+        auto val = lagged_.fetch_add(1, std::memory_order_relaxed);
+        if (val > 0) {
+            return;
+        }
+
+        utl::Message msg;
+        msg.id = MSG_VSYNC;
+        msg.ui1 = after_ts;
+        msg.ui2 = (uint64_t(refresh_rate) << 32) | uint32_t(real_interval);
+        cycler_.post(&msg);
     }
 
     void VSyncProvider::notifyCallbacks(

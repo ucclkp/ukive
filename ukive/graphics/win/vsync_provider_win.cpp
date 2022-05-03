@@ -7,7 +7,6 @@
 #include "vsync_provider_win.h"
 
 #include "utils/log.h"
-#include "utils/message/message.h"
 #include "utils/time_utils.h"
 
 #include "ukive/graphics/display.h"
@@ -22,7 +21,6 @@ namespace win {
           is_running_(false),
           pm_opened_(true)
     {
-        cycler_.setListener(this);
         worker_ = std::thread(std::bind(&VSyncProviderWin::onWork, this));
     }
 
@@ -47,21 +45,12 @@ namespace win {
         return true;
     }
 
-    void VSyncProviderWin::setPrimaryMonitorStatus(bool opened) {
-        pm_opened_.store(opened, std::memory_order_relaxed);
+    bool VSyncProviderWin::isRunning() const {
+        return is_running_.load(std::memory_order_relaxed);
     }
 
-    void VSyncProviderWin::onHandleMessage(const utl::Message& msg) {
-        switch(msg.id) {
-        case MSG_VSYNC:
-            if (is_running_) {
-                notifyCallbacks(msg.ui1, uint32_t(msg.ui2 >> 32), uint32_t(msg.ui2));
-            }
-            break;
-
-        default:
-            break;
-        }
+    void VSyncProviderWin::setPrimaryMonitorStatus(bool opened) {
+        pm_opened_.store(opened, std::memory_order_relaxed);
     }
 
     void VSyncProviderWin::wake() {
@@ -113,7 +102,7 @@ namespace win {
              * TODO：需要测试 E-Ink 屏幕的行为。刷新率可能是 0 ？
              */
             if (!ret || !pm_opened_.load(std::memory_order_relaxed)) {
-                std::this_thread::sleep_for(std::chrono::nanoseconds(1000000000 / refresh_rate));
+                std::this_thread::sleep_for(std::chrono::nanoseconds(std::nano::den / refresh_rate));
                 after_ts = utl::TimeUtils::upTimeNanos();
                 real_interval = after_ts - before_ts;
                 //DLOG(Log::INFO) << "VSync fallback. interval: " << real_interval << "us";
@@ -121,13 +110,7 @@ namespace win {
                 //DLOG(Log::INFO) << "VSync normal. interval: " << real_interval << "us";
             }
 
-            cycler_.removeMessages(MSG_VSYNC);
-
-            utl::Message msg;
-            msg.id = MSG_VSYNC;
-            msg.ui1 = after_ts;
-            msg.ui2 = (uint64_t(refresh_rate) << 32) | uint32_t(real_interval);
-            cycler_.post(&msg);
+            sendVSyncToUI(after_ts, refresh_rate, uint32_t(real_interval));
         }
     }
 

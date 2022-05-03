@@ -184,9 +184,6 @@
     <ClCompile Include="window\win\window_impl_win.cpp">
       <Filter>window\win</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\matrix_2x3_f.cpp">
-      <Filter>graphics</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\path.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
@@ -927,9 +924,6 @@
     <ClInclude Include="window\win\window_impl_win.h">
       <Filter>window\win</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\matrix_2x3_f.h">
-      <Filter>graphics</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\path.h">
       <Filter>graphics</Filter>
     </ClInclude>
@@ -1588,6 +1582,9 @@
       <Filter>graphics</Filter>
     </ClInclude>
     <ClInclude Include="graphics\rebuildable.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\matrix_2x3.hpp">
       <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>

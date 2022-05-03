@@ -9,6 +9,15 @@
 #include "animator.h"
 
 
+namespace {
+
+    template <typename Ty>
+    Ty uns_sub(Ty lhs, Ty rhs) {
+        return (lhs >= rhs) ? (lhs - rhs) : 0;
+    }
+
+}
+
 namespace ukive {
 
     AnimationDirector::AnimationDirector()
@@ -162,19 +171,27 @@ namespace ukive {
             return;
         }
 
-        for (auto it = loops_.begin(); it != loops_.end(); ++it) {
-            if (it->start == start.count()) {
-                it->duration = duration.count();
-                it->count = count;
+        for (size_t i = 0; i < loops_.size(); ++i) {
+            auto& loop = loops_[i];
+            if (loop.start == start.count()) {
+                loop.duration = duration.count();
+                loop.count = count;
                 return;
             }
 
-            if (it->start > start.count()) {
+            if (loop.start > start.count()) {
                 LoopItem item;
                 item.start = start.count();
                 item.duration = duration.count();
                 item.count = count;
-                loops_.insert(it, item);
+                item.is_finished = false;
+                loops_.insert(loops_.begin() + i, item);
+
+                if (cur_loop_idx_ != npos) {
+                    if (i <= cur_loop_idx_) {
+                        ++cur_loop_idx_;
+                    }
+                }
                 return;
             }
         }
@@ -183,13 +200,22 @@ namespace ukive {
         item.start = start.count();
         item.duration = duration.count();
         item.count = count;
+        item.is_finished = false;
         loops_.push_back(item);
     }
 
     void AnimationDirector::removeLoop(nsp start) {
-        for (auto it = loops_.begin(); it != loops_.end(); ++it) {
-            if (it->start == start.count()) {
-                loops_.erase(it);
+        for (size_t i = 0; i < loops_.size(); ++i) {
+            if (loops_[i].start == start.count()) {
+                loops_.erase(loops_.begin() + i);
+
+                if (cur_loop_idx_ != npos) {
+                    if (i == cur_loop_idx_) {
+                        cur_loop_idx_ = npos;
+                    } else if (i < cur_loop_idx_) {
+                        --cur_loop_idx_;
+                    }
+                }
                 return;
             }
         }
@@ -197,6 +223,7 @@ namespace ukive {
 
     void AnimationDirector::removeLoops() {
         loops_.clear();
+        cur_loop_idx_ = npos;
     }
 
     void AnimationDirector::start() {
@@ -217,7 +244,8 @@ namespace ukive {
 
         is_running_ = true;
         is_finished_ = false;
-        start_time_ = Animator::now() - elapsed_time_;
+        is_preparing_ = true;
+        start_time_ = 0;
 
         if (listener_) {
             listener_->onDirectorStarted(this);
@@ -230,7 +258,9 @@ namespace ukive {
         }
 
         is_running_ = false;
-        elapsed_time_ = Animator::now() - start_time_;
+        if (!is_preparing_) {
+            elapsed_time_ = uns_sub(Animator::now(), start_time_);
+        }
 
         for (auto& pair : channels_) {
             auto& channel = pair.second;
@@ -257,6 +287,12 @@ namespace ukive {
 
         is_running_ = false;
         is_finished_ = true;
+        is_preparing_ = false;
+
+        for (auto& loop : loops_) {
+            loop.is_finished = true;
+        }
+        cur_loop_idx_ = npos;
 
         for (auto& pair : channels_) {
             ns end_time;
@@ -293,7 +329,14 @@ namespace ukive {
         is_started_ = false;
         is_running_ = false;
         is_finished_ = false;
+        is_preparing_ = false;
         elapsed_time_ = 0;
+        looped_time_ = 0;
+
+        for (auto& loop : loops_) {
+            loop.is_finished = false;
+        }
+        cur_loop_idx_ = npos;
 
         for (auto& pair : channels_) {
             pair.second.cur_val = pair.second.init_val;
@@ -314,34 +357,49 @@ namespace ukive {
             return false;
         }
 
-        bool in_loop = false;
-        auto local_time = cur_time - start_time_;
+        if (is_preparing_) {
+            is_preparing_ = false;
+            start_time_ = uns_sub(cur_time, (std::nano::den / display_freq) + elapsed_time_);
+        }
 
-        if (cur_loop_.has_value()) {
-            auto& loop = cur_loop_.value();
-            if (loop.start <= local_time) {
-                auto elapsed_loop_count = uint32_t((local_time - loop.start) / loop.duration);
-                if (elapsed_loop_count > loop.count) {
-                    in_loop = false;
-                    local_time -= loop.count * loop.duration;
-                } else {
-                    in_loop = true;
-                    local_time -= elapsed_loop_count * loop.duration;
+        // 计算已经结束的循环所花的时间
+        uint64_t prev_loop_time = 0;
+        for (size_t i = 0; i < loops_.size(); ++i) {
+            const auto& loop = loops_[i];
+            if (loop.is_finished) {
+                prev_loop_time += loop.duration * loop.count;
+            }
+        }
+
+        auto local_time = uns_sub(cur_time, start_time_ + prev_loop_time);
+        uint64_t cur_loop_time = 0;
+
+        // 选定下一个循环
+        if (cur_loop_idx_ == npos) {
+            for (size_t i = 0; i < loops_.size(); ++i) {
+                const auto& loop = loops_[i];
+                if (local_time >= loop.start && !loop.is_finished) {
+                    cur_loop_idx_ = i;
+                    break;
                 }
+            }
+        }
+
+        if (cur_loop_idx_ != npos) {
+            auto& loop = loops_[cur_loop_idx_];
+            auto elapsed_loop_count = uint32_t(uns_sub(local_time, loop.start) / loop.duration);
+            if (elapsed_loop_count > loop.count) {
+                loop.is_finished = true;
+                cur_loop_idx_ = npos;
+                cur_loop_time = loop.count * loop.duration;
             } else {
-                cur_loop_.reset();
+                cur_loop_time = elapsed_loop_count * loop.duration;
             }
+
+            local_time = uns_sub(local_time, cur_loop_time);
         }
 
-        if (!in_loop) {
-            for (auto& loop : loops_) {
-                if (local_time >= loop.start &&
-                    local_time < loop.start + loop.duration)
-                {
-                    cur_loop_ = loop;
-                }
-            }
-        }
+        looped_time_ = prev_loop_time + cur_loop_time;
 
         bool finished = updateInternal(local_time);
         if (finished) {
@@ -474,7 +532,13 @@ namespace ukive {
             pair.second.cur_val = pair.second.init_val;
         }
 
+        for (auto& loop : loops_) {
+            loop.is_finished = true;
+        }
+        cur_loop_idx_ = npos;
+
         elapsed_time_ = 0;
+        looped_time_ = 0;
         start_time_ = cur_time;
     }
 

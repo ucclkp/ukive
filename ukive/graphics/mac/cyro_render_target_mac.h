@@ -13,7 +13,7 @@
 
 #include "ukive/graphics/cyro_render_target.h"
 #include "ukive/graphics/images/image_frame.h"
-#include "ukive/graphics/matrix_2x3_f.h"
+#include "ukive/graphics/matrix_2x3.hpp"
 
 
 namespace ukive {

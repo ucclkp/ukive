@@ -7,11 +7,8 @@
 #ifndef UKIVE_GRAPHICS_WIN_VSYNC_PROVIDER_WIN_H_
 #define UKIVE_GRAPHICS_WIN_VSYNC_PROVIDER_WIN_H_
 
-#include <atomic>
 #include <condition_variable>
 #include <thread>
-
-#include "utils/message/cycler.h"
 
 #include "ukive/graphics/vsync_provider.h"
 
@@ -24,33 +21,26 @@ namespace win {
      * 在 Windows 上 DWM 将垂直同步信号限定为主显示器的垂直同步信号。
      */
     class VSyncProviderWin :
-        public VSyncProvider,
-        public utl::CyclerListener
+        public VSyncProvider
     {
     public:
         VSyncProviderWin();
         ~VSyncProviderWin();
 
+        bool isRunning() const override;
+
         void setPrimaryMonitorStatus(bool opened);
 
     protected:
-        enum MsgType {
-            MSG_VSYNC = 0,
-        };
-
         // VSyncProvider
         bool onStartVSync() override;
         bool onStopVSync() override;
-
-        // CyclerListener
-        void onHandleMessage(const utl::Message& msg) override;
 
     private:
         void wake();
         void wait();
         void onWork();
 
-        utl::Cycler cycler_;
         std::thread worker_;
         std::mutex cv_mutex_;
         std::condition_variable cv_;

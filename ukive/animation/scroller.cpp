@@ -13,8 +13,7 @@
 
 #include "ukive/event/input_consts.h"
 
-#define NANO_RATIO   1000000000
-#define NANO_RATIO_D 1000000000.0
+#define NANO_RATIO_D  double(std::nano::den)
 
 
 namespace {
@@ -26,6 +25,11 @@ namespace {
 
     const double kBezierBaseTime = 6;
     const double kBezierBaseVelocity = 20000;
+
+    template <typename Ty>
+    Ty uns_sub(Ty lhs, Ty rhs) {
+        return (lhs >= rhs) ? (lhs - rhs) : 0;
+    }
 
 }
 
@@ -145,7 +149,7 @@ namespace ukive {
 
         if (is_preparing_) {
             is_preparing_ = false;
-            start_time_ = cur_time - (NANO_RATIO / display_freq);
+            start_time_ = uns_sub<uint64_t>(cur_time, (std::nano::den / display_freq));
             prev_time_ = start_time_;
         }
 
@@ -174,7 +178,7 @@ namespace ukive {
     }
 
     void Scroller::computeLinear(uint64_t cur_time) {
-        auto elapsed = (cur_time - start_time_) / NANO_RATIO_D;
+        auto elapsed = uns_sub(cur_time, start_time_) / NANO_RATIO_D;
         auto duration = duration_ / NANO_RATIO_D;
 
         if (elapsed >= duration) {
@@ -187,7 +191,7 @@ namespace ukive {
     }
 
     void Scroller::computeInertia(uint64_t cur_time) {
-        double elapsed = (cur_time - start_time_) / NANO_RATIO_D;
+        double elapsed = uns_sub(cur_time, start_time_) / NANO_RATIO_D;
 
         auto v1 = cur_velocity_ + decelerate_ * elapsed;
         if (v1 * cur_velocity_ < 0) {
@@ -207,8 +211,8 @@ namespace ukive {
     }
 
     void Scroller::computeBezier(uint64_t cur_time) {
-        auto dt = (cur_time - prev_time_) / NANO_RATIO_D;
-        auto elapsed = (cur_time - start_time_) / NANO_RATIO_D;
+        auto dt = uns_sub(cur_time, prev_time_) / NANO_RATIO_D;
+        auto elapsed = uns_sub(cur_time, start_time_) / NANO_RATIO_D;
 
         if (cur_velocity_ != 0) {
             double v;

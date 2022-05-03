@@ -44,6 +44,8 @@ namespace ukive {
             const PointD& p1, const PointD& p2, const PointD& p3, const Color& color);
         void clearLines();
 
+        void showOverlay(bool show);
+
         // View
         Size onDetermineSize(const SizeInfo& info) override;
         void onAfterLayout(const Rect& new_bounds, const Rect& old_bounds) override;
