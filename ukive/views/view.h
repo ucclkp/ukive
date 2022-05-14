@@ -31,6 +31,7 @@ namespace ukive {
     class OnInputEventDelegate;
     class ShadowEffect;
     class InputMethodConnection;
+    class HaulSource;
     class ViewAnimator;
     class Window;
 
@@ -72,7 +73,7 @@ namespace ukive {
         void setPadding(int lead, int top, int trail, int bottom);
         void setPadding(const Padding& p);
         void setPressed(bool pressed);
-        void setCurrentCursor(Cursor cursor);
+        void setCursor(Cursor cursor);
         void setClickable(bool clickable);
         void setDoubleClickable(bool dbclkable);
         void setFocusable(bool focusable);
@@ -83,6 +84,7 @@ namespace ukive {
         void setMinimumHeight(int height);
         void setOnClickListener(OnClickListener* l);
         void setOnInputEventDelegate(OnInputEventDelegate* d);
+        void setHaulSource(HaulSource* src);
         void setOutline(Outline outline);
 
         void setLayoutSize(int width, int height);
@@ -110,8 +112,10 @@ namespace ukive {
         int getShadowRadius() const;
         int getVisibility() const;
         int getOutline() const;
+        Cursor getCursor() const;
         OnClickListener* getClickListener() const;
         OnInputEventDelegate* getInputEventDelegate() const;
+        HaulSource* getHaulSource() const;
         const Size& getMinimumSize() const;
         const Size& getDeterminedSize() const;
 
@@ -164,7 +168,6 @@ namespace ukive {
         bool isAttachedToWindow() const;
         bool isPressed() const;
         bool hasFocus() const;
-        bool canGetFocus() const;
         bool isClickable() const;
         bool isDoubleClickable() const;
         bool isFocusable() const;
@@ -174,6 +177,9 @@ namespace ukive {
         bool isLocalPointerInThisVisible(InputEvent* e) const;
         bool isParentPointerInThis(InputEvent* e) const;
         bool isReceiveOutsideInputEvent() const;
+
+        bool canGetFocus() const;
+        bool canInteract() const;
 
         void scrollTo(int x, int y);
         void scrollBy(int dx, int dy);
@@ -298,7 +304,7 @@ namespace ukive {
         void resetBackground();
         void resetForeground();
 
-        void processPointerUp();
+        bool processPointerUp();
         bool processInputEvent(InputEvent* e);
 
         int id_;
@@ -352,6 +358,8 @@ namespace ukive {
         bool wait_for_dbclk_ = false;
         uint64_t first_clk_ts = 0;
 
+        Cursor cursor_ = Cursor::ARROW;
+
         ViewAnimatorParams anime_params_;
         std::unique_ptr<ViewAnimator> animator_;
         std::unique_ptr<ShadowEffect> shadow_effect_;
@@ -360,6 +368,7 @@ namespace ukive {
         LayoutView* parent_;
         OnClickListener* click_listener_ = nullptr;
         OnInputEventDelegate* ie_delegate_ = nullptr;
+        HaulSource* haul_src_ = nullptr;
         InputMethodConnection* input_conn_;
     };
 

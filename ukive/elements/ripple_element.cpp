@@ -146,14 +146,8 @@ namespace ukive {
         case STATE_NONE:
         {
             if (prev_state == STATE_HOVERED) {
-                if (hover_animator_.isRunning()) {
-                    hover_animator_.stop();
-                    alpha_ = hover_animator_.getCurValue();
-                } else if (up_animator_.isRunning()) {
-                    up_animator_.stop();
-                    alpha_ = up_animator_.getCurValue();
-                }
-
+                hover_animator_.stop();
+                up_animator_.stop();
                 leave_animator_.setInitValue(alpha_);
                 leave_animator_.reset();
                 leave_animator_.start();
@@ -162,8 +156,6 @@ namespace ukive {
                 need_redraw |= true;
             } else if (prev_state == STATE_PRESSED) {
                 down_animator_.stop();
-                alpha_ = down_animator_.getCurValue();
-
                 up_animator_.setValueRange(alpha_, 0);
                 up_animator_.setInterpolator(new LinearInterpolator());
                 up_animator_.reset();
@@ -177,7 +169,8 @@ namespace ukive {
 
         case STATE_HOVERED:
             if (prev_state == STATE_NONE) {
-                alpha_ = 0;
+                up_animator_.stop();
+                hover_animator_.setValueRange(alpha_, HOVER_ALPHA);
                 hover_animator_.reset();
                 hover_animator_.start();
                 startVSync();
@@ -185,8 +178,6 @@ namespace ukive {
                 need_redraw |= true;
             } else if (prev_state == STATE_PRESSED) {
                 down_animator_.stop();
-                alpha_ = down_animator_.getCurValue();
-
                 up_animator_.setValueRange(alpha_, HOVER_ALPHA);
                 up_animator_.setInterpolator(new LinearInterpolator());
                 up_animator_.reset();
@@ -202,8 +193,6 @@ namespace ukive {
 
         case STATE_PRESSED:
             hover_animator_.stop();
-            alpha_ = hover_animator_.getCurValue();
-
             down_animator_.setInitValue(alpha_);
             down_animator_.reset();
             down_animator_.start();

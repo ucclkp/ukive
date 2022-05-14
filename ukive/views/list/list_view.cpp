@@ -111,13 +111,13 @@ namespace ukive {
     bool ListView::onHookInputEvent(InputEvent* e) {
         switch (e->getEvent()) {
         case InputEvent::EVM_DOWN:
-            if (scroll_bar_->onMousePressed({ e->getX(), e->getY() })) {
+            if (scroll_bar_->onMousePressed(e->getPos())) {
                 return true;
             }
             break;
 
         case InputEvent::EVM_MOVE:
-            if (scroll_bar_->isInScrollBar({ e->getX(), e->getY() })) {
+            if (scroll_bar_->isInScrollBar(e->getPos())) {
                 return true;
             }
             break;
@@ -132,7 +132,7 @@ namespace ukive {
             break;
 
         case InputEvent::EVT_UP:
-        case InputEvent::EV_LEAVE_VIEW:
+        case InputEvent::EV_LEAVE:
             is_touch_down_ = false;
             break;
 
@@ -238,7 +238,7 @@ namespace ukive {
             break;
         }
 
-        case InputEvent::EV_LEAVE_VIEW:
+        case InputEvent::EV_LEAVE:
             is_touch_down_ = false;
             break;
 

@@ -378,6 +378,7 @@ namespace win {
         case Cursor::HAND:     native_cursor = ::LoadCursor(nullptr, IDC_HAND);     break;
         case Cursor::APPSTARTING: native_cursor = ::LoadCursor(nullptr, IDC_APPSTARTING); break;
         case Cursor::HELP:     native_cursor = ::LoadCursor(nullptr, IDC_HELP);     break;
+        default:               native_cursor = ::LoadCursor(nullptr, IDC_ARROW);    break;
         }
 
         if (!native_cursor) {
@@ -1315,10 +1316,10 @@ namespace win {
         e->transformInputPos(
             [this](InputEvent::InputPos* pos)
         {
-            ukive::scaleFromNative(this, &pos->x);
-            ukive::scaleFromNative(this, &pos->y);
-            ukive::scaleFromNative(this, &pos->raw_x);
-            ukive::scaleFromNative(this, &pos->raw_y);
+            ukive::scaleFromNative(this, &pos->pos.x());
+            ukive::scaleFromNative(this, &pos->pos.y());
+            ukive::scaleFromNative(this, &pos->raw.x());
+            ukive::scaleFromNative(this, &pos->raw.y());
         });
 
         bool ret = delegate_->onInputEvent(e);

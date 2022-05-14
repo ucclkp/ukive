@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2006
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32228.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shell", "shell\shell.vcxproj", "{58F52DDE-C924-4F42-8DF1-E9E7AE93B9D5}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -23,6 +23,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "necro", "necro\necro.vcxpro
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "utils", "utils\utils\utils.vcxproj", "{97F36483-7CC1-4004-9510-BA6DDBA49C66}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vevah", "vevah\vevah.vcxproj", "{A07C60C5-F67C-4136-A55B-AC10A2A3ED59}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C4614518-1D8D-4448-8050-52B7046865CE} = {C4614518-1D8D-4448-8050-52B7046865CE}
+		{6C135376-870C-4C39-B198-2FFC8E947FFD} = {6C135376-870C-4C39-B198-2FFC8E947FFD}
+		{97F36483-7CC1-4004-9510-BA6DDBA49C66} = {97F36483-7CC1-4004-9510-BA6DDBA49C66}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +74,14 @@ Global
 		{97F36483-7CC1-4004-9510-BA6DDBA49C66}.Release|x64.Build.0 = Release|x64
 		{97F36483-7CC1-4004-9510-BA6DDBA49C66}.Release|x86.ActiveCfg = Release|Win32
 		{97F36483-7CC1-4004-9510-BA6DDBA49C66}.Release|x86.Build.0 = Release|Win32
+		{A07C60C5-F67C-4136-A55B-AC10A2A3ED59}.Debug|x64.ActiveCfg = Debug|x64
+		{A07C60C5-F67C-4136-A55B-AC10A2A3ED59}.Debug|x64.Build.0 = Debug|x64
+		{A07C60C5-F67C-4136-A55B-AC10A2A3ED59}.Debug|x86.ActiveCfg = Debug|Win32
+		{A07C60C5-F67C-4136-A55B-AC10A2A3ED59}.Debug|x86.Build.0 = Debug|Win32
+		{A07C60C5-F67C-4136-A55B-AC10A2A3ED59}.Release|x64.ActiveCfg = Release|x64
+		{A07C60C5-F67C-4136-A55B-AC10A2A3ED59}.Release|x64.Build.0 = Release|x64
+		{A07C60C5-F67C-4136-A55B-AC10A2A3ED59}.Release|x86.ActiveCfg = Release|Win32
+		{A07C60C5-F67C-4136-A55B-AC10A2A3ED59}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

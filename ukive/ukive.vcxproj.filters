@@ -109,7 +109,7 @@
     <ClCompile Include="views\chart_view.cpp">
       <Filter>views</Filter>
     </ClCompile>
-    <ClCompile Include="resources\layout_instantiator.cpp">
+    <ClCompile Include="resources\layout_parser.cpp">
       <Filter>resources</Filter>
     </ClCompile>
     <ClCompile Include="resources\dimension_utils.cpp">
@@ -709,6 +709,12 @@
     <ClCompile Include="views\view_ref.cpp">
       <Filter>views</Filter>
     </ClCompile>
+    <ClCompile Include="window\haul_source.cpp">
+      <Filter>window</Filter>
+    </ClCompile>
+    <ClCompile Include="diagnostic\input_tracker.cpp">
+      <Filter>diagnostic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">
@@ -843,7 +849,7 @@
     <ClInclude Include="views\chart_view.h">
       <Filter>views</Filter>
     </ClInclude>
-    <ClInclude Include="resources\layout_instantiator.h">
+    <ClInclude Include="resources\layout_parser.h">
       <Filter>resources</Filter>
     </ClInclude>
     <ClInclude Include="resources\dimension_utils.h">
@@ -1592,6 +1598,15 @@
     </ClInclude>
     <ClInclude Include="views\view_ref.h">
       <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="window\haul_source.h">
+      <Filter>window</Filter>
+    </ClInclude>
+    <ClInclude Include="window\haul_delegate.h">
+      <Filter>window</Filter>
+    </ClInclude>
+    <ClInclude Include="diagnostic\input_tracker.h">
+      <Filter>diagnostic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

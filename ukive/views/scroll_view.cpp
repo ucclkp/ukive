@@ -10,6 +10,7 @@
 
 #include "utils/log.h"
 
+#include "ukive/diagnostic/input_tracker.h"
 #include "ukive/event/input_consts.h"
 #include "ukive/event/input_event.h"
 #include "ukive/window/window.h"
@@ -22,11 +23,10 @@ namespace ukive {
 
     ScrollView::ScrollView(Context c, AttrsRef attrs)
         : LayoutView(c, attrs),
-          mouse_x_cache_(0),
-          mouse_y_cache_(0),
-          saved_pointer_type_(InputEvent::PT_NONE)
+          saved_pt_(InputEvent::PT_NONE)
     {
         setTouchCapturable(true);
+        setCursor(Cursor::NONE);
     }
 
     ScrollView::~ScrollView() {
@@ -221,18 +221,32 @@ namespace ukive {
     {
         LayoutView::onScrollChanged(scroll_x, scroll_y, old_scroll_x, old_scroll_y);
 
-        // 当前窗口存在有鼠标/触摸焦点的 View 时，不应产生
-        // EVM_SCROLL_ENTER 消息
-        if (saved_pointer_type_ == InputEvent::PT_MOUSE &&
-            getWindow()->getMouseHolderRef() == 0 &&
-            getWindow()->getTouchHolderRef() == 0)
+        /**
+         * 使用鼠标滚动时，我们想即时反应光标的变化。
+         * 于是在这里发送 EVM_MOVE 事件，好让当前鼠标指针下的
+         * View 决定光标样式。因为 ScrollView 自己也可能会设置光标样式，
+         * 如果设置了，就不要发 EVM_MOVE 了，以防两边都设置光标造成光标跳变。
+         */
+        if (saved_pt_ == InputEvent::PT_MOUSE &&
+            getCursor() == Cursor::NONE &&
+            !getWindow()->hasPointerHolder())
         {
             InputEvent e;
-            e.setEvent(InputEvent::EVM_SCROLL_ENTER);
-            e.setPointerType(saved_pointer_type_);
-            e.setX(mouse_x_cache_);
-            e.setY(mouse_y_cache_);
-            dispatchInputEvent(&e);
+            e.setEvent(InputEvent::EVM_MOVE);
+            e.setPointerType(InputEvent::PT_MOUSE);
+            e.setPos(mouse_pos_cache_);
+            e.setRawPos(mouse_raw_pos_cache_);
+            e.offsetInputPos(getX(), getY());
+
+            std::weak_ptr<void> wptr = getCanary();
+            INPUT_TRACK_PRINT("Scroll", &e);
+            if (!dispatchInputEvent(&e) && !wptr.expired()) {
+                // 如果没人处理，就设置默认光标
+                auto w = getWindow();
+                if (w) {
+                    w->setDefaultCursor();
+                }
+            }
         }
     }
 
@@ -244,14 +258,12 @@ namespace ukive {
 
         switch (e->getEvent()) {
         case InputEvent::EVM_MOVE:
-            consumed = true;
             break;
 
         case InputEvent::EVM_WHEEL:
         {
-            mouse_x_cache_ = e->getX();
-            mouse_y_cache_ = e->getY();
-            saved_pointer_type_ = e->getPointerType();
+            mouse_pos_cache_ = e->getPos();
+            mouse_raw_pos_cache_ = e->getRawPos();
 
             int wheel = e->getWheelValue();
             if (wheel == 0 || !canScroll(wheel > 0)) {
@@ -260,11 +272,12 @@ namespace ukive {
             consumed = true;
 
             if (e->getWheelGranularity() == InputEvent::WG_HIGH_PRECISE) {
-                saved_pointer_type_ = InputEvent::PT_NONE;
+                saved_pt_ = InputEvent::PT_NONE;
                 scroller_.finish();
                 scroller_.bezier(
                     0, getContext().dp2px(10 * wheel), true);
             } else {
+                saved_pt_ = e->getPointerType();
                 scroller_.bezier(
                     0, getContext().dp2px(6 * wheel), false);
             }
@@ -277,8 +290,7 @@ namespace ukive {
 
         case InputEvent::EVT_DOWN:
             scroller_.finish();
-            prev_touch_x_ = start_touch_x_ = e->getX();
-            prev_touch_y_ = start_touch_y_ = e->getY();
+            prev_touch_pos_ = start_touch_pos_ = e->getPos();
             is_touch_down_ = true;
             consumed |= true;
             break;
@@ -300,24 +312,19 @@ namespace ukive {
             break;
         }
 
-        case InputEvent::EV_LEAVE_VIEW:
+        case InputEvent::EV_LEAVE:
             is_touch_down_ = false;
-            saved_pointer_type_ = InputEvent::PT_NONE;
             break;
 
         case InputEvent::EVT_MOVE:
             if (is_touch_down_) {
-                int dx = e->getX() - prev_touch_x_;
-                int dy = e->getY() - prev_touch_y_;
-                mouse_x_cache_ = e->getX();
-                mouse_y_cache_ = e->getY();
-                saved_pointer_type_ = e->getPointerType();
+                int dx = e->getX() - prev_touch_pos_.x();
+                int dy = e->getY() - prev_touch_pos_.y();
                 processVerticalScroll(dy);
                 //DLOG(Log::INFO) << "EVT_MOVE: dy: " << dy;
                 consumed |= true;
 
-                prev_touch_x_ = e->getX();
-                prev_touch_y_ = e->getY();
+                prev_touch_pos_ = e->getPos();
             }
             break;
 
@@ -331,9 +338,9 @@ namespace ukive {
     bool ScrollView::onHookInputEvent(InputEvent* e) {
         switch (e->getEvent()) {
         case InputEvent::EVT_DOWN:
-            start_touch_x_ = e->getX();
-            start_touch_y_ = e->getY();
+            start_touch_pos_ = e->getPos();
             is_touch_down_ = true;
+            saved_pt_ = InputEvent::PT_NONE;
             if (!scroller_.isFinished()) {
                 return true;
             }
@@ -341,18 +348,16 @@ namespace ukive {
 
         case InputEvent::EVT_UP:
             is_touch_down_ = false;
-            saved_pointer_type_ = InputEvent::PT_NONE;
             break;
 
         case InputEvent::EVT_MOVE:
             if (is_touch_down_) {
-                int dx = e->getX() - start_touch_x_;
-                int dy = e->getY() - start_touch_y_;
+                int dx = e->getX() - start_touch_pos_.x();
+                int dy = e->getY() - start_touch_pos_.y();
                 int r = getContext().dp2pxi(kTouchScrollingThreshold);
 
                 if (/*dx * dx +*/ dy * dy > r * r) {
-                    start_touch_x_ = e->getX();
-                    start_touch_y_ = e->getY();
+                    start_touch_pos_ = e->getPos();
                     return true;
                 }
             }

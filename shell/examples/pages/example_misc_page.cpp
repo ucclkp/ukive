@@ -26,7 +26,7 @@
 #include "ukive/text/span/interactable_span.h"
 #include "ukive/text/span/text_attributes_span.h"
 #include "ukive/text/span/inline_object_span.h"
-#include "ukive/resources/layout_instantiator.h"
+#include "ukive/resources/layout_parser.h"
 #include "ukive/resources/resource_manager.h"
 #include "ukive/graphics/images/image_frame.h"
 #include "ukive/graphics/images/image_options.h"
@@ -168,7 +168,7 @@ namespace shell {
         director_.start();
         startVSync();
 
-        auto v = ukive::LayoutInstantiator::from(
+        auto v = ukive::LayoutParser::from(
             parent->getContext(), parent, Res::Layout::example_misc_page_layout_xml);
 
         auto sv = findView<ukive::ScrollView>(v, Res::Id::sv_misc_page);

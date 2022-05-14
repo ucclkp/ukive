@@ -203,6 +203,7 @@
     <ClInclude Include="basics\levitator.h" />
     <ClInclude Include="diagnostic\grid_navigator.h" />
     <ClInclude Include="diagnostic\grid_view.h" />
+    <ClInclude Include="diagnostic\input_tracker.h" />
     <ClInclude Include="diagnostic\statistic_drawer.h" />
     <ClInclude Include="diagnostic\ui_tracker.h" />
     <ClInclude Include="dialogs\dialog.h" />
@@ -362,7 +363,7 @@
     <ClInclude Include="resources\attributes.h" />
     <ClInclude Include="resources\dim.hpp" />
     <ClInclude Include="resources\dimension_utils.h" />
-    <ClInclude Include="resources\layout_instantiator.h" />
+    <ClInclude Include="resources\layout_parser.h" />
     <ClInclude Include="resources\resource_manager.h" />
     <ClInclude Include="resources\tval.hpp" />
     <ClInclude Include="system\clipboard_manager.h" />
@@ -469,6 +470,8 @@
     <ClInclude Include="window\context.h" />
     <ClInclude Include="window\context_changed_listener.h" />
     <ClInclude Include="window\context_impl.h" />
+    <ClInclude Include="window\haul_delegate.h" />
+    <ClInclude Include="window\haul_source.h" />
     <ClInclude Include="window\purpose.h" />
     <ClInclude Include="window\window.h" />
     <ClInclude Include="window\window_dpi_utils.h" />
@@ -500,6 +503,7 @@
     <ClCompile Include="basics\levitator.cpp" />
     <ClCompile Include="diagnostic\grid_navigator.cpp" />
     <ClCompile Include="diagnostic\grid_view.cpp" />
+    <ClCompile Include="diagnostic\input_tracker.cpp" />
     <ClCompile Include="diagnostic\statistic_drawer.cpp" />
     <ClCompile Include="diagnostic\ui_tracker.cpp" />
     <ClCompile Include="dialogs\dialog.cpp" />
@@ -623,7 +627,7 @@
     <ClCompile Include="menu\menu_item_impl.cpp" />
     <ClCompile Include="page\page.cpp" />
     <ClCompile Include="resources\dimension_utils.cpp" />
-    <ClCompile Include="resources\layout_instantiator.cpp" />
+    <ClCompile Include="resources\layout_parser.cpp" />
     <ClCompile Include="resources\resource_manager.cpp" />
     <ClCompile Include="system\clipboard_manager.cpp" />
     <ClCompile Include="system\dialogs\sys_open_file_dialog.cpp" />
@@ -712,6 +716,7 @@
     <ClCompile Include="views\view_ref.cpp" />
     <ClCompile Include="window\context.cpp" />
     <ClCompile Include="window\context_impl.cpp" />
+    <ClCompile Include="window\haul_source.cpp" />
     <ClCompile Include="window\window.cpp" />
     <ClCompile Include="window\window_dpi_utils.cpp" />
     <ClCompile Include="window\window_manager.cpp" />

@@ -13,6 +13,7 @@
 #include "utils/time_utils.h"
 #include "utils/weak_bind.hpp"
 
+#include "ukive/diagnostic/input_tracker.h"
 #include "ukive/diagnostic/ui_tracker.h"
 #include "ukive/event/input_event.h"
 #include "ukive/graphics/canvas.h"
@@ -24,6 +25,7 @@
 #include "ukive/views/input_event_delegate.h"
 #include "ukive/views/layout_info/layout_info.h"
 #include "ukive/views/layout/layout_view.h"
+#include "ukive/window/haul_source.h"
 #include "ukive/window/window.h"
 #include "ukive/app/application.h"
 #include "ukive/graphics/effects/shadow_effect.h"
@@ -278,8 +280,8 @@ namespace ukive {
         requestDraw();
     }
 
-    void View::setCurrentCursor(Cursor cursor) {
-        window_->setCurrentCursor(cursor);
+    void View::setCursor(Cursor cursor) {
+        cursor_ = cursor;
     }
 
     void View::setClickable(bool clickable) {
@@ -412,6 +414,10 @@ namespace ukive {
         ie_delegate_ = d;
     }
 
+    void View::setHaulSource(HaulSource* src) {
+        haul_src_ = src;
+    }
+
     void View::setOutline(Outline outline) {
         if (outline == outline_) {
             return;
@@ -513,6 +519,10 @@ namespace ukive {
         return outline_;
     }
 
+    Cursor View::getCursor() const {
+        return cursor_;
+    }
+
     const Size& View::getMinimumSize() const {
         return min_size_;
     }
@@ -531,6 +541,10 @@ namespace ukive {
 
     OnInputEventDelegate* View::getInputEventDelegate() const {
         return ie_delegate_;
+    }
+
+    HaulSource* View::getHaulSource() const {
+        return haul_src_;
     }
 
     LayoutView* View::getParent() const {
@@ -701,10 +715,6 @@ namespace ukive {
         return has_focus_;
     }
 
-    bool View::canGetFocus() const {
-        return is_focusable_ && visibility_ == SHOW && is_enabled_;
-    }
-
     bool View::isClickable() const {
         return is_clickable_;
     }
@@ -779,16 +789,24 @@ namespace ukive {
         return is_receive_outside_input_event_;
     }
 
+    bool View::canGetFocus() const {
+        return is_focusable_ && canInteract();
+    }
+
+    bool View::canInteract() const {
+        return visibility_ == SHOW && is_enabled_;
+    }
+
     void View::scrollTo(int x, int y) {
         if (scroll_x_ != x || scroll_y_ != y) {
-            int oldScrollX = scroll_x_;
-            int oldScrollY = scroll_y_;
+            int old_scroll_x = scroll_x_;
+            int old_scroll_y = scroll_y_;
 
             scroll_x_ = x;
             scroll_y_ = y;
 
             requestDraw();
-            onScrollChanged(x, y, oldScrollX, oldScrollY);
+            onScrollChanged(x, y, old_scroll_x, old_scroll_y);
         }
     }
 
@@ -1017,17 +1035,31 @@ namespace ukive {
         }
 
         /**
-         * EV_LEAVE_VIEW 只能发送给最后接受输入的 View，这里不做判断，
+         * EV_LEAVE 只能发送给最后接受输入的 View，这里不做判断，
          * 由调用方保证。
          */
         ubassert(
-            e->getEvent() != InputEvent::EV_LEAVE_VIEW ||
+            e->getEvent() != InputEvent::EV_LEAVE ||
             window_->getLastInputView() == this);
 
-        std::weak_ptr<InputEvent> wptr = cur_ev_;
+        std::weak_ptr<void> wptr = cur_ev_;
         bool consumed = processInputEvent(e);
         if (wptr.expired() || !isAttachedToWindow()) {
             return consumed;
+        }
+
+        /**
+         * 如果 View 消费了鼠标事件，则将当前光标设置为
+         * 该 View 的光标。
+         */
+        if (consumed &&
+            e->isMouseEvent() &&
+            cursor_ != Cursor::NONE &&
+            e->getEvent() != InputEvent::EV_DRAG &&
+            e->getEvent() != InputEvent::EV_DRAG_END &&
+            e->getEvent() != InputEvent::EV_LEAVE)
+        {
+            window_->setCurrentCursor(cursor_);
         }
 
         updateLastInputView(e, consumed, cancel);
@@ -1050,8 +1082,7 @@ namespace ukive {
          * 以确保操作的合理性。原则上只能于一次输入流程的开始事件时更新。
          */
         if (e->getEvent() == InputEvent::EVM_DOWN ||
-            e->getEvent() == InputEvent::EVM_MOVE ||
-            e->getEvent() == InputEvent::EVM_SCROLL_ENTER)
+            e->getEvent() == InputEvent::EVM_MOVE)
         {
             auto prev_target = window_->getLastInputView();
             if (prev_target == this) {
@@ -1084,10 +1115,11 @@ namespace ukive {
                         << "] consumed: " << consumed << " cancel: " << cancel;*/
 
                     InputEvent ev(*e);
-                    ev.setEvent(InputEvent::EV_LEAVE_VIEW);
+                    ev.setEvent(InputEvent::EV_LEAVE);
                     ev.setIsNoDispatch(true);
                     ev.setCancelled(cancel);
-                    std::weak_ptr<InputEvent> wptr = cur_ev_;
+                    std::weak_ptr<void> wptr = cur_ev_;
+                    INPUT_TRACK_PRINT("Leave", &ev);
                     prev_target->dispatchInputEvent(&ev);
                     if (wptr.expired()) {
                         return;
@@ -1135,10 +1167,11 @@ namespace ukive {
                         << "] consumed: " << consumed << " cancel: " << cancel;
 
                     InputEvent ev(*e);
-                    ev.setEvent(InputEvent::EV_LEAVE_VIEW);
+                    ev.setEvent(InputEvent::EV_LEAVE);
                     ev.setIsNoDispatch(true);
                     ev.setCancelled(cancel);
-                    std::weak_ptr<InputEvent> wptr = cur_ev_;
+                    std::weak_ptr<void> wptr = cur_ev_;
+                    INPUT_TRACK_PRINT("Leave", &ev);
                     prev_target->dispatchInputEvent(&ev);
                     if (wptr.expired()) {
                         return;
@@ -1212,12 +1245,13 @@ namespace ukive {
         }
     }
 
-    void View::processPointerUp() {
+    bool View::processPointerUp() {
         if (!click_listener_) {
-            return;
+            return true;
         }
 
         bool need_perform_click = true;
+        std::weak_ptr<void> wptr = cur_ev_;
         if (is_dbclkable_) {
             if (!wait_for_dbclk_) {
                 wait_for_dbclk_ = true;
@@ -1227,6 +1261,9 @@ namespace ukive {
                     wait_for_dbclk_ = false;
                     need_perform_click = false;
                     performDoubleClick();
+                    if (wptr.expired() || !isAttachedToWindow()) {
+                        return false;
+                    }
                 } else {
                     first_clk_ts = utl::TimeUtils::upTimeMillis();
                 }
@@ -1235,20 +1272,26 @@ namespace ukive {
 
         if (is_clickable_ && need_perform_click) {
             performClick();
+            if (wptr.expired() || !isAttachedToWindow()) {
+                return false;
+            }
         }
+
+        return true;
     }
 
     bool View::processInputEvent(InputEvent* e) {
         // 对于鼠标事件的过滤
-        if (e->getEvent() == InputEvent::EVM_UP && !is_mouse_down_) {
+        if (e->isMouseEvent() && !is_mouse_down_ &&
+            e->getEvent() == InputEvent::EVM_UP)
+        {
             return false;
         }
 
         // 对于触摸事件的过滤
-        if (e->isTouchEvent() &&
-            e->getEvent() != InputEvent::EVT_DOWN &&
-            e->getEvent() != InputEvent::EV_LEAVE_VIEW &&
-            !is_touch_down_)
+        if (e->isTouchEvent() && !is_touch_down_ &&
+            (e->getEvent() == InputEvent::EVT_MOVE ||
+            e->getEvent() == InputEvent::EVT_UP))
         {
             return false;
         }
@@ -1261,10 +1304,8 @@ namespace ukive {
             ev = e;
         }
 
-        std::weak_ptr<InputEvent> wptr = cur_ev_;
-
+        std::weak_ptr<void> wptr = cur_ev_;
         bool consumed = invokeOnInputEvent(ev);
-
         if (wptr.expired() || !isAttachedToWindow()) {
             return consumed;
         }
@@ -1298,7 +1339,7 @@ namespace ukive {
                     }
                 }
             }
-            return consumed;
+            break;
 
         case InputEvent::EVT_DOWN:
             if (consumed) {
@@ -1323,10 +1364,11 @@ namespace ukive {
             } else {
                 cur_ev_->clearTouch();
             }
-            return consumed;
+            break;
 
         case InputEvent::EVT_MULTI_DOWN:
-            return true;
+            consumed = true;
+            break;
 
         case InputEvent::EVM_MOVE:
             if (consumed) {
@@ -1344,7 +1386,7 @@ namespace ukive {
                     requestDraw();
                 }
             }
-            return consumed;
+            break;
 
         case InputEvent::EVT_MOVE:
             if (consumed) {
@@ -1359,19 +1401,7 @@ namespace ukive {
                     window_->captureTouch(this);
                 }
             }
-            return consumed;
-
-        case InputEvent::EVM_SCROLL_ENTER:
-            if (fg_element_) {
-                should_refresh = fg_element_->setState(Element::STATE_HOVERED);
-            }
-            if (bg_element_) {
-                should_refresh = bg_element_->setState(Element::STATE_HOVERED);
-            }
-            if (should_refresh) {
-                requestDraw();
-            }
-            return consumed;
+            break;
 
         case InputEvent::EVM_UP:
             window_->releaseMouse();
@@ -1382,38 +1412,38 @@ namespace ukive {
                 bool pressed = isPressed();
                 setPressed(false);
 
-                if (isLocalPointerInThisVisible(e)) {
-                    if (fg_element_) {
-                        fg_element_->setHotspot(e->getX(), e->getY());
-                        should_refresh = fg_element_->setState(Element::STATE_HOVERED);
-                    }
-                    if (bg_element_) {
-                        bg_element_->setHotspot(e->getX(), e->getY());
-                        should_refresh = bg_element_->setState(Element::STATE_HOVERED);
-                    }
+                if (pressed) {
+                    if (isLocalPointerInThisVisible(e)) {
+                        if (fg_element_) {
+                            fg_element_->setHotspot(e->getX(), e->getY());
+                            should_refresh = fg_element_->setState(Element::STATE_HOVERED);
+                        }
+                        if (bg_element_) {
+                            bg_element_->setHotspot(e->getX(), e->getY());
+                            should_refresh = bg_element_->setState(Element::STATE_HOVERED);
+                        }
 
-                    if (pressed) {
-                        processPointerUp();
-                        if (wptr.expired() || !isAttachedToWindow()) {
+                        if (!processPointerUp()) {
                             return consumed;
                         }
-                    }
-                } else {
-                    if (fg_element_) {
-                        should_refresh = fg_element_->setState(Element::STATE_NONE);
-                    }
-                    if (bg_element_) {
-                        should_refresh = bg_element_->setState(Element::STATE_NONE);
+                    } else {
+                        if (fg_element_) {
+                            should_refresh = fg_element_->setState(Element::STATE_NONE);
+                        }
+                        if (bg_element_) {
+                            should_refresh = bg_element_->setState(Element::STATE_NONE);
+                        }
                     }
                 }
             }
             if (should_refresh) {
                 requestDraw();
             }
-            return consumed;
+            break;
 
         case InputEvent::EVT_MULTI_UP:
-            return true;
+            consumed = true;
+            break;
 
         case InputEvent::EVT_UP:
         {
@@ -1437,8 +1467,7 @@ namespace ukive {
             }
 
             if (isLocalPointerInThisVisible(e) && pressed) {
-                processPointerUp();
-                if (wptr.expired() || !isAttachedToWindow()) {
+                if (!processPointerUp()) {
                     return consumed;
                 }
             }
@@ -1446,12 +1475,13 @@ namespace ukive {
             if (should_refresh) {
                 requestDraw();
             }
-            return true;
+            consumed = true;
+            break;
         }
 
-        case InputEvent::EV_LEAVE_VIEW:
+        case InputEvent::EV_LEAVE:
             if (e->isMouseEvent() && is_mouse_down_) {
-                window_->releaseMouse();
+                window_->releaseMouse(true);
                 is_mouse_down_ = false;
             }
             if (e->isTouchEvent() && is_touch_down_) {
@@ -1468,10 +1498,14 @@ namespace ukive {
             if (should_refresh) {
                 requestDraw();
             }
-            return consumed;
+            break;
 
         default:
             break;
+        }
+
+        if (haul_src_ && isPressed()) {
+            haul_src_->ignite(this, e);
         }
 
         return consumed;
@@ -1671,8 +1705,13 @@ namespace ukive {
     }
 
     bool View::dispatchInputEvent(InputEvent* e) {
+        INPUT_TRACK_RT_START("dispatchInputEvent");
+
         e->offsetInputPos(-bounds_.x(), -bounds_.y());
-        return sendInputEvent(e);
+        bool ret = sendInputEvent(e);
+
+        INPUT_TRACK_RT_END();
+        return ret;
     }
 
     void View::dispatchWindowFocusChanged(bool focus) {

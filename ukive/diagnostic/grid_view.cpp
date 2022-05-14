@@ -294,7 +294,7 @@ namespace ukive {
             }
             break;
 
-        case InputEvent::EV_LEAVE_VIEW:
+        case InputEvent::EV_LEAVE:
             is_moving_ = false;
             break;
 

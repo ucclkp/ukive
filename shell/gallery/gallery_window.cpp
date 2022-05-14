@@ -15,7 +15,7 @@
 #include "ukive/app/application.h"
 #include "ukive/elements/ripple_element.h"
 #include "ukive/graphics/images/image_frame.h"
-#include "ukive/resources/layout_instantiator.h"
+#include "ukive/resources/layout_parser.h"
 #include "ukive/views/image_view.h"
 #include "ukive/views/list/grid_list_layouter.h"
 #include "ukive/views/button.h"
@@ -91,7 +91,7 @@ namespace shell {
     ukive::ListItem* GalleryWindow::onCreateListItem(
         ukive::LayoutView* parent, ukive::ListItemEventRouter* router, size_t position)
     {
-        auto view = ukive::LayoutInstantiator::from(
+        auto view = ukive::LayoutParser::from(
             parent->getContext(), parent, Res::Layout::gallery_item_layout_xml);
         view->setClickable(true);
         view->setOnClickListener(router);

@@ -12,7 +12,7 @@
 #include "ukive/views/list/linear_list_layouter.h"
 #include "ukive/views/list/list_view.h"
 #include "ukive/window/window.h"
-#include "ukive/resources/layout_instantiator.h"
+#include "ukive/resources/layout_parser.h"
 #include "ukive/system/dialogs/sys_message_dialog.h"
 #include "ukive/dialogs/message_dialog.h"
 
@@ -26,7 +26,7 @@ namespace shell {
         : Page(w) {}
 
     ukive::View* ExampleListPage::onCreate(ukive::LayoutView* parent) {
-        auto v = ukive::LayoutInstantiator::from(
+        auto v = ukive::LayoutParser::from(
             parent->getContext(), parent, Res::Layout::example_list_page_layout_xml);
 
         // Buttons

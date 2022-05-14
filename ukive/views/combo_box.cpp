@@ -13,6 +13,7 @@
 
 #include "ukive/animation/animation_director.h"
 #include "ukive/animation/view_animator.h"
+#include "ukive/diagnostic/input_tracker.h"
 #include "ukive/elements/ripple_element.h"
 #include "ukive/elements/shape_element.h"
 #include "ukive/event/input_event.h"
@@ -304,8 +305,9 @@ namespace ukive {
         auto last_input_view = w->getLastInputView();
         if (last_input_view) {
             InputEvent e;
-            e.setEvent(InputEvent::EV_LEAVE_VIEW);
+            e.setEvent(InputEvent::EV_LEAVE);
             e.setIsNoDispatch(true);
+            INPUT_TRACK_PRINT("Combo", &e);
             last_input_view->dispatchInputEvent(&e);
         }
     }

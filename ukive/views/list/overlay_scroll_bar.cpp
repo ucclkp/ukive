@@ -83,6 +83,10 @@ namespace ukive {
     }
 
     bool OverlayScrollBar::onMousePressed(const Point& p) {
+        if (thumb_bounds_.empty()) {
+            return false;
+        }
+
         if (scrollbar_bounds_.hit(p)) {
             thumb_bounds_start_ = thumb_bounds_;
 
@@ -115,6 +119,9 @@ namespace ukive {
     }
 
     bool OverlayScrollBar::isInScrollBar(const Point& p) const {
+        if (thumb_bounds_.empty()) {
+            return false;
+        }
         return scrollbar_bounds_.hit(p);
     }
 

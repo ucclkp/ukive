@@ -11,6 +11,7 @@
 #include "utils/time_utils.h"
 
 #include "ukive/app/application.h"
+#include "ukive/diagnostic/input_tracker.h"
 #include "ukive/window/window_native.h"
 #include "ukive/window/window_dpi_utils.h"
 #include "ukive/views/layout/root_layout.h"
@@ -30,6 +31,7 @@
 #include "ukive/graphics/cyro_render_target.h"
 #include "ukive/diagnostic/statistic_drawer.h"
 #include "ukive/views/size_info.h"
+#include "ukive/window/haul_source.h"
 #include "ukive/window/window_listener.h"
 
 
@@ -165,6 +167,10 @@ namespace ukive {
 
     void Window::setMinHeight(int min_height) {
         min_height_ = min_height;
+    }
+
+    void Window::setDefaultCursor() {
+        setCurrentCursor(Cursor::ARROW);
     }
 
     void Window::setCurrentCursor(Cursor cursor) {
@@ -388,6 +394,10 @@ namespace ukive {
         return impl_->hasSizeBorder();
     }
 
+    bool Window::hasPointerHolder() const {
+        return capture_role_ != CAPR_NONE;
+    }
+
     void Window::showTitleBar() {
         root_layout_->showTitleBar();
     }
@@ -444,7 +454,7 @@ namespace ukive {
 
         // 该 View 第一次捕获鼠标。
         if (mouse_holder_ref_ == 1) {
-            impl_->setMouseCapture();
+            capturePointer(CAPR_NORM);
             mouse_holder_ = v;
         }
     }
@@ -462,7 +472,7 @@ namespace ukive {
 
         // 鼠标将被释放。
         if (mouse_holder_ref_ == 0) {
-            impl_->releaseMouseCapture();
+            releasePointer(CAPR_NORM);
             mouse_holder_ = nullptr;
         }
     }
@@ -483,7 +493,7 @@ namespace ukive {
 
         // 该 View 第一次捕获触摸。
         if (touch_holder_ref_ == 1) {
-            impl_->setMouseCapture();
+            capturePointer(CAPR_NORM);
             touch_holder_ = v;
         }
     }
@@ -501,7 +511,7 @@ namespace ukive {
 
         // 鼠标将被释放。
         if (touch_holder_ref_ == 0) {
-            impl_->releaseMouseCapture();
+            releasePointer(CAPR_NORM);
             touch_holder_ = nullptr;
         }
     }
@@ -618,6 +628,20 @@ namespace ukive {
         return action_menu;
     }
 
+    void Window::startHaul(HaulSource* src) {
+        haul_src_ = src;
+        if (src) {
+            capturePointer(CAPR_DRAG);
+        }
+    }
+
+    void Window::stopHaul(HaulSource* src) {
+        if (src == haul_src_) {
+            haul_src_ = nullptr;
+            releasePointer(CAPR_DRAG);
+        }
+    }
+
     void Window::onCreate() {
     }
 
@@ -678,9 +702,28 @@ namespace ukive {
             return;
         }
 
-        while (mouse_holder_ref_ > 0) {
-            releaseMouse();
+        if (mouse_holder_) {
+            InputEvent e;
+            e.setEvent(InputEvent::EV_LEAVE);
+            e.setIsNoDispatch(true);
+            mouse_holder_->dispatchInputEvent(&e);
         }
+
+        if (touch_holder_) {
+            InputEvent e;
+            e.setEvent(InputEvent::EV_LEAVE);
+            e.setIsNoDispatch(true);
+            touch_holder_->dispatchInputEvent(&e);
+        }
+
+        if (haul_src_) {
+            haul_src_->cancel();
+        }
+
+        releaseMouse(true);
+        releaseTouch(true);
+        releasePointer(CAPR_DRAG);
+
         root_layout_->dispatchWindowFocusChanged(false);
     }
 
@@ -778,6 +821,24 @@ namespace ukive {
                 drawWithDebug(region);
             } else {
                 draw(region);
+            }
+        }
+    }
+
+    void Window::capturePointer(int role) {
+        if (capture_role_ == CAPR_NONE) {
+            capture_role_ |= role;
+            if (capture_role_ != CAPR_NONE) {
+                impl_->setMouseCapture();
+            }
+        }
+    }
+
+    void Window::releasePointer(int role) {
+        if (capture_role_ != CAPR_NONE) {
+            capture_role_ &= ~role;
+            if (capture_role_ == CAPR_NONE) {
+                impl_->releaseMouseCapture();
             }
         }
     }
@@ -984,70 +1045,78 @@ namespace ukive {
     }
 
     bool Window::processPointerHolder(View* holder, InputEvent* e) {
-        if (e->getEvent() == InputEvent::EVM_LEAVE_WIN &&
-            e->isTouchEvent())
-        {
+        bool valid_holder = holder && holder->canInteract();
+        if (e->getEvent() == InputEvent::EVM_LEAVE_WIN) {
+            if (e->isTouchEvent()) {
+                return false;
+            }
+
+            if (valid_holder) {
+                e->setIsNoDispatch(true);
+                e->setEvent(InputEvent::EV_LEAVE);
+                holder->dispatchInputEvent(e);
+                return false;
+            }
+
+            if (last_input_view_) {
+                e->setIsNoDispatch(true);
+                e->setEvent(InputEvent::EV_LEAVE);
+                last_input_view_->dispatchInputEvent(e);
+                return false;
+            }
+
             return false;
+        }
+
+        bool ret = false;
+        InputEvent ev;
+        if (haul_src_) {
+            ev = *e;
         }
 
         // 若有之前捕获过 Poiner 的 View 存在，则直接将所有 Poiner 事件
         // 直接发送至该 View。
-        if (holder &&
-            holder->getVisibility() == View::SHOW &&
-            holder->isEnabled())
-        {
+        if (valid_holder) {
             // 进行坐标变换，将目标 View 左上角映射为(0, 0)。
             int total_left = 0;
             int total_top = 0;
             auto parent = holder->getParent();
             while (parent) {
-                total_left += (parent->getX() - parent->getScrollX());
-                total_top += (parent->getY() - parent->getScrollY());
-
+                total_left += parent->getX() - parent->getScrollX();
+                total_top += parent->getY() - parent->getScrollY();
                 parent = parent->getParent();
             }
 
-            e->setX(e->getX() - total_left);
-            e->setY(e->getY() - total_top);
+            e->offsetInputPos(-total_left, -total_top);
             e->setIsNoDispatch(true);
-
-            if (e->getEvent() == InputEvent::EVM_LEAVE_WIN) {
-                e->setEvent(InputEvent::EV_LEAVE_VIEW);
-                return holder->dispatchInputEvent(e);
-            }
-
-            /**
-             * 对于已经获取了 Poiner 焦点的 View，如果当前事件处理后释放了 Poiner 焦点，
-             * 并且此时 Poiner 已不在该 View 内，那么应向该 View 发送离开事件。
-             * （Poiner 离开事件在正常情况下是由 LayoutView 产生的，但对于获取了
-             * Poiner 焦点的 View，事件走不到 LayoutView 中，无法利用这种机制）
-             */
-            auto canary = holder->getCanary();
-            auto prev_holder = holder;
-            bool ret = holder->dispatchInputEvent(e);
-            if (!canary.expired() &&
-                holder != prev_holder &&
-                !prev_holder->isLocalPointerInThisVisible(e))
-            {
-                e->setEvent(InputEvent::EV_LEAVE_VIEW);
-                prev_holder->dispatchInputEvent(e);
-            }
-            return ret;
-        }
-
-        if (e->getEvent() == InputEvent::EVM_LEAVE_WIN) {
-            if (last_input_view_) {
-                e->setEvent(InputEvent::EV_LEAVE_VIEW);
-                e->setIsNoDispatch(true);
-                last_input_view_->dispatchInputEvent(e);
-                return false;
+            ret = holder->dispatchInputEvent(e);
+            if (!root_layout_) {
+                return ret;
             }
         }
 
-        return root_layout_->dispatchInputEvent(e);
+        if (haul_src_) {
+            if (haul_src_->brake(e)) {
+                ev.setEvent(InputEvent::EV_DRAG_END);
+            } else {
+                ev.setEvent(InputEvent::EV_DRAG);
+            }
+
+            INPUT_TRACK_PRINT("Drag", &ev);
+            root_layout_->dispatchInputEvent(&ev);
+        } else if (!valid_holder) {
+            ret = root_layout_->dispatchInputEvent(e);
+        }
+
+        if (!ret && e->isMouseEvent()) {
+            setDefaultCursor();
+        }
+        return ret;
     }
 
     bool Window::onInputEvent(InputEvent* e) {
+        INPUT_TRACK_PRINT("", e);
+
         if (e->isMouseEvent()) {
             return processPointerHolder(mouse_holder_, e);
         }

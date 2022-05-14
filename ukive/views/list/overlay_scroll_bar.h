@@ -50,8 +50,8 @@ namespace ukive {
         Rect thumb_bounds_;
         Rect thumb_bounds_start_;
 
-        Point dragging_prev_;
-        Point dragging_start_;
+        Point dragging_prev_{};
+        Point dragging_start_{};
 
         std::function<void(int)> scroll_handler_;
     };

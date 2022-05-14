@@ -39,6 +39,7 @@ namespace ukive {
     class ContextMenuCallback;
     class TextActionMenu;
     class TextActionMenuCallback;
+    class HaulSource;
     class OnWindowStatusChangedListener;
     struct ThemeConfig;
 
@@ -74,6 +75,7 @@ namespace ukive {
         void setBounds(int x, int y, int width, int height);
         void setMinWidth(int min_width);
         void setMinHeight(int min_height);
+        void setDefaultCursor();
         void setCurrentCursor(Cursor cursor);
         void setContentView(int layout_id);
         void setContentView(View* content);
@@ -130,6 +132,7 @@ namespace ukive {
         bool isShowInTaskBar() const;
         bool isIgnoreMouseEvents() const;
         bool hasSizeBorder() const;
+        bool hasPointerHolder() const;
 
         void showTitleBar();
         void hideTitleBar();
@@ -174,6 +177,9 @@ namespace ukive {
             ContextMenuCallback* callback, View* anchor, int gravity);
         TextActionMenu* startTextActionMenu(TextActionMenuCallback* callback);
 
+        void startHaul(HaulSource* src);
+        void stopHaul(HaulSource* src);
+
     protected:
         // WindowNativeDelegate
         void onCreate() override;
@@ -216,6 +222,15 @@ namespace ukive {
             SCHEDULE_LAYOUT = 1,
         };
 
+        enum CaptureRole {
+            CAPR_NONE = 0,
+            CAPR_NORM = 1 << 0,
+            CAPR_DRAG = 1 << 1,
+        };
+
+        void capturePointer(int role);
+        void releasePointer(int role);
+
         void draw(const DirtyRegion& region);
         void drawWithDebug(const DirtyRegion& region);
         void drawRootView(Canvas* canvas, const Rect& rect);
@@ -239,7 +254,9 @@ namespace ukive {
         View* last_input_view_;
         int mouse_holder_ref_;
         int touch_holder_ref_;
+        int capture_role_ = CAPR_NONE;
         Window* parent_ = nullptr;
+        HaulSource* haul_src_ = nullptr;
 
         std::unique_ptr<ContextMenu> context_menu_;
         std::unique_ptr<TextActionMenu> text_action_menu_;

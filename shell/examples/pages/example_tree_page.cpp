@@ -17,7 +17,7 @@
 #include "ukive/views/list/linear_list_layouter.h"
 #include "ukive/views/tree/tree_node.h"
 #include "ukive/views/tree/tree_node_button.h"
-#include "ukive/resources/layout_instantiator.h"
+#include "ukive/resources/layout_parser.h"
 
 #include "shell/resources/necro_resources_id.h"
 
@@ -32,7 +32,7 @@ namespace shell {
         : Page(w) {}
 
     ukive::View* ExampleTreePage::onCreate(ukive::LayoutView* parent) {
-        auto v = ukive::LayoutInstantiator::from(
+        auto v = ukive::LayoutParser::from(
             parent->getContext(), parent, Res::Layout::example_tree_page_layout_xml);
 
         // ListView

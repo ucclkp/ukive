@@ -154,7 +154,7 @@ namespace shell {
             }
             return true;
 
-        case ukive::InputEvent::EV_LEAVE_VIEW:
+        case ukive::InputEvent::EV_LEAVE:
             is_down_ = false;
             break;
 

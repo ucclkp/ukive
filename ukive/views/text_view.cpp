@@ -372,7 +372,7 @@ namespace ukive {
             return false;
         }
 
-        if (e->getEvent() == InputEvent::EV_LEAVE_VIEW) {
+        if (e->getEvent() == InputEvent::EV_LEAVE) {
             for (size_t i = 0; i < base_text_->getSpanCount(); ++i) {
                 auto span = base_text_->getSpan(i);
                 if (span->getType() == Span::INTERACTABLE) {
@@ -815,22 +815,13 @@ namespace ukive {
         result |= sendEventToSpans(e);
 
         switch (e->getEvent()) {
-        case InputEvent::EV_LEAVE_VIEW:
+        case InputEvent::EV_LEAVE:
         {
             is_plkey_down_ = false;
             is_plkey_down_on_text_ = false;
             is_prkey_down_ = false;
-            if (e->isMouseEvent()) {
-                setCurrentCursor(Cursor::ARROW);
-            }
-            result = true;
-            break;
-        }
-
-        case InputEvent::EVM_SCROLL_ENTER:
-        {
-            if (is_selectable_) {
-                setCurrentCursor(Cursor::IBEAM);
+            if (is_selectable_ && e->isMouseEvent()) {
+                //setCursor(Cursor::ARROW);
             }
             result = true;
             break;
@@ -851,7 +842,7 @@ namespace ukive {
                     e->getY() - getPadding().top() - space_.top() + getScrollY());
 
                 if (is_selectable_ && (is_down_on_text || is_editable_)) {
-                    setCurrentCursor(Cursor::IBEAM);
+                    setCursor(Cursor::IBEAM);
                 }
 
                 if (e->getMouseKey() == InputEvent::MK_LEFT) {
@@ -896,9 +887,9 @@ namespace ukive {
                         e->getX() - getPadding().start() - space_.start() + getScrollX(),
                         e->getY() - getPadding().top() - space_.top() + getScrollY()) || is_editable_))
                 {
-                    setCurrentCursor(Cursor::IBEAM);
+                    setCursor(Cursor::IBEAM);
                 } else {
-                    setCurrentCursor(Cursor::ARROW);
+                    setCursor(Cursor::ARROW);
                 }
             } else if (e->getMouseKey() == InputEvent::MK_RIGHT) {
                 prev_x_ = e->getX();
@@ -955,9 +946,9 @@ namespace ukive {
                         e->getX() - getPadding().start() - space_.start() + getScrollX(),
                         e->getY() - getPadding().top() - space_.top() + getScrollY()) || is_editable_))
                 {
-                    setCurrentCursor(Cursor::IBEAM);
+                    setCursor(Cursor::IBEAM);
                 } else {
-                    setCurrentCursor(Cursor::ARROW);
+                    setCursor(Cursor::ARROW);
                 }
             }
             result |= is_interactivable;

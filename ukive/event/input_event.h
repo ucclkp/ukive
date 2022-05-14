@@ -11,6 +11,8 @@
 #include <map>
 #include <string>
 
+#include "ukive/graphics/point.hpp"
+
 
 namespace ukive {
 
@@ -18,32 +20,28 @@ namespace ukive {
     public:
         enum {
             EV_NONE = 0,
-            EV_LEAVE_VIEW,
-        };
+            EV_DRAG,
+            EV_DRAG_END,
+            EV_LEAVE,
 
-        // 鼠标事件
-        enum {
-            EVM_DOWN = EV_LEAVE_VIEW + 1,
+            // 鼠标事件
+            EVM_DOWN,
             EVM_UP,
             EVM_MOVE,
             EVM_WHEEL,
             EVM_LEAVE_WIN,
             EVM_HOVER,
-            EVM_SCROLL_ENTER,
-        };
 
-        // 触摸事件
-        enum {
-            EVT_DOWN = (EVM_SCROLL_ENTER + 1),
+            // 触摸事件
+            EVT_DOWN,
             EVT_MULTI_DOWN,
             EVT_MULTI_UP,
             EVT_UP,
             EVT_MOVE,
-        };
 
-        // 键盘事件
-        enum {
-            EVK_DOWN = (EVT_MOVE + 1),
+            // 键盘事件
+            // 键盘按键使用 keyboard.h 中的定义。
+            EVK_DOWN,
             EVK_UP,
             EVK_CHARS,
         };
@@ -57,7 +55,6 @@ namespace ukive {
             MK_XBUTTON_2,
         };
 
-        // 键盘按键定义使用 keyboard.h 中的定义。
 
         enum PointerType {
             PT_NONE,
@@ -73,13 +70,10 @@ namespace ukive {
         };
 
         struct InputPos {
-            int x = 0;
-            int y = 0;
-            int raw_x = 0;
-            int raw_y = 0;
+            Point pos{};
+            Point raw{};
         };
 
-    public:
         InputEvent();
         InputEvent(const InputEvent& source) = default;
         ~InputEvent();
@@ -88,12 +82,16 @@ namespace ukive {
         void setPointerType(int type);
         void setX(int x);
         void setY(int y);
+        void setPos(const Point& pos);
         void setX(int x, int id);
         void setY(int y, int id);
+        void setPos(const Point& pos, int id);
         void setRawX(int raw_x);
         void setRawY(int raw_y);
+        void setRawPos(const Point& pos);
         void setRawX(int raw_x, int id);
         void setRawY(int raw_y, int id);
+        void setRawPos(const Point& pos, int id);
         void setWheelValue(int wheel, WheelGranularity granularity);
         void setMouseKey(int key);
         void setKeyboardChars(std::u16string chars, bool repeat);
@@ -111,12 +109,16 @@ namespace ukive {
         int getPointerType() const;
         int getX() const;
         int getY() const;
+        Point getPos() const;
         int getX(int id) const;
         int getY(int id) const;
+        Point getPos(int id) const;
         int getRawX() const;
         int getRawY() const;
+        Point getRawPos() const;
         int getRawX(int id) const;
         int getRawY(int id) const;
+        Point getRawPos(int id) const;
         int getWheelValue() const;
         WheelGranularity getWheelGranularity() const;
         int getMouseKey() const;
@@ -144,6 +146,11 @@ namespace ukive {
 
         void clearTouchUp();
         void clearTouch();
+
+        std::string toString() const;
+        std::string evtos() const;
+        std::string mktos() const;
+        std::string pttos() const;
 
     private:
         int wheel_;

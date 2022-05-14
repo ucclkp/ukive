@@ -10,12 +10,13 @@
 
 #include "utils/log.h"
 
+#include "ukive/diagnostic/input_tracker.h"
 #include "ukive/views/layout_info/layout_info.h"
 #include "ukive/graphics/canvas.h"
 #include "ukive/resources/dimension_utils.h"
+#include "ukive/views/input_event_delegate.h"
 #include "ukive/window/window.h"
 
-#include "ukive/views/input_event_delegate.h"
 
 namespace ukive {
 
@@ -315,7 +316,7 @@ namespace ukive {
     bool LayoutView::dispatchPointerEvent(InputEvent* e) {
         bool hooked = false;
         bool consumed = false;
-        std::weak_ptr<InputEvent> wptr = cur_ev_;
+        std::weak_ptr<void> wptr = cur_ev_;
 
         e->offsetInputPos(-getX(), -getY());
 
@@ -360,13 +361,7 @@ namespace ukive {
                 is_hooked_ = false;
             } else {
                 if (is_hooked_) {
-                    if (e->getEvent() == InputEvent::EV_LEAVE_VIEW ||
-                        e->getEvent() == InputEvent::EVM_UP ||
-                        e->getEvent() == InputEvent::EVT_UP)
-                    {
-                        is_hooked_ = false;
-                    }
-
+                    updateHookingStatus(e);
                     return consumed;
                 }
             }
@@ -385,8 +380,7 @@ namespace ukive {
                 continue;
             }
 
-            int mx = e->getX();
-            int my = e->getY();
+            InputEvent saved(*e);
             e->offsetInputPos(getScrollX(), getScrollY());
 
             if (child->isParentPointerInThis(e)) {
@@ -405,8 +399,7 @@ namespace ukive {
                 }
             }
 
-            e->setX(mx);
-            e->setY(my);
+            *e = saved;
 
             if (wptr.expired() || !isAttachedToWindow()) {
                 break;
@@ -431,21 +424,26 @@ namespace ukive {
     }
 
     bool LayoutView::dispatchInputEvent(InputEvent* e) {
+        INPUT_TRACK_RT_START("dispatchInputEvent");
+
         bool consumed;
         if ((e->isMouseEvent() || e->isTouchEvent()) && !e->isNoDispatch()) {
             consumed = dispatchPointerEvent(e);
         } else if (e->isKeyboardEvent()) {
             consumed = dispatchKeyboardEvent(e);
         } else {
+            // 理论上，到这里的时候 LayoutView 已经接过 EVT_DOWN 了。
+            // 但以防万一，这里先这样，以后看看能不能去掉。
             if ((e->getEvent() == InputEvent::EVT_MOVE ||
                 e->getEvent() == InputEvent::EVT_UP) &&
                 !cur_ev_->hasTouchEvent(e))
             {
+                INPUT_TRACK_RT_END();
                 return true;
             }
 
-            // LayoutView 拦截事件后如果获得了鼠标焦点，则
-            // 鼠标事件将走到这里而不是 dispatchPointerEvent()，
+            // LayoutView 如果获得了鼠标焦点，则鼠标事件
+            // 将直接走到这里而不是经过 dispatchPointerEvent()，
             // 所以需要在这里进行拦截变量的重置
             if (is_hooked_) {
                 prepareHookingStatus(e);
@@ -455,6 +453,7 @@ namespace ukive {
             consumed = View::dispatchInputEvent(e);
         }
 
+        INPUT_TRACK_RT_END();
         return consumed;
     }
 
@@ -502,13 +501,14 @@ namespace ukive {
 
     void LayoutView::prepareHookingStatus(InputEvent* e) {
         // 如果拦截时的事件是触摸事件，
-        // 并且不是按下事件的话，将当前消息转为按下事件
+        // 并且是移动事件的话，将当前消息转为按下事件
         if (e->isTouchEvent() &&
             e->getEvent() == InputEvent::EVT_MOVE &&
             !cur_ev_->hasTouchEvent(e))
         {
             auto saved = e->getEvent();
             e->setEvent(InputEvent::EVT_DOWN);
+            INPUT_TRACK_PRINT("EVT_MOVE ->", e);
             sendInputEvent(e, true);
             e->setEvent(saved);
         }
@@ -519,7 +519,7 @@ namespace ukive {
             e->getEvent() == InputEvent::EVT_DOWN)
         {
             is_hooked_ = true;
-        } else if (e->getEvent() == InputEvent::EV_LEAVE_VIEW ||
+        } else if (e->getEvent() == InputEvent::EV_LEAVE ||
             e->getEvent() == InputEvent::EVM_UP ||
             e->getEvent() == InputEvent::EVT_UP)
         {

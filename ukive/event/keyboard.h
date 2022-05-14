@@ -53,7 +53,7 @@ namespace ukive {
          * 如果当前字符为空或不可打印，返回 true；
          * 否则返回 false。
          */
-        static bool filterChars(const std::u16string& chars);
+        static bool filterChars(const std::u16string_view& chars);
 
         static bool isKeyPressed(int key);
         static bool isKeyToggled(int key);

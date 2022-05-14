@@ -12,7 +12,7 @@
 #include "ukive/views/layout/shade_layout.h"
 #include "ukive/window/window.h"
 #include "ukive/views/title_bar/default_title_bar.h"
-#include "ukive/resources/layout_instantiator.h"
+#include "ukive/resources/layout_parser.h"
 
 
 namespace {
@@ -171,7 +171,7 @@ namespace ukive {
     }
 
     void RootLayout::setContent(int id) {
-        auto content_view = LayoutInstantiator::from(getContext(), content_layout_, id);
+        auto content_view = LayoutParser::from(getContext(), content_layout_, id);
         setContent(content_view);
     }
 

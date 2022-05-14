@@ -11,6 +11,7 @@
 namespace ukive {
 
     enum class Cursor {
+        NONE,
         ARROW,
         IBEAM,
         WAIT,

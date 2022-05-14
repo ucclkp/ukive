@@ -324,13 +324,7 @@ namespace ukive {
             break;
         }
 
-        case InputEvent::EVM_SCROLL_ENTER:
-        {
-            result = true;
-            break;
-        }
-
-        case InputEvent::EV_LEAVE_VIEW:
+        case InputEvent::EV_LEAVE:
         {
             startZoomOutAnimation();
             break;

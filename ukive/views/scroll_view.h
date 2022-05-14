@@ -48,14 +48,12 @@ namespace ukive {
 
         bool processVerticalScroll(int dy);
 
-        int mouse_x_cache_;
-        int mouse_y_cache_;
-        int saved_pointer_type_;
+        Point mouse_pos_cache_{};
+        Point mouse_raw_pos_cache_{};
+        int saved_pt_;
 
-        int prev_touch_x_ = 0;
-        int prev_touch_y_ = 0;
-        int start_touch_x_ = 0;
-        int start_touch_y_ = 0;
+        Point prev_touch_pos_{};
+        Point start_touch_pos_{};
         bool is_touch_down_ = false;
 
         Scroller scroller_;

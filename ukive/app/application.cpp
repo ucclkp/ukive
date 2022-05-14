@@ -18,7 +18,7 @@
 #include "ukive/graphics/images/lc_image_factory.h"
 #include "ukive/graphics/vsync_provider.h"
 #include "ukive/text/input_method_manager.h"
-#include "ukive/resources/layout_instantiator.h"
+#include "ukive/resources/layout_parser.h"
 #include "ukive/resources/resource_manager.h"
 
 
@@ -69,7 +69,7 @@ namespace ukive {
 
         cm_.reset(ColorManager::create());
 
-        LayoutInstantiator::init();
+        LayoutParser::initialize();
 
         ilf_.reset(LcImageFactory::create());
         bool ret = ilf_->initialize();

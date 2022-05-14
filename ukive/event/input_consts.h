@@ -34,6 +34,12 @@ namespace ukive {
      */
     extern const float kMouseScrollingThreshold;
 
+    /**
+     * 鼠标拖动的阈值。
+     * 低于此值的位移不会被当成是拖动。
+     */
+    extern const float kMouseDraggingThreshold;
+
 }
 
 #endif  // UKIVE_EVENT_INPUT_CONSTS_H_

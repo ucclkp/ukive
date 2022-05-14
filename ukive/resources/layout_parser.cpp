@@ -4,7 +4,7 @@
 // This program is licensed under GPLv3 license that can be
 // found in the LICENSE file.
 
-#include "ukive/resources/layout_instantiator.h"
+#include "ukive/resources/layout_parser.h"
 
 #include <fstream>
 
@@ -42,21 +42,22 @@
 
 
 #define VIEW_CONSTRUCTOR(name)  \
-    handler_map_[#name] = [](Context c, const Attributes& attrs)->View* {  \
+    handler_map_[#name] = [](Context c, AttrsRef attrs)->View* {  \
         return new name(c, attrs);  \
     };
 
 
 namespace ukive {
 
-    std::map<std::string, LayoutInstantiator::Handler> LayoutInstantiator::handler_map_;
+    LayoutParser::Map LayoutParser::handler_map_;
+    LayoutParser::Map LayoutParser::handler_map2_;
 
-    LayoutInstantiator::LayoutInstantiator()
+    LayoutParser::LayoutParser()
         : has_read_lim_(false),
           root_parent_(nullptr) {}
 
     // static
-    void LayoutInstantiator::init() {
+    void LayoutParser::initialize() {
         VIEW_CONSTRUCTOR(View);
         VIEW_CONSTRUCTOR(Button);
         VIEW_CONSTRUCTOR(ChartView);
@@ -85,11 +86,24 @@ namespace ukive {
     }
 
     // static
-    View* LayoutInstantiator::from(Context c, LayoutView* parent, int layout_id) {
-        return LayoutInstantiator().instantiate(c, parent, layout_id);
+    void LayoutParser::addViewName(const std::string& name, const Handler& ctor) {
+        handler_map2_[name] = ctor;
     }
 
-    View* LayoutInstantiator::instantiate(Context c, LayoutView* parent, int layout_id) {
+    // static
+    void LayoutParser::removeViewName(const std::string& name) {
+        auto it = handler_map2_.find(name);
+        if (it != handler_map2_.end()) {
+            handler_map2_.erase(it);
+        }
+    }
+
+    // static
+    View* LayoutParser::from(Context c, LayoutView* parent, int layout_id) {
+        return LayoutParser().parse(c, parent, layout_id);
+    }
+
+    View* LayoutParser::parse(Context c, LayoutView* parent, int layout_id) {
         context_ = c;
         root_parent_ = parent;
 
@@ -120,7 +134,7 @@ namespace ukive {
         return root_view;
     }
 
-    bool LayoutInstantiator::fetchLayoutFileName(int layout_id, std::filesystem::path* file_name) {
+    bool LayoutParser::fetchLayoutFileName(int layout_id, std::filesystem::path* file_name) {
         ubassert(file_name != nullptr);
 
         if (!has_read_lim_) {
@@ -196,7 +210,7 @@ namespace ukive {
         return true;
     }
 
-    bool LayoutInstantiator::traverseTree(const ElementPtr& element, View** parent) {
+    bool LayoutParser::traverseTree(const ElementPtr& element, View** parent) {
         ubassert(parent != nullptr);
 
         if (!element) {
@@ -217,13 +231,21 @@ namespace ukive {
             RadioButton::StartGroup();
             cur_view = *parent;
         } else {
+            Handler* handler;
             auto it = handler_map_.find(element->tag_name);
-            if (it == handler_map_.end()) {
-                LOG(Log::ERR) << "Cannot find View: " << element->tag_name;
-                return false;
+            if (it != handler_map_.end()) {
+                handler = &it->second;
+            } else {
+                auto it2 = handler_map2_.find(element->tag_name);
+                if (it2 != handler_map2_.end()) {
+                    handler = &it2->second;
+                } else {
+                    LOG(Log::ERR) << "Cannot find View: " << element->tag_name;
+                    return false;
+                }
             }
 
-            auto view_constructor = it->second;
+            auto& view_constructor = *handler;
             cur_view = view_constructor(context_, element->attrs);
             if (!*parent) {
                 *parent = cur_view;

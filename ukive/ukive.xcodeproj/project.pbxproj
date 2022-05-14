@@ -49,8 +49,6 @@
 		670BD64124B229ED00DF5B85 /* editable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 670BD4FB24B229EC00DF5B85 /* editable.cpp */; };
 		670BD64224B229ED00DF5B85 /* input_method_manager.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD4FC24B229EC00DF5B85 /* input_method_manager.h */; };
 		670BD64324B229ED00DF5B85 /* application.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD4FD24B229EC00DF5B85 /* application.h */; };
-		670BD64424B229ED00DF5B85 /* layout_instantiator.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD4FF24B229EC00DF5B85 /* layout_instantiator.h */; };
-		670BD64524B229ED00DF5B85 /* layout_instantiator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 670BD50024B229EC00DF5B85 /* layout_instantiator.cpp */; };
 		670BD64624B229ED00DF5B85 /* dimension_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD50124B229EC00DF5B85 /* dimension_utils.h */; };
 		670BD64724B229ED00DF5B85 /* dimension_utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 670BD50224B229EC00DF5B85 /* dimension_utils.cpp */; };
 		670BD64824B229ED00DF5B85 /* velocity_calculator.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD50424B229EC00DF5B85 /* velocity_calculator.h */; };
@@ -329,6 +327,13 @@
 		6783F45824D1E99D00056DA1 /* image_frame_mac.h in Headers */ = {isa = PBXBuildFile; fileRef = 6783F45624D1E99D00056DA1 /* image_frame_mac.h */; };
 		6783F45B24DADD4100056DA1 /* rect.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 6783F45924DADD4100056DA1 /* rect.hpp */; };
 		6783F45C24DADD4100056DA1 /* point.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 6783F45A24DADD4100056DA1 /* point.hpp */; };
+		6786E75F2833DA770058A7DE /* input_tracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6786E75D2833DA770058A7DE /* input_tracker.cpp */; };
+		6786E7602833DA770058A7DE /* input_tracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 6786E75E2833DA770058A7DE /* input_tracker.h */; };
+		6786E7632833DA9D0058A7DE /* layout_parser.h in Headers */ = {isa = PBXBuildFile; fileRef = 6786E7612833DA9D0058A7DE /* layout_parser.h */; };
+		6786E7642833DA9D0058A7DE /* layout_parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6786E7622833DA9D0058A7DE /* layout_parser.cpp */; };
+		6786E7682833DAB30058A7DE /* irs_drag_source.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6786E7652833DAB20058A7DE /* irs_drag_source.cpp */; };
+		6786E7692833DAB30058A7DE /* irs_drag_source.h in Headers */ = {isa = PBXBuildFile; fileRef = 6786E7662833DAB20058A7DE /* irs_drag_source.h */; };
+		6786E76A2833DAB30058A7DE /* irs_drag_delegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 6786E7672833DAB30058A7DE /* irs_drag_delegate.h */; };
 		678C89B427C1492D008D0B21 /* ucmm.h in Headers */ = {isa = PBXBuildFile; fileRef = 678C89B227C1492D008D0B21 /* ucmm.h */; };
 		678C89B527C1492D008D0B21 /* ucmm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 678C89B327C1492D008D0B21 /* ucmm.cpp */; };
 		678C89B927C1493C008D0B21 /* icc_profile.h in Headers */ = {isa = PBXBuildFile; fileRef = 678C89B627C1493C008D0B21 /* icc_profile.h */; };
@@ -459,8 +464,6 @@
 		670BD4FB24B229EC00DF5B85 /* editable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = editable.cpp; sourceTree = "<group>"; };
 		670BD4FC24B229EC00DF5B85 /* input_method_manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = input_method_manager.h; sourceTree = "<group>"; };
 		670BD4FD24B229EC00DF5B85 /* application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = application.h; sourceTree = "<group>"; };
-		670BD4FF24B229EC00DF5B85 /* layout_instantiator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = layout_instantiator.h; sourceTree = "<group>"; };
-		670BD50024B229EC00DF5B85 /* layout_instantiator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layout_instantiator.cpp; sourceTree = "<group>"; };
 		670BD50124B229EC00DF5B85 /* dimension_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dimension_utils.h; sourceTree = "<group>"; };
 		670BD50224B229EC00DF5B85 /* dimension_utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dimension_utils.cpp; sourceTree = "<group>"; };
 		670BD50424B229EC00DF5B85 /* velocity_calculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = velocity_calculator.h; sourceTree = "<group>"; };
@@ -757,6 +760,13 @@
 		6783F45624D1E99D00056DA1 /* image_frame_mac.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = image_frame_mac.h; sourceTree = "<group>"; };
 		6783F45924DADD4100056DA1 /* rect.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = rect.hpp; sourceTree = "<group>"; };
 		6783F45A24DADD4100056DA1 /* point.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = point.hpp; sourceTree = "<group>"; };
+		6786E75D2833DA770058A7DE /* input_tracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = input_tracker.cpp; sourceTree = "<group>"; };
+		6786E75E2833DA770058A7DE /* input_tracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = input_tracker.h; sourceTree = "<group>"; };
+		6786E7612833DA9D0058A7DE /* layout_parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = layout_parser.h; sourceTree = "<group>"; };
+		6786E7622833DA9D0058A7DE /* layout_parser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layout_parser.cpp; sourceTree = "<group>"; };
+		6786E7652833DAB20058A7DE /* irs_drag_source.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = irs_drag_source.cpp; sourceTree = "<group>"; };
+		6786E7662833DAB20058A7DE /* irs_drag_source.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = irs_drag_source.h; sourceTree = "<group>"; };
+		6786E7672833DAB30058A7DE /* irs_drag_delegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = irs_drag_delegate.h; sourceTree = "<group>"; };
 		678C89B227C1492D008D0B21 /* ucmm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ucmm.h; sourceTree = "<group>"; };
 		678C89B327C1492D008D0B21 /* ucmm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ucmm.cpp; sourceTree = "<group>"; };
 		678C89B627C1493C008D0B21 /* icc_profile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = icc_profile.h; sourceTree = "<group>"; };
@@ -1004,8 +1014,8 @@
 				672DD03026EE332200E49039 /* dim.hpp */,
 				670BD50224B229EC00DF5B85 /* dimension_utils.cpp */,
 				670BD50124B229EC00DF5B85 /* dimension_utils.h */,
-				670BD50024B229EC00DF5B85 /* layout_instantiator.cpp */,
-				670BD4FF24B229EC00DF5B85 /* layout_instantiator.h */,
+				6786E7622833DA9D0058A7DE /* layout_parser.cpp */,
+				6786E7612833DA9D0058A7DE /* layout_parser.h */,
 				6783F42624D1E43000056DA1 /* resource_manager.cpp */,
 				6783F42524D1E43000056DA1 /* resource_manager.h */,
 				672DD02F26EE332200E49039 /* tval.hpp */,
@@ -1274,6 +1284,9 @@
 				6723A79524FE9B1900F3FB53 /* context_impl.h */,
 				6723A79924FE9B1900F3FB53 /* context.cpp */,
 				6723A79824FE9B1900F3FB53 /* context.h */,
+				6786E7672833DAB30058A7DE /* irs_drag_delegate.h */,
+				6786E7652833DAB20058A7DE /* irs_drag_source.cpp */,
+				6786E7662833DAB20058A7DE /* irs_drag_source.h */,
 				670BD7CA24B4C39F00DF5B85 /* mac */,
 				670BD5E624B229ED00DF5B85 /* purpose.h */,
 				67BD763825EA8F9800F200DB /* window_dpi_utils.cpp */,
@@ -1602,6 +1615,8 @@
 				67985C6A2504E54B0092EACB /* grid_navigator.h */,
 				67985C682504E54B0092EACB /* grid_view.cpp */,
 				67985C692504E54B0092EACB /* grid_view.h */,
+				6786E75D2833DA770058A7DE /* input_tracker.cpp */,
+				6786E75E2833DA770058A7DE /* input_tracker.h */,
 				67985C662504E54B0092EACB /* statistic_drawer.cpp */,
 				67985C6C2504E54B0092EACB /* statistic_drawer.h */,
 				67985C6B2504E54B0092EACB /* ui_tracker.cpp */,
@@ -1737,6 +1752,7 @@
 				6783F40324C4554400056DA1 /* input_connection_mac.h in Headers */,
 				67630479280EFB7D0097DD20 /* gerror_code.hpp in Headers */,
 				6783F45C24DADD4100056DA1 /* point.hpp in Headers */,
+				6786E7632833DA9D0058A7DE /* layout_parser.h in Headers */,
 				67950D7B261B45500012DE92 /* tree_node_button.h in Headers */,
 				670BD64224B229ED00DF5B85 /* input_method_manager.h in Headers */,
 				678C89BA27C1493C008D0B21 /* icc_types.h in Headers */,
@@ -1758,6 +1774,7 @@
 				670BD70524B229ED00DF5B85 /* window_native.h in Headers */,
 				67CAAADF2528AE0C00965E68 /* check_listener.h in Headers */,
 				671BEB33282120D100AA65E6 /* matrix_2x3.hpp in Headers */,
+				6786E7692833DAB30058A7DE /* irs_drag_source.h in Headers */,
 				67950D89261B457A0012DE92 /* list_item.h in Headers */,
 				67950D8B261B457A0012DE92 /* list_item_recycler.h in Headers */,
 				6723A79424FE99B800F3FB53 /* display.h in Headers */,
@@ -1844,7 +1861,6 @@
 				670BD65124B229ED00DF5B85 /* menu_callback.h in Headers */,
 				6770CE2F256FB889007B49F3 /* radio_button.h in Headers */,
 				670BD6BE24B229ED00DF5B85 /* seek_value_changed_listener.h in Headers */,
-				670BD64424B229ED00DF5B85 /* layout_instantiator.h in Headers */,
 				670BD60D24B229ED00DF5B85 /* animator.h in Headers */,
 				6773928E26076DCD00D03228 /* image_element.h in Headers */,
 				672DD01426EE327F00E49039 /* vsync_provider.h in Headers */,
@@ -1890,6 +1906,7 @@
 				670BD60124B229ED00DF5B85 /* animation_director.h in Headers */,
 				6783F42724D1E43000056DA1 /* resource_manager.h in Headers */,
 				670BD6EE24B229ED00DF5B85 /* overlay_scroll_bar.h in Headers */,
+				6786E7602833DA770058A7DE /* input_tracker.h in Headers */,
 				671BEB3B2826C36D00AA65E6 /* view_ref.h in Headers */,
 				6723A79C24FE9B1900F3FB53 /* context_changed_listener.h in Headers */,
 				670BD69D24B229ED00DF5B85 /* paint.h in Headers */,
@@ -1898,6 +1915,7 @@
 				670BD64924B229ED00DF5B85 /* input_event.h in Headers */,
 				677392B126076EAB00D03228 /* layout_info.h in Headers */,
 				67630473280EF97F0097DD20 /* sys_open_file_dialog_mac.h in Headers */,
+				6786E76A2833DAB30058A7DE /* irs_drag_delegate.h in Headers */,
 				6773929126076DCD00D03228 /* ripple_element.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1963,10 +1981,12 @@
 				67998DFE27BA84A800B9113C /* icc_type_param_curve.cpp in Sources */,
 				670BD71124B229ED00DF5B85 /* window_native.cpp in Sources */,
 				670BD6F724B229ED00DF5B85 /* flow_list_layouter.cpp in Sources */,
+				6786E75F2833DA770058A7DE /* input_tracker.cpp in Sources */,
 				6773928C26076DCD00D03228 /* image_element.cpp in Sources */,
 				670BD71324B229ED00DF5B85 /* window_manager.cpp in Sources */,
 				670BD65F24B229ED00DF5B85 /* render_node.cpp in Sources */,
 				677392BF26076EBB00D03228 /* simple_layout.cpp in Sources */,
+				6786E7642833DA9D0058A7DE /* layout_parser.cpp in Sources */,
 				670BD65724B229ED00DF5B85 /* menu_item_impl.cpp in Sources */,
 				677392C026076EBB00D03228 /* layout_view.cpp in Sources */,
 				67BD763F25EAA12200F200DB /* image_options_mac_utils.cpp in Sources */,
@@ -2008,6 +2028,7 @@
 				67998DF127BA84A800B9113C /* icc_type_lut16.cpp in Sources */,
 				67998E0527BA84A800B9113C /* icc_parser.cpp in Sources */,
 				670BD6FD24B229ED00DF5B85 /* scroll_view.cpp in Sources */,
+				6786E7682833DAB30058A7DE /* irs_drag_source.cpp in Sources */,
 				6773928A26076DCD00D03228 /* multi_element.cpp in Sources */,
 				670BD65324B229ED00DF5B85 /* menu_impl.cpp in Sources */,
 				6770CE26256FB85A007B49F3 /* focus_manager.cpp in Sources */,
@@ -2034,7 +2055,6 @@
 				67998E0327BA84A800B9113C /* icc_type_lut_ab.cpp in Sources */,
 				672DD02526EE32F300E49039 /* gravity.cpp in Sources */,
 				672DD00826EE31DF00E49039 /* pipe_client.cpp in Sources */,
-				670BD64524B229ED00DF5B85 /* layout_instantiator.cpp in Sources */,
 				6770CE36256FB914007B49F3 /* dirty_region.cpp in Sources */,
 				670BD69924B229ED00DF5B85 /* shadow_effect.cpp in Sources */,
 				67630468280EF92A0097DD20 /* drawer_element.cpp in Sources */,

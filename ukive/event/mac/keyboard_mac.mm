@@ -84,7 +84,7 @@ namespace ukive {
     }
 
     // static
-    bool Keyboard::filterChars(const std::u16string& chars) {
+    bool Keyboard::filterChars(const std::u16string_view& chars) {
         if (chars.empty()) {
             return true;
         }

@@ -37,11 +37,11 @@ namespace ukive {
 
     void InputEvent::setX(int x) {
         if (pointer_type_ == PT_MOUSE) {
-            mouse_pos_.x = x;
+            mouse_pos_.pos.x(x);
             return;
         }
         if (pointer_type_ == PT_TOUCH) {
-            touch_pos_[cur_touch_id_].x = x;
+            touch_pos_[cur_touch_id_].pos.x(x);
             return;
         }
         ubassert(false);
@@ -49,11 +49,23 @@ namespace ukive {
 
     void InputEvent::setY(int y) {
         if (pointer_type_ == PT_MOUSE) {
-            mouse_pos_.y = y;
+            mouse_pos_.pos.y(y);
             return;
         }
         if (pointer_type_ == PT_TOUCH) {
-            touch_pos_[cur_touch_id_].y = y;
+            touch_pos_[cur_touch_id_].pos.y(y);
+            return;
+        }
+        ubassert(false);
+    }
+
+    void InputEvent::setPos(const Point& pos) {
+        if (pointer_type_ == PT_MOUSE) {
+            mouse_pos_.pos = pos;
+            return;
+        }
+        if (pointer_type_ == PT_TOUCH) {
+            touch_pos_[cur_touch_id_].pos = pos;
             return;
         }
         ubassert(false);
@@ -61,7 +73,7 @@ namespace ukive {
 
     void InputEvent::setX(int x, int id) {
         if (pointer_type_ == PT_TOUCH) {
-            touch_pos_[id].x = x;
+            touch_pos_[id].pos.x(x);
             return;
         }
         ubassert(false);
@@ -69,7 +81,15 @@ namespace ukive {
 
     void InputEvent::setY(int y, int id) {
         if (pointer_type_ == PT_TOUCH) {
-            touch_pos_[id].y = y;
+            touch_pos_[id].pos.y(y);
+            return;
+        }
+        ubassert(false);
+    }
+
+    void InputEvent::setPos(const Point& pos, int id) {
+        if (pointer_type_ == PT_TOUCH) {
+            touch_pos_[id].pos = pos;
             return;
         }
         ubassert(false);
@@ -77,11 +97,11 @@ namespace ukive {
 
     void InputEvent::setRawX(int raw_x) {
         if (pointer_type_ == PT_MOUSE) {
-            mouse_pos_.raw_x = raw_x;
+            mouse_pos_.raw.x(raw_x);
             return;
         }
         if (pointer_type_ == PT_TOUCH) {
-            touch_pos_[cur_touch_id_].raw_x = raw_x;
+            touch_pos_[cur_touch_id_].raw.x(raw_x);
             return;
         }
         ubassert(false);
@@ -89,11 +109,23 @@ namespace ukive {
 
     void InputEvent::setRawY(int raw_y) {
         if (pointer_type_ == PT_MOUSE) {
-            mouse_pos_.raw_y = raw_y;
+            mouse_pos_.raw.y(raw_y);
             return;
         }
         if (pointer_type_ == PT_TOUCH) {
-            touch_pos_[cur_touch_id_].raw_y = raw_y;
+            touch_pos_[cur_touch_id_].raw.y(raw_y);
+            return;
+        }
+        ubassert(false);
+    }
+
+    void InputEvent::setRawPos(const Point& pos) {
+        if (pointer_type_ == PT_MOUSE) {
+            mouse_pos_.raw = pos;
+            return;
+        }
+        if (pointer_type_ == PT_TOUCH) {
+            touch_pos_[cur_touch_id_].raw = pos;
             return;
         }
         ubassert(false);
@@ -101,7 +133,7 @@ namespace ukive {
 
     void InputEvent::setRawX(int raw_x, int id) {
         if (pointer_type_ == PT_TOUCH) {
-            touch_pos_[id].raw_x = raw_x;
+            touch_pos_[id].raw.x(raw_x);
             return;
         }
         ubassert(false);
@@ -109,7 +141,15 @@ namespace ukive {
 
     void InputEvent::setRawY(int raw_y, int id) {
         if (pointer_type_ == PT_TOUCH) {
-            touch_pos_[id].raw_y = raw_y;
+            touch_pos_[id].raw.y(raw_y);
+            return;
+        }
+        ubassert(false);
+    }
+
+    void InputEvent::setRawPos(const Point& pos, int id) {
+        if (pointer_type_ == PT_TOUCH) {
+            touch_pos_[id].raw = pos;
             return;
         }
         ubassert(false);
@@ -155,23 +195,23 @@ namespace ukive {
     }
 
     void InputEvent::offsetInputPos(int dx, int dy) {
-        if (event_type_ == EV_LEAVE_VIEW) {
+        if (event_type_ == EV_LEAVE) {
             return;
         }
 
         if (isMouseEvent()) {
-            mouse_pos_.x += dx;
-            mouse_pos_.y += dy;
+            mouse_pos_.pos.x() += dx;
+            mouse_pos_.pos.y() += dy;
         } else if (isTouchEvent()) {
             for (auto& pos : touch_pos_) {
-                pos.second.x += dx;
-                pos.second.y += dy;
+                pos.second.pos.x() += dx;
+                pos.second.pos.y() += dy;
             }
         }
     }
 
     void InputEvent::transformInputPos(std::function<void(InputPos* pos)>&& func) {
-        if (event_type_ == EV_LEAVE_VIEW) {
+        if (event_type_ == EV_LEAVE) {
             return;
         }
 
@@ -194,12 +234,12 @@ namespace ukive {
 
     int InputEvent::getX() const {
         if (pointer_type_ == PT_MOUSE) {
-            return mouse_pos_.x;
+            return mouse_pos_.pos.x();
         }
         if (pointer_type_ == PT_TOUCH) {
             auto it = touch_pos_.find(cur_touch_id_);
             if (it != touch_pos_.end()) {
-                return it->second.x;
+                return it->second.pos.x();
             }
         }
         ubassert(false);
@@ -208,23 +248,37 @@ namespace ukive {
 
     int InputEvent::getY() const {
         if (pointer_type_ == PT_MOUSE) {
-            return mouse_pos_.y;
+            return mouse_pos_.pos.y();
         }
         if (pointer_type_ == PT_TOUCH) {
             auto it = touch_pos_.find(cur_touch_id_);
             if (it != touch_pos_.end()) {
-                return it->second.y;
+                return it->second.pos.y();
             }
         }
         ubassert(false);
         return 0;
     }
 
+    Point InputEvent::getPos() const {
+        if (pointer_type_ == PT_MOUSE) {
+            return mouse_pos_.pos;
+        }
+        if (pointer_type_ == PT_TOUCH) {
+            auto it = touch_pos_.find(cur_touch_id_);
+            if (it != touch_pos_.end()) {
+                return it->second.pos;
+            }
+        }
+        ubassert(false);
+        return {};
+    }
+
     int InputEvent::getX(int id) const {
         if (pointer_type_ == PT_TOUCH) {
             auto it = touch_pos_.find(id);
             if (it != touch_pos_.end()) {
-                return it->second.x;
+                return it->second.pos.x();
             }
         }
         ubassert(false);
@@ -235,21 +289,32 @@ namespace ukive {
         if (pointer_type_ == PT_TOUCH) {
             auto it = touch_pos_.find(id);
             if (it != touch_pos_.end()) {
-                return it->second.y;
+                return it->second.pos.y();
             }
         }
         ubassert(false);
         return 0;
     }
 
+    Point InputEvent::getPos(int id) const {
+        if (pointer_type_ == PT_TOUCH) {
+            auto it = touch_pos_.find(id);
+            if (it != touch_pos_.end()) {
+                return it->second.pos;
+            }
+        }
+        ubassert(false);
+        return {};
+    }
+
     int InputEvent::getRawX() const {
         if (pointer_type_ == PT_MOUSE) {
-            return mouse_pos_.raw_x;
+            return mouse_pos_.raw.x();
         }
         if (pointer_type_ == PT_TOUCH) {
             auto it = touch_pos_.find(cur_touch_id_);
             if (it != touch_pos_.end()) {
-                return it->second.raw_x;
+                return it->second.raw.x();
             }
         }
         ubassert(false);
@@ -258,23 +323,37 @@ namespace ukive {
 
     int InputEvent::getRawY() const {
         if (pointer_type_ == PT_MOUSE) {
-            return mouse_pos_.raw_y;
+            return mouse_pos_.raw.y();
         }
         if (pointer_type_ == PT_TOUCH) {
             auto it = touch_pos_.find(cur_touch_id_);
             if (it != touch_pos_.end()) {
-                return it->second.raw_y;
+                return it->second.raw.y();
             }
         }
         ubassert(false);
         return 0;
     }
 
+    Point InputEvent::getRawPos() const {
+        if (pointer_type_ == PT_MOUSE) {
+            return mouse_pos_.raw;
+        }
+        if (pointer_type_ == PT_TOUCH) {
+            auto it = touch_pos_.find(cur_touch_id_);
+            if (it != touch_pos_.end()) {
+                return it->second.raw;
+            }
+        }
+        ubassert(false);
+        return {};
+    }
+
     int InputEvent::getRawX(int id) const {
         if (pointer_type_ == PT_TOUCH) {
             auto it = touch_pos_.find(id);
             if (it != touch_pos_.end()) {
-                return it->second.raw_x;
+                return it->second.raw.x();
             }
         }
         ubassert(false);
@@ -285,11 +364,22 @@ namespace ukive {
         if (pointer_type_ == PT_TOUCH) {
             auto it = touch_pos_.find(id);
             if (it != touch_pos_.end()) {
-                return it->second.raw_y;
+                return it->second.raw.y();
             }
         }
         ubassert(false);
         return 0;
+    }
+
+    Point InputEvent::getRawPos(int id) const {
+        if (pointer_type_ == PT_TOUCH) {
+            auto it = touch_pos_.find(id);
+            if (it != touch_pos_.end()) {
+                return it->second.raw;
+            }
+        }
+        ubassert(false);
+        return {};
     }
 
     int InputEvent::getWheelValue() const {
@@ -317,17 +407,23 @@ namespace ukive {
     }
 
     bool InputEvent::isMouseEvent() const {
-        ubassert(event_type_ == EV_LEAVE_VIEW || pointer_type_ != PT_NONE);
+        ubassert(
+            event_type_ == EV_LEAVE ||
+            pointer_type_ != PT_NONE);
         return pointer_type_ == PT_MOUSE;
     }
 
     bool InputEvent::isTouchEvent() const {
-        ubassert(event_type_ == EV_LEAVE_VIEW || pointer_type_ != PT_NONE);
+        ubassert(
+            event_type_ == EV_LEAVE ||
+            pointer_type_ != PT_NONE);
         return pointer_type_ == PT_TOUCH;
     }
 
     bool InputEvent::isKeyboardEvent() const {
-        ubassert(event_type_ == EV_LEAVE_VIEW || pointer_type_ != PT_NONE);
+        ubassert(
+            event_type_ == EV_LEAVE ||
+            pointer_type_ != PT_NONE);
         return pointer_type_ == PT_KEYBOARD;
     }
 
@@ -367,26 +463,28 @@ namespace ukive {
                     ubassert(touch_pos_.empty());
                     touch_pos_.clear();
                 }
-                touch_pos_[e->getCurTouchId()] = { e->getX(), e->getY(), e->getRawX(), e->getRawY() };
+                touch_pos_[e->getCurTouchId()] = { e->getPos(), e->getRawPos() };
                 event_type_ = touch_pos_.size() > 1 ? EVT_MULTI_DOWN : EVT_DOWN;
                 cur_touch_id_ = e->getCurTouchId();
                 break;
 
             case EVT_UP:
                 ubassert(touch_pos_.find(e->getCurTouchId()) != touch_pos_.end());
-                touch_pos_[e->getCurTouchId()] = { e->getX(), e->getY(), e->getRawX(), e->getRawY() };
+                touch_pos_[e->getCurTouchId()] = { e->getPos(), e->getRawPos() };
                 event_type_ = touch_pos_.size() > 1 ? EVT_MULTI_UP : EVT_UP;
                 cur_touch_id_ = e->getCurTouchId();
                 break;
 
             case EVT_MOVE:
                 ubassert(touch_pos_.find(e->getCurTouchId()) != touch_pos_.end());
-                touch_pos_[e->getCurTouchId()] = { e->getX(), e->getY(), e->getRawX(), e->getRawY() };
+                touch_pos_[e->getCurTouchId()] = { e->getPos(), e->getRawPos() };
                 event_type_ = EVT_MOVE;
                 cur_touch_id_ = e->getCurTouchId();
                 break;
 
-            case EV_LEAVE_VIEW:
+            case EV_DRAG:
+            case EV_DRAG_END:
+            case EV_LEAVE:
                 event_type_ = e->getEvent();
                 break;
 
@@ -430,7 +528,7 @@ namespace ukive {
             } else {
                 ubassert(false);
             }
-        } else if (event_type_ == EV_LEAVE_VIEW) {
+        } else if (event_type_ == EV_LEAVE) {
             touch_pos_.clear();
             cur_touch_id_ = -1;
         }
@@ -439,6 +537,103 @@ namespace ukive {
     void InputEvent::clearTouch() {
         touch_pos_.clear();
         cur_touch_id_ = -1;
+    }
+
+    std::string InputEvent::toString() const {
+        std::string r;
+        r.append(evtos());
+
+        switch (event_type_) {
+        case EV_NONE:
+        case EV_LEAVE:
+        case EVM_LEAVE_WIN:
+            break;
+
+        case EV_DRAG:
+        case EV_DRAG_END:
+        case EVM_DOWN:
+        case EVM_UP:
+        case EVM_MOVE:
+        case EVM_WHEEL:
+        case EVM_HOVER:
+        case EVT_DOWN:
+        case EVT_MULTI_DOWN:
+        case EVT_MULTI_UP:
+        case EVT_UP:
+        case EVT_MOVE:
+            r += utl::usformat(" (%d, %d)", getX(), getY());
+            break;
+
+        case EVK_DOWN:
+        case EVK_UP:
+            r += utl::usformat(" %d", key_);
+            break;
+
+        case EVK_CHARS:
+            r += utl::usformat(" %s", chars_);
+            break;
+
+        default:
+            break;
+        }
+
+        return r;
+    }
+
+    std::string InputEvent::evtos() const {
+        switch (event_type_) {
+            // Misc
+        case EV_NONE:   return "EV_NONE";
+        case EV_DRAG:   return "EV_DRAG";
+        case EV_DRAG_END: return "EV_DRAG_END";
+        case EV_LEAVE:  return "EV_LEAVE";
+
+            // Mouse
+        case EVM_DOWN:  return "EVM_DOWN";
+        case EVM_UP:    return "EVM_UP";
+        case EVM_MOVE:  return "EVM_MOVE";
+        case EVM_WHEEL: return "EVM_WHEEL";
+        case EVM_LEAVE_WIN:  return "EVM_LEAVE_WIN";
+        case EVM_HOVER:      return "EVM_HOVER";
+
+            // Touch
+        case EVT_DOWN:  return "EVT_DOWN";
+        case EVT_MULTI_DOWN: return "EVT_MULTI_DOWN";
+        case EVT_MULTI_UP:   return "EVT_MULTI_UP";
+        case EVT_UP:    return "EVT_UP";
+        case EVT_MOVE:  return "EVT_MOVE";
+
+            // Keyboard
+        case EVK_DOWN:  return "EVK_DOWN";
+        case EVK_UP:    return "EVK_UP";
+        case EVK_CHARS: return "EVK_CHARS";
+
+        default:        return "EV_UNKNOWN";
+        }
+    }
+
+    std::string InputEvent::mktos() const {
+        switch (mouse_key_) {
+        case MK_LEFT:      return "MK_LEFT";
+        case MK_MIDDLE:    return "MK_MIDDLE";
+        case MK_RIGHT:     return "MK_RIGHT";
+        case MK_XBUTTON_1: return "MK_XB1";
+        case MK_XBUTTON_2: return "MK_XB2";
+
+        default: return "MK_UNKNOWN";
+        }
+    }
+
+    std::string InputEvent::pttos() const {
+        switch (pointer_type_) {
+        case PT_NONE:     return "PT_NONE";
+        case PT_MOUSE:    return "PT_MOUSE";
+        case PT_TOUCH:    return "PT_TOUCH";
+        case PT_PEN:      return "PT_PEN";
+        case PT_KEYBOARD: return "PT_KEYBOARD";
+
+        default: return "PT_UNKNOWN";
+        }
     }
 
 }

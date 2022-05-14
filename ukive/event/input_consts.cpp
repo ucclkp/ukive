@@ -13,5 +13,6 @@ namespace ukive {
     const double kMaxVelocityInScroller = 10000;
     const float kTouchScrollingThreshold = 8;
     const float kMouseScrollingThreshold = 2;
+    const float kMouseDraggingThreshold = 2;
 
 }
