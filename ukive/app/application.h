@@ -8,6 +8,7 @@
 #define UKIVE_APP_APPLICATION_H_
 
 #include <memory>
+#include <string>
 
 
 namespace ukive {
@@ -23,7 +24,8 @@ namespace ukive {
     class Application {
     public:
         struct Options {
-            bool is_auto_dpi_scale;
+            bool is_auto_dpi_scale = false;
+            std::u16string app_name;
         };
 
         explicit Application(const Options& options);

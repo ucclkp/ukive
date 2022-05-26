@@ -1,7 +1,7 @@
 // 经由 hori 像素着色器处理后的中间结果
 Texture2D st_mid_ : register(t0);
 
-// 原始材质，用于屏蔽不透明的部分
+// 原始纹理，用于屏蔽不透明的部分
 Texture2D st_init_ : register(t1);
 
 // 权重
@@ -26,7 +26,7 @@ float4 main(PixelInputType input) : SV_TARGET {
     int ry = sh + radius * 2 - (int)ceil(input.raw_position.y);
 
     float4 init_color = st_init_.Load(int3(rx - radius, ry - radius, 0));
-    if (init_color.w > 0.99) {
+    if (init_color.w > 0.01f) {
         return init_color;
     }
 
@@ -37,11 +37,7 @@ float4 main(PixelInputType input) : SV_TARGET {
         int y = ry + i - radius;
         float4 color = st_mid_.Load(int3(x, y, 0));
 
-        int index_x = i;
-        if (i > radius) {
-            index_x = 2 * radius - i;
-        }
-
+        int index_x = min(i, radius) * 2 - i;
         float weight = kernel_texture_.Load(int3(index_x, 0, 0));
         acc_alpha += color.w * weight;
     }

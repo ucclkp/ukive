@@ -11,6 +11,7 @@
 namespace necro {
 
     const char16_t kLayoutIdFileName[] = u"necro_layout_id";
+    const char16_t kLayoutHistoryFileName[] = u"necro_layout_histories";
 
     // View
     const char kAttrViewId[] = "id";

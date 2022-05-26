@@ -7,8 +7,12 @@
 #include "main_window.h"
 
 #include "ukive/elements/color_element.h"
+#include "ukive/resources/layout_parser.h"
+#include "ukive/views/button.h"
 #include "ukive/views/list/list_view.h"
 #include "ukive/views/list/linear_list_layouter.h"
+#include "ukive/views/list/list_item.h"
+#include "ukive/window/haul_source.h"
 
 #include "vevah/container_layout.h"
 #include "vevah/control_list_source.h"
@@ -25,6 +29,8 @@ namespace vevah {
         showTitleBar();
         setContentView(Res::Layout::main_window_layout_xml);
 
+        auto c = getContext();
+
         left_panel_ = findView<ukive::View>(Res::Id::sl_main_wnd_left_panel);
         left_panel_->setBackground(new ukive::ColorElement(ukive::Color::Grey100));
 
@@ -37,6 +43,12 @@ namespace vevah {
         ctrl_list_->setSource(ctrl_source_);
         ctrl_list_->setLayouter(new ukive::LinearListLayouter());
         ctrl_list_->setItemEventRouter(new ukive::ListItemEventRouter(this));
+
+        haul_src_ = std::make_unique<ukive::HaulSource>(0, this);
+
+        levitator_.setDismissByTouchOutside(true);
+        levitator_.setOutsideTouchable(true);
+        levitator_.setInputEnabled(false);
     }
 
     void MainWindow::onDestroy() {
@@ -50,7 +62,37 @@ namespace vevah {
         ukive::ListView* list_view,
         ukive::ListItem* item, ukive::View* v)
     {
+        auto c = getContext();
+        int margin = c.dp2pxi(4);
+        auto view = ukive::LayoutParser::createView(
+            ctrl_source_->getName(item->data_pos), c, {});
+        view->animeParams().setAlpha(0.75);
+        view->setLayoutMargin({ margin, margin, margin, margin });
+        levitator_.setContentView(view);
 
+        v->setHaulSource(haul_src_.get());
+    }
+
+    void MainWindow::onHaulStarted(
+        ukive::HaulSource* src,
+        ukive::View* v, ukive::InputEvent* e)
+    {
+        ukive::Levitator::PosInfo info;
+        info.corner = ukive::GV_MID_HORI | ukive::GV_MID_VERT;
+        levitator_.show(this, 0, 0, info);
+    }
+
+    void MainWindow::onHaulStopped(ukive::HaulSource* src) {
+        levitator_.dismiss();
+    }
+
+    void MainWindow::onHaulCancelled(ukive::HaulSource* src) {
+        levitator_.dismiss();
+    }
+
+    bool MainWindow::onHauling(ukive::HaulSource* src, ukive::InputEvent* e) {
+        levitator_.update(e->getRawX(), e->getRawY());
+        return true;
     }
 
 }

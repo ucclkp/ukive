@@ -34,6 +34,7 @@
 #include "ukive/elements/color_element.h"
 #include "ukive/elements/texteditor_element.h"
 #include "ukive/graphics/colors/color.h"
+#include "ukive/window/haul_source.h"
 #include "ukive/window/window.h"
 #include "ukive/graphics/colors/color_manager.h"
 #include "ukive/graphics/colors/ucmm.h"
@@ -157,6 +158,8 @@ namespace shell {
         : Page(w) {}
 
     ukive::View* ExampleMiscPage::onCreate(ukive::LayoutView* parent) {
+        auto c = parent->getContext();
+
         using namespace std::chrono_literals;
         director_.setListener(this);
         auto animator = director_.add(0);
@@ -169,7 +172,7 @@ namespace shell {
         startVSync();
 
         auto v = ukive::LayoutParser::from(
-            parent->getContext(), parent, Res::Layout::example_misc_page_layout_xml);
+            c, parent, Res::Layout::example_misc_page_layout_xml);
 
         auto sv = findView<ukive::ScrollView>(v, Res::Id::sv_misc_page);
 
@@ -207,7 +210,7 @@ namespace shell {
 
         auto textView = findView<ukive::TextView>(v, Res::Id::tv_misc_txt);
         textView->setText(u"这\n是一个示\n例程序，\n在这里可以显示文本。");
-        textView->setBackground(new ukive::TextEditorElement(parent->getContext()));
+        textView->setBackground(new ukive::TextEditorElement(c));
         textView->setLineSpacing(ukive::TextLayout::LineSpacing::UNIFORM, 10);
         //textView->autoWrap(false);
         //textView->setTextAlignment(ukive::TextLayout::Alignment::CENTER);
@@ -243,6 +246,20 @@ namespace shell {
 
         test_button_ = findView<ukive::Button>(v, Res::Id::bt_misc_button);
         test_button_->setOnClickListener(this);
+        {
+            haul_src_ = std::make_unique<ukive::HaulSource>(0, this);
+            test_button_->setHaulSource(haul_src_.get());
+
+            int margin = c.dp2pxi(4);
+            auto haul_btn = new ukive::Button(c);
+            haul_btn->setLayoutMargin({ margin, margin, margin, margin });
+            haul_btn->animeParams().setAlpha(0.75);
+
+            levitator_.setContentView(haul_btn);
+            levitator_.setDismissByTouchOutside(true);
+            levitator_.setOutsideTouchable(true);
+            levitator_.setInputEnabled(false);
+        }
 
         ukive::Color dst;
         std::unique_ptr<ukive::ColorManager> cm(ukive::ColorManager::create());
@@ -305,6 +322,28 @@ namespace shell {
         if (!director_.update(start_time, display_freq)) {
             stopVSync();
         }
+    }
+
+    void ExampleMiscPage::onHaulStarted(
+        ukive::HaulSource* src,
+        ukive::View* v, ukive::InputEvent* e)
+    {
+        ukive::Levitator::PosInfo info;
+        info.corner = ukive::GV_MID_HORI | ukive::GV_MID_VERT;
+        levitator_.show(getWindow(), 0, 0, info);
+    }
+
+    void ExampleMiscPage::onHaulStopped(ukive::HaulSource* src) {
+        levitator_.dismiss();
+    }
+
+    void ExampleMiscPage::onHaulCancelled(ukive::HaulSource* src) {
+        levitator_.dismiss();
+    }
+
+    bool ExampleMiscPage::onHauling(ukive::HaulSource* src, ukive::InputEvent* e) {
+        levitator_.update(e->getRawX(), e->getRawY());
+        return true;
     }
 
 }

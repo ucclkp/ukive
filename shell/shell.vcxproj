@@ -115,10 +115,10 @@
     <PostBuildEvent>
       <Command>xcopy "$(ProjectDir)resources\altitude.raw" "$(OutDir)" /Y /D /Q
 xcopy "$(ProjectDir)resources\freshpaint.png" "$(OutDir)" /Y /D /Q
-$(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro" -d "$(OutDir)necro\"</Command>
+$(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro\$(ProjectName)" -d "$(OutDir)necro\$(ProjectName)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>$(SolutionDir)necro.exe -g -r "$(ProjectDir)resources" -b "$(SolutionDir)build\"</Command>
+      <Command>$(SolutionDir)necro.exe -g -r "$(ProjectDir)resources" -b "$(SolutionDir)build" -n "$(ProjectName)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -145,10 +145,10 @@ $(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro" -d "$(OutDir)necro\"</
     <PostBuildEvent>
       <Command>xcopy "$(ProjectDir)resources\altitude.raw" "$(OutDir)" /Y /D /Q
 xcopy "$(ProjectDir)resources\freshpaint.png" "$(OutDir)" /Y /D /Q
-$(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro" -d "$(OutDir)necro\"</Command>
+$(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro\$(ProjectName)" -d "$(OutDir)necro\$(ProjectName)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>$(SolutionDir)necro.exe -g -r "$(ProjectDir)resources" -b "$(SolutionDir)build\"</Command>
+      <Command>$(SolutionDir)necro.exe -g -r "$(ProjectDir)resources" -b "$(SolutionDir)build" -n "$(ProjectName)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -180,10 +180,10 @@ $(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro" -d "$(OutDir)necro\"</
     <PostBuildEvent>
       <Command>xcopy "$(ProjectDir)resources\altitude.raw" "$(OutDir)" /Y /D /Q
 xcopy "$(ProjectDir)resources\freshpaint.png" "$(OutDir)" /Y /D /Q
-$(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro" -d "$(OutDir)necro\"</Command>
+$(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro\$(ProjectName)" -d "$(OutDir)necro\$(ProjectName)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>$(SolutionDir)necro.exe -g -r "$(ProjectDir)resources" -b "$(SolutionDir)build\"</Command>
+      <Command>$(SolutionDir)necro.exe -g -r "$(ProjectDir)resources" -b "$(SolutionDir)build" -n "$(ProjectName)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -214,10 +214,10 @@ $(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro" -d "$(OutDir)necro\"</
     <PostBuildEvent>
       <Command>xcopy "$(ProjectDir)resources\altitude.raw" "$(OutDir)" /Y /D /Q
 xcopy "$(ProjectDir)resources\freshpaint.png" "$(OutDir)" /Y /D /Q
-$(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro" -d "$(OutDir)necro\"</Command>
+$(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro\$(ProjectName)" -d "$(OutDir)necro\$(ProjectName)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>$(SolutionDir)necro.exe -g -r "$(ProjectDir)resources" -b "$(SolutionDir)build\"</Command>
+      <Command>$(SolutionDir)necro.exe -g -r "$(ProjectDir)resources" -b "$(SolutionDir)build" -n "$(ProjectName)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

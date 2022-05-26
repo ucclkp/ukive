@@ -11,8 +11,9 @@
 
 #include "utils/memory/win/com_ptr.hpp"
 
-#include "ukive/graphics/images/image_options.h"
+#include "ukive/graphics/canvas_stack.hpp"
 #include "ukive/graphics/cyro_render_target.h"
+#include "ukive/graphics/images/image_options.h"
 #include "ukive/graphics/rebuildable.h"
 
 #include <d2d1.h>
@@ -101,6 +102,11 @@ namespace win {
         void onRebuild() override;
 
     private:
+        struct StackData {
+            float opacity;
+            utl::win::ComPtr<ID2D1DrawingStateBlock> state_block;
+        };
+
         bool initialize();
         void uninitialize();
 
@@ -111,8 +117,7 @@ namespace win {
         utl::win::ComPtr<ID2D1SolidColorBrush> solid_brush_;
         utl::win::ComPtr<ID2D1BitmapBrush> bitmap_brush_;
 
-        std::stack<float> opacity_stack_;
-        std::stack<utl::win::ComPtr<ID2D1DrawingStateBlock>> drawing_state_stack_;
+        CanvasStack<StackData> save_stack_;
 
         CyroBuffer* buffer_ = nullptr;
     };

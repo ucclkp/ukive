@@ -20,8 +20,6 @@
 
 namespace necro {
 
-    constexpr char16_t kHistoryFileName[] = u"necro_histories";
-
     LayoutProcessor::LayoutProcessor()
         : need_second_(false),
           cur_view_id_(10000),
@@ -167,8 +165,8 @@ namespace necro {
             writer.write(xml_str.data(), xml_str.length());
 
             // 直到 C++ 20 足够普及为止，这里先这样写
-            std::string xml_file_name = reinterpret_cast<const char*>(
-                xml_file.path().filename().u8string().c_str());
+            auto xml_file_name_u8 = xml_file.path().filename().u8string();
+            std::string xml_file_name(xml_file_name_u8.begin(), xml_file_name_u8.end());
             if (!xml_file_name.empty()) {
                 layout_id_map_[xml_file_name] = cur_layout_id_;
                 ++cur_layout_id_;
@@ -222,7 +220,7 @@ namespace necro {
     void LayoutProcessor::readHistory(
         const fs::path& out_dir, std::vector<History>* histories)
     {
-        std::ifstream cache_file(out_dir / kHistoryFileName, std::ios::binary);
+        std::ifstream cache_file(out_dir / kLayoutHistoryFileName, std::ios::binary);
         if (!cache_file) {
             return;
         }
@@ -268,7 +266,7 @@ namespace necro {
             return;
         }
 
-        std::ofstream cache_file(out_dir / kHistoryFileName, std::ios::binary | std::ios::trunc);
+        std::ofstream cache_file(out_dir / kLayoutHistoryFileName, std::ios::binary | std::ios::trunc);
         if (!cache_file) {
             return;
         }

@@ -16,12 +16,15 @@
 
 namespace ukive {
 
+    class HaulSource;
+
     class InputEvent {
     public:
         enum {
             EV_NONE = 0,
-            EV_DRAG,
-            EV_DRAG_END,
+            EV_HAUL,
+            EV_HAUL_END,
+            EV_HAUL_LEAVE,
             EV_LEAVE,
 
             // 鼠标事件
@@ -29,8 +32,10 @@ namespace ukive {
             EVM_UP,
             EVM_MOVE,
             EVM_WHEEL,
-            EVM_LEAVE_WIN,
             EVM_HOVER,
+
+            // 该事件不会分发给 View
+            EVM_LEAVE_WIN,
 
             // 触摸事件
             EVT_DOWN,
@@ -101,6 +106,7 @@ namespace ukive {
         void setIsNoDispatch(bool captured);
         void setCancelled(bool cancelled);
         void setPrimaryTouchDown(bool primary);
+        void setHaulSource(HaulSource* src);
 
         void offsetInputPos(int dx, int dy);
         void transformInputPos(std::function<void(InputPos* pos)>&& func);
@@ -125,6 +131,7 @@ namespace ukive {
         const std::u16string& getKeyboardChars() const;
         int getKeyboardKey() const;
         int getCurTouchId() const;
+        HaulSource* getHaulSource() const;
 
         bool isMouseEvent() const;
         bool isTouchEvent() const;
@@ -172,6 +179,8 @@ namespace ukive {
         bool is_no_dispatch_;
         bool is_cancelled_ = false;
         bool is_primary_touch_down_ = false;
+
+        HaulSource* haul_ = nullptr;
     };
 
 }

@@ -194,6 +194,10 @@ namespace ukive {
         is_primary_touch_down_ = primary;
     }
 
+    void InputEvent::setHaulSource(HaulSource* src) {
+        haul_ = src;
+    }
+
     void InputEvent::offsetInputPos(int dx, int dy) {
         if (event_type_ == EV_LEAVE) {
             return;
@@ -406,9 +410,14 @@ namespace ukive {
         return cur_touch_id_;
     }
 
+    HaulSource* InputEvent::getHaulSource() const {
+        return haul_;
+    }
+
     bool InputEvent::isMouseEvent() const {
         ubassert(
             event_type_ == EV_LEAVE ||
+            event_type_ == EV_HAUL_LEAVE ||
             pointer_type_ != PT_NONE);
         return pointer_type_ == PT_MOUSE;
     }
@@ -416,6 +425,7 @@ namespace ukive {
     bool InputEvent::isTouchEvent() const {
         ubassert(
             event_type_ == EV_LEAVE ||
+            event_type_ == EV_HAUL_LEAVE ||
             pointer_type_ != PT_NONE);
         return pointer_type_ == PT_TOUCH;
     }
@@ -423,6 +433,7 @@ namespace ukive {
     bool InputEvent::isKeyboardEvent() const {
         ubassert(
             event_type_ == EV_LEAVE ||
+            event_type_ == EV_HAUL_LEAVE ||
             pointer_type_ != PT_NONE);
         return pointer_type_ == PT_KEYBOARD;
     }
@@ -482,8 +493,9 @@ namespace ukive {
                 cur_touch_id_ = e->getCurTouchId();
                 break;
 
-            case EV_DRAG:
-            case EV_DRAG_END:
+            case EV_HAUL:
+            case EV_HAUL_END:
+            case EV_HAUL_LEAVE:
             case EV_LEAVE:
                 event_type_ = e->getEvent();
                 break;
@@ -546,11 +558,12 @@ namespace ukive {
         switch (event_type_) {
         case EV_NONE:
         case EV_LEAVE:
+        case EV_HAUL_LEAVE:
         case EVM_LEAVE_WIN:
             break;
 
-        case EV_DRAG:
-        case EV_DRAG_END:
+        case EV_HAUL:
+        case EV_HAUL_END:
         case EVM_DOWN:
         case EVM_UP:
         case EVM_MOVE:
@@ -584,8 +597,9 @@ namespace ukive {
         switch (event_type_) {
             // Misc
         case EV_NONE:   return "EV_NONE";
-        case EV_DRAG:   return "EV_DRAG";
-        case EV_DRAG_END: return "EV_DRAG_END";
+        case EV_HAUL:   return "EV_HAUL";
+        case EV_HAUL_END: return "EV_HAUL_END";
+        case EV_HAUL_LEAVE: return "EV_HAUL_LEAVE";
         case EV_LEAVE:  return "EV_LEAVE";
 
             // Mouse

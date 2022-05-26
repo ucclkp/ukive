@@ -1608,6 +1608,9 @@
     <ClInclude Include="diagnostic\input_tracker.h">
       <Filter>diagnostic</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\canvas_stack.hpp">
+      <Filter>graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="window">

@@ -13,6 +13,7 @@
 namespace ukive {
 
     class View;
+    class Window;
     class InputEvent;
     class HaulDelegate;
 
@@ -25,12 +26,17 @@ namespace ukive {
         bool brake(InputEvent* e);
         void cancel();
 
+        int getId() const;
+
     private:
+        void stop();
+
         int id_;
         HaulDelegate* delegate_;
+        Window* window_ = nullptr;
 
         Point start_pos_{};
-        bool is_dragging_ = false;
+        bool is_hauling_ = false;
     };
 
 }

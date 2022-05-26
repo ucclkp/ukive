@@ -136,10 +136,10 @@ namespace shell {
                     }
                 }
 
-                utl::Message msg;
-                msg.id = 10089;
-                msg.shared_data = thumbnail;
-                cycler_.post(&msg);
+                utl::Message* msg = utl::Message::get();
+                msg->id = 10089;
+                msg->shared_data = thumbnail;
+                cycler_.post(msg);
             } else {
                 std::unique_lock<std::mutex> lk(cv_sync_);
                 cv_.wait(lk, [this] { return cv_pred_; });

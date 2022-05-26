@@ -151,8 +151,7 @@ namespace win {
         solid_brush_.reset();
         bitmap_brush_.reset();
         matrix_.identity();
-        opacity_stack_ = {};
-        drawing_state_stack_ = {};
+        save_stack_.clear();
     }
 
     CyroBuffer* CyroRenderTargetD2D::getBuffer() const {
@@ -361,25 +360,38 @@ namespace win {
     }
 
     void CyroRenderTargetD2D::save() {
-        utl::win::ComPtr<ID2D1Factory> factory;
-        rt_->GetFactory(&factory);
+        StackData* data;
+        if (save_stack_.has_space()) {
+            auto& sb = save_stack_.push();
+            sb.opacity = opacity_;
+            data = &sb;
+        } else {
+            save_stack_.push({ opacity_, {} });
+            data = &save_stack_.top();
+        }
 
-        utl::win::ComPtr<ID2D1DrawingStateBlock> drawingStateBlock;
-        factory->CreateDrawingStateBlock(&drawingStateBlock);
-        rt_->SaveDrawingState(drawingStateBlock.get());
+        if (data->state_block) {
+            rt_->SaveDrawingState(data->state_block.get());
+        } else {
+            utl::win::ComPtr<ID2D1Factory> factory;
+            rt_->GetFactory(&factory);
 
-        opacity_stack_.push(opacity_);
-        drawing_state_stack_.push(drawingStateBlock);
+            HRESULT hr = factory->CreateDrawingStateBlock(&data->state_block);
+            if (SUCCEEDED(hr)) {
+                rt_->SaveDrawingState(data->state_block.get());
+            }
+        }
     }
 
     void CyroRenderTargetD2D::restore() {
-        if (drawing_state_stack_.empty()) {
+        if (save_stack_.empty()) {
+            ubassert(false);
             return;
         }
 
-        opacity_ = opacity_stack_.top();
-
-        auto drawingStateBlock = drawing_state_stack_.top().get();
+        auto& sb = save_stack_.top();
+        opacity_ = sb.opacity;
+        auto drawingStateBlock = sb.state_block.get();
 
         D2D1_DRAWING_STATE_DESCRIPTION desc;
         drawingStateBlock->GetDescription(&desc);
@@ -393,8 +405,7 @@ namespace win {
 
         rt_->RestoreDrawingState(drawingStateBlock);
 
-        opacity_stack_.pop();
-        drawing_state_stack_.pop();
+        save_stack_.pop();
 
         solid_brush_->SetOpacity(opacity_);
         bitmap_brush_->SetOpacity(opacity_);

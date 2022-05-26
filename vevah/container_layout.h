@@ -24,9 +24,13 @@ namespace vevah {
         void onLayout(
             const ukive::Rect& new_bounds,
             const ukive::Rect& old_bounds) override;
+        bool onInputEvent(ukive::InputEvent* e) override;
+        void onDrawOverChildren(ukive::Canvas* canvas) override;
 
     private:
         using super = LayoutView;
+
+        bool is_haul_in_ = false;
     };
 
 }

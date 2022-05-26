@@ -270,14 +270,13 @@ namespace ukive {
                 break;
             }
             consumed = true;
+            saved_pt_ = e->getPointerType();
 
             if (e->getWheelGranularity() == InputEvent::WG_HIGH_PRECISE) {
-                saved_pt_ = InputEvent::PT_NONE;
                 scroller_.finish();
                 scroller_.bezier(
                     0, getContext().dp2px(10 * wheel), true);
             } else {
-                saved_pt_ = e->getPointerType();
                 scroller_.bezier(
                     0, getContext().dp2px(6 * wheel), false);
             }

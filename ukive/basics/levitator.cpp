@@ -6,6 +6,7 @@
 
 #include "levitator.h"
 
+#include "ukive/diagnostic/input_tracker.h"
 #include "ukive/event/input_event.h"
 #include "ukive/views/layout/root_layout.h"
 #include "ukive/window/window.h"
@@ -74,6 +75,58 @@ namespace ukive {
         frame_view_->addView(content_view_);
     }
 
+    void Levitator::leaveFromInside() {
+        if (!frame_view_ || !window_) {
+            return;
+        }
+
+        bool hit = false;
+        auto liv = window_->getLastInputView();
+        View* cur = liv;
+        while (cur) {
+            if (cur == frame_view_) {
+                hit = true;
+                break;
+            }
+            cur = cur->getParent();
+        }
+
+        if (!hit) return;
+
+        InputEvent ev;
+        ev.setEvent(InputEvent::EV_LEAVE);
+        ev.setIsNoDispatch(true);
+        INPUT_TRACK_PRINT("Levitator", &e);
+        liv->dispatchInputEvent(&ev);
+        window_->setLastInputView(nullptr);
+    }
+
+    void Levitator::leaveFromOutside() {
+        if (!frame_view_ || !window_) {
+            return;
+        }
+
+        bool hit = false;
+        auto liv = window_->getLastInputView();
+        View* cur = liv;
+        while (cur) {
+            if (cur == frame_view_) {
+                hit = true;
+                break;
+            }
+            cur = cur->getParent();
+        }
+
+        if (hit) return;
+
+        InputEvent ev;
+        ev.setEvent(InputEvent::EV_LEAVE);
+        ev.setIsNoDispatch(true);
+        INPUT_TRACK_PRINT("Levitator", &e);
+        liv->dispatchInputEvent(&ev);
+        window_->setLastInputView(nullptr);
+    }
+
     void Levitator::setLayoutWidth(int width) {
         width_ = width;
         if (frame_view_) {
@@ -126,6 +179,21 @@ namespace ukive {
 
     void Levitator::setOutsideTouchable(bool touchable) {
         outside_touchable_ = touchable;
+        if (frame_view_) {
+            frame_view_->setReceiveOutsideInputEvent(touchable);
+            leaveFromOutside();
+        }
+    }
+
+    void Levitator::setInputEnabled(bool enabled) {
+        if (enabled == input_enabled_) {
+            return;
+        }
+
+        input_enabled_ = enabled;
+        if (!enabled && !is_dismissing_) {
+            leaveFromInside();
+        }
     }
 
     void Levitator::setDismissByTouchOutside(bool enable) {
@@ -136,6 +204,17 @@ namespace ukive {
         if (!v) {
             return;
         }
+
+        if (content_view_) {
+            if (frame_view_) {
+                v->setLayoutSize(width_, height_);
+                frame_view_->removeAllViews();
+                frame_view_->addView(v);
+            } else {
+                delete content_view_;
+            }
+        }
+
         content_view_ = v;
     }
 
@@ -165,6 +244,10 @@ namespace ukive {
 
     bool Levitator::isDismissByTouchOutside() const {
         return dismiss_by_touch_outside_;
+    }
+
+    bool Levitator::isInputEnabled() const {
+        return input_enabled_;
     }
 
     View* Levitator::getContentView() const {
@@ -197,7 +280,7 @@ namespace ukive {
 
         createFrameView(c);
 
-        is_marked_as_dismissing_ = false;
+        is_dismissing_ = false;
 
         frame_view_->setLayoutSize(width_, height_);
 
@@ -209,6 +292,9 @@ namespace ukive {
 
         window_ = w;
         is_showing_ = true;
+        if (!outside_touchable_) {
+            leaveFromOutside();
+        }
     }
 
     void Levitator::show(View* anchor, int gravity, const SnapInfo& info) {
@@ -234,7 +320,7 @@ namespace ukive {
         auto c = w->getContext();
         createFrameView(c);
 
-        is_marked_as_dismissing_ = false;
+        is_dismissing_ = false;
 
         frame_view_->setLayoutSize(width_, height_);
 
@@ -248,6 +334,9 @@ namespace ukive {
 
         window_ = w;
         is_showing_ = true;
+        if (!outside_touchable_) {
+            leaveFromOutside();
+        }
     }
 
     void Levitator::update(int x, int y) {
@@ -324,7 +413,7 @@ namespace ukive {
     }
 
     void Levitator::dismissing() {
-        is_marked_as_dismissing_ = true;
+        is_dismissing_ = true;
     }
 
     void Levitator::dismiss() {
@@ -375,6 +464,10 @@ namespace ukive {
     }
 
     bool Levitator::LevFrameView::dispatchInputEvent(InputEvent* e) {
+        if (!levitator_->input_enabled_) {
+            return false;
+        }
+
         // Levitator 模拟一个独立的窗口，未消费的事件不应该继续传递。
         SimpleLayout::dispatchInputEvent(e);
 
@@ -382,7 +475,7 @@ namespace ukive {
         if (e->isTouchEvent()) {
             return true;
         }
-        return !levitator_->is_marked_as_dismissing_;
+        return !levitator_->is_dismissing_;
     }
 
     bool Levitator::LevFrameView::onHookInputEvent(InputEvent* e) {

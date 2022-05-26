@@ -107,10 +107,10 @@
       <AdditionalDependencies>ukive.lib;utils.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>$(SolutionDir)necro.exe -g -r "$(ProjectDir)resources" -b "$(SolutionDir)build\"</Command>
+      <Command>$(SolutionDir)necro.exe -g -r "$(ProjectDir)resources" -b "$(SolutionDir)build" -n "$(ProjectName)"</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>$(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro" -d "$(OutDir)necro\"</Command>
+      <Command>$(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro\$(ProjectName)" -d "$(OutDir)necro\$(ProjectName)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -134,10 +134,10 @@
       <AdditionalDependencies>ukive.lib;utils.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>$(SolutionDir)necro.exe -g -r "$(ProjectDir)resources" -b "$(SolutionDir)build\"</Command>
+      <Command>$(SolutionDir)necro.exe -g -r "$(ProjectDir)resources" -b "$(SolutionDir)build" -n "$(ProjectName)"</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>$(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro" -d "$(OutDir)necro\"</Command>
+      <Command>$(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro\$(ProjectName)" -d "$(OutDir)necro\$(ProjectName)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -157,10 +157,10 @@
       <AdditionalDependencies>ukive.lib;utils.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>$(SolutionDir)necro.exe -g -r "$(ProjectDir)resources" -b "$(SolutionDir)build\"</Command>
+      <Command>$(SolutionDir)necro.exe -g -r "$(ProjectDir)resources" -b "$(SolutionDir)build" -n "$(ProjectName)"</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>$(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro" -d "$(OutDir)necro\"</Command>
+      <Command>$(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro\$(ProjectName)" -d "$(OutDir)necro\$(ProjectName)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -184,10 +184,10 @@
       <AdditionalDependencies>ukive.lib;utils.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>$(SolutionDir)necro.exe -g -r "$(ProjectDir)resources" -b "$(SolutionDir)build\"</Command>
+      <Command>$(SolutionDir)necro.exe -g -r "$(ProjectDir)resources" -b "$(SolutionDir)build" -n "$(ProjectName)"</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>$(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro" -d "$(OutDir)necro\"</Command>
+      <Command>$(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro\$(ProjectName)" -d "$(OutDir)necro\$(ProjectName)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

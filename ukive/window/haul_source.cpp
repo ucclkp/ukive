@@ -20,7 +20,10 @@ namespace ukive {
           delegate_(d) {}
 
     void HaulSource::ignite(View* v, InputEvent* e) {
-        if (is_dragging_) {
+        if (!v || !e || !v->getWindow()) {
+            return;
+        }
+        if (is_hauling_) {
             return;
         }
         if (!delegate_->canHaul(this)) {
@@ -29,18 +32,22 @@ namespace ukive {
 
         switch (e->getEvent()) {
         case InputEvent::EVM_DOWN:
+        case InputEvent::EVT_DOWN:
             if (v->isPressed()) {
                 start_pos_ = e->getPos();
             }
             break;
 
         case InputEvent::EVM_MOVE:
+        case InputEvent::EVT_MOVE:
             if (v->isPressed()) {
                 auto d = e->getPos() - start_pos_;
                 int r = v->getContext().dp2pxi(kMouseDraggingThreshold);
                 if (d.lengsq() > r * r) {
-                    v->getWindow()->startHaul(this);
-                    is_dragging_ = true;
+                    is_hauling_ = true;
+                    window_ = v->getWindow();
+                    window_->startHaul(this);
+                    delegate_->onHaulStarted(this, v, e);
                 }
             }
             break;
@@ -51,11 +58,19 @@ namespace ukive {
     }
 
     bool HaulSource::brake(InputEvent* e) {
-        delegate_->onHauling(this, e);
+        if (!is_hauling_) {
+            return true;
+        }
+
+        if (!delegate_->onHauling(this, e)) {
+            stop();
+            return true;
+        }
 
         switch (e->getEvent()) {
         case InputEvent::EVM_UP:
             if (e->getMouseKey() == InputEvent::MK_LEFT) {
+                stop();
                 return true;
             }
             break;
@@ -63,11 +78,28 @@ namespace ukive {
         default:
             break;
         }
+
         return false;
     }
 
+    void HaulSource::stop() {
+        if (is_hauling_) {
+            is_hauling_ = false;
+            window_->stopHaul(this);
+            delegate_->onHaulStopped(this);
+        }
+    }
+
     void HaulSource::cancel() {
-        delegate_->onHaulStopped(this);
+        if (is_hauling_) {
+            is_hauling_ = false;
+            window_->stopHaul(this);
+            delegate_->onHaulCancelled(this);
+        }
+    }
+
+    int HaulSource::getId() const {
+        return id_;
     }
 
 }

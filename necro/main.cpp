@@ -13,23 +13,33 @@
 
 #include "necro/copy_processor.h"
 #include "necro/layout_processor.h"
+#include "necro/layout_constants.h"
 #include "necro/resource_header_processor.h"
 
 
 namespace fs = std::filesystem;
 
-int processXMLFiles(const fs::path& res_path, const fs::path& build_path) {
+int processXMLFiles(
+    const fs::path& res_path,
+    const fs::path& build_path,
+    const std::u16string_view& app_name)
+{
     fs::path layout_xml_file = res_path / u"layout";
     fs::path header_file = res_path / u"necro_resources_id.h";
     fs::path build_res_file = build_path / u"necro";
+
+    if (!app_name.empty()) {
+        build_res_file /= app_name;
+    }
 
     LOG(Log::INFO) << "Start processing...";
     LOG(Log::INFO) << "Resource path: " << res_path;
     LOG(Log::INFO) << "Build path: " << build_path;
 
     bool xml_changed;
+    auto layout_out_dir = build_res_file / u"layout";
     necro::LayoutProcessor layout_processor;
-    if (layout_processor.process(layout_xml_file, build_res_file, &xml_changed)) {
+    if (layout_processor.process(layout_xml_file, layout_out_dir, &xml_changed)) {
         if (!xml_changed) {
             return 0;
         }
@@ -45,7 +55,7 @@ int processXMLFiles(const fs::path& res_path, const fs::path& build_path) {
         }
 
         if (xml_changed) {
-            std::ofstream necro_cache(build_res_file / u"necro_histories", std::ios::binary | std::ios::in);
+            std::ofstream necro_cache(layout_out_dir / necro::kLayoutHistoryFileName, std::ios::binary | std::ios::in);
             if (necro_cache.good()) {
                 uint8_t available = 1;
                 necro_cache.write(reinterpret_cast<const char*>(&available), 1);
@@ -82,14 +92,23 @@ int processGeneratorMode() {
         return 1;
     }
 
+    std::u16string app_name;
+    if (utl::CommandLine::hasName("app_name")) {
+        app_name = utl::CommandLine::getValue("app_name");
+    } else if (utl::CommandLine::hasName("n")) {
+        app_name = utl::CommandLine::getValue("n");
+    }
+
     utl::trim(&res_path_param, u"\"");
     utl::trim(&build_path_param, u"\"");
+    utl::trim(&app_name, u"\"");
+    utl::trim(&app_name);
 
     std::error_code ec;
     auto resource_path = std::filesystem::absolute(res_path_param, ec);
     auto build_path = std::filesystem::absolute(build_path_param, ec);
     if (!resource_path.empty() && !build_path.empty()) {
-        return processXMLFiles(resource_path, build_path);
+        return processXMLFiles(resource_path, build_path, app_name);
     }
 
     LOG(Log::ERR) << "Invalid params: Cannot parse path!";

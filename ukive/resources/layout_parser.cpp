@@ -41,16 +41,19 @@
 #include "necro/layout_constants.h"
 
 
-#define VIEW_CONSTRUCTOR(name)  \
-    handler_map_[#name] = [](Context c, AttrsRef attrs)->View* {  \
+#define VIEW_CONSTRUCTOR(name) {    \
+    auto& info = view_map_[#name];  \
+    info.is_layout = std::is_base_of<LayoutView, name>::value;  \
+    info.creator = [](Context c, AttrsRef attrs)->View* {   \
         return new name(c, attrs);  \
-    };
+    };  \
+}
 
 
 namespace ukive {
 
-    LayoutParser::Map LayoutParser::handler_map_;
-    LayoutParser::Map LayoutParser::handler_map2_;
+    LayoutParser::ViewMap LayoutParser::view_map_;
+    LayoutParser::ViewMap LayoutParser::view_map2_;
 
     LayoutParser::LayoutParser()
         : has_read_lim_(false),
@@ -77,25 +80,47 @@ namespace ukive {
         VIEW_CONSTRUCTOR(SimpleLayout);
         VIEW_CONSTRUCTOR(SequenceLayout);
         VIEW_CONSTRUCTOR(ListView);
-        VIEW_CONSTRUCTOR(NonClientLayout);
+        //VIEW_CONSTRUCTOR(NonClientLayout);
         VIEW_CONSTRUCTOR(RestraintLayout);
-        VIEW_CONSTRUCTOR(RootLayout);
+        //VIEW_CONSTRUCTOR(RootLayout);
         VIEW_CONSTRUCTOR(ScrollView);
         VIEW_CONSTRUCTOR(TabStripView);
         VIEW_CONSTRUCTOR(TabView);
     }
 
     // static
-    void LayoutParser::addViewName(const std::string& name, const Handler& ctor) {
-        handler_map2_[name] = ctor;
+    void LayoutParser::addViewName(const std::string& name, bool is_layout, Creator&& ctor) {
+        auto& info = view_map2_[name];
+        info.is_layout = is_layout;
+        info.creator = std::move(ctor);
     }
 
     // static
     void LayoutParser::removeViewName(const std::string& name) {
-        auto it = handler_map2_.find(name);
-        if (it != handler_map2_.end()) {
-            handler_map2_.erase(it);
+        auto it = view_map2_.find(name);
+        if (it != view_map2_.end()) {
+            view_map2_.erase(it);
         }
+    }
+
+    // static
+    View* LayoutParser::createView(const std::string& name, Context c, AttrsRef attrs) {
+        Creator* handler;
+        auto it = view_map_.find(name);
+        if (it != view_map_.end()) {
+            handler = &it->second.creator;
+        } else {
+            auto it2 = view_map2_.find(name);
+            if (it2 != view_map2_.end()) {
+                handler = &it2->second.creator;
+            } else {
+                LOG(Log::ERR) << "Cannot find View: " << name;
+                return nullptr;
+            }
+        }
+
+        auto& view_constructor = *handler;
+        return view_constructor(c, attrs);
     }
 
     // static
@@ -141,8 +166,7 @@ namespace ukive {
             has_read_lim_ = true;
 
             auto rm = Application::getResourceManager();
-            auto file_path = rm->getResRootPath();
-            file_path.append(u"necro");
+            auto file_path = rm->getNecroPath() / u"layout";
             auto lm_file_path = file_path / necro::kLayoutIdFileName;
 
             std::ifstream id_file_reader(lm_file_path, std::ios::in | std::ios::binary);
@@ -231,22 +255,7 @@ namespace ukive {
             RadioButton::StartGroup();
             cur_view = *parent;
         } else {
-            Handler* handler;
-            auto it = handler_map_.find(element->tag_name);
-            if (it != handler_map_.end()) {
-                handler = &it->second;
-            } else {
-                auto it2 = handler_map2_.find(element->tag_name);
-                if (it2 != handler_map2_.end()) {
-                    handler = &it2->second;
-                } else {
-                    LOG(Log::ERR) << "Cannot find View: " << element->tag_name;
-                    return false;
-                }
-            }
-
-            auto& view_constructor = *handler;
-            cur_view = view_constructor(context_, element->attrs);
+            cur_view = createView(element->tag_name, context_, element->attrs);
             if (!*parent) {
                 *parent = cur_view;
                 auto lp = root_parent_->makeExtraLayoutInfo(element->attrs);

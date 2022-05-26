@@ -228,12 +228,6 @@ namespace ukive {
     }
 
     void LayoutView::isolateChild(View* child, bool attached, bool del) {
-        child->discardFocus();
-        child->discardMouseCapture();
-        child->discardTouchCapture();
-        child->discardPendingOperations();
-        child->resetLayoutStatus();
-
         if (child->isAttachedToWindow() && attached) {
             child->dispatchDetachFromWindow();
         }
@@ -389,12 +383,14 @@ namespace ukive {
                 }
             } else if (child->isReceiveOutsideInputEvent()) {
                 if (!consumed) {
-                    auto prev_target = getWindow()->getLastInputView();
+                    auto prev_lhv = getWindow()->getLastHaulView();
+                    auto prev_liv = getWindow()->getLastInputView();
                     e->setOutside(true);
                     consumed = child->dispatchInputEvent(e);
                     e->setOutside(false);
                     if (!wptr.expired() && isAttachedToWindow()) {
-                        getWindow()->setLastInputView(prev_target);
+                        getWindow()->setLastHaulView(prev_lhv);
+                        getWindow()->setLastInputView(prev_liv);
                     }
                 }
             }
@@ -520,6 +516,8 @@ namespace ukive {
         {
             is_hooked_ = true;
         } else if (e->getEvent() == InputEvent::EV_LEAVE ||
+            e->getEvent() == InputEvent::EV_HAUL_END ||
+            e->getEvent() == InputEvent::EV_HAUL_LEAVE ||
             e->getEvent() == InputEvent::EVM_UP ||
             e->getEvent() == InputEvent::EVT_UP)
         {

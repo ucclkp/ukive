@@ -16,17 +16,20 @@ namespace ukive {
     public:
         ResourceManager();
 
-        bool initialize();
+        bool initialize(const std::u16string_view& app_name);
         void destroy();
 
         const std::filesystem::path& getExeDirPath() const;
         const std::filesystem::path& getResRootPath() const;
+        const std::filesystem::path& getNecroPath() const;
 
         bool getFileData(const std::filesystem::path& p, std::string* out) const;
 
     private:
+        std::u16string app_name_;
         std::filesystem::path exe_dir_path_;
         std::filesystem::path resource_root_path_;
+        std::filesystem::path necro_path_;
     };
 
 }

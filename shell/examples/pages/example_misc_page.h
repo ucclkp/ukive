@@ -11,6 +11,8 @@
 #include "ukive/views/click_listener.h"
 #include "ukive/animation/animation_director.h"
 #include "ukive/graphics/vsyncable.h"
+#include "ukive/window/haul_delegate.h"
+#include "ukive/basics/levitator.h"
 
 
 namespace ukive {
@@ -18,6 +20,7 @@ namespace ukive {
     class CheckBox;
     class ImageView;
     class ComboBox;
+    class HaulSource;
 }
 
 namespace shell {
@@ -26,7 +29,8 @@ namespace shell {
         public ukive::Page,
         public ukive::OnClickListener,
         public ukive::AnimationDirectorListener,
-        public ukive::VSyncable
+        public ukive::VSyncable,
+        public ukive::HaulDelegate
     {
     public:
         explicit ExampleMiscPage(ukive::Window* w);
@@ -47,8 +51,18 @@ namespace shell {
             uint32_t display_freq,
             uint32_t real_interval) override;
 
+        // ukive::HaulDelegate
+        void onHaulStarted(
+            ukive::HaulSource* src,
+            ukive::View* v, ukive::InputEvent* e) override;
+        void onHaulStopped(ukive::HaulSource* src) override;
+        void onHaulCancelled(ukive::HaulSource* src) override;
+        bool onHauling(ukive::HaulSource* src, ukive::InputEvent* e) override;
+
     private:
+        ukive::Levitator levitator_;
         ukive::AnimationDirector director_;
+        std::unique_ptr<ukive::HaulSource> haul_src_;
 
         ukive::Button* test_button_ = nullptr;
         ukive::ImageView* image_view_ = nullptr;

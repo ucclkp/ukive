@@ -18,17 +18,24 @@ namespace ukive {
     ResourceManager::ResourceManager() {
     }
 
-    bool ResourceManager::initialize() {
+    bool ResourceManager::initialize(const std::u16string_view& app_name) {
         exe_dir_path_ = utl::getExecFileName(true);
         if (exe_dir_path_.empty()) {
             return false;
         }
+
+        app_name_ = app_name;
 
 #ifdef OS_MAC
         resource_root_path_ = exe_dir_path_.parent_path() / u"Resources";
 #else
         resource_root_path_ = exe_dir_path_;
 #endif
+
+        necro_path_ = resource_root_path_ / u"necro";
+        if (!app_name_.empty()) {
+            necro_path_ /= app_name_;
+        }
         return true;
     }
 
@@ -41,6 +48,10 @@ namespace ukive {
 
     const std::filesystem::path& ResourceManager::getResRootPath() const {
         return resource_root_path_;
+    }
+
+    const std::filesystem::path& ResourceManager::getNecroPath() const {
+        return necro_path_;
     }
 
     bool ResourceManager::getFileData(

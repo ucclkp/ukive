@@ -6,6 +6,9 @@
 
 #include "control_list_source.h"
 
+#include "utils/strings/string_utils.hpp"
+
+#include "ukive/resources/layout_parser.h"
 #include "ukive/views/list/list_item.h"
 #include "ukive/views/text_view.h"
 #include "ukive/views/button.h"
@@ -28,8 +31,40 @@ namespace {
 namespace vevah {
 
     ControlListSource::ControlListSource() {
-        data_.push_back({ u"Button", "Button" });
-        data_.push_back({ u"TextViiiiii", "TextView" });
+        auto& map = ukive::LayoutParser::getViewMap();
+        auto& map2 = ukive::LayoutParser::getViewMap2();
+
+        // 预设非容器
+        for (const auto& pair : map) {
+            if (!pair.second.is_layout) {
+                data_.push_back(
+                    { utl::UTF8ToUTF16(pair.first), pair.first });
+            }
+        }
+
+        // 自定义非容器
+        for (const auto& pair : map2) {
+            if (!pair.second.is_layout) {
+                data_.push_back(
+                    { utl::UTF8ToUTF16(pair.first), pair.first });
+            }
+        }
+
+        // 预设容器
+        for (const auto& pair : map) {
+            if (pair.second.is_layout) {
+                data_.push_back(
+                    { utl::UTF8ToUTF16(pair.first), pair.first });
+            }
+        }
+
+        // 自定义容器
+        for (const auto& pair : map2) {
+            if (pair.second.is_layout) {
+                data_.push_back(
+                    { utl::UTF8ToUTF16(pair.first), pair.first });
+            }
+        }
     }
 
     ukive::ListItem* ControlListSource::onCreateListItem(
@@ -39,6 +74,7 @@ namespace vevah {
         auto bt = new ukive::Button(parent->getContext());
         bt->setShadowRadius(0);
         bt->setOnClickListener(router);
+        bt->setOnInputEventDelegate(router);
         bt->setLayoutSize(ukive::View::LS_FILL, ukive::View::LS_AUTO);
 
         auto item = new CtrlListItem(bt);
@@ -57,6 +93,10 @@ namespace vevah {
 
     size_t ControlListSource::onGetListDataCount(ukive::LayoutView* parent) const {
         return data_.size();
+    }
+
+    const std::string& ControlListSource::getName(size_t dpos) const {
+        return data_[dpos].name;
     }
 
 }

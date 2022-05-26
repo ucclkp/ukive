@@ -368,10 +368,10 @@ namespace win {
         auto data = new MessageData();
         data->frame = video_frame_;
 
-        utl::Message msg;
-        msg.id = MSG_RENDER_SURFACE;
-        msg.shared_data.reset(data);
-        cycler_.post(&msg);
+        utl::Message* msg = utl::Message::get();
+        msg->id = MSG_RENDER_SURFACE;
+        msg->shared_data.reset(data);
+        cycler_.post(msg);
     }
 
     HRESULT MediaPlayerWin::onReadFileComplete(IMFAsyncResult* result) {

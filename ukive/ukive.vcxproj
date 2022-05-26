@@ -229,6 +229,7 @@
     <ClInclude Include="graphics\3d\scene.h" />
     <ClInclude Include="graphics\byte_data.h" />
     <ClInclude Include="graphics\canvas.h" />
+    <ClInclude Include="graphics\canvas_stack.hpp" />
     <ClInclude Include="graphics\colors\color.h" />
     <ClInclude Include="graphics\colors\icc\icc_profile.h" />
     <ClInclude Include="graphics\colors\icc\icc_types.h" />

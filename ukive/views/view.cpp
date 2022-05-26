@@ -101,7 +101,10 @@ namespace ukive {
     }
 
     ViewAnimatorParams& View::animeParams() {
-        return anime_params_;
+        if (!anime_params_) {
+            anime_params_ = std::make_unique<ViewAnimatorParams>();
+        }
+        return *anime_params_;
     }
 
     void View::setId(int id) {
@@ -141,11 +144,7 @@ namespace ukive {
         visibility_ = visibility;
 
         if (visibility_ != SHOW) {
-            discardFocus();
-            discardMouseCapture();
-            discardTouchCapture();
-            discardPendingOperations();
-            resetLastInputView();
+            cleanInteracted();
         }
 
         if (need_layout) {
@@ -164,11 +163,7 @@ namespace ukive {
         is_enabled_ = enable;
 
         if (!is_enabled_) {
-            discardFocus();
-            discardMouseCapture();
-            discardTouchCapture();
-            discardPendingOperations();
-            resetLastInputView();
+            cleanInteracted();
         }
 
         updateBackgroundState();
@@ -686,8 +681,12 @@ namespace ukive {
     }
 
     void View::transformBounds(Rect* bounds) const {
+        if (!anime_params_) {
+            return;
+        }
+
         Matrix2x3F matrix;
-        anime_params_.generateMatrix(bounds->x(), bounds->y(), &matrix);
+        anime_params_->generateMatrix(bounds->x(), bounds->y(), &matrix);
 
         PointF lt, tr, rb, bl;
         matrix.transformRect(RectF(*bounds), &lt, &tr, &rb, &bl);
@@ -842,17 +841,18 @@ namespace ukive {
 
         // 应用动画变量
         canvas->save();
-        canvas->setOpacity(
-            float(anime_params_.getAlpha()*canvas->getOpacity()));
-
-        Matrix2x3F anim_m;
-        anime_params_.generateMatrix(0, 0, &anim_m);
-        canvas->concat(anim_m);
+        if (anime_params_) {
+            canvas->setOpacity(
+                float(anime_params_->getAlpha() * canvas->getOpacity()));
+            Matrix2x3F anim_m;
+            anime_params_->generateMatrix(0, 0, &anim_m);
+            canvas->concat(anim_m);
+        }
 
         bool has_bg = needDrawBackground();
         bool has_shadow = (has_bg && (shadow_radius_ > 0) && shadow_effect_);
 
-        if (anime_params_.hasReveal()) {
+        if (anime_params_ && anime_params_->hasReveal()) {
             drawWithReveal(canvas, has_bg, has_shadow);
         } else {
             drawNormal(canvas, has_bg, has_shadow);
@@ -911,13 +911,13 @@ namespace ukive {
                     c->getBuffer()->getImageOptions());
                 offscreen.beginDraw();
                 offscreen.clear();
-                if (anime_params_.reveal().getType() == ViewRevealTVals::Type::Circle) {
-                    auto r = anime_params_.reveal().getRV(this);
+                if (anime_params_->reveal().getType() == ViewRevealTVals::Type::Circle) {
+                    auto r = anime_params_->reveal().getRV(this);
                     offscreen.fillCircle(
                         PointF(r.pos()), float(r.width()), bg_img.get());
                 } else {
                     offscreen.fillRect(
-                        RectF(anime_params_.reveal().getRV(this)), bg_img.get());
+                        RectF(anime_params_->reveal().getRV(this)), bg_img.get());
                 }
                 offscreen.endDraw();
                 auto buffer = static_cast<OffscreenBuffer*>(offscreen.getBuffer());
@@ -943,15 +943,15 @@ namespace ukive {
         cur_c.endDraw();
         auto c_img = cur_c.extractImage();
         if (c_img) {
-            if (anime_params_.reveal().getType() == ViewRevealTVals::Type::Circle) {
+            if (anime_params_->reveal().getType() == ViewRevealTVals::Type::Circle) {
                 c->pushClip(RectF(0, 0, float(getWidth()), float(getHeight())));
-                auto r = anime_params_.reveal().getRV(this);
+                auto r = anime_params_->reveal().getRV(this);
                 c->fillCircle(
                     PointF(r.pos()), float(r.width()), c_img.get());
                 c->popClip();
             } else {
                 c->fillRect(
-                    RectF(anime_params_.reveal().getRV(this)), c_img.get());
+                    RectF(anime_params_->reveal().getRV(this)), c_img.get());
             }
         }
     }
@@ -1042,6 +1042,14 @@ namespace ukive {
             e->getEvent() != InputEvent::EV_LEAVE ||
             window_->getLastInputView() == this);
 
+        /**
+         * EV_HAUL_LEAVE 只能发送给最后接受输入的 View，这里不做判断，
+         * 由调用方保证。
+         */
+        ubassert(
+            e->getEvent() != InputEvent::EV_HAUL_LEAVE ||
+            window_->getLastHaulView() == this);
+
         std::weak_ptr<void> wptr = cur_ev_;
         bool consumed = processInputEvent(e);
         if (wptr.expired() || !isAttachedToWindow()) {
@@ -1055,9 +1063,8 @@ namespace ukive {
         if (consumed &&
             e->isMouseEvent() &&
             cursor_ != Cursor::NONE &&
-            e->getEvent() != InputEvent::EV_DRAG &&
-            e->getEvent() != InputEvent::EV_DRAG_END &&
-            e->getEvent() != InputEvent::EV_LEAVE)
+            e->getEvent() != InputEvent::EV_LEAVE &&
+            e->getEvent() != InputEvent::EV_HAUL_LEAVE)
         {
             window_->setCurrentCursor(cursor_);
         }
@@ -1081,10 +1088,14 @@ namespace ukive {
          * 这里用于更新最后接受输入的 View，但只限于接收到以下几个事件时更新，
          * 以确保操作的合理性。原则上只能于一次输入流程的开始事件时更新。
          */
-        if (e->getEvent() == InputEvent::EVM_DOWN ||
-            e->getEvent() == InputEvent::EVM_MOVE)
+        if (e->isMouseEvent() &&
+            (e->getEvent() == InputEvent::EVM_DOWN ||
+            e->getEvent() == InputEvent::EVM_MOVE ||
+            e->getEvent() == InputEvent::EV_HAUL))
         {
-            auto prev_target = window_->getLastInputView();
+            bool is_haul = e->getEvent() == InputEvent::EV_HAUL;
+            View* prev_target = is_haul ?
+                window_->getLastHaulView() : window_->getLastInputView();
             if (prev_target == this) {
                 return;
             }
@@ -1115,7 +1126,12 @@ namespace ukive {
                         << "] consumed: " << consumed << " cancel: " << cancel;*/
 
                     InputEvent ev(*e);
-                    ev.setEvent(InputEvent::EV_LEAVE);
+                    // 拖拽事件引起的离开要和普通离开区分开
+                    if (is_haul) {
+                        ev.setEvent(InputEvent::EV_HAUL_LEAVE);
+                    } else {
+                        ev.setEvent(InputEvent::EV_LEAVE);
+                    }
                     ev.setIsNoDispatch(true);
                     ev.setCancelled(cancel);
                     std::weak_ptr<void> wptr = cur_ev_;
@@ -1127,15 +1143,27 @@ namespace ukive {
                 }
             }
 
-            if (consumed) {
-                window_->setLastInputView(this);
-            } else if (need_null) {
-                window_->setLastInputView(nullptr);
+            if (is_haul) {
+                if (consumed) {
+                    window_->setLastHaulView(this);
+                } else if (need_null) {
+                    window_->setLastHaulView(nullptr);
+                }
+            } else {
+                if (consumed) {
+                    window_->setLastInputView(this);
+                } else if (need_null) {
+                    window_->setLastInputView(nullptr);
+                }
             }
-        } else if (e->getEvent() == InputEvent::EVT_DOWN ||
-            e->getEvent() == InputEvent::EVT_MOVE)
+        } else if (e->isTouchEvent() &&
+            (e->getEvent() == InputEvent::EVT_DOWN ||
+            e->getEvent() == InputEvent::EVT_MOVE ||
+            e->getEvent() == InputEvent::EV_HAUL))
         {
-            auto prev_target = window_->getLastInputView();
+            bool is_haul = e->getEvent() == InputEvent::EV_HAUL;
+            View* prev_target = is_haul ?
+                window_->getLastHaulView() : window_->getLastInputView();
             if (prev_target == this) {
                 return;
             }
@@ -1162,12 +1190,17 @@ namespace ukive {
 
                 if (send_leave) {
                     need_null = true;
-                    LOG(Log::INFO) << "========= SEND_LEAVE| this["
+                    /*LOG(Log::INFO) << "========= SEND_LEAVE| this["
                         << typeid(*this).name() << "] prev[" << (prev_target ? typeid(*prev_target).name() : "null")
-                        << "] consumed: " << consumed << " cancel: " << cancel;
+                        << "] consumed: " << consumed << " cancel: " << cancel;*/
 
                     InputEvent ev(*e);
-                    ev.setEvent(InputEvent::EV_LEAVE);
+                    // 拖拽事件引起的离开要和普通离开区分开
+                    if (is_haul) {
+                        ev.setEvent(InputEvent::EV_HAUL_LEAVE);
+                    } else {
+                        ev.setEvent(InputEvent::EV_LEAVE);
+                    }
                     ev.setIsNoDispatch(true);
                     ev.setCancelled(cancel);
                     std::weak_ptr<void> wptr = cur_ev_;
@@ -1179,10 +1212,18 @@ namespace ukive {
                 }
             }
 
-            if (consumed) {
-                window_->setLastInputView(this);
-            } else if (need_null) {
-                window_->setLastInputView(nullptr);
+            if (is_haul) {
+                if (consumed) {
+                    window_->setLastHaulView(this);
+                } else if (need_null) {
+                    window_->setLastHaulView(nullptr);
+                }
+            } else {
+                if (consumed) {
+                    window_->setLastInputView(this);
+                } else if (need_null) {
+                    window_->setLastInputView(nullptr);
+                }
             }
         }
     }
@@ -1243,6 +1284,42 @@ namespace ukive {
                 }
             }
         }
+    }
+
+    void View::resetLayoutStatus() {
+        is_measured_ = false;
+        is_layouted_ = false;
+        need_layout_ = true;
+        request_layout_ = false;
+    }
+
+    void View::resetLastHaulView() {
+        if (!window_) {
+            return;
+        }
+
+        if (window_->getLastHaulView() == this) {
+            window_->setLastHaulView(nullptr);
+        }
+    }
+
+    void View::resetLastInputView() {
+        if (!window_) {
+            return;
+        }
+
+        if (window_->getLastInputView() == this) {
+            window_->setLastInputView(nullptr);
+        }
+    }
+
+    void View::cleanInteracted() {
+        discardFocus();
+        discardMouseCapture();
+        discardTouchCapture();
+        discardPendingOperations();
+        resetLastHaulView();
+        resetLastInputView();
     }
 
     bool View::processPointerUp() {
@@ -1680,23 +1757,6 @@ namespace ukive {
         dispatchDiscardPendingOperations();
     }
 
-    void View::resetLayoutStatus() {
-        is_measured_ = false;
-        is_layouted_ = false;
-        need_layout_ = true;
-        request_layout_ = false;
-    }
-
-    void View::resetLastInputView() {
-        if (!window_) {
-            return;
-        }
-
-        if (window_->getLastInputView() == this) {
-            window_->setLastInputView(nullptr);
-        }
-    }
-
     View* View::findView(int id) {
         if (id_ == id) {
             return this;
@@ -1768,18 +1828,17 @@ namespace ukive {
             animator_->cancel();
         }
 
-        discardFocus();
-        discardMouseCapture();
-        discardTouchCapture();
-        discardPendingOperations();
-        resetLastInputView();
+        cleanInteracted();
+        //resetLayoutStatus();
         updateBackgroundState();
         updateForegroundState();
 
         if (bg_element_) {
+            bg_element_->resetState();
             bg_element_->notifyDetachedFromWindow();
         }
         if (fg_element_) {
+            fg_element_->resetState();
             fg_element_->notifyDetachedFromWindow();
         }
 
@@ -1792,7 +1851,12 @@ namespace ukive {
     }
 
     bool View::onInputEvent(InputEvent* e) {
-        if (e->getEvent() == InputEvent::EVM_WHEEL) {
+        if (e->getEvent() == InputEvent::EVM_WHEEL ||
+            e->getEvent() == InputEvent::EV_HAUL ||
+            e->getEvent() == InputEvent::EV_HAUL_END ||
+            e->getEvent() == InputEvent::EV_HAUL_LEAVE ||
+            e->getEvent() == InputEvent::EV_LEAVE)
+        {
             return false;
         }
         return is_clickable_ || is_dbclkable_;
@@ -1812,17 +1876,13 @@ namespace ukive {
 
     void View::onAncestorVisibilityChanged(View* ancestor, int visibility) {
         if (visibility_ == SHOW && visibility != SHOW) {
-            discardMouseCapture();
-            discardTouchCapture();
-            resetLastInputView();
+            cleanInteracted();
         }
     }
 
     void View::onAncestorEnableChanged(View* ancestor, bool enabled) {
         if (is_enabled_ && !enabled) {
-            discardMouseCapture();
-            discardTouchCapture();
-            resetLastInputView();
+            cleanInteracted();
         }
     }
 

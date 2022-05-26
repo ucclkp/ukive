@@ -6,6 +6,8 @@
 
 #include "container_layout.h"
 
+#include "ukive/graphics/canvas.h"
+
 
 namespace vevah {
 
@@ -24,6 +26,44 @@ namespace vevah {
         const ukive::Rect& old_bounds)
     {
 
+    }
+
+    bool ContainerLayout::onInputEvent(ukive::InputEvent* e) {
+        bool consumed = super::onInputEvent(e);
+
+        switch (e->getEvent()) {
+        case ukive::InputEvent::EV_HAUL:
+            is_haul_in_ = true;
+            requestDraw();
+            consumed = true;
+            break;
+
+        case ukive::InputEvent::EV_HAUL_END:
+            is_haul_in_ = false;
+            requestDraw();
+            consumed = true;
+            break;
+
+        case ukive::InputEvent::EV_HAUL_LEAVE:
+            is_haul_in_ = false;
+            requestDraw();
+            consumed = true;
+            break;
+
+        default:
+            break;
+        }
+
+        return consumed;
+    }
+
+    void ContainerLayout::onDrawOverChildren(ukive::Canvas* canvas) {
+        super::onDrawOverChildren(canvas);
+
+        if (is_haul_in_) {
+            canvas->fillRect(
+                ukive::RectF(getContentBounds()), ukive::Color::Grey500);
+        }
     }
 
 }

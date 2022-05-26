@@ -7,8 +7,10 @@
 #ifndef VEVAH_MAIN_WINDOW_H_
 #define VEVAH_MAIN_WINDOW_H_
 
-#include "ukive/window/window.h"
+#include "ukive/basics/levitator.h"
 #include "ukive/views/list/list_item_event_router.h"
+#include "ukive/window/haul_delegate.h"
+#include "ukive/window/window.h"
 
 
 namespace ukive {
@@ -22,7 +24,8 @@ namespace vevah {
 
     class MainWindow :
         public ukive::Window,
-        public ukive::ListItemEventListener
+        public ukive::ListItemEventListener,
+        public ukive::HaulDelegate
     {
     public:
         MainWindow();
@@ -37,6 +40,14 @@ namespace vevah {
             ukive::ListView* list_view,
             ukive::ListItem* item, ukive::View* v) override;
 
+        // ukive::HaulDelegate
+        void onHaulStarted(
+            ukive::HaulSource* src,
+            ukive::View* v, ukive::InputEvent* e) override;
+        void onHaulStopped(ukive::HaulSource* src) override;
+        void onHaulCancelled(ukive::HaulSource* src) override;
+        bool onHauling(ukive::HaulSource* src, ukive::InputEvent* e) override;
+
     private:
         using super = Window;
 
@@ -44,6 +55,9 @@ namespace vevah {
         ukive::ListView* ctrl_list_ = nullptr;
         ContainerLayout* container_layout_ = nullptr;
         ControlListSource* ctrl_source_ = nullptr;
+
+        ukive::Levitator levitator_;
+        std::unique_ptr<ukive::HaulSource> haul_src_;
     };
 
 }

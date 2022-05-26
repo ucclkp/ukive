@@ -91,9 +91,11 @@ namespace ukive {
         void setIgnoreMouseEvents(bool ignore);
         void setTranslucentType(TranslucentType type);
         void setStartupWindow(bool enable);
-        void setLastInputView(View* v);
         void setOwnership(bool myself);
         void setPurpose(const Purpose& p);
+
+        void setLastHaulView(View* v);
+        void setLastInputView(View* v);
 
         Rect getBounds() const;
         Rect getContentBounds() const;
@@ -105,7 +107,6 @@ namespace ukive {
         utl::Cycler* getCycler() const;
         Canvas* getCanvas() const;
         WindowFrameType getFrameType() const;
-        View* getLastInputView() const;
         View* getContentView() const;
         TitleBar* getTitleBar() const;
         WindowNative* getImpl() const;
@@ -115,6 +116,9 @@ namespace ukive {
         TranslucentType getTranslucentType() const;
         uint32_t getCloseMethods() const;
         Window* getParent() const;
+
+        View* getLastHaulView() const;
+        View* getLastInputView() const;
 
         bool isCreated() const;
         bool isShowing() const;
@@ -225,7 +229,7 @@ namespace ukive {
         enum CaptureRole {
             CAPR_NONE = 0,
             CAPR_NORM = 1 << 0,
-            CAPR_DRAG = 1 << 1,
+            CAPR_HAUL = 1 << 1,
         };
 
         void capturePointer(int role);
@@ -236,6 +240,7 @@ namespace ukive {
         void drawRootView(Canvas* canvas, const Rect& rect);
         void processDeviceLost();
         bool processPointerHolder(View* holder, InputEvent* e);
+        void processKeyForDebugView(InputEvent* e);
 
         Context context_;
         std::unique_ptr<WindowNative> impl_;
@@ -251,10 +256,12 @@ namespace ukive {
         View* touch_holder_;
         View* focus_holder_;
         View* focus_holder_backup_;
+        View* last_haul_view_ = nullptr;
         View* last_input_view_;
         int mouse_holder_ref_;
         int touch_holder_ref_;
         int capture_role_ = CAPR_NONE;
+        bool haul_lock_ = false;
         Window* parent_ = nullptr;
         HaulSource* haul_src_ = nullptr;
 

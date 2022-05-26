@@ -89,6 +89,7 @@ namespace ukive {
         void setShadowRadius(int radius);
         void setBackground(Element* element);
         void setOutsideTouchable(bool touchable);
+        void setInputEnabled(bool enabled);
 
         /**
          * 在点击外围区域时关闭本窗口。
@@ -107,6 +108,7 @@ namespace ukive {
         Element* getBackground() const;
         bool isOutsideTouchable() const;
         bool isDismissByTouchOutside() const;
+        bool isInputEnabled() const;
         View* getContentView() const;
         View* getFrameView() const;
 
@@ -124,11 +126,15 @@ namespace ukive {
     private:
         void createFrameView(Context c);
 
+        void leaveFromInside();
+        void leaveFromOutside();
+
         int width_;
         int height_;
         int shadow_radius_;
         bool outside_touchable_;
         bool dismiss_by_touch_outside_;
+        bool input_enabled_ = true;
         Margin margin_;
         Element* background_;
 
@@ -137,7 +143,7 @@ namespace ukive {
         LayoutView* frame_view_;
         OnInnerWindowEventListener* listener_ = nullptr;
         bool is_showing_;
-        bool is_marked_as_dismissing_ = false;
+        bool is_dismissing_ = false;
     };
 
 }

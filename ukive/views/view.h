@@ -205,9 +205,6 @@ namespace ukive {
         void discardTouchCapture();
         void discardPendingOperations();
 
-        void resetLayoutStatus();
-        void resetLastInputView();
-
         virtual View* findView(int id);
         virtual bool dispatchInputEvent(InputEvent* e);
         virtual void dispatchWindowFocusChanged(bool focus);
@@ -304,6 +301,12 @@ namespace ukive {
         void resetBackground();
         void resetForeground();
 
+        void resetLayoutStatus();
+        void resetLastHaulView();
+        void resetLastInputView();
+
+        void cleanInteracted();
+
         bool processPointerUp();
         bool processInputEvent(InputEvent* e);
 
@@ -360,7 +363,7 @@ namespace ukive {
 
         Cursor cursor_ = Cursor::ARROW;
 
-        ViewAnimatorParams anime_params_;
+        std::unique_ptr<ViewAnimatorParams> anime_params_;
         std::unique_ptr<ViewAnimator> animator_;
         std::unique_ptr<ShadowEffect> shadow_effect_;
         std::unique_ptr<LayoutInfo> layout_info_;

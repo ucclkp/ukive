@@ -29,11 +29,7 @@ float4 main(PixelInputType input) : SV_TARGET {
         int y = ry - radius;
         float4 color = shader_texture_.Load(int3(x, y, 0));
 
-        int index_x = i;
-        if (i > radius) {
-            index_x = 2 * radius - i;
-        }
-
+        int index_x = min(i, radius) * 2 - i;
         float weight = kernel_texture_.Load(int3(index_x, 0, 0));
         acc_alpha += color.w * weight;
     }

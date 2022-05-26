@@ -95,11 +95,11 @@ namespace ukive {
             return;
         }
 
-        utl::Message msg;
-        msg.id = MSG_VSYNC;
-        msg.ui1 = after_ts;
-        msg.ui2 = (uint64_t(refresh_rate) << 32) | uint32_t(real_interval);
-        cycler_.post(&msg);
+        utl::Message* msg = utl::Message::get();
+        msg->id = MSG_VSYNC;
+        msg->ui1 = after_ts;
+        msg->ui2 = (uint64_t(refresh_rate) << 32) | uint32_t(real_interval);
+        cycler_.post(msg);
     }
 
     void VSyncProvider::notifyCallbacks(

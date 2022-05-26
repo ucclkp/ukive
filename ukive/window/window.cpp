@@ -174,7 +174,15 @@ namespace ukive {
     }
 
     void Window::setCurrentCursor(Cursor cursor) {
-        impl_->setCurrentCursor(cursor);
+        /**
+         * 在拖拽时，用来起步的 View 可能处于捕获焦点的状态。
+         * 这种情况下，该 View 会更新光标样式，这显然不是我们想要的。
+         * 拖拽时的光标样式应该由光标所处的位置的 View 来决定。
+         * 因此在拖拽时的焦点 View 处理事件时，锁定光标样式。
+         */
+        if (!haul_lock_) {
+            impl_->setCurrentCursor(cursor);
+        }
     }
 
     void Window::setContentView(int layout_id) {
@@ -234,6 +242,10 @@ namespace ukive {
         is_startup_window_ = enable;
     }
 
+    void Window::setLastHaulView(View* v) {
+        last_haul_view_ = v;
+    }
+
     void Window::setLastInputView(View* v) {
         last_input_view_ = v;
     }
@@ -288,6 +300,10 @@ namespace ukive {
 
     WindowFrameType Window::getFrameType() const {
         return impl_->getFrameType();
+    }
+
+    View* Window::getLastHaulView() const {
+        return last_haul_view_;
     }
 
     View* Window::getLastInputView() const {
@@ -631,14 +647,14 @@ namespace ukive {
     void Window::startHaul(HaulSource* src) {
         haul_src_ = src;
         if (src) {
-            capturePointer(CAPR_DRAG);
+            capturePointer(CAPR_HAUL);
         }
     }
 
     void Window::stopHaul(HaulSource* src) {
         if (src == haul_src_) {
             haul_src_ = nullptr;
-            releasePointer(CAPR_DRAG);
+            releasePointer(CAPR_HAUL);
         }
     }
 
@@ -702,6 +718,7 @@ namespace ukive {
             return;
         }
 
+        bool sent_leave = mouse_holder_ == touch_holder_;
         if (mouse_holder_) {
             InputEvent e;
             e.setEvent(InputEvent::EV_LEAVE);
@@ -709,7 +726,7 @@ namespace ukive {
             mouse_holder_->dispatchInputEvent(&e);
         }
 
-        if (touch_holder_) {
+        if (!sent_leave && touch_holder_) {
             InputEvent e;
             e.setEvent(InputEvent::EV_LEAVE);
             e.setIsNoDispatch(true);
@@ -718,11 +735,20 @@ namespace ukive {
 
         if (haul_src_) {
             haul_src_->cancel();
+            haul_src_ = nullptr;
+
+            if (last_haul_view_) {
+                InputEvent e;
+                e.setEvent(InputEvent::EV_HAUL_LEAVE);
+                e.setIsNoDispatch(true);
+                last_haul_view_->dispatchInputEvent(&e);
+                last_haul_view_ = nullptr;
+            }
         }
 
         releaseMouse(true);
         releaseTouch(true);
-        releasePointer(CAPR_DRAG);
+        releasePointer(CAPR_HAUL);
 
         root_layout_->dispatchWindowFocusChanged(false);
     }
@@ -1062,6 +1088,7 @@ namespace ukive {
                 e->setIsNoDispatch(true);
                 e->setEvent(InputEvent::EV_LEAVE);
                 last_input_view_->dispatchInputEvent(e);
+                last_input_view_ = nullptr;
                 return false;
             }
 
@@ -1069,10 +1096,7 @@ namespace ukive {
         }
 
         bool ret = false;
-        InputEvent ev;
-        if (haul_src_) {
-            ev = *e;
-        }
+        InputEvent ev(*e);
 
         // 若有之前捕获过 Poiner 的 View 存在，则直接将所有 Poiner 事件
         // 直接发送至该 View。
@@ -1087,23 +1111,30 @@ namespace ukive {
                 parent = parent->getParent();
             }
 
+            // 参见使用 haul_lock_ 的地方的注释。
+            if (haul_src_) {
+                haul_lock_ = true;
+            }
+
             e->offsetInputPos(-total_left, -total_top);
             e->setIsNoDispatch(true);
             ret = holder->dispatchInputEvent(e);
+            haul_lock_ = false;
             if (!root_layout_) {
                 return ret;
             }
         }
 
         if (haul_src_) {
+            ev.setHaulSource(haul_src_);
             if (haul_src_->brake(e)) {
-                ev.setEvent(InputEvent::EV_DRAG_END);
+                ev.setEvent(InputEvent::EV_HAUL_END);
             } else {
-                ev.setEvent(InputEvent::EV_DRAG);
+                ev.setEvent(InputEvent::EV_HAUL);
             }
 
-            INPUT_TRACK_PRINT("Drag", &ev);
-            root_layout_->dispatchInputEvent(&ev);
+            INPUT_TRACK_PRINT("Haul", &ev);
+            ret = root_layout_->dispatchInputEvent(&ev);
         } else if (!valid_holder) {
             ret = root_layout_->dispatchInputEvent(e);
         }
@@ -1112,6 +1143,29 @@ namespace ukive {
             setDefaultCursor();
         }
         return ret;
+    }
+
+    void Window::processKeyForDebugView(InputEvent* e) {
+        if (e->getEvent() == InputEvent::EVK_DOWN &&
+            e->getKeyboardKey() == Keyboard::KEY_Q)
+        {
+            bool is_shift_key_pressed = Keyboard::isKeyPressed(Keyboard::KEY_SHIFT);
+            bool is_ctrl_key_pressed = Keyboard::isKeyPressed(Keyboard::KEY_CONTROL);
+            if (is_ctrl_key_pressed && is_shift_key_pressed) {
+                if (debug_drawer_) {
+                    debug_drawer_.reset();
+                    off_canvas_.reset();
+                } else {
+                    debug_drawer_ = std::make_unique<StatisticDrawer>(getContext());
+                }
+                requestDraw();
+            } else if (is_ctrl_key_pressed && !is_shift_key_pressed) {
+                if (debug_drawer_) {
+                    debug_drawer_->toggleMode();
+                    requestDraw();
+                }
+            }
+        }
     }
 
     bool Window::onInputEvent(InputEvent* e) {
@@ -1126,25 +1180,7 @@ namespace ukive {
         }
 
         if (e->isKeyboardEvent()) {
-            // debug view
-            if (e->getEvent() == InputEvent::EVK_DOWN && e->getKeyboardKey() == Keyboard::KEY_Q) {
-                bool is_shift_key_pressed = Keyboard::isKeyPressed(Keyboard::KEY_SHIFT);
-                bool is_ctrl_key_pressed = Keyboard::isKeyPressed(Keyboard::KEY_CONTROL);
-                if (is_ctrl_key_pressed && is_shift_key_pressed) {
-                    if (debug_drawer_) {
-                        debug_drawer_.reset();
-                        off_canvas_.reset();
-                    } else {
-                        debug_drawer_ = std::make_unique<StatisticDrawer>(getContext());
-                    }
-                    requestDraw();
-                } else if (is_ctrl_key_pressed && !is_shift_key_pressed) {
-                    if (debug_drawer_) {
-                        debug_drawer_->toggleMode();
-                        requestDraw();
-                    }
-                }
-            }
+            processKeyForDebugView(e);
 
             // TODO：某些 View 需要提前处理按键。
             // TODO：快捷键支持

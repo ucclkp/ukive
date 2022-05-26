@@ -372,7 +372,9 @@ namespace ukive {
             return false;
         }
 
-        if (e->getEvent() == InputEvent::EV_LEAVE) {
+        if (e->getEvent() == InputEvent::EV_LEAVE ||
+            e->getEvent() == InputEvent::EV_HAUL_LEAVE)
+        {
             for (size_t i = 0; i < base_text_->getSpanCount(); ++i) {
                 auto span = base_text_->getSpan(i);
                 if (span->getType() == Span::INTERACTABLE) {
@@ -820,9 +822,6 @@ namespace ukive {
             is_plkey_down_ = false;
             is_plkey_down_on_text_ = false;
             is_prkey_down_ = false;
-            if (is_selectable_ && e->isMouseEvent()) {
-                //setCursor(Cursor::ARROW);
-            }
             result = true;
             break;
         }
@@ -1012,6 +1011,12 @@ namespace ukive {
                 base_text_, is_editable_, is_selectable_, e->getKeyboardKey());
             break;
         }
+
+        case InputEvent::EV_HAUL:
+            break;
+
+        case InputEvent::EV_HAUL_LEAVE:
+            break;
 
         default:
             break;

@@ -84,7 +84,7 @@ namespace ukive {
         }
 
         res_mgr_.reset(new ResourceManager());
-        ret = res_mgr_->initialize();
+        ret = res_mgr_->initialize(options_.app_name);
         if (!ret) {
             LOG(Log::ERR) << "Failed to initialize ResourceManager";
         }

@@ -10,6 +10,7 @@
 
 namespace ukive {
 
+    class View;
     class InputEvent;
     class HaulSource;
 
@@ -18,10 +19,9 @@ namespace ukive {
         virtual ~HaulDelegate() = default;
 
         virtual bool canHaul(HaulSource* src) const { return true; }
-        virtual bool continueHaul(HaulSource* src, InputEvent* e) const { return true; }
 
-        virtual void onHaulStarted(HaulSource* src) {}
-        virtual void onHauling(HaulSource* src, InputEvent* e) {}
+        virtual void onHaulStarted(HaulSource* src, View* v, InputEvent* e) {}
+        virtual bool onHauling(HaulSource* src, InputEvent* e) { return false; }
         virtual void onHaulStopped(HaulSource* src) {}
         virtual void onHaulCancelled(HaulSource* src) {}
     };

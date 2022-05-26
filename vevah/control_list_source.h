@@ -29,6 +29,8 @@ namespace vevah {
             ukive::ListItemEventRouter* router, ukive::ListItem* item) override;
         size_t onGetListDataCount(ukive::LayoutView* parent) const override;
 
+        const std::string& getName(size_t dpos) const;
+
     private:
         struct ItemData {
             std::u16string text;

@@ -13,11 +13,12 @@
 
 #include "utils/xml/xml_structs.h"
 
-#include "ukive/views/view.h"
+#include "ukive/views/layout/layout_view.h"
 
 #define UKIVE_ADD_VIEW_NAME(name)  \
     ::ukive::LayoutParser::addViewName(  \
         #name,  \
+        std::is_base_of<::ukive::LayoutView, name>::value,  \
         [](::ukive::Context c, ::ukive::AttrsRef attrs)->::ukive::View* {  \
             return new ::name(c, attrs);  \
         });
@@ -30,19 +31,30 @@ namespace ukive {
 
     class LayoutParser {
     public:
-        using Handler = std::function<View* (Context c, AttrsRef attrs)>;
+        using Creator = std::function<View* (Context c, AttrsRef attrs)>;
+
+        struct ViewInfo {
+            bool is_layout;
+            Creator creator;
+        };
+
+        using ViewMap = std::map<std::string, ViewInfo>;
 
         LayoutParser();
 
         static void initialize();
 
-        static void addViewName(const std::string& name, const Handler& ctor);
+        static void addViewName(const std::string& name, bool is_layout, Creator&& ctor);
         static void removeViewName(const std::string& name);
+
+        static const ViewMap& getViewMap() { return view_map_; }
+        static const ViewMap& getViewMap2() { return view_map2_; }
+
+        static View* createView(const std::string& name, Context c, AttrsRef attrs);
 
         static View* from(Context c, LayoutView* parent, int layout_id);
 
     private:
-        using Map = std::map<std::string, Handler>;
         using ElementPtr = std::shared_ptr<utl::xml::Element>;
 
         View* parse(Context c, LayoutView* parent, int layout_id);
@@ -54,8 +66,8 @@ namespace ukive {
         LayoutView* root_parent_;
         std::map<int, std::filesystem::path> layout_id_map_;
 
-        static Map handler_map_;
-        static Map handler_map2_;
+        static ViewMap view_map_;
+        static ViewMap view_map2_;
     };
 
 }
