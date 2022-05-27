@@ -9,7 +9,7 @@
 #include "utils/weak_bind.hpp"
 
 #include "ukive/animation/view_animator.h"
-#include "ukive/elements/color_element.h"
+#include "ukive/elements/element.h"
 #include "ukive/menu/context_menu_callback.h"
 #include "ukive/menu/menu.h"
 #include "ukive/menu/menu_impl.h"
@@ -37,7 +37,7 @@ namespace ukive {
         levitator_->setContentView(menu_);
         levitator_->setOutsideTouchable(false);
         levitator_->setDismissByTouchOutside(true);
-        levitator_->setBackground(new ColorElement(Color::White));
+        levitator_->setBackground(new Element(Color::White));
         levitator_->setLayoutWidth(menu_width_);
         levitator_->setEventListener(this);
         levitator_->setLayoutMargin(

@@ -80,12 +80,13 @@ namespace ukive {
         VIEW_CONSTRUCTOR(SimpleLayout);
         VIEW_CONSTRUCTOR(SequenceLayout);
         VIEW_CONSTRUCTOR(ListView);
-        //VIEW_CONSTRUCTOR(NonClientLayout);
         VIEW_CONSTRUCTOR(RestraintLayout);
-        //VIEW_CONSTRUCTOR(RootLayout);
         VIEW_CONSTRUCTOR(ScrollView);
         VIEW_CONSTRUCTOR(TabStripView);
         VIEW_CONSTRUCTOR(TabView);
+
+        //VIEW_CONSTRUCTOR(NonClientLayout);
+        //VIEW_CONSTRUCTOR(RootLayout);
     }
 
     // static

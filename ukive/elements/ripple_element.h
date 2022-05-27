@@ -8,7 +8,7 @@
 #define UKIVE_ELEMENTS_RIPPLE_ELEMENT_H_
 
 #include "ukive/animation/animator.h"
-#include "ukive/elements/multi_element.h"
+#include "ukive/elements/element.h"
 #include "ukive/graphics/colors/color.h"
 #include "ukive/graphics/vsyncable.h"
 
@@ -16,20 +16,21 @@
 namespace ukive {
 
     class RippleElement :
-        public MultiElement,
+        public Element,
         public AnimationListener,
         public VSyncable
     {
     public:
         RippleElement();
+        explicit RippleElement(const Color& color);
+        RippleElement(Shape shape, const Color& color);
         ~RippleElement();
 
-        void setTintColor(const Color& tint);
         void setDrawMaskEnabled(bool enabled);
 
         void draw(Canvas* canvas) override;
 
-        Opacity getOpacity() const override;
+        bool isTransparent() const override;
 
         // VSyncable
         void onVSync(
@@ -43,8 +44,11 @@ namespace ukive {
         bool onStateReset() override;
 
     private:
+        using super = Element;
+
+        void initElement();
+
         double alpha_;
-        Color tint_color_;
         bool is_draw_mask_ = true;
 
         Animator up_animator_;

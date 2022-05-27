@@ -38,41 +38,36 @@ namespace ukive {
     }
 
     void Button::initButton() {
-        shape_element_ = new ShapeElement(ShapeElement::ROUND_RECT);
-        shape_element_->setRadius(getContext().dp2px(2.f));
-        shape_element_->setSolidEnable(true);
-        shape_element_->setSolidColor(Color::White);
-
-        ripple_background_ = new RippleElement();
-        ripple_background_->add(shape_element_);
+        bg_ = new RippleElement(Element::SHAPE_RRECT, Color::White);
+        bg_->setRadius(getContext().dp2px(2.f));
 
         setPadding(
             getContext().dp2pxi(24),
             getContext().dp2pxi(6),
             getContext().dp2pxi(24),
             getContext().dp2pxi(6));
-        setBackground(ripple_background_);
+        setBackground(bg_);
         setShadowRadius(getContext().dp2pxi(2.0f));
     }
 
     void Button::setButtonColor(Color color) {
-        shape_element_->setSolidColor(color);
+        bg_->setSolidColor(color);
         requestDraw();
     }
 
-    void Button::setButtonShape(ShapeElement::Shape shape) {
+    void Button::setButtonShape(Element::Shape shape) {
         switch (shape) {
-        case ShapeElement::OVAL:
+        case Element::SHAPE_OVAL:
             setOutline(OUTLINE_OVAL);
             break;
 
-        case ShapeElement::RECT:
-        case ShapeElement::ROUND_RECT:
+        case Element::SHAPE_RECT:
+        case Element::SHAPE_RRECT:
         default:
             setOutline(OUTLINE_RECT);
             break;
         }
-        shape_element_->setShape(shape);
+        bg_->setShape(shape);
         requestDraw();
     }
 
@@ -81,20 +76,15 @@ namespace ukive {
     DropdownButton::DropdownButton(Context c)
         : View(c)
     {
-        setClickable(true);
-
         initButton();
     }
 
     void DropdownButton::initButton() {
-        auto shape_element = new ShapeElement(ShapeElement::OVAL);
-        shape_element->setSolidEnable(true);
-        shape_element->setSolidColor(Color::White);
+        setClickable(true);
 
-        auto ripple_background = new RippleElement();
-        ripple_background->setDrawMaskEnabled(false);
-        ripple_background->add(shape_element);
-        setBackground(ripple_background);
+        auto bg = new RippleElement(Element::SHAPE_OVAL, Color::White);
+        bg->setDrawMaskEnabled(false);
+        setBackground(bg);
 
         tri_length_ = getContext().dp2pxi(10);
         tri_height_ = getContext().dp2pxi(6);

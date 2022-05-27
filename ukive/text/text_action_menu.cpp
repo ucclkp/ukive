@@ -11,7 +11,7 @@
 #include "utils/message/cycler.h"
 
 #include "ukive/menu/menu_impl.h"
-#include "ukive/elements/shape_element.h"
+#include "ukive/elements/element.h"
 #include "ukive/text/text_action_menu_callback.h"
 #include "ukive/animation/view_animator.h"
 #include "ukive/window/window.h"
@@ -33,11 +33,9 @@ namespace ukive {
         menu_impl_->setCallback(this);
         menu_impl_->setMenuItemHeight(menu_item_height_);
 
-        ShapeElement* shape_element
-            = new ShapeElement(ShapeElement::ROUND_RECT);
+        auto shape_element
+            = new Element(Element::SHAPE_RRECT, Color::White);
         shape_element->setRadius(2.f);
-        shape_element->setSolidEnable(true);
-        shape_element->setSolidColor(Color::White);
 
         levitator_ = std::make_shared<Levitator>();
         levitator_->setLayoutSize(View::LS_FREE, View::LS_FREE);

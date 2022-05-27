@@ -14,7 +14,6 @@
 #include "ukive/views/layout_info/sequence_layout_info.h"
 #include "ukive/views/layout/restraint_layout.h"
 #include "ukive/views/layout_info/restraint_layout_info.h"
-#include "ukive/elements/color_element.h"
 #include "ukive/graphics/colors/color.h"
 #include "ukive/elements/ripple_element.h"
 #include "ukive/menu/context_menu.h"
@@ -92,7 +91,7 @@ namespace shell {
         toolbar->setId(ID_TOOLBAR);
         toolbar->setShadowRadius(1);
         toolbar->setOrientation(ukive::SequenceLayout::HORIZONTAL);
-        toolbar->setBackground(new ukive::ColorElement(ukive::Color::White));
+        toolbar->setBackground(new ukive::Element(ukive::Color::White));
 
         ukive::TextView *font = new ukive::TextView(getContext());
         font->setId(ID_TOOLBAR_ITEM_FONT);

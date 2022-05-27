@@ -47,8 +47,8 @@ namespace ukive {
             panel_line_color_);
     }
 
-    Element::Opacity TextEditorElement::getOpacity() const {
-        return OPA_OPAQUE;
+    bool TextEditorElement::isTransparent() const {
+        return false;
     }
 
 }

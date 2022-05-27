@@ -209,13 +209,10 @@
     <ClInclude Include="dialogs\dialog.h" />
     <ClInclude Include="dialogs\message_dialog.h" />
     <ClInclude Include="elements\chessboard_element.h" />
-    <ClInclude Include="elements\color_element.h" />
     <ClInclude Include="elements\drawer_element.h" />
     <ClInclude Include="elements\element.h" />
     <ClInclude Include="elements\image_element.h" />
-    <ClInclude Include="elements\multi_element.h" />
     <ClInclude Include="elements\ripple_element.h" />
-    <ClInclude Include="elements\shape_element.h" />
     <ClInclude Include="elements\texteditor_element.h" />
     <ClInclude Include="event\focus_manager.h" />
     <ClInclude Include="event\input_consts.h" />
@@ -510,13 +507,10 @@
     <ClCompile Include="dialogs\dialog.cpp" />
     <ClCompile Include="dialogs\message_dialog.cpp" />
     <ClCompile Include="elements\chessboard_element.cpp" />
-    <ClCompile Include="elements\color_element.cpp" />
     <ClCompile Include="elements\drawer_element.cpp" />
     <ClCompile Include="elements\element.cpp" />
     <ClCompile Include="elements\image_element.cpp" />
-    <ClCompile Include="elements\multi_element.cpp" />
     <ClCompile Include="elements\ripple_element.cpp" />
-    <ClCompile Include="elements\shape_element.cpp" />
     <ClCompile Include="elements\texteditor_element.cpp" />
     <ClCompile Include="event\focus_manager.cpp" />
     <ClCompile Include="event\input_consts.cpp" />

@@ -6,7 +6,9 @@
 
 #include "main_window.h"
 
-#include "ukive/elements/color_element.h"
+#include "utils/strings/string_utils.hpp"
+
+#include "ukive/elements/element.h"
 #include "ukive/resources/layout_parser.h"
 #include "ukive/views/button.h"
 #include "ukive/views/list/list_view.h"
@@ -32,10 +34,10 @@ namespace vevah {
         auto c = getContext();
 
         left_panel_ = findView<ukive::View>(Res::Id::sl_main_wnd_left_panel);
-        left_panel_->setBackground(new ukive::ColorElement(ukive::Color::Grey100));
+        left_panel_->setBackground(new ukive::Element(ukive::Color::Grey100));
 
         container_layout_ = findView<ContainerLayout>(Res::Id::cl_main_wnd_cur_view);
-        container_layout_->setBackground(new ukive::ColorElement(ukive::Color::Green100));
+        container_layout_->setBackground(new ukive::Element(ukive::Color::Green100));
 
         ctrl_list_ = findView<ukive::ListView>(Res::Id::lv_main_wnd_controls);
 
@@ -64,8 +66,32 @@ namespace vevah {
     {
         auto c = getContext();
         int margin = c.dp2pxi(4);
-        auto view = ukive::LayoutParser::createView(
-            ctrl_source_->getName(item->data_pos), c, {});
+
+        std::string faux_name;
+        auto& real_name = ctrl_source_->getName(item->data_pos);
+        if (real_name == "ImageView" ||
+            real_name == "ChartView" ||
+            real_name == "GridView" ||
+            real_name == "MediaView" ||
+            real_name == "TitleBarLayout" ||
+            real_name == "SimpleLayout" ||
+            real_name == "SequenceLayout" ||
+            real_name == "ListView" ||
+            real_name == "RestraintLayout" ||
+            real_name == "ScrollView" ||
+            real_name == "TabStripView" ||
+            real_name == "TabView")
+        {
+            faux_name = "TextView";
+        } else {
+            faux_name = real_name;
+        }
+
+        auto view = ukive::LayoutParser::createView(faux_name, c, {});
+        if (faux_name == "TextView") {
+            static_cast<ukive::TextView*>(view)->setText(utl::UTF8ToUTF16(real_name));
+        }
+
         view->animeParams().setAlpha(0.75);
         view->setLayoutMargin({ margin, margin, margin, margin });
         levitator_.setContentView(view);

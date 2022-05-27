@@ -97,7 +97,8 @@ namespace shell {
         view->setOnClickListener(router);
 
         auto bg = new ukive::RippleElement();
-        bg->setTintColor(ukive::Color::White);
+        bg->setSolidColor(ukive::Color::White);
+        bg->setSolidEnable(true);
         view->setBackground(bg);
 
         return new GalleryListItem(view);
@@ -117,6 +118,7 @@ namespace shell {
 
         gallery_list_item->title_view_->setText(d.title);
         gallery_list_item->img_view_->setImage(d.img);
+        gallery_list_item->item_view->getBackground()->resetState();
     }
 
     size_t GalleryWindow::onGetListDataCount(ukive::LayoutView* parent) const {

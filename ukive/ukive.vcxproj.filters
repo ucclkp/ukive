@@ -370,22 +370,13 @@
     <ClCompile Include="elements\chessboard_element.cpp">
       <Filter>elements</Filter>
     </ClCompile>
-    <ClCompile Include="elements\color_element.cpp">
-      <Filter>elements</Filter>
-    </ClCompile>
     <ClCompile Include="elements\element.cpp">
       <Filter>elements</Filter>
     </ClCompile>
     <ClCompile Include="elements\image_element.cpp">
       <Filter>elements</Filter>
     </ClCompile>
-    <ClCompile Include="elements\multi_element.cpp">
-      <Filter>elements</Filter>
-    </ClCompile>
     <ClCompile Include="elements\ripple_element.cpp">
-      <Filter>elements</Filter>
-    </ClCompile>
-    <ClCompile Include="elements\shape_element.cpp">
       <Filter>elements</Filter>
     </ClCompile>
     <ClCompile Include="elements\texteditor_element.cpp">
@@ -1218,22 +1209,13 @@
     <ClInclude Include="elements\chessboard_element.h">
       <Filter>elements</Filter>
     </ClInclude>
-    <ClInclude Include="elements\color_element.h">
-      <Filter>elements</Filter>
-    </ClInclude>
     <ClInclude Include="elements\element.h">
       <Filter>elements</Filter>
     </ClInclude>
     <ClInclude Include="elements\image_element.h">
       <Filter>elements</Filter>
     </ClInclude>
-    <ClInclude Include="elements\multi_element.h">
-      <Filter>elements</Filter>
-    </ClInclude>
     <ClInclude Include="elements\ripple_element.h">
-      <Filter>elements</Filter>
-    </ClInclude>
-    <ClInclude Include="elements\shape_element.h">
       <Filter>elements</Filter>
     </ClInclude>
     <ClInclude Include="elements\texteditor_element.h">

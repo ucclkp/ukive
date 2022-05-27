@@ -31,7 +31,7 @@
 #include "ukive/graphics/images/image_frame.h"
 #include "ukive/graphics/images/image_options.h"
 #include "ukive/graphics/display.h"
-#include "ukive/elements/color_element.h"
+#include "ukive/elements/element.h"
 #include "ukive/elements/texteditor_element.h"
 #include "ukive/graphics/colors/color.h"
 #include "ukive/window/haul_source.h"
@@ -189,7 +189,7 @@ namespace shell {
         deviceTextView->setText(deviceDesc);
 
         auto chart_view = findView<ukive::ChartView>(v, Res::Id::cv_data_chart);
-        chart_view->setBackground(new ukive::ColorElement(ukive::Color::Grey100));
+        chart_view->setBackground(new ukive::Element(ukive::Color::Grey100));
         chart_view->setVisibility(ukive::View::VANISHED);
 
         //fillChartView1(chart_view);

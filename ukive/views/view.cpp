@@ -180,16 +180,6 @@ namespace ukive {
             return;
         }
 
-        ubassert(!element || !element->isAttachedToWindow());
-        if (bg_element_) {
-            if (isAttachedToWindow()) {
-                ubassert(bg_element_->isAttachedToWindow());
-                bg_element_->notifyDetachedFromWindow();
-            } else {
-                ubassert(!bg_element_->isAttachedToWindow());
-            }
-        }
-
         resetBackground();
 
         bg_element_ = element;
@@ -197,16 +187,6 @@ namespace ukive {
             bg_element_->setCallback(this);
         }
         owned_bg_ = owned;
-
-        if (bg_element_) {
-            if (isAttachedToWindow()) {
-                ubassert(getWindow());
-                ubassert(!bg_element_->isAttachedToWindow());
-                bg_element_->notifyAttachedToWindow(getWindow());
-            } else {
-                ubassert(!bg_element_->isAttachedToWindow());
-            }
-        }
 
         updateBackgroundState();
         requestDraw();
@@ -218,16 +198,6 @@ namespace ukive {
             return;
         }
 
-        ubassert(!element || !element->isAttachedToWindow());
-        if (fg_element_) {
-            if (isAttachedToWindow()) {
-                ubassert(fg_element_->isAttachedToWindow());
-                fg_element_->notifyDetachedFromWindow();
-            } else {
-                ubassert(!fg_element_->isAttachedToWindow());
-            }
-        }
-
         resetForeground();
 
         fg_element_ = element;
@@ -235,16 +205,6 @@ namespace ukive {
             fg_element_->setCallback(this);
         }
         owned_fg_ = owned;
-
-        if (fg_element_) {
-            if (isAttachedToWindow()) {
-                ubassert(getWindow());
-                ubassert(!fg_element_->isAttachedToWindow());
-                fg_element_->notifyAttachedToWindow(getWindow());
-            } else {
-                ubassert(!fg_element_->isAttachedToWindow());
-            }
-        }
 
         updateForegroundState();
         requestDraw();
@@ -1003,13 +963,11 @@ namespace ukive {
     }
 
     bool View::needDrawBackground() {
-        return (bg_element_ != nullptr
-            && bg_element_->getOpacity() != Element::OPA_TRANSPARENT);
+        return bg_element_ != nullptr && !bg_element_->isTransparent();
     }
 
     bool View::needDrawForeground() {
-        return (fg_element_ != nullptr
-            && fg_element_->getOpacity() != Element::OPA_TRANSPARENT);
+        return fg_element_ != nullptr && !fg_element_->isTransparent();
     }
 
     void View::drawBackground(Canvas* canvas) {
@@ -1802,13 +1760,6 @@ namespace ukive {
             input_conn_->pushEditor();
         }
 
-        if (bg_element_) {
-            bg_element_->notifyAttachedToWindow(w);
-        }
-        if (fg_element_) {
-            fg_element_->notifyAttachedToWindow(w);
-        }
-
         if (has_focus_requesting_) {
             has_focus_requesting_ = false;
             requestFocus();
@@ -1835,11 +1786,9 @@ namespace ukive {
 
         if (bg_element_) {
             bg_element_->resetState();
-            bg_element_->notifyDetachedFromWindow();
         }
         if (fg_element_) {
             fg_element_->resetState();
-            fg_element_->notifyDetachedFromWindow();
         }
 
         window_ = nullptr;

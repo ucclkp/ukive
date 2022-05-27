@@ -723,14 +723,24 @@ namespace ukive {
             InputEvent e;
             e.setEvent(InputEvent::EV_LEAVE);
             e.setIsNoDispatch(true);
+
+            std::weak_ptr<void> wptr = impl_;
             mouse_holder_->dispatchInputEvent(&e);
+            if (wptr.expired()) {
+                return;
+            }
         }
 
         if (!sent_leave && touch_holder_) {
             InputEvent e;
             e.setEvent(InputEvent::EV_LEAVE);
             e.setIsNoDispatch(true);
+
+            std::weak_ptr<void> wptr = impl_;
             touch_holder_->dispatchInputEvent(&e);
+            if (wptr.expired()) {
+                return;
+            }
         }
 
         if (haul_src_) {
@@ -741,7 +751,12 @@ namespace ukive {
                 InputEvent e;
                 e.setEvent(InputEvent::EV_HAUL_LEAVE);
                 e.setIsNoDispatch(true);
+
+                std::weak_ptr<void> wptr = impl_;
                 last_haul_view_->dispatchInputEvent(&e);
+                if (wptr.expired()) {
+                    return;
+                }
                 last_haul_view_ = nullptr;
             }
         }
@@ -1087,7 +1102,12 @@ namespace ukive {
             if (last_input_view_) {
                 e->setIsNoDispatch(true);
                 e->setEvent(InputEvent::EV_LEAVE);
+
+                std::weak_ptr<void> wptr = impl_;
                 last_input_view_->dispatchInputEvent(e);
+                if (wptr.expired()) {
+                    return false;
+                }
                 last_input_view_ = nullptr;
                 return false;
             }
@@ -1118,11 +1138,13 @@ namespace ukive {
 
             e->offsetInputPos(-total_left, -total_top);
             e->setIsNoDispatch(true);
+
+            std::weak_ptr<void> wptr = impl_;
             ret = holder->dispatchInputEvent(e);
-            haul_lock_ = false;
-            if (!root_layout_) {
+            if (wptr.expired()) {
                 return ret;
             }
+            haul_lock_ = false;
         }
 
         if (haul_src_) {
@@ -1134,9 +1156,17 @@ namespace ukive {
             }
 
             INPUT_TRACK_PRINT("Haul", &ev);
+            std::weak_ptr<void> wptr = impl_;
             ret = root_layout_->dispatchInputEvent(&ev);
+            if (wptr.expired()) {
+                return ret;
+            }
         } else if (!valid_holder) {
+            std::weak_ptr<void> wptr = impl_;
             ret = root_layout_->dispatchInputEvent(e);
+            if (wptr.expired()) {
+                return ret;
+            }
         }
 
         if (!ret && e->isMouseEvent()) {

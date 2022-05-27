@@ -13,14 +13,11 @@
 #include "ukive/app/application.h"
 #include "ukive/views/button.h"
 #include "ukive/views/image_view.h"
-#include "ukive/views/layout/sequence_layout.h"
 #include "ukive/views/layout_info/layout_info.h"
 #include "ukive/views/layout/restraint_layout.h"
 #include "ukive/views/layout_info/restraint_layout_info.h"
 #include "ukive/system/win/reg_manager.h"
-#include "ukive/elements/color_element.h"
 #include "ukive/views/check_box.h"
-#include "ukive/graphics/canvas.h"
 
 #include "shell/gallery/picture/slide_image_view.h"
 

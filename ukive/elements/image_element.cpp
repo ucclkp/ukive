@@ -36,14 +36,11 @@ namespace ukive {
         }
     }
 
-    Element::Opacity ImageElement::getOpacity() const {
-        if (opacity_ >= 1.0f) {
-            return OPA_OPAQUE;
+    bool ImageElement::isTransparent() const {
+        if (opacity_ <= 0) {
+            return true;
         }
-        if (opacity_ == 0) {
-            return OPA_TRANSPARENT;
-        }
-        return OPA_SEMILUCENT;
+        return !image_;
     }
 
     int ImageElement::getContentWidth() const {

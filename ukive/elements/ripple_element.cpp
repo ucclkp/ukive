@@ -11,7 +11,6 @@
 #include "ukive/graphics/canvas.h"
 #include "ukive/graphics/images/image_frame.h"
 #include "ukive/graphics/images/image_options.h"
-#include "ukive/graphics/cyro_buffer.h"
 #include "ukive/window/window.h"
 #include "ukive/animation/interpolator.h"
 
@@ -25,9 +24,25 @@
 namespace ukive {
 
     RippleElement::RippleElement()
-        : MultiElement(),
+        : alpha_(0)
+    {
+        initElement();
+    }
+
+    RippleElement::RippleElement(const Color& color)
+        : RippleElement(SHAPE_RECT, color) {}
+
+    RippleElement::RippleElement(Shape shape, const Color& color)
+        : super(shape, color),
           alpha_(0)
     {
+        initElement();
+    }
+
+    RippleElement::~RippleElement() {
+    }
+
+    void RippleElement::initElement() {
         using namespace std::chrono_literals;
 
         ripple_animator_.setDuration(500ms);
@@ -53,13 +68,6 @@ namespace ukive {
         leave_animator_.setFinalValue(0);
     }
 
-    RippleElement::~RippleElement() {
-    }
-
-    void RippleElement::setTintColor(const Color& tint) {
-        tint_color_ = tint;
-    }
-
     void RippleElement::setDrawMaskEnabled(bool enabled) {
         if (is_draw_mask_ != enabled) {
             is_draw_mask_ = enabled;
@@ -71,7 +79,7 @@ namespace ukive {
         auto bound = getBounds();
         Color color(0.f, 0.f, 0.f, float(alpha_));
 
-        bool has_content = tint_color_.a > 0.f || color.a > 0.f || ripple_animator_.isRunning();
+        bool has_content = color.a > 0.f || ripple_animator_.isRunning();
         if (has_content) {
             // 绘制底色、alpha 和 ripple。
             if (!content_off_ ||
@@ -86,9 +94,6 @@ namespace ukive {
             content_off_->beginDraw();
             content_off_->clear();
             content_off_->setOpacity(canvas->getOpacity());
-            if (tint_color_.a > 0.f) {
-                content_off_->fillRect(RectF(bound), tint_color_);
-            }
             if (color.a > 0.f) {
                 content_off_->fillRect(RectF(bound), color);
             }
@@ -100,13 +105,16 @@ namespace ukive {
 
                 Color ripple_color = Color::ofRGB(0, float(1 - ripple_animator_.getCurValue()) * 0.1f);
                 content_off_->fillCircle(
-                    PointF(Point{ start_x_, start_y_ }),
+                    PointF(start_pos_),
                     float(ripple_animator_.getCurValue() * r), ripple_color);
             }
             content_off_->endDraw();
             auto content_img = content_off_->extractImage();
 
-            if (list_.empty()) {
+            if (!hasSolid()) {
+                if (is_draw_mask_) {
+                    super::draw(canvas);
+                }
                 canvas->drawImage(content_img.get());
             } else {
                 // 绘制 mask，以该 mask 确定背景形状以及 ripple 的扩散边界。
@@ -121,7 +129,7 @@ namespace ukive {
                 mask_off_->beginDraw();
                 mask_off_->clear();
                 mask_off_->setOpacity(canvas->getOpacity());
-                MultiElement::draw(mask_off_.get());
+                super::draw(mask_off_.get());
                 mask_off_->endDraw();
                 auto mask_img = mask_off_->extractImage();
 
@@ -134,13 +142,13 @@ namespace ukive {
             }
         } else {
             if (is_draw_mask_) {
-                MultiElement::draw(canvas);
+                super::draw(canvas);
             }
         }
     }
 
     bool RippleElement::onStateChanged(int new_state, int prev_state) {
-        bool need_redraw = MultiElement::onStateChanged(new_state, prev_state);
+        bool need_redraw = super::onStateChanged(new_state, prev_state);
 
         switch (new_state) {
         case STATE_NONE:
@@ -220,6 +228,8 @@ namespace ukive {
     }
 
     bool RippleElement::onStateReset() {
+        super::onStateReset();
+
         up_animator_.stop();
         down_animator_.stop();
         hover_animator_.stop();
@@ -229,8 +239,17 @@ namespace ukive {
         return true;
     }
 
-    Element::Opacity RippleElement::getOpacity() const {
-        return OPA_OPAQUE;
+    bool RippleElement::isTransparent() const {
+        bool has_content = alpha_ > 0.f || ripple_animator_.isRunning();
+        if (has_content) {
+            return false;
+        }
+
+        if (is_draw_mask_) {
+            return super::isTransparent();
+        }
+
+        return true;
     }
 
     void RippleElement::onVSync(

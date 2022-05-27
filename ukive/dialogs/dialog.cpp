@@ -6,7 +6,7 @@
 
 #include "dialog.h"
 
-#include "ukive/elements/color_element.h"
+#include "ukive/elements/element.h"
 #include "ukive/views/layout/root_layout.h"
 #include "ukive/window/window.h"
 
@@ -18,7 +18,7 @@ namespace ukive {
         levitator_->setShadowRadius(c.dp2pxi(8.f));
         levitator_->setOutsideTouchable(false);
         levitator_->setDismissByTouchOutside(false);
-        levitator_->setBackground(new ColorElement(Color::White));
+        levitator_->setBackground(new Element(Color::White));
         levitator_->setLayoutSize(View::LS_AUTO, View::LS_AUTO);
         levitator_->setEventListener(this);
         levitator_->setLayoutMargin(
@@ -39,7 +39,7 @@ namespace ukive {
         bg.a = 0.25f;
 
         auto anchor = parent->getRootLayout();
-        anchor->setShadeBackground(new ColorElement(bg));
+        anchor->setShadeBackground(new Element(bg));
 
         levitator_->show(parent, x, y);
     }
@@ -59,7 +59,7 @@ namespace ukive {
         info.is_discretized = false;
 
         auto anchor = parent->getRootLayout();
-        anchor->setShadeBackground(new ColorElement(bg));
+        anchor->setShadeBackground(new Element(bg));
         levitator_->show(anchor, gravity, info);
     }
 

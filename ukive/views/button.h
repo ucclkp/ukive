@@ -8,13 +8,12 @@
 #define UKIVE_VIEWS_BUTTON_H_
 
 #include "ukive/views/text_view.h"
-#include "ukive/elements/shape_element.h"
+#include "ukive/elements/element.h"
 
 
 namespace ukive {
 
     class Path;
-    class ShapeElement;
     class RippleElement;
 
     class Button : public TextView {
@@ -23,13 +22,12 @@ namespace ukive {
         Button(Context c, AttrsRef attrs);
 
         void setButtonColor(Color color);
-        void setButtonShape(ShapeElement::Shape shape);
+        void setButtonShape(Element::Shape shape);
 
     private:
         void initButton();
 
-        ShapeElement* shape_element_;
-        RippleElement* ripple_background_;
+        RippleElement* bg_;
     };
 
 

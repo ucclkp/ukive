@@ -7,16 +7,17 @@
 #ifndef UKIVE_ELEMENTS_ELEMENT_H_
 #define UKIVE_ELEMENTS_ELEMENT_H_
 
+#include <memory>
+#include <vector>
+
 #include "ukive/graphics/rect.hpp"
 #include "ukive/window/context.h"
-#include "ukive/graphics/gref_count.h"
 
 
 namespace ukive {
 
     class Canvas;
     class Element;
-    class Window;
 
     class ElementCallback {
     public:
@@ -27,10 +28,10 @@ namespace ukive {
 
     class Element {
     public:
-        enum Opacity {
-            OPA_OPAQUE,
-            OPA_SEMILUCENT,
-            OPA_TRANSPARENT,
+        enum Shape {
+            SHAPE_RECT,
+            SHAPE_RRECT,
+            SHAPE_OVAL
         };
 
         enum ElementState {
@@ -42,6 +43,8 @@ namespace ukive {
         };
 
         Element();
+        explicit Element(const Color& color);
+        Element(Shape shape, const Color& color);
         virtual ~Element() = default;
 
         void setBounds(const Rect& rect);
@@ -53,24 +56,36 @@ namespace ukive {
         bool setParentFocus(bool focus);
 
         bool resetState();
-        void notifyAttachedToWindow(Window* w);
-        void notifyDetachedFromWindow();
         void notifyContextChanged(Context::Type type, const Context& context);
 
         int getState() const;
         int getPrevState() const;
         Rect getBounds() const;
         ElementCallback* getCallback() const;
-        Window* getWindow() const;
         bool isParentHasFocus() const;
-        bool isAttachedToWindow() const;
 
-        virtual void draw(Canvas* canvas) = 0;
+        virtual void draw(Canvas* canvas);
 
-        virtual Opacity getOpacity() const;
+        virtual bool isTransparent() const;
 
         virtual int getContentWidth() const;
         virtual int getContentHeight() const;
+
+        void setShape(Shape shape);
+        void setRadius(float radius);
+        void setSolidEnable(bool enable);
+        void setSolidColor(const Color& c);
+        void setStrokeEnable(bool enable);
+        void setStrokeWidth(float width);
+        void setStrokeColor(const Color& color);
+
+        void add(Element* element);
+        void remove(Element* element);
+
+        Shape getShape() const;
+        const Color& getSolidColor() const;
+        bool hasSolid() const;
+        bool hasStroke() const;
 
     protected:
         void requestDraw();
@@ -79,21 +94,29 @@ namespace ukive {
         virtual void onBoundChanged(const Rect& new_bound);
         virtual bool onStateChanged(int new_state, int prev_state);
         virtual bool onStateReset();
+        virtual void onContextChanged(
+            Context::Type type, const Context& context);
 
-        virtual void onAttachedToWindow(Window* w) {}
-        virtual void onDetachedFromWindow() {}
-        virtual void onContextChanged(Context::Type type, const Context& context) {}
-
-        int start_x_, start_y_;
+        Point start_pos_{};
 
     private:
-        int state_;
-        int prev_state_;
-        bool is_parent_has_focus_;
-        bool is_attached_to_window_ = false;
         Rect bounds_;
-        Window* window_ = nullptr;
-        ElementCallback* callback_;
+        int state_ = STATE_NONE;
+        int prev_state_ = STATE_NONE;
+        bool is_parent_has_focus_ = false;
+        ElementCallback* callback_ = nullptr;
+
+        Shape shape_;
+        bool has_solid_;
+        Color solid_color_;
+
+        bool has_stroke_ = false;
+        float stroke_width_ = 1.f;
+        Color stroke_color_;
+
+        float round_radius_ = 0;
+
+        std::vector<std::shared_ptr<Element>> list_;
     };
 
 }

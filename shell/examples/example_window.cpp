@@ -8,7 +8,7 @@
 
 #include "ukive/views/button.h"
 #include "ukive/views/image_view.h"
-#include "ukive/elements/color_element.h"
+#include "ukive/elements/element.h"
 #include "ukive/graphics/colors/color.h"
 #include "ukive/views/tab/tab_strip_view.h"
 #include "ukive/views/tab/tab_view.h"
@@ -48,10 +48,10 @@ namespace shell {
 
     void ExampleWindow::inflateTabView() {
         setContentView(Res::Layout::example_window_layout_xml);
-        getContentView()->setBackground(new ukive::ColorElement(ukive::Color::White));
+        getContentView()->setBackground(new ukive::Element(ukive::Color::White));
 
         auto strip_view = findView<ukive::TabStripView>(Res::Id::tsv_example_strip);
-        strip_view->setBackground(new ukive::ColorElement(ukive::Color::White));
+        strip_view->setBackground(new ukive::Element(ukive::Color::White));
         strip_view->setShadowRadius(getContext().dp2pxi(2));
 
         auto tab_view = findView<ukive::TabView>(Res::Id::tv_example_table);

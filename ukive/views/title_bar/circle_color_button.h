@@ -13,7 +13,7 @@
 namespace ukive {
 
     class Color;
-    class ShapeElement;
+    class Element;
     class RippleElement;
 
     class CircleColorButton : public View {
@@ -30,8 +30,7 @@ namespace ukive {
 
     private:
         int size_;
-        ShapeElement* shape_element_;
-        RippleElement* ripple_background_;
+        RippleElement* bg_;
     };
 
 }

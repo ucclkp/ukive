@@ -191,12 +191,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Manifest Include="application.manifest" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClCompile Include="app\main.cpp" />
     <ClCompile Include="container_layout.cpp" />
     <ClCompile Include="control_list_source.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="main_window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -206,6 +203,9 @@
   </ItemGroup>
   <ItemGroup>
     <Xml Include="resources\layout\main_window_layout.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="app\application.manifest" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

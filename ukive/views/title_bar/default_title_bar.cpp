@@ -11,7 +11,7 @@
 #include "ukive/views/layout/restraint_layout.h"
 #include "ukive/views/layout_info/restraint_layout_info.h"
 #include "ukive/views/title_bar/circle_color_button.h"
-#include "ukive/elements/color_element.h"
+#include "ukive/elements/element.h"
 #include "ukive/system/theme_info.h"
 
 
@@ -28,7 +28,7 @@ namespace ukive {
         determineColor(&color);
 
         setShadowRadius(c.dp2pxi(4));
-        setBackground(new ColorElement(color));
+        setBackground(new Element(color));
         initViews();
     }
 
@@ -36,8 +36,7 @@ namespace ukive {
     }
 
     void DefaultTitleBar::setColor(const Color& c) {
-        auto b = getBackground();
-        static_cast<ColorElement*>(b)->setColor(c);
+        getBackground()->setSolidColor(c);
         requestDraw();
     }
 

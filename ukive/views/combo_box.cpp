@@ -14,7 +14,6 @@
 #include "ukive/animation/animation_director.h"
 #include "ukive/animation/view_animator.h"
 #include "ukive/elements/ripple_element.h"
-#include "ukive/elements/shape_element.h"
 #include "ukive/event/input_event.h"
 #include "ukive/views/button.h"
 #include "ukive/views/combo_box_selected_listener.h"
@@ -65,10 +64,8 @@ namespace ukive {
         list_view_->setSource(this);
         list_view_->setItemEventRouter(new ListItemEventRouter(this));
 
-        auto shape_element = new ShapeElement(ShapeElement::RECT);
+        auto shape_element = new Element(Element::SHAPE_RECT, Color::White);
         shape_element->setRadius(c.dp2pxi(2.f));
-        shape_element->setSolidEnable(true);
-        shape_element->setSolidColor(Color::White);
 
         levitator_ = std::make_shared<Levitator>();
         levitator_->setShadowRadius(c.dp2pxi(2.f));

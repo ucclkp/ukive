@@ -13,7 +13,7 @@
 #include "ukive/views/layout_info/restraint_layout_info.h"
 #include "ukive/views/image_view.h"
 #include "ukive/views/text_view.h"
-#include "ukive/elements/color_element.h"
+#include "ukive/elements/element.h"
 #include "ukive/graphics/colors/color.h"
 
 
@@ -31,7 +31,7 @@ namespace shell {
         ukive::LayoutView* parent, ukive::ListItemEventRouter* router, size_t position)
     {
         auto layout = new ukive::RestraintLayout(parent->getContext());
-        layout->setBackground(new ukive::ColorElement(ukive::Color::Blue100));
+        layout->setBackground(new ukive::Element(ukive::Color::Blue100));
         layout->setLayoutSize(ukive::View::LS_FILL, ukive::View::LS_AUTO);
         layout->setLayoutMargin(4, 4, 4, 4);
 

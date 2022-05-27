@@ -20,6 +20,7 @@ namespace ukive {
 
     protected:
         void draw(Canvas* canvas) override;
+        bool isTransparent() const override;
 
     private:
         Context context_;

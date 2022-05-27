@@ -26,7 +26,7 @@ float4 main(PixelInputType input) : SV_TARGET {
     int ry = sh + radius * 2 - (int)ceil(input.raw_position.y);
 
     float4 init_color = st_init_.Load(int3(rx - radius, ry - radius, 0));
-    if (init_color.w > 0.01f) {
+    if (init_color.w > 0.99f) {
         return init_color;
     }
 

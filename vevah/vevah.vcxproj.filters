@@ -1,13 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Manifest Include="application.manifest" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="main_window.cpp" />
     <ClCompile Include="control_list_source.cpp" />
     <ClCompile Include="container_layout.cpp" />
+    <ClCompile Include="app\main.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main_window.h" />
@@ -21,10 +20,18 @@
     <Filter Include="resources\layout">
       <UniqueIdentifier>{23b171af-a889-469f-bb13-2ffc999d83cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="app">
+      <UniqueIdentifier>{22c78a8c-b95b-4440-8800-afbf8cfe45a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="resources\layout\main_window_layout.xml">
       <Filter>resources\layout</Filter>
     </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="app\application.manifest">
+      <Filter>app</Filter>
+    </Manifest>
   </ItemGroup>
 </Project>

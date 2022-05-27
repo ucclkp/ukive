@@ -8,7 +8,7 @@
 
 #include "utils/strings/int_conv.hpp"
 
-#include "ukive/elements/color_element.h"
+#include "ukive/elements/element.h"
 #include "ukive/graphics/images/image_frame.h"
 #include "ukive/views/layout/restraint_layout.h"
 #include "ukive/views/layout_info/restraint_layout_info.h"
@@ -139,16 +139,15 @@ namespace shell {
         if (node->is_selected) {
             auto b = tree_item->text_label->getBackground();
             if (b) {
-                static_cast<ukive::ColorElement*>(b)->setColor(ukive::Color::Blue300);
-            }
-            else {
-                tree_item->text_label->setBackground(new ukive::ColorElement(ukive::Color::Blue300));
+                b->setSolidColor(ukive::Color::Blue300);
+            } else {
+                tree_item->text_label->setBackground(new ukive::Element(ukive::Color::Blue300));
             }
         }
         else {
             auto b = tree_item->text_label->getBackground();
             if (b) {
-                static_cast<ukive::ColorElement*>(b)->setColor(ukive::Color::Transparent);
+                b->setSolidColor(ukive::Color::Transparent);
             }
         }
 

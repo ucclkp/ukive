@@ -9,7 +9,6 @@
 #include <algorithm>
 
 #include "ukive/elements/ripple_element.h"
-#include "ukive/elements/shape_element.h"
 #include "ukive/window/window.h"
 
 
@@ -24,14 +23,9 @@ namespace ukive {
         setOutline(OUTLINE_OVAL);
         setClickable(true);
 
-        shape_element_ = new ShapeElement(ShapeElement::OVAL);
-        shape_element_->setSolidEnable(true);
-        shape_element_->setSolidColor(Color::White);
+        bg_ = new RippleElement(Element::SHAPE_OVAL, Color::White);
 
-        ripple_background_ = new RippleElement();
-        ripple_background_->add(shape_element_);
-
-        setBackground(ripple_background_);
+        setBackground(bg_);
         setShadowRadius(c.dp2pxi(2.0f));
 
         size_ = c.dp2pxi(18);
@@ -46,7 +40,7 @@ namespace ukive {
     }
 
     void CircleColorButton::setColor(const Color& c) {
-        shape_element_->setSolidColor(c);
+        bg_->setSolidColor(c);
         requestDraw();
     }
 

@@ -28,7 +28,7 @@ namespace ukive {
 
         void draw(Canvas* canvas) override;
 
-        Opacity getOpacity() const override;
+        bool isTransparent() const override;
 
         int getContentWidth() const override;
         int getContentHeight() const override;

@@ -7,7 +7,7 @@
 #include "grid_navigator.h"
 
 #include "ukive/animation/view_animator.h"
-#include "ukive/elements/shape_element.h"
+#include "ukive/elements/element.h"
 #include "ukive/views/view.h"
 #include "ukive/views/text_view.h"
 
@@ -35,10 +35,8 @@ namespace ukive {
         view->setTextColor(text_color);
         view->setPadding(padding_hori, padding_vert, padding_hori, padding_vert);
 
-        auto shape_element = new ShapeElement(ShapeElement::ROUND_RECT);
+        auto shape_element = new Element(Element::SHAPE_RRECT, bg_color);
         shape_element->setRadius(c.dp2px(4.f));
-        shape_element->setSolidEnable(true);
-        shape_element->setSolidColor(bg_color);
 
         levitator_ = std::make_shared<Levitator>();
         levitator_->setLayoutSize(View::LS_FREE, View::LS_FREE);

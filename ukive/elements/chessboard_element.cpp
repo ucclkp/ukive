@@ -68,4 +68,8 @@ namespace ukive {
         }
     }
 
+    bool ChessboardElement::isTransparent() const {
+        return false;
+    }
+
 }

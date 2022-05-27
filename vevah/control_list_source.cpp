@@ -37,8 +37,10 @@ namespace vevah {
         // 预设非容器
         for (const auto& pair : map) {
             if (!pair.second.is_layout) {
-                data_.push_back(
-                    { utl::UTF8ToUTF16(pair.first), pair.first });
+                if (pair.first != "View") {
+                    data_.push_back(
+                        { utl::UTF8ToUTF16(pair.first), pair.first });
+                }
             }
         }
 
@@ -53,16 +55,20 @@ namespace vevah {
         // 预设容器
         for (const auto& pair : map) {
             if (pair.second.is_layout) {
-                data_.push_back(
-                    { utl::UTF8ToUTF16(pair.first), pair.first });
+                if (pair.first != "LayoutView") {
+                    data_.push_back(
+                        { utl::UTF8ToUTF16(pair.first), pair.first });
+                }
             }
         }
 
         // 自定义容器
         for (const auto& pair : map2) {
             if (pair.second.is_layout) {
-                data_.push_back(
-                    { utl::UTF8ToUTF16(pair.first), pair.first });
+                if (pair.first != "vevah::ContainerLayout") {
+                    data_.push_back(
+                        { utl::UTF8ToUTF16(pair.first), pair.first });
+                }
             }
         }
     }

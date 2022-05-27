@@ -244,11 +244,6 @@ $(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro\$(ProjectName)" -d "$(O
     <ClCompile Include="visualize\visual_layout_scene.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="application.manifest">
-      <SubType>Designer</SubType>
-    </Manifest>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="effects\effect_window.h" />
     <ClInclude Include="examples\pages\example_list_page.h" />
     <ClInclude Include="examples\pages\example_misc_page.h" />
@@ -301,6 +296,9 @@ $(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro\$(ProjectName)" -d "$(O
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="app\application.manifest" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

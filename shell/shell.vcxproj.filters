@@ -189,9 +189,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="application.manifest" />
-  </ItemGroup>
-  <ItemGroup>
     <Xml Include="resources\layout\gallery_item_layout.xml">
       <Filter>resources\layout</Filter>
     </Xml>
@@ -218,5 +215,10 @@
     <FxCompile Include="lod\direct3d\hlsl\terrain_vertex_shader.hlsl">
       <Filter>lod\direct3d\hlsl</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="app\application.manifest">
+      <Filter>app</Filter>
+    </Manifest>
   </ItemGroup>
 </Project>

@@ -22,7 +22,6 @@
 #include "ukive/views/seek_bar.h"
 #include "ukive/views/button.h"
 #include "ukive/views/text_view.h"
-#include "ukive/elements/color_element.h"
 #include "ukive/elements/texteditor_element.h"
 #include "ukive/views/space3d_view.h"
 
@@ -85,7 +84,7 @@ namespace shell {
         ukive::SequenceLayoutInfo *d3dViewLp = new ukive::SequenceLayoutInfo();
         d3dViewLp->weight = 2;
         lodView->setExtraLayoutInfo(d3dViewLp);
-        lodView->setBackground(new ukive::ColorElement(ukive::Color::White));
+        lodView->setBackground(new ukive::Element(ukive::Color::White));
         lodView->setShadowRadius(getContext().dp2pxi(2));
 
         lod_view_ = lodView;

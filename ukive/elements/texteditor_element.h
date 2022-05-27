@@ -23,7 +23,7 @@ namespace ukive {
 
         bool onFocusChanged(bool focus) override;
         void draw(Canvas *canvas) override;
-        Opacity getOpacity() const override;
+        bool isTransparent() const override;
 
     private:
         Context context_;
