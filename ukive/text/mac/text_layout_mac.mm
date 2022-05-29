@@ -407,12 +407,18 @@ namespace mac {
             if (NSEqualRanges(fragment_range, line_glyph_range) == NO) {
                 auto fragment_rect = [layout_mgr_ boundingRectForGlyphRange:fragment_range
                                                             inTextContainer:text_container_];
-                if (fragment_rect.origin.x > rect.x()) {
-                    rect.x(fragment_rect.origin.x);
+                float nx = fragment_rect.origin.x;
+                if (nx < rect.x()) {
+                    nx = rect.x();
                 }
-                if (fragment_rect.origin.x + fragment_rect.size.width < rect.right()) {
-                    rect.right(fragment_rect.origin.x + fragment_rect.size.width);
+
+                float nr = fragment_rect.origin.x + fragment_rect.size.width;
+                if (nr > rect.right()) {
+                    nr = rect.right();
                 }
+
+                rect.x(nx);
+                rect.width(nr - nx);
             }
 
             auto line_ch_range = [layout_mgr_ characterRangeForGlyphRange:fragment_range

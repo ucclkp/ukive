@@ -100,10 +100,10 @@
 			isa = PBXGroup;
 			children = (
 				670BD4A624B227FB00DF5B85 /* Assets.xcassets */,
-				670BD4A824B227FB00DF5B85 /* MainMenu.xib */,
 				670BD4AB24B227FB00DF5B85 /* Info.plist */,
-				670BD4AE24B227FB00DF5B85 /* shell.entitlements */,
+				670BD4A824B227FB00DF5B85 /* MainMenu.xib */,
 				670BD74524B22A5B00DF5B85 /* shell.cpp */,
+				670BD4AE24B227FB00DF5B85 /* shell.entitlements */,
 			);
 			path = app;
 			sourceTree = "<group>";

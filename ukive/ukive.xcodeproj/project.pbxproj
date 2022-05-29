@@ -251,15 +251,9 @@
 		6770CE42256FB97F007B49F3 /* text_attributes_span.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6770CE3E256FB97F007B49F3 /* text_attributes_span.cpp */; };
 		6770CE46256FB9AC007B49F3 /* text_custom_drawing.h in Headers */ = {isa = PBXBuildFile; fileRef = 6770CE44256FB9AC007B49F3 /* text_custom_drawing.h */; };
 		6770CE47256FB9AC007B49F3 /* text_inline_object.h in Headers */ = {isa = PBXBuildFile; fileRef = 6770CE45256FB9AC007B49F3 /* text_inline_object.h */; };
-		6773928226076DCD00D03228 /* color_element.h in Headers */ = {isa = PBXBuildFile; fileRef = 6773927226076DCD00D03228 /* color_element.h */; };
 		6773928326076DCD00D03228 /* texteditor_element.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6773927326076DCD00D03228 /* texteditor_element.cpp */; };
 		6773928426076DCD00D03228 /* chessboard_element.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6773927426076DCD00D03228 /* chessboard_element.cpp */; };
-		6773928526076DCD00D03228 /* shape_element.h in Headers */ = {isa = PBXBuildFile; fileRef = 6773927526076DCD00D03228 /* shape_element.h */; };
 		6773928626076DCD00D03228 /* ripple_element.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6773927626076DCD00D03228 /* ripple_element.cpp */; };
-		6773928726076DCD00D03228 /* multi_element.h in Headers */ = {isa = PBXBuildFile; fileRef = 6773927726076DCD00D03228 /* multi_element.h */; };
-		6773928826076DCD00D03228 /* shape_element.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6773927826076DCD00D03228 /* shape_element.cpp */; };
-		6773928926076DCD00D03228 /* color_element.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6773927926076DCD00D03228 /* color_element.cpp */; };
-		6773928A26076DCD00D03228 /* multi_element.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6773927A26076DCD00D03228 /* multi_element.cpp */; };
 		6773928B26076DCD00D03228 /* element.h in Headers */ = {isa = PBXBuildFile; fileRef = 6773927B26076DCD00D03228 /* element.h */; };
 		6773928C26076DCD00D03228 /* image_element.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6773927C26076DCD00D03228 /* image_element.cpp */; };
 		6773928D26076DCD00D03228 /* texteditor_element.h in Headers */ = {isa = PBXBuildFile; fileRef = 6773927D26076DCD00D03228 /* texteditor_element.h */; };
@@ -331,9 +325,10 @@
 		6786E7602833DA770058A7DE /* input_tracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 6786E75E2833DA770058A7DE /* input_tracker.h */; };
 		6786E7632833DA9D0058A7DE /* layout_parser.h in Headers */ = {isa = PBXBuildFile; fileRef = 6786E7612833DA9D0058A7DE /* layout_parser.h */; };
 		6786E7642833DA9D0058A7DE /* layout_parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6786E7622833DA9D0058A7DE /* layout_parser.cpp */; };
-		6786E7682833DAB30058A7DE /* irs_drag_source.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6786E7652833DAB20058A7DE /* irs_drag_source.cpp */; };
-		6786E7692833DAB30058A7DE /* irs_drag_source.h in Headers */ = {isa = PBXBuildFile; fileRef = 6786E7662833DAB20058A7DE /* irs_drag_source.h */; };
-		6786E76A2833DAB30058A7DE /* irs_drag_delegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 6786E7672833DAB30058A7DE /* irs_drag_delegate.h */; };
+		6786E7722843765F0058A7DE /* haul_delegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 6786E76F2843765F0058A7DE /* haul_delegate.h */; };
+		6786E7732843765F0058A7DE /* haul_source.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6786E7702843765F0058A7DE /* haul_source.cpp */; };
+		6786E7742843765F0058A7DE /* haul_source.h in Headers */ = {isa = PBXBuildFile; fileRef = 6786E7712843765F0058A7DE /* haul_source.h */; };
+		6786E7AB28438BB00058A7DE /* canvas_stack.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 6786E7AA28438BB00058A7DE /* canvas_stack.hpp */; };
 		678C89B427C1492D008D0B21 /* ucmm.h in Headers */ = {isa = PBXBuildFile; fileRef = 678C89B227C1492D008D0B21 /* ucmm.h */; };
 		678C89B527C1492D008D0B21 /* ucmm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 678C89B327C1492D008D0B21 /* ucmm.cpp */; };
 		678C89B927C1493C008D0B21 /* icc_profile.h in Headers */ = {isa = PBXBuildFile; fileRef = 678C89B627C1493C008D0B21 /* icc_profile.h */; };
@@ -666,15 +661,9 @@
 		6770CE3E256FB97F007B49F3 /* text_attributes_span.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text_attributes_span.cpp; sourceTree = "<group>"; };
 		6770CE44256FB9AC007B49F3 /* text_custom_drawing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text_custom_drawing.h; sourceTree = "<group>"; };
 		6770CE45256FB9AC007B49F3 /* text_inline_object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text_inline_object.h; sourceTree = "<group>"; };
-		6773927226076DCD00D03228 /* color_element.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = color_element.h; sourceTree = "<group>"; };
 		6773927326076DCD00D03228 /* texteditor_element.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = texteditor_element.cpp; sourceTree = "<group>"; };
 		6773927426076DCD00D03228 /* chessboard_element.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = chessboard_element.cpp; sourceTree = "<group>"; };
-		6773927526076DCD00D03228 /* shape_element.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shape_element.h; sourceTree = "<group>"; };
 		6773927626076DCD00D03228 /* ripple_element.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ripple_element.cpp; sourceTree = "<group>"; };
-		6773927726076DCD00D03228 /* multi_element.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = multi_element.h; sourceTree = "<group>"; };
-		6773927826076DCD00D03228 /* shape_element.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shape_element.cpp; sourceTree = "<group>"; };
-		6773927926076DCD00D03228 /* color_element.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = color_element.cpp; sourceTree = "<group>"; };
-		6773927A26076DCD00D03228 /* multi_element.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = multi_element.cpp; sourceTree = "<group>"; };
 		6773927B26076DCD00D03228 /* element.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = element.h; sourceTree = "<group>"; };
 		6773927C26076DCD00D03228 /* image_element.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image_element.cpp; sourceTree = "<group>"; };
 		6773927D26076DCD00D03228 /* texteditor_element.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = texteditor_element.h; sourceTree = "<group>"; };
@@ -764,9 +753,10 @@
 		6786E75E2833DA770058A7DE /* input_tracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = input_tracker.h; sourceTree = "<group>"; };
 		6786E7612833DA9D0058A7DE /* layout_parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = layout_parser.h; sourceTree = "<group>"; };
 		6786E7622833DA9D0058A7DE /* layout_parser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layout_parser.cpp; sourceTree = "<group>"; };
-		6786E7652833DAB20058A7DE /* irs_drag_source.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = irs_drag_source.cpp; sourceTree = "<group>"; };
-		6786E7662833DAB20058A7DE /* irs_drag_source.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = irs_drag_source.h; sourceTree = "<group>"; };
-		6786E7672833DAB30058A7DE /* irs_drag_delegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = irs_drag_delegate.h; sourceTree = "<group>"; };
+		6786E76F2843765F0058A7DE /* haul_delegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = haul_delegate.h; sourceTree = "<group>"; };
+		6786E7702843765F0058A7DE /* haul_source.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = haul_source.cpp; sourceTree = "<group>"; };
+		6786E7712843765F0058A7DE /* haul_source.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = haul_source.h; sourceTree = "<group>"; };
+		6786E7AA28438BB00058A7DE /* canvas_stack.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = canvas_stack.hpp; sourceTree = "<group>"; };
 		678C89B227C1492D008D0B21 /* ucmm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ucmm.h; sourceTree = "<group>"; };
 		678C89B327C1492D008D0B21 /* ucmm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ucmm.cpp; sourceTree = "<group>"; };
 		678C89B627C1493C008D0B21 /* icc_profile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = icc_profile.h; sourceTree = "<group>"; };
@@ -1064,6 +1054,7 @@
 				6765098725875E6A000DD7BC /* 3d */,
 				671BEB252812E50F00AA65E6 /* byte_data.cpp */,
 				671BEB242812E50F00AA65E6 /* byte_data.h */,
+				6786E7AA28438BB00058A7DE /* canvas_stack.hpp */,
 				670BD52524B229EC00DF5B85 /* canvas.cpp */,
 				670BD55D24B229EC00DF5B85 /* canvas.h */,
 				67998DCC27BA84A800B9113C /* colors */,
@@ -1284,9 +1275,9 @@
 				6723A79524FE9B1900F3FB53 /* context_impl.h */,
 				6723A79924FE9B1900F3FB53 /* context.cpp */,
 				6723A79824FE9B1900F3FB53 /* context.h */,
-				6786E7672833DAB30058A7DE /* irs_drag_delegate.h */,
-				6786E7652833DAB20058A7DE /* irs_drag_source.cpp */,
-				6786E7662833DAB20058A7DE /* irs_drag_source.h */,
+				6786E76F2843765F0058A7DE /* haul_delegate.h */,
+				6786E7702843765F0058A7DE /* haul_source.cpp */,
+				6786E7712843765F0058A7DE /* haul_source.h */,
 				670BD7CA24B4C39F00DF5B85 /* mac */,
 				670BD5E624B229ED00DF5B85 /* purpose.h */,
 				67BD763825EA8F9800F200DB /* window_dpi_utils.cpp */,
@@ -1464,20 +1455,14 @@
 			children = (
 				6773927426076DCD00D03228 /* chessboard_element.cpp */,
 				6773928026076DCD00D03228 /* chessboard_element.h */,
-				6773927926076DCD00D03228 /* color_element.cpp */,
-				6773927226076DCD00D03228 /* color_element.h */,
 				67630466280EF92A0097DD20 /* drawer_element.cpp */,
 				67630467280EF92A0097DD20 /* drawer_element.h */,
 				6773927F26076DCD00D03228 /* element.cpp */,
 				6773927B26076DCD00D03228 /* element.h */,
 				6773927C26076DCD00D03228 /* image_element.cpp */,
 				6773927E26076DCD00D03228 /* image_element.h */,
-				6773927A26076DCD00D03228 /* multi_element.cpp */,
-				6773927726076DCD00D03228 /* multi_element.h */,
 				6773927626076DCD00D03228 /* ripple_element.cpp */,
 				6773928126076DCD00D03228 /* ripple_element.h */,
-				6773927826076DCD00D03228 /* shape_element.cpp */,
-				6773927526076DCD00D03228 /* shape_element.h */,
 				6773927326076DCD00D03228 /* texteditor_element.cpp */,
 				6773927D26076DCD00D03228 /* texteditor_element.h */,
 			);
@@ -1727,6 +1712,7 @@
 				672DD02826EE32F300E49039 /* shade_layout_info.h in Headers */,
 				67998E0027BA84A800B9113C /* icc_type_param_curve.h in Headers */,
 				67998E0D27BA84E200B9113C /* display_manager.h in Headers */,
+				6786E7742843765F0058A7DE /* haul_source.h in Headers */,
 				6770CE39256FB958007B49F3 /* range.hpp in Headers */,
 				6773929B26076E4200D03228 /* text_action_menu_callback.h in Headers */,
 				670BD71524B229ED00DF5B85 /* window_listener.h in Headers */,
@@ -1774,7 +1760,6 @@
 				670BD70524B229ED00DF5B85 /* window_native.h in Headers */,
 				67CAAADF2528AE0C00965E68 /* check_listener.h in Headers */,
 				671BEB33282120D100AA65E6 /* matrix_2x3.hpp in Headers */,
-				6786E7692833DAB30058A7DE /* irs_drag_source.h in Headers */,
 				67950D89261B457A0012DE92 /* list_item.h in Headers */,
 				67950D8B261B457A0012DE92 /* list_item_recycler.h in Headers */,
 				6723A79424FE99B800F3FB53 /* display.h in Headers */,
@@ -1816,7 +1801,6 @@
 				670BD64C24B229ED00DF5B85 /* input_consts.h in Headers */,
 				670BD6ED24B229ED00DF5B85 /* list_layouter.h in Headers */,
 				6796F0E82711ADFB009D0E59 /* pipe_server_mac.h in Headers */,
-				6773928726076DCD00D03228 /* multi_element.h in Headers */,
 				67BD763925EA8F9800F200DB /* window_dpi_utils.h in Headers */,
 				670BD66724B229ED00DF5B85 /* path.h in Headers */,
 				6783F43C24D1E4D300056DA1 /* lc_image.h in Headers */,
@@ -1842,7 +1826,6 @@
 				6770CE25256FB85A007B49F3 /* focus_manager.h in Headers */,
 				670BD72824B229ED00DF5B85 /* ui_utils.h in Headers */,
 				670BD6BF24B229ED00DF5B85 /* switch_view.h in Headers */,
-				6773928526076DCD00D03228 /* shape_element.h in Headers */,
 				670BD69A24B229ED00DF5B85 /* shadow_effect.h in Headers */,
 				6723A79D24FE9B1900F3FB53 /* context.h in Headers */,
 				676D2CDF24BE1296000F3DAE /* imm_mac.h in Headers */,
@@ -1861,6 +1844,7 @@
 				670BD65124B229ED00DF5B85 /* menu_callback.h in Headers */,
 				6770CE2F256FB889007B49F3 /* radio_button.h in Headers */,
 				670BD6BE24B229ED00DF5B85 /* seek_value_changed_listener.h in Headers */,
+				6786E7AB28438BB00058A7DE /* canvas_stack.hpp in Headers */,
 				670BD60D24B229ED00DF5B85 /* animator.h in Headers */,
 				6773928E26076DCD00D03228 /* image_element.h in Headers */,
 				672DD01426EE327F00E49039 /* vsync_provider.h in Headers */,
@@ -1870,10 +1854,10 @@
 				670BD60724B229ED00DF5B85 /* scroller.h in Headers */,
 				670BD6E524B229ED00DF5B85 /* tab_view.h in Headers */,
 				670BD72A24B229ED00DF5B85 /* clipboard_manager.h in Headers */,
-				6773928226076DCD00D03228 /* color_element.h in Headers */,
 				6770CE41256FB97F007B49F3 /* text_attributes_span.h in Headers */,
 				6723A7A824FE9C6E00F3FB53 /* view_animator_params.h in Headers */,
 				677392CC26076F0D00D03228 /* size_info.h in Headers */,
+				6786E7722843765F0058A7DE /* haul_delegate.h in Headers */,
 				670BD60A24B229ED00DF5B85 /* timer.h in Headers */,
 				670BD60B24B229ED00DF5B85 /* view_animator.h in Headers */,
 				6783F44324D1E4D300056DA1 /* image.h in Headers */,
@@ -1915,7 +1899,6 @@
 				670BD64924B229ED00DF5B85 /* input_event.h in Headers */,
 				677392B126076EAB00D03228 /* layout_info.h in Headers */,
 				67630473280EF97F0097DD20 /* sys_open_file_dialog_mac.h in Headers */,
-				6786E76A2833DAB30058A7DE /* irs_drag_delegate.h in Headers */,
 				6773929126076DCD00D03228 /* ripple_element.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2024,12 +2007,9 @@
 				670BD64E24B229ED00DF5B85 /* input_event.cpp in Sources */,
 				670BD60C24B229ED00DF5B85 /* animator.cpp in Sources */,
 				670BD64A24B229ED00DF5B85 /* input_consts.cpp in Sources */,
-				6773928926076DCD00D03228 /* color_element.cpp in Sources */,
 				67998DF127BA84A800B9113C /* icc_type_lut16.cpp in Sources */,
 				67998E0527BA84A800B9113C /* icc_parser.cpp in Sources */,
 				670BD6FD24B229ED00DF5B85 /* scroll_view.cpp in Sources */,
-				6786E7682833DAB30058A7DE /* irs_drag_source.cpp in Sources */,
-				6773928A26076DCD00D03228 /* multi_element.cpp in Sources */,
 				670BD65324B229ED00DF5B85 /* menu_impl.cpp in Sources */,
 				6770CE26256FB85A007B49F3 /* focus_manager.cpp in Sources */,
 				6783F40624C45C3600056DA1 /* offscreen_buffer_mac.mm in Sources */,
@@ -2098,6 +2078,7 @@
 				670BD70224B229ED00DF5B85 /* text_view.cpp in Sources */,
 				670BD63C24B229ED00DF5B85 /* text_layout.cpp in Sources */,
 				670BD6C124B229ED00DF5B85 /* chart_view.cpp in Sources */,
+				6786E7732843765F0058A7DE /* haul_source.cpp in Sources */,
 				672DD02626EE32F300E49039 /* shade_layout_info.cpp in Sources */,
 				67998DF727BA84A800B9113C /* icc_type.cpp in Sources */,
 				670BD6BD24B229ED00DF5B85 /* button.cpp in Sources */,
@@ -2138,7 +2119,6 @@
 				6723A79E24FE9B1900F3FB53 /* context.cpp in Sources */,
 				670BD6DC24B229ED00DF5B85 /* view.cpp in Sources */,
 				67985C732504E54B0092EACB /* ui_tracker.cpp in Sources */,
-				6773928826076DCD00D03228 /* shape_element.cpp in Sources */,
 				670BD6F924B229ED00DF5B85 /* list_view.cpp in Sources */,
 				670BD60F24B229ED00DF5B85 /* page.cpp in Sources */,
 				672DD00A26EE31DF00E49039 /* pipe_server.cpp in Sources */,

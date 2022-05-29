@@ -10,6 +10,7 @@
 #include "ukive/basics/levitator.h"
 #include "ukive/views/list/list_item_event_router.h"
 #include "ukive/window/haul_delegate.h"
+#include "ukive/window/haul_source.h"
 #include "ukive/window/window.h"
 
 

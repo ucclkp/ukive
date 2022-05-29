@@ -9,12 +9,15 @@
       </FileRef>
    </Group>
    <FileRef
-      location = "group:shell/shell.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:necro/necro.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:shell/shell.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:ukive/ukive.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:vevah/vevah.xcodeproj">
    </FileRef>
 </Workspace>

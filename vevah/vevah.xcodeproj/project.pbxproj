@@ -1,0 +1,399 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6786E79B28437BE80058A7DE /* main_window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6786E79628437BE80058A7DE /* main_window.cpp */; };
+		6786E79D28437BE80058A7DE /* container_layout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6786E79828437BE80058A7DE /* container_layout.cpp */; };
+		6786E79E28437BE80058A7DE /* control_list_source.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6786E79A28437BE80058A7DE /* control_list_source.cpp */; };
+		6786E7A328437BF50058A7DE /* main_window_layout.xml in Resources */ = {isa = PBXBuildFile; fileRef = 6786E7A128437BF50058A7DE /* main_window_layout.xml */; };
+		6786E7A6284380DC0058A7DE /* libukive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6786E7A5284380DC0058A7DE /* libukive.a */; };
+		6786E7A8284380DC0058A7DE /* libutils.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6786E7A7284380DC0058A7DE /* libutils.a */; };
+		6786E7AD284393560058A7DE /* necro in Resources */ = {isa = PBXBuildFile; fileRef = 6786E7AC284393560058A7DE /* necro */; };
+		67BFCFEB2843CDE300DE7B82 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 67BFCFE52843CDE300DE7B82 /* Assets.xcassets */; };
+		67BFCFEC2843CDE300DE7B82 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67BFCFE72843CDE300DE7B82 /* MainMenu.xib */; };
+		67BFCFEE2843CDE300DE7B82 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67BFCFEA2843CDE300DE7B82 /* main.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		6786E77E284379600058A7DE /* vevah.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = vevah.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6786E79428437BE80058A7DE /* control_list_source.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = control_list_source.h; sourceTree = "<group>"; };
+		6786E79528437BE80058A7DE /* main_window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = main_window.h; sourceTree = "<group>"; };
+		6786E79628437BE80058A7DE /* main_window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main_window.cpp; sourceTree = "<group>"; };
+		6786E79828437BE80058A7DE /* container_layout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = container_layout.cpp; sourceTree = "<group>"; };
+		6786E79928437BE80058A7DE /* container_layout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = container_layout.h; sourceTree = "<group>"; };
+		6786E79A28437BE80058A7DE /* control_list_source.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = control_list_source.cpp; sourceTree = "<group>"; };
+		6786E7A128437BF50058A7DE /* main_window_layout.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = main_window_layout.xml; sourceTree = "<group>"; };
+		6786E7A228437BF50058A7DE /* necro_resources_id.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = necro_resources_id.h; sourceTree = "<group>"; };
+		6786E7A5284380DC0058A7DE /* libukive.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libukive.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		6786E7A7284380DC0058A7DE /* libutils.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libutils.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		6786E7AC284393560058A7DE /* necro */ = {isa = PBXFileReference; lastKnownFileType = folder; name = necro; path = ../build/necro; sourceTree = "<group>"; };
+		67BFCFE52843CDE300DE7B82 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		67BFCFE62843CDE300DE7B82 /* vevah.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = vevah.entitlements; sourceTree = "<group>"; };
+		67BFCFE82843CDE300DE7B82 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		67BFCFEA2843CDE300DE7B82 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6786E77B284379600058A7DE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6786E7A8284380DC0058A7DE /* libutils.a in Frameworks */,
+				6786E7A6284380DC0058A7DE /* libukive.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6786E775284379600058A7DE = {
+			isa = PBXGroup;
+			children = (
+				6786E7AC284393560058A7DE /* necro */,
+				67BFCFE42843CDE300DE7B82 /* app */,
+				6786E79828437BE80058A7DE /* container_layout.cpp */,
+				6786E79928437BE80058A7DE /* container_layout.h */,
+				6786E79A28437BE80058A7DE /* control_list_source.cpp */,
+				6786E79428437BE80058A7DE /* control_list_source.h */,
+				6786E7A4284380DC0058A7DE /* Frameworks */,
+				6786E79628437BE80058A7DE /* main_window.cpp */,
+				6786E79528437BE80058A7DE /* main_window.h */,
+				6786E77F284379600058A7DE /* Products */,
+				6786E79F28437BF50058A7DE /* resources */,
+			);
+			sourceTree = "<group>";
+		};
+		6786E77F284379600058A7DE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6786E77E284379600058A7DE /* vevah.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6786E79F28437BF50058A7DE /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				6786E7A028437BF50058A7DE /* layout */,
+				6786E7A228437BF50058A7DE /* necro_resources_id.h */,
+			);
+			path = resources;
+			sourceTree = "<group>";
+		};
+		6786E7A028437BF50058A7DE /* layout */ = {
+			isa = PBXGroup;
+			children = (
+				6786E7A128437BF50058A7DE /* main_window_layout.xml */,
+			);
+			path = layout;
+			sourceTree = "<group>";
+		};
+		6786E7A4284380DC0058A7DE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6786E7A5284380DC0058A7DE /* libukive.a */,
+				6786E7A7284380DC0058A7DE /* libutils.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		67BFCFE42843CDE300DE7B82 /* app */ = {
+			isa = PBXGroup;
+			children = (
+				67BFCFE52843CDE300DE7B82 /* Assets.xcassets */,
+				67BFCFEA2843CDE300DE7B82 /* main.cpp */,
+				67BFCFE72843CDE300DE7B82 /* MainMenu.xib */,
+				67BFCFE62843CDE300DE7B82 /* vevah.entitlements */,
+			);
+			path = app;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6786E77D284379600058A7DE /* vevah */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6786E78E284379640058A7DE /* Build configuration list for PBXNativeTarget "vevah" */;
+			buildPhases = (
+				6786E77A284379600058A7DE /* Sources */,
+				6786E77B284379600058A7DE /* Frameworks */,
+				6786E77C284379600058A7DE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = vevah;
+			productName = vevah;
+			productReference = 6786E77E284379600058A7DE /* vevah.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6786E776284379600058A7DE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1330;
+				TargetAttributes = {
+					6786E77D284379600058A7DE = {
+						CreatedOnToolsVersion = 13.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 6786E779284379600058A7DE /* Build configuration list for PBXProject "vevah" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 6786E775284379600058A7DE;
+			productRefGroup = 6786E77F284379600058A7DE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6786E77D284379600058A7DE /* vevah */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6786E77C284379600058A7DE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6786E7AD284393560058A7DE /* necro in Resources */,
+				6786E7A328437BF50058A7DE /* main_window_layout.xml in Resources */,
+				67BFCFEB2843CDE300DE7B82 /* Assets.xcassets in Resources */,
+				67BFCFEC2843CDE300DE7B82 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6786E77A284379600058A7DE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6786E79E28437BE80058A7DE /* control_list_source.cpp in Sources */,
+				6786E79D28437BE80058A7DE /* container_layout.cpp in Sources */,
+				67BFCFEE2843CDE300DE7B82 /* main.cpp in Sources */,
+				6786E79B28437BE80058A7DE /* main_window.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		67BFCFE72843CDE300DE7B82 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				67BFCFE82843CDE300DE7B82 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		6786E78C284379640058A7DE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/..",
+					"$(SRCROOT)/../ukive",
+					"$(SRCROOT)/../utils",
+				);
+			};
+			name = Debug;
+		};
+		6786E78D284379640058A7DE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/..",
+					"$(SRCROOT)/../ukive",
+					"$(SRCROOT)/../utils",
+				);
+			};
+			name = Release;
+		};
+		6786E78F284379640058A7DE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = app/vevah.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainNibFile = MainMenu;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ucclkp.vevah;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Debug;
+		};
+		6786E790284379640058A7DE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = app/vevah.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainNibFile = MainMenu;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ucclkp.vevah;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6786E779284379600058A7DE /* Build configuration list for PBXProject "vevah" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6786E78C284379640058A7DE /* Debug */,
+				6786E78D284379640058A7DE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6786E78E284379640058A7DE /* Build configuration list for PBXNativeTarget "vevah" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6786E78F284379640058A7DE /* Debug */,
+				6786E790284379640058A7DE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6786E776284379600058A7DE /* Project object */;
+}

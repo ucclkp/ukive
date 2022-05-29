@@ -11,6 +11,7 @@
 
 #include "utils/mac/objc_utils.hpp"
 
+#include "ukive/graphics/canvas_stack.hpp"
 #include "ukive/graphics/cyro_render_target.h"
 #include "ukive/graphics/images/image_frame.h"
 #include "ukive/graphics/matrix_2x3.hpp"
@@ -89,11 +90,15 @@ namespace mac {
             TextLayout *layout, const Paint &paint) override;
 
     private:
+        struct StackData {
+            float opacity;
+            Matrix2x3F matrix;
+        };
+
         float opacity_ = 1;
         Matrix2x3F matrix_;
+        CanvasStack<StackData> save_stack_;
 
-        std::stack<float> opacity_stack_;
-        std::stack<Matrix2x3F> matrix_stack_;
         CyroBuffer* buffer_ = nullptr;
     };
 

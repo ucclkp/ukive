@@ -6,6 +6,8 @@
 
 #include "ukive/graphics/mac/cyro_render_target_mac.h"
 
+#include "utils/log.h"
+
 #include "ukive/app/application.h"
 #include "ukive/graphics/cyro_buffer.h"
 #include "ukive/graphics/images/image_options.h"
@@ -35,6 +37,8 @@ namespace mac {
     }
 
     void CyroRenderTargetMac::onDestroy() {
+        save_stack_.clear();
+
         if (buffer_) {
             buffer_->onDestroy();
             delete buffer_;
@@ -242,17 +246,21 @@ namespace mac {
 
     void CyroRenderTargetMac::save() {
         [NSGraphicsContext saveGraphicsState];
-        matrix_stack_.push(matrix_);
-        opacity_stack_.push(opacity_);
+        save_stack_.push({ opacity_, matrix_ });
     }
 
     void CyroRenderTargetMac::restore() {
         [NSGraphicsContext restoreGraphicsState];
-        matrix_ = matrix_stack_.top();
-        matrix_stack_.pop();
 
-        opacity_ = opacity_stack_.top();
-        opacity_stack_.pop();
+        if (save_stack_.empty()) {
+            ubassert(false);
+            return;
+        }
+
+        auto& sb = save_stack_.top();
+        matrix_ = sb.matrix;
+        opacity_ = sb.opacity;
+        save_stack_.pop();
     }
 
     void CyroRenderTargetMac::scale(float sx, float sy, const PointF &c) {
