@@ -17,15 +17,11 @@
 
 namespace ukive {
 
-    class OnHookInputEventDelegate;
-
     class LayoutView : public View {
     public:
         explicit LayoutView(Context c);
         LayoutView(Context c, AttrsRef attrs);
         ~LayoutView();
-
-        void setHookInputEventDelegate(OnHookInputEventDelegate* d);
 
         bool dispatchInputEvent(InputEvent* e) override;
         void dispatchWindowFocusChanged(bool focus) override;
@@ -81,6 +77,7 @@ namespace ukive {
          */
         void removeAllViews(bool del = true, bool req_layout = true);
 
+        bool hasChildren() const;
         size_t getChildCount() const;
         View* getChildById(int id) const;
         View* getChildAt(size_t index) const;
@@ -127,7 +124,6 @@ namespace ukive {
 
         std::vector<View*> views_;
         bool is_hooked_ = false;
-        OnHookInputEventDelegate* iie_delegate_ = nullptr;
     };
 
 }

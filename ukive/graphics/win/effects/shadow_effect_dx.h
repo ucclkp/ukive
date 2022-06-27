@@ -55,7 +55,7 @@ namespace win {
 
     protected:
         void onDemolish() override;
-        void onRebuild() override;
+        void onRebuild(bool succeeded) override;
 
     private:
         struct ConstBuffer {

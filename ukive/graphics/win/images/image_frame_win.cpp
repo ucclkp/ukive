@@ -36,7 +36,7 @@ namespace win {
         d2d_bmp_.reset();
     }
 
-    void ImageFrameWin::onRebuild() {}
+    void ImageFrameWin::onRebuild(bool succeeded) {}
 
     void ImageFrameWin::initDpiValues() {
         if (d2d_bmp_) {

@@ -7,6 +7,8 @@
 #ifndef UKIVE_WINDOW_HAUL_SOURCE_H_
 #define UKIVE_WINDOW_HAUL_SOURCE_H_
 
+#include <string>
+
 #include "ukive/graphics/point.hpp"
 
 
@@ -19,6 +21,20 @@ namespace ukive {
 
     class HaulSource {
     public:
+        enum DataType {
+            DT_NONE,
+            DT_URL,
+            DT_TEXT,
+            DT_BYTES,
+            DT_EX_DATA,
+        };
+
+        struct Data {
+            DataType type;
+            std::string exd;
+            std::string raw;
+        };
+
         HaulSource(int id, HaulDelegate* d);
         virtual ~HaulSource() = default;
 
@@ -26,7 +42,21 @@ namespace ukive {
         bool brake(InputEvent* e);
         void cancel();
 
-        int getId() const;
+        void setURL(const std::string_view& url);
+        void setText(const std::string_view& text);
+        void setBytes(const std::string_view& bytes);
+        void setExData(
+            const std::string_view& exid,
+            const std::string_view& data);
+
+        const std::string& getRaw() const;
+
+        bool isURL() const;
+        bool isText() const;
+        bool isBytes() const;
+        bool isExData(const std::string_view& exd) const;
+
+        int getSourceId() const;
 
     private:
         void stop();
@@ -37,6 +67,8 @@ namespace ukive {
 
         Point start_pos_{};
         bool is_hauling_ = false;
+
+        Data data_;
     };
 
 }

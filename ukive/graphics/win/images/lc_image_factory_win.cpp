@@ -497,7 +497,7 @@ namespace win {
             WICDecodeMetadataCacheOnDemand,
             &decoder);
         if (FAILED(hr)) {
-            DLOG(Log::WARNING) << "Failed to decode file: " << utl::UTF16ToUTF8(file_name) << " " << std::hex << hr;
+            DLOG(Log::WARNING) << "Failed to decode file: " << utl::u16to8(file_name) << " " << std::hex << hr;
             return {};
         }
         return decoder;

@@ -1248,7 +1248,7 @@
     <ClInclude Include="views\size_info.h">
       <Filter>views</Filter>
     </ClInclude>
-    <ClInclude Include="views\input_event_delegate.h">
+    <ClInclude Include="views\view_delegate.h">
       <Filter>views</Filter>
     </ClInclude>
     <ClInclude Include="text\text_action_menu_callback.h">

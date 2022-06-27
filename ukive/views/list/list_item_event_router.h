@@ -8,7 +8,7 @@
 #define UKIVE_VIEWS_LIST_LIST_ITEM_EVENT_ROUTER_H_
 
 #include "ukive/views/click_listener.h"
-#include "ukive/views/input_event_delegate.h"
+#include "ukive/views/view_delegate.h"
 
 
 namespace ukive {
@@ -27,7 +27,7 @@ namespace ukive {
 
     class ListItemEventRouter :
         public OnClickListener,
-        public OnInputEventDelegate
+        public ViewDelegate
     {
     public:
         explicit ListItemEventRouter(ListItemEventListener* listener);
@@ -38,7 +38,7 @@ namespace ukive {
         void onClick(View* v) override;
         void onDoubleClick(View* v) override;
 
-        // OnInputEventDelegate
+        // ViewDelegate
         bool onInputReceived(View* v, InputEvent* e, bool* ret) override;
 
     private:

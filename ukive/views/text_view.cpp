@@ -69,7 +69,7 @@ namespace ukive {
         is_auto_wrap_ = resolveAttrBool(attrs, necro::kAttrTextViewAutoWrap, true);
 
         auto text = resolveAttrString(attrs, necro::kAttrTextViewText, "");
-        base_text_ = new Editable(utl::UTF8ToUTF16(text));
+        base_text_ = new Editable(utl::u8to16(text));
         base_text_->addEditWatcher(this);
 
         auto def_text_size = std::round(c.dp2px(15.f));
@@ -856,6 +856,7 @@ namespace ukive {
                     first_sel_ = getTextPositionAtPoint(
                         e->getX() - getPadding().start() - space_.start() + getScrollX(),
                         e->getY() - getPadding().top() - space_.top() + getScrollY());
+                    last_sel_ = first_sel_;
 
                     if (input_connection_->isCompositing()) {
                         // 输入法在候选阶段时，用鼠标修改当前选择位置并不会使
@@ -1491,8 +1492,8 @@ namespace ukive {
             if (is_editable_) {
                 locate_blink = true;
             }
+            last_sel_ = first_sel_ = ns;
         } else {
-            setSelection(ns, ne);
             text_blink_->hide();
             drawSelection(ns, ne);
         }

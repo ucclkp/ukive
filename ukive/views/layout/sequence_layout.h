@@ -25,6 +25,7 @@ namespace ukive {
         SequenceLayout(Context c, AttrsRef attrs);
 
         void setOrientation(int orientation);
+        int getOrientation() const;
 
         Size onDetermineSize(const SizeInfo& info) override;
         void onLayout(

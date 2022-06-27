@@ -90,14 +90,23 @@ namespace ukive {
     }
 
     // static
-    void LayoutParser::addViewName(const std::string& name, bool is_layout, Creator&& ctor) {
-        auto& info = view_map2_[name];
+    std::string LayoutParser::genNameByType(const std::string_view& type) {
+        std::string r(type);
+        utl::replaceAll(&r, "::", ".");
+        return r;
+    }
+
+    // static
+    void LayoutParser::addViewName(
+        const std::string_view& name, bool is_layout, Creator&& ctor)
+    {
+        auto& info = view_map2_[std::string(name)];
         info.is_layout = is_layout;
         info.creator = std::move(ctor);
     }
 
     // static
-    void LayoutParser::removeViewName(const std::string& name) {
+    void LayoutParser::removeViewName(const std::string_view& name) {
         auto it = view_map2_.find(name);
         if (it != view_map2_.end()) {
             view_map2_.erase(it);
@@ -105,7 +114,9 @@ namespace ukive {
     }
 
     // static
-    View* LayoutParser::createView(const std::string& name, Context c, AttrsRef attrs) {
+    View* LayoutParser::createView(
+        const std::string_view& name, Context c, AttrsRef attrs)
+    {
         Creator* handler;
         auto it = view_map_.find(name);
         if (it != view_map_.end()) {
@@ -222,7 +233,7 @@ namespace ukive {
                     return false;
                 }
 
-                layout_id_map_[id] = file_path / utl::UTF8ToUTF16(pair[1]);
+                layout_id_map_[id] = file_path / utl::u8to16(pair[1]);
             }
         }
 

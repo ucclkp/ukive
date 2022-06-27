@@ -359,4 +359,8 @@ namespace ukive {
         requestDraw();
     }
 
+    int SequenceLayout::getOrientation() const {
+        return orientation_;
+    }
+
 }

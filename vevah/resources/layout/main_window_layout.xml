@@ -39,7 +39,7 @@
 
     </SequenceLayout>
 
-    <vevah::ContainerLayout
+    <vevah.ContainerLayout
         id="@+id/cl_main_wnd_cur_view"
         width="fill"
         height="fill"

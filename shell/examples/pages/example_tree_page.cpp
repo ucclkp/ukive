@@ -28,8 +28,8 @@ namespace shell {
     ExampleTreeItem::ExampleTreeItem(ukive::View* v)
         : ListItem(v) {}
 
-    ExampleTreePage::ExampleTreePage(ukive::Window* w)
-        : Page(w) {}
+    ExampleTreePage::ExampleTreePage()
+        : Page() {}
 
     ukive::View* ExampleTreePage::onCreate(ukive::LayoutView* parent) {
         auto v = ukive::LayoutParser::from(

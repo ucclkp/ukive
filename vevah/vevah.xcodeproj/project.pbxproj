@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		675B1B222883290F00E817EA /* property_page.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 675B1B212883290F00E817EA /* property_page.cpp */; };
+		675B1B242883292900E817EA /* property_page_layout.xml in Resources */ = {isa = PBXBuildFile; fileRef = 675B1B232883292900E817EA /* property_page_layout.xml */; };
+		675B1B272883294900E817EA /* sequence_layout_delegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 675B1B252883294900E817EA /* sequence_layout_delegate.cpp */; };
 		6786E79B28437BE80058A7DE /* main_window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6786E79628437BE80058A7DE /* main_window.cpp */; };
 		6786E79D28437BE80058A7DE /* container_layout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6786E79828437BE80058A7DE /* container_layout.cpp */; };
 		6786E79E28437BE80058A7DE /* control_list_source.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6786E79A28437BE80058A7DE /* control_list_source.cpp */; };
@@ -20,6 +23,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		675B1B202883290F00E817EA /* property_page.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = property_page.h; sourceTree = "<group>"; };
+		675B1B212883290F00E817EA /* property_page.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = property_page.cpp; sourceTree = "<group>"; };
+		675B1B232883292900E817EA /* property_page_layout.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = property_page_layout.xml; sourceTree = "<group>"; };
+		675B1B252883294900E817EA /* sequence_layout_delegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sequence_layout_delegate.cpp; sourceTree = "<group>"; };
+		675B1B262883294900E817EA /* sequence_layout_delegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sequence_layout_delegate.h; sourceTree = "<group>"; };
 		6786E77E284379600058A7DE /* vevah.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = vevah.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6786E79428437BE80058A7DE /* control_list_source.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = control_list_source.h; sourceTree = "<group>"; };
 		6786E79528437BE80058A7DE /* main_window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = main_window.h; sourceTree = "<group>"; };
@@ -51,10 +59,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		675B1B1F2883290F00E817EA /* properties */ = {
+			isa = PBXGroup;
+			children = (
+				675B1B212883290F00E817EA /* property_page.cpp */,
+				675B1B202883290F00E817EA /* property_page.h */,
+			);
+			path = properties;
+			sourceTree = "<group>";
+		};
 		6786E775284379600058A7DE = {
 			isa = PBXGroup;
 			children = (
-				6786E7AC284393560058A7DE /* necro */,
 				67BFCFE42843CDE300DE7B82 /* app */,
 				6786E79828437BE80058A7DE /* container_layout.cpp */,
 				6786E79928437BE80058A7DE /* container_layout.h */,
@@ -63,8 +79,12 @@
 				6786E7A4284380DC0058A7DE /* Frameworks */,
 				6786E79628437BE80058A7DE /* main_window.cpp */,
 				6786E79528437BE80058A7DE /* main_window.h */,
+				6786E7AC284393560058A7DE /* necro */,
 				6786E77F284379600058A7DE /* Products */,
+				675B1B1F2883290F00E817EA /* properties */,
 				6786E79F28437BF50058A7DE /* resources */,
+				675B1B252883294900E817EA /* sequence_layout_delegate.cpp */,
+				675B1B262883294900E817EA /* sequence_layout_delegate.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -89,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				6786E7A128437BF50058A7DE /* main_window_layout.xml */,
+				675B1B232883292900E817EA /* property_page_layout.xml */,
 			);
 			path = layout;
 			sourceTree = "<group>";
@@ -171,6 +192,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6786E7AD284393560058A7DE /* necro in Resources */,
+				675B1B242883292900E817EA /* property_page_layout.xml in Resources */,
 				6786E7A328437BF50058A7DE /* main_window_layout.xml in Resources */,
 				67BFCFEB2843CDE300DE7B82 /* Assets.xcassets in Resources */,
 				67BFCFEC2843CDE300DE7B82 /* MainMenu.xib in Resources */,
@@ -184,6 +206,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				675B1B222883290F00E817EA /* property_page.cpp in Sources */,
+				675B1B272883294900E817EA /* sequence_layout_delegate.cpp in Sources */,
 				6786E79E28437BE80058A7DE /* control_list_source.cpp in Sources */,
 				6786E79D28437BE80058A7DE /* container_layout.cpp in Sources */,
 				67BFCFEE2843CDE300DE7B82 /* main.cpp in Sources */,

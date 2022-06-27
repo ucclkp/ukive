@@ -28,11 +28,11 @@ namespace ukive {
     class LayoutInfo;
     class LayoutView;
     class OnClickListener;
-    class OnInputEventDelegate;
     class ShadowEffect;
     class InputMethodConnection;
     class HaulSource;
     class ViewAnimator;
+    class ViewDelegate;
     class Window;
 
     class View : public ElementCallback {
@@ -83,7 +83,7 @@ namespace ukive {
         void setMinimumWidth(int width);
         void setMinimumHeight(int height);
         void setOnClickListener(OnClickListener* l);
-        void setOnInputEventDelegate(OnInputEventDelegate* d);
+        void setDelegate(ViewDelegate* d);
         void setHaulSource(HaulSource* src);
         void setOutline(Outline outline);
 
@@ -114,7 +114,7 @@ namespace ukive {
         int getOutline() const;
         Cursor getCursor() const;
         OnClickListener* getClickListener() const;
-        OnInputEventDelegate* getInputEventDelegate() const;
+        ViewDelegate* getDelegate() const;
         HaulSource* getHaulSource() const;
         const Size& getMinimumSize() const;
         const Size& getDeterminedSize() const;
@@ -290,6 +290,7 @@ namespace ukive {
 
         Rect dirty_rect_;
         std::shared_ptr<InputEvent> cur_ev_;
+        ViewDelegate* delegate_ = nullptr;
 
     private:
         void drawNormal(Canvas* c, bool has_bg, bool has_shadow);
@@ -370,7 +371,6 @@ namespace ukive {
 
         LayoutView* parent_;
         OnClickListener* click_listener_ = nullptr;
-        OnInputEventDelegate* ie_delegate_ = nullptr;
         HaulSource* haul_src_ = nullptr;
         InputMethodConnection* input_conn_;
     };

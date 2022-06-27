@@ -19,16 +19,16 @@ namespace ukive {
         virtual ~Rebuildable();
 
         void demolish();
-        void rebuild();
+        void rebuild(bool succeeded);
 
-        void setRbEnabled(bool enable);
-        bool isRbEnabled() const { return enabled_; }
+        void setRebuildEnabled(bool enable);
+        bool isRebuildEnabled() const { return enabled_; }
 
-        Rebuildable* getRbNext() { return next_; }
+        Rebuildable* getRebuildNext() { return next_; }
 
     protected:
         virtual void onDemolish() {}
-        virtual void onRebuild() {}
+        virtual void onRebuild(bool succeeded) {}
 
     private:
         std::atomic_bool enabled_;

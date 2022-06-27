@@ -8,6 +8,7 @@
 
 #include "utils/log.h"
 #include "utils/numbers.hpp"
+#include "utils/scope_utils.hpp"
 
 #include "ukive/graphics/cyro_buffer.h"
 #include "ukive/graphics/paint.h"
@@ -101,6 +102,8 @@ namespace win {
     }
 
     void CyroRenderTargetD2D::onDemolish() {
+        rt_sync_.lock();
+
         uninitialize();
         rt_.reset();
 
@@ -109,11 +112,17 @@ namespace win {
         }
     }
 
-    void CyroRenderTargetD2D::onRebuild() {
-        if (buffer_) {
-            if (!buffer_->onRecreate()) {
-                return;
-            }
+    void CyroRenderTargetD2D::onRebuild(bool succeeded) {
+        ESC_FROM_SCOPE{
+            rt_sync_.unlock();
+        };
+
+        if (!buffer_) {
+            return;
+        }
+
+        if (!buffer_->onRecreate()) {
+            return;
         }
 
         rt_ = static_cast<const NativeRTD2D*>(
@@ -172,10 +181,13 @@ namespace win {
         }
 
         utl::win::ComPtr<ID2D1Bitmap> d2d_bmp;
-        HRESULT hr = rt_->CreateBitmapFromWicBitmap(native_src.get(), &props, &d2d_bmp);
-        if (FAILED(hr)) {
-            assert(false);
-            return {};
+        {
+            std::lock_guard<std::mutex> lg(rt_sync_);
+            HRESULT hr = rt_->CreateBitmapFromWicBitmap(native_src.get(), &props, &d2d_bmp);
+            if (FAILED(hr)) {
+                assert(false);
+                return {};
+            }
         }
 
         return GPtr<ImageFrame>(
@@ -188,10 +200,13 @@ namespace win {
         auto prop = mapBitmapProps(options);
 
         utl::win::ComPtr<ID2D1Bitmap> d2d_bmp;
-        HRESULT hr = rt_->CreateBitmap(D2D1::SizeU(width, height), prop, &d2d_bmp);
-        if (FAILED(hr)) {
-            ubassert(false);
-            return {};
+        {
+            std::lock_guard<std::mutex> lg(rt_sync_);
+            HRESULT hr = rt_->CreateBitmap(D2D1::SizeU(width, height), prop, &d2d_bmp);
+            if (FAILED(hr)) {
+                ubassert(false);
+                return {};
+            }
         }
 
         return GPtr<ImageFrame>(
@@ -205,13 +220,16 @@ namespace win {
         auto prop = mapBitmapProps(options);
 
         utl::win::ComPtr<ID2D1Bitmap> d2d_bmp;
-        HRESULT hr = rt_->CreateBitmap(
-            D2D1::SizeU(width, height),
-            pixel_data->getConstData(),
-            utl::num_cast<UINT32>(stride), prop, &d2d_bmp);
-        if (FAILED(hr)) {
-            ubassert(false);
-            return {};
+        {
+            std::lock_guard<std::mutex> lg(rt_sync_);
+            HRESULT hr = rt_->CreateBitmap(
+                D2D1::SizeU(width, height),
+                pixel_data->getConstData(),
+                utl::num_cast<UINT32>(stride), prop, &d2d_bmp);
+            if (FAILED(hr)) {
+                ubassert(false);
+                return {};
+            }
         }
 
         ImageFrameWin::ImageRawParams params;
@@ -254,11 +272,14 @@ namespace win {
         D2D1_BITMAP_PROPERTIES bmp_prop = mapBitmapProps(options);
 
         utl::win::ComPtr<ID2D1Bitmap> d2d_bmp;
-        hr = rt_->CreateSharedBitmap(
-            __uuidof(IDXGISurface), dxgi_surface.get(), &bmp_prop, &d2d_bmp);
-        if (FAILED(hr)) {
-            LOG(Log::WARNING) << "Failed to create shared bitmap: " << hr;
-            return {};
+        {
+            std::lock_guard<std::mutex> lg(rt_sync_);
+            hr = rt_->CreateSharedBitmap(
+                __uuidof(IDXGISurface), dxgi_surface.get(), &bmp_prop, &d2d_bmp);
+            if (FAILED(hr)) {
+                LOG(Log::WARNING) << "Failed to create shared bitmap: " << hr;
+                return {};
+            }
         }
 
         auto img_win = new ImageFrameWin(options, {}, {}, d2d_bmp);
@@ -316,6 +337,8 @@ namespace win {
         if (!buffer_) {
             return GRet::Failed;
         }
+
+        std::lock_guard<std::mutex> lg(rt_sync_);
 
         uninitialize();
         rt_.reset();

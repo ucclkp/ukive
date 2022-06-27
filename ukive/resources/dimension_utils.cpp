@@ -54,19 +54,19 @@ namespace ukive {
     {
         if (utl::endWith(dm, "dp", false)) {
             float val = 0;
-            if (utl::stof(dm.substr(0, dm.length() - 2), &val) == utl::UCR_OK) {
+            if (utl::stof(dm.substr(0, dm.length() - 2), &val) == utl::SCR_OK) {
                 *out = c.dp2px(val);
                 return true;
             }
         } else if (utl::endWith(dm, "px", false)) {
             float val = 0;
-            if (utl::stof(dm.substr(0, dm.length() - 2), &val) == utl::UCR_OK) {
+            if (utl::stof(dm.substr(0, dm.length() - 2), &val) == utl::SCR_OK) {
                 *out = val;
                 return true;
             }
         } else {
             float val = 0;
-            if (utl::stof(dm, &val) == utl::UCR_OK) {
+            if (utl::stof(dm, &val) == utl::SCR_OK) {
                 *out = c.dp2px(val);
                 return true;
             }
@@ -79,19 +79,19 @@ namespace ukive {
     {
         if (utl::endWith(dm, "dp", false)) {
             float val = 0;
-            if (utl::stof(dm.substr(0, dm.length() - 2), &val) == utl::UCR_OK) {
+            if (utl::stof(dm.substr(0, dm.length() - 2), &val) == utl::SCR_OK) {
                 out->set_dp(val);
                 return true;
             }
         } else if (utl::endWith(dm, "px", false)) {
             float val = 0;
-            if (utl::stof(dm.substr(0, dm.length() - 2), &val) == utl::UCR_OK) {
+            if (utl::stof(dm.substr(0, dm.length() - 2), &val) == utl::SCR_OK) {
                 out->set_px(val);
                 return true;
             }
         } else {
             float val = 0;
-            if (utl::stof(dm, &val) == utl::UCR_OK) {
+            if (utl::stof(dm, &val) == utl::SCR_OK) {
                 out->set_dp(val);
                 return true;
             }
@@ -120,7 +120,7 @@ namespace ukive {
         auto it = attrs.find(key);
         if (it != attrs.end()) {
             float val = 0;
-            if (utl::stof(it->second, &val) == utl::UCR_OK) {
+            if (utl::stof(it->second, &val) == utl::SCR_OK) {
                 return val;
             }
             LOG(Log::WARNING) << "Cannot resolve float attr " << key

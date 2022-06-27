@@ -39,7 +39,7 @@ namespace vevah {
             if (!pair.second.is_layout) {
                 if (pair.first != "View") {
                     data_.push_back(
-                        { utl::UTF8ToUTF16(pair.first), pair.first });
+                        { utl::u8to16(pair.first), pair.first });
                 }
             }
         }
@@ -48,7 +48,7 @@ namespace vevah {
         for (const auto& pair : map2) {
             if (!pair.second.is_layout) {
                 data_.push_back(
-                    { utl::UTF8ToUTF16(pair.first), pair.first });
+                    { utl::u8to16(pair.first), pair.first });
             }
         }
 
@@ -57,7 +57,7 @@ namespace vevah {
             if (pair.second.is_layout) {
                 if (pair.first != "LayoutView") {
                     data_.push_back(
-                        { utl::UTF8ToUTF16(pair.first), pair.first });
+                        { utl::u8to16(pair.first), pair.first });
                 }
             }
         }
@@ -67,7 +67,7 @@ namespace vevah {
             if (pair.second.is_layout) {
                 if (pair.first != "vevah::ContainerLayout") {
                     data_.push_back(
-                        { utl::UTF8ToUTF16(pair.first), pair.first });
+                        { utl::u8to16(pair.first), pair.first });
                 }
             }
         }
@@ -80,7 +80,7 @@ namespace vevah {
         auto bt = new ukive::Button(parent->getContext());
         bt->setShadowRadius(0);
         bt->setOnClickListener(router);
-        bt->setOnInputEventDelegate(router);
+        bt->setDelegate(router);
         bt->setLayoutSize(ukive::View::LS_FILL, ukive::View::LS_AUTO);
 
         auto item = new CtrlListItem(bt);

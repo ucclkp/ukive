@@ -11,6 +11,7 @@
 #include <thread>
 
 #include "ukive/graphics/vsync_provider.h"
+#include "ukive/graphics/win/display_win.h"
 
 
 namespace ukive {
@@ -41,6 +42,8 @@ namespace win {
         void wait();
         void onWork();
 
+        DisplayWin* primaryDisplay();
+
         std::thread worker_;
         std::mutex cv_mutex_;
         std::condition_variable cv_;
@@ -48,6 +51,8 @@ namespace win {
         std::atomic_bool is_finished_;
         std::atomic_bool is_running_;
         std::atomic_bool pm_opened_;
+
+        std::unique_ptr<DisplayWin> primary_;
     };
 
 }

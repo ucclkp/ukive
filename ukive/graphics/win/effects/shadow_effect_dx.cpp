@@ -181,7 +181,7 @@ namespace win {
         is_initialized_ = false;
     }
 
-    void ShadowEffectGPU::onRebuild() {
+    void ShadowEffectGPU::onRebuild(bool succeeded) {
         if (!initialize()) {
             return;
         }

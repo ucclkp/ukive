@@ -20,9 +20,12 @@ namespace shell {
 
     class ExampleListSource;
 
-    class ExampleListPage : public ukive::Page, public ukive::OnClickListener {
+    class ExampleListPage :
+        public ukive::Page,
+        public ukive::OnClickListener
+    {
     public:
-        explicit ExampleListPage(ukive::Window* w);
+        ExampleListPage();
 
         // ukive::Page
         ukive::View* onCreate(ukive::LayoutView* parent) override;

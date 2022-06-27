@@ -7,13 +7,17 @@
 #ifndef VEVAH_CONTAINER_LAYOUT_H_
 #define VEVAH_CONTAINER_LAYOUT_H_
 
-#include "ukive/views/layout/layout_view.h"
+#include "ukive/views/layout/simple_layout.h"
 
+
+namespace ukive {
+    class ViewDelegate;
+}
 
 namespace vevah {
 
     class ContainerLayout :
-        public ukive::LayoutView
+        public ukive::SimpleLayout
     {
     public:
         explicit ContainerLayout(ukive::Context c);
@@ -24,13 +28,24 @@ namespace vevah {
         void onLayout(
             const ukive::Rect& new_bounds,
             const ukive::Rect& old_bounds) override;
-        bool onInputEvent(ukive::InputEvent* e) override;
         void onDrawOverChildren(ukive::Canvas* canvas) override;
 
-    private:
-        using super = LayoutView;
+        bool onHookInputEvent(ukive::InputEvent* e) override;
+        bool onInputEvent(ukive::InputEvent* e) override;
 
+    private:
+        using super = SimpleLayout;
+
+        enum class Mode {
+            None,
+            View,
+            Layout,
+        };
+
+        Mode mode_ = Mode::None;
         bool is_haul_in_ = false;
+        bool is_view_selected_ = false;
+        std::unique_ptr<ukive::ViewDelegate> vd_;
     };
 
 }

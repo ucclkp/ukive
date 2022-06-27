@@ -57,16 +57,16 @@ namespace ukive {
         auto rb = rb_head_;
         while (rb) {
             rb->demolish();
-            rb = rb->getRbNext();
+            rb = rb->getRebuildNext();
         }
     }
 
-    void GraphicDeviceManager::rebuildRbs() {
+    void GraphicDeviceManager::rebuildRbs(bool succeeded) {
         std::lock_guard<std::recursive_mutex> lg(rb_sync_);
         auto rb = rb_head_;
         while (rb) {
-            rb->rebuild();
-            rb = rb->getRbNext();
+            rb->rebuild(succeeded);
+            rb = rb->getRebuildNext();
         }
     }
 

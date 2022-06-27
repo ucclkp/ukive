@@ -435,7 +435,7 @@ namespace shell {
                     << "\nTriangle Count: " << terrain_scene_->getLodGenerator()->getMaxIndexCount() / 3
                     << "\nRendered Triangle Count: " << terrain_scene_->getLodGenerator()->getIndexCount() / 3;
 
-                render_info_->setText(utl::UTF8ToUTF16(ss.str()));
+                render_info_->setText(utl::u8to16(ss.str()));
             }
         } else {
             prev_time_ = current_time;

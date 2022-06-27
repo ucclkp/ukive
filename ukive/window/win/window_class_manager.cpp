@@ -56,7 +56,7 @@ namespace win {
             ++class_counter_;
         } else {
             LOG(Log::ERR) << "Cannot create new window class: "
-                << utl::WideToUTF8(class_name);
+                << utl::wtou8(class_name);
         }
 
         return atom;

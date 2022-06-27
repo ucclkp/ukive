@@ -24,9 +24,13 @@ namespace ukive {
         void show(bool show);
         void destroy();
 
-        template <typename T>
-        T* findView(View* v, int id) const {
-            return static_cast<T*>(v->findView(id));
+        template <typename Ty>
+        Ty* findView(View* v, int id) const {
+            return v ? static_cast<Ty*>(v->findView(id)) : nullptr;
+        }
+        template <typename Ty>
+        Ty* findView(int id) const {
+            return findView<Ty>(content_view_, id);
         }
 
         bool isCreated() const;
@@ -35,15 +39,14 @@ namespace ukive {
         View* getContentView() const;
 
     protected:
-        explicit Page(Window* w);
+        Page();
 
         virtual View* onCreate(LayoutView* parent) = 0;
-        virtual void onInitialize() {}
+        virtual void onCreated(View* v) {}
         virtual void onShow(bool show) {}
         virtual void onDestroy() {}
 
     private:
-        Window* window_;
         View* content_view_ = nullptr;
 
         bool is_created_ = false;

@@ -21,6 +21,25 @@
 #include "vevah/resources/necro_resources_id.h"
 
 
+namespace {
+
+    bool needFauxView(const std::string_view& real_name) {
+        return (real_name == "ImageView" ||
+            real_name == "ChartView" ||
+            real_name == "GridView" ||
+            real_name == "MediaView" ||
+            real_name == "TitleBarLayout" ||
+            real_name == "SimpleLayout" ||
+            real_name == "SequenceLayout" ||
+            real_name == "ListView" ||
+            real_name == "RestraintLayout" ||
+            real_name == "ScrollView" ||
+            real_name == "TabStripView" ||
+            real_name == "TabView");
+    }
+
+}
+
 namespace vevah {
 
     MainWindow::MainWindow() {}
@@ -37,7 +56,7 @@ namespace vevah {
         left_panel_->setBackground(new ukive::Element(ukive::Color::Grey100));
 
         container_layout_ = findView<ContainerLayout>(Res::Id::cl_main_wnd_cur_view);
-        container_layout_->setBackground(new ukive::Element(ukive::Color::Green100));
+        container_layout_->setBackground(new ukive::Element(ukive::Color::Grey100));
 
         ctrl_list_ = findView<ukive::ListView>(Res::Id::lv_main_wnd_controls);
 
@@ -69,19 +88,7 @@ namespace vevah {
 
         std::string faux_name;
         auto& real_name = ctrl_source_->getName(item->data_pos);
-        if (real_name == "ImageView" ||
-            real_name == "ChartView" ||
-            real_name == "GridView" ||
-            real_name == "MediaView" ||
-            real_name == "TitleBarLayout" ||
-            real_name == "SimpleLayout" ||
-            real_name == "SequenceLayout" ||
-            real_name == "ListView" ||
-            real_name == "RestraintLayout" ||
-            real_name == "ScrollView" ||
-            real_name == "TabStripView" ||
-            real_name == "TabView")
-        {
+        if (needFauxView(real_name)) {
             faux_name = "TextView";
         } else {
             faux_name = real_name;
@@ -89,12 +96,14 @@ namespace vevah {
 
         auto view = ukive::LayoutParser::createView(faux_name, c, {});
         if (faux_name == "TextView") {
-            static_cast<ukive::TextView*>(view)->setText(utl::UTF8ToUTF16(real_name));
+            static_cast<ukive::TextView*>(view)->setText(utl::u8to16(real_name));
         }
 
         view->animeParams().setAlpha(0.75);
         view->setLayoutMargin({ margin, margin, margin, margin });
         levitator_.setContentView(view);
+
+        haul_src_->setExData("view", real_name);
 
         v->setHaulSource(haul_src_.get());
     }
@@ -105,7 +114,7 @@ namespace vevah {
     {
         ukive::Levitator::PosInfo info;
         info.corner = ukive::GV_MID_HORI | ukive::GV_MID_VERT;
-        levitator_.show(this, 0, 0, info);
+        levitator_.show(this, e->getRawX(), e->getRawY(), info);
     }
 
     void MainWindow::onHaulStopped(ukive::HaulSource* src) {

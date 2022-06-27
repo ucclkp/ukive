@@ -14,7 +14,7 @@
 #include "ukive/views/layout_info/layout_info.h"
 #include "ukive/graphics/canvas.h"
 #include "ukive/resources/dimension_utils.h"
-#include "ukive/views/input_event_delegate.h"
+#include "ukive/views/view_delegate.h"
 #include "ukive/window/window.h"
 
 
@@ -28,12 +28,6 @@ namespace ukive {
 
     LayoutView::~LayoutView() {
         utl::STLDeleteElements(&views_);
-    }
-
-    void LayoutView::setHookInputEventDelegate(
-        OnHookInputEventDelegate* d)
-    {
-        iie_delegate_ = d;
     }
 
     LayoutInfo* LayoutView::makeExtraLayoutInfo() const {
@@ -236,6 +230,10 @@ namespace ukive {
         if (del) {
             delete child;
         }
+    }
+
+    bool LayoutView::hasChildren() const {
+        return !views_.empty();
     }
 
     size_t LayoutView::getChildCount() const {
@@ -528,9 +526,9 @@ namespace ukive {
     }
 
     bool LayoutView::invokeOnHookInputEvent(InputEvent* e) {
-        if (iie_delegate_) {
+        if (delegate_) {
             bool ret = false;
-            if (iie_delegate_->onHookInputReceived(this, e, &ret)) {
+            if (delegate_->onHookInputReceived(this, e, &ret)) {
                 return ret;
             }
         }

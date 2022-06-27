@@ -17,7 +17,10 @@ namespace ukive {
 
     HaulSource::HaulSource(int id, HaulDelegate* d)
         : id_(id),
-          delegate_(d) {}
+          delegate_(d)
+    {
+        data_.type = DT_NONE;
+    }
 
     void HaulSource::ignite(View* v, InputEvent* e) {
         if (!v || !e || !v->getWindow()) {
@@ -98,7 +101,52 @@ namespace ukive {
         }
     }
 
-    int HaulSource::getId() const {
+
+    void HaulSource::setURL(const std::string_view& url) {
+        data_.type = DT_URL;
+        data_.raw = url;
+    }
+
+    void HaulSource::setText(const std::string_view& text) {
+        data_.type = DT_TEXT;
+        data_.raw = text;
+    }
+
+    void HaulSource::setBytes(const std::string_view& bytes) {
+        data_.type = DT_BYTES;
+        data_.raw = bytes;
+    }
+
+    void HaulSource::setExData(
+        const std::string_view& exid,
+        const std::string_view& data)
+    {
+        data_.type = DT_EX_DATA;
+        data_.exd = exid;
+        data_.raw = data;
+    }
+
+    const std::string& HaulSource::getRaw() const {
+        return data_.raw;
+    }
+
+    bool HaulSource::isURL() const {
+        return data_.type == DT_URL;
+    }
+
+    bool HaulSource::isText() const {
+        return data_.type == DT_TEXT;
+    }
+
+    bool HaulSource::isBytes() const {
+        return data_.type == DT_BYTES;
+    }
+
+    bool HaulSource::isExData(const std::string_view& exd) const {
+        return data_.type == DT_EX_DATA && data_.exd == exd;
+    }
+
+    int HaulSource::getSourceId() const {
         return id_;
     }
 

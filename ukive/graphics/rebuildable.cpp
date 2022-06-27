@@ -45,13 +45,13 @@ namespace ukive {
         }
     }
 
-    void Rebuildable::rebuild() {
+    void Rebuildable::rebuild(bool succeeded) {
         if (enabled_.load(std::memory_order_relaxed)) {
-            onRebuild();
+            onRebuild(succeeded);
         }
     }
 
-    void Rebuildable::setRbEnabled(bool enable) {
+    void Rebuildable::setRebuildEnabled(bool enable) {
         enabled_.store(enable, std::memory_order_relaxed);
     }
 

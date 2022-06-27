@@ -429,7 +429,7 @@
     <ClInclude Include="views\size_info.h" />
     <ClInclude Include="views\space3d_view.h" />
     <ClInclude Include="views\image_view.h" />
-    <ClInclude Include="views\input_event_delegate.h" />
+    <ClInclude Include="views\view_delegate.h" />
     <ClInclude Include="views\layout\title_bar_layout.h" />
     <ClInclude Include="views\layout\non_client_layout.h" />
     <ClInclude Include="views\layout\root_layout.h" />

@@ -22,8 +22,8 @@
 
 namespace shell {
 
-    ExampleListPage::ExampleListPage(ukive::Window* w)
-        : Page(w) {}
+    ExampleListPage::ExampleListPage()
+        : Page() {}
 
     ukive::View* ExampleListPage::onCreate(ukive::LayoutView* parent) {
         auto v = ukive::LayoutParser::from(

@@ -57,9 +57,9 @@ namespace shell {
         auto tab_view = findView<ukive::TabView>(Res::Id::tv_example_table);
         tab_view->setStripView(strip_view);
 
-        tab_view->addPage(new ExampleMiscPage(this), u"Misc");
-        tab_view->addPage(new ExampleListPage(this), u"ListView");
-        tab_view->addPage(new ExampleTreePage(this), u"TreeView");
+        tab_view->addPage(new ExampleMiscPage(), u"Misc");
+        tab_view->addPage(new ExampleListPage(), u"ListView");
+        tab_view->addPage(new ExampleTreePage(), u"TreeView");
     }
 
 }

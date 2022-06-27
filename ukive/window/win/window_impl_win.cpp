@@ -991,7 +991,7 @@ namespace win {
 
         if (::GetCursorPos(&pt) != 0) {
             ::ScreenToClient(hWnd_, &pt);
-            lParam = MAKEWORD(pt.x, pt.y);
+            lParam = MAKELPARAM(pt.x, pt.y);
         }
 
         ::PostMessageW(hWnd_, WM_MOUSEMOVE, wParam, lParam);

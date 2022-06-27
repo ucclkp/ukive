@@ -366,7 +366,7 @@ namespace win {
         pChange->acpNewEnd = acpEnd + cch - (acpEnd - acpStart);
 
         /*DLOG(Log::INFO) << "SetText(" << dwFlags << ", "
-            << utl::WideToUTF8(newText) << ", "
+            << utl::wtou8(newText) << ", "
             << "[" << acpStart << ", "
              << acpEnd << "], "
             << "[" << pChange->acpStart << ", "
@@ -577,7 +577,7 @@ namespace win {
         input_conn_->insertTextAtSelection(dwFlags, pchText, cch, pacpStart, pacpEnd, pChange);
 
         /*DLOG(Log::INFO) << "InsertTextAtSelection(" << dwFlags << ", "
-            << utl::WideToUTF8(text) << ", "
+            << utl::wtou8(text) << ", "
             << *pacpStart << ", "
             << *pacpEnd << ", "
             << pChange->acpStart << ", "

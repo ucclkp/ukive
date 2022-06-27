@@ -195,14 +195,19 @@
     <ClCompile Include="container_layout.cpp" />
     <ClCompile Include="control_list_source.cpp" />
     <ClCompile Include="main_window.cpp" />
+    <ClCompile Include="properties\property_page.cpp" />
+    <ClCompile Include="sequence_layout_delegate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="container_layout.h" />
     <ClInclude Include="control_list_source.h" />
     <ClInclude Include="main_window.h" />
+    <ClInclude Include="properties\property_page.h" />
+    <ClInclude Include="sequence_layout_delegate.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="resources\layout\main_window_layout.xml" />
+    <Xml Include="resources\layout\property_page_layout.xml" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="app\application.manifest" />

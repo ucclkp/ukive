@@ -33,10 +33,11 @@ namespace shell {
         public ukive::HaulDelegate
     {
     public:
-        explicit ExampleMiscPage(ukive::Window* w);
+        ExampleMiscPage();
 
         // ukive::Page
         ukive::View* onCreate(ukive::LayoutView* parent) override;
+        void onCreated(ukive::View* v) override;
         void onDestroy() override;
 
         // ukive::AnimationListener

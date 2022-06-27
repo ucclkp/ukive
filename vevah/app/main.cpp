@@ -38,8 +38,8 @@ GUI_MAIN() {
     auto main_window = std::make_shared<vevah::MainWindow>();
     main_window->init(ukive::Window::InitParams());
     main_window->setTitle(u"Examples");
-    main_window->setWidth(ukive::Application::dp2pxi(600));
-    main_window->setHeight(ukive::Application::dp2pxi(600));
+    main_window->setWidth(ukive::Application::dp2pxi(1000));
+    main_window->setHeight(ukive::Application::dp2pxi(700));
     main_window->setTranslucentType(ukive::TRANS_BLURBEHIND_SYSTEM);
     main_window->center();
     main_window->show();

@@ -154,11 +154,18 @@ namespace {
 
 namespace shell {
 
-    ExampleMiscPage::ExampleMiscPage(ukive::Window* w)
-        : Page(w) {}
+    ExampleMiscPage::ExampleMiscPage()
+        : Page() {}
 
     ukive::View* ExampleMiscPage::onCreate(ukive::LayoutView* parent) {
         auto c = parent->getContext();
+        auto v = ukive::LayoutParser::from(
+            c, parent, Res::Layout::example_misc_page_layout_xml);
+        return v;
+    }
+
+    void ExampleMiscPage::onCreated(ukive::View* v) {
+        auto c = v->getContext();
 
         using namespace std::chrono_literals;
         director_.setListener(this);
@@ -170,9 +177,6 @@ namespace shell {
         director_.addLoop(2s, 1s, 10);
         director_.start();
         startVSync();
-
-        auto v = ukive::LayoutParser::from(
-            c, parent, Res::Layout::example_misc_page_layout_xml);
 
         auto sv = findView<ukive::ScrollView>(v, Res::Id::sv_misc_page);
 
@@ -281,7 +285,6 @@ namespace shell {
             int sdg = 0;
         }
 
-        return v;
     }
 
     void ExampleMiscPage::onDestroy() {

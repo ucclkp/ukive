@@ -207,6 +207,7 @@
 		672DD03726EE334200E49039 /* anitom.h in Headers */ = {isa = PBXBuildFile; fileRef = 672DD03526EE334200E49039 /* anitom.h */; };
 		674721CB270DF5D200478B85 /* vsync_provider_mac.h in Headers */ = {isa = PBXBuildFile; fileRef = 674721C9270DF5D100478B85 /* vsync_provider_mac.h */; };
 		674721CC270DF5D200478B85 /* vsync_provider_mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 674721CA270DF5D100478B85 /* vsync_provider_mac.cpp */; };
+		675B1B1E288328E600E817EA /* view_delegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 675B1B1D288328E600E817EA /* view_delegate.h */; };
 		676023B72590F45700DA26AA /* keyboard_mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 676023B62590F45700DA26AA /* keyboard_mac.mm */; };
 		6763044F280EF8B70097DD20 /* combo_box_selected_listener.h in Headers */ = {isa = PBXBuildFile; fileRef = 6763044E280EF8B70097DD20 /* combo_box_selected_listener.h */; };
 		67630454280EF8D90097DD20 /* list_handler_source.h in Headers */ = {isa = PBXBuildFile; fileRef = 67630450280EF8D90097DD20 /* list_handler_source.h */; };
@@ -338,7 +339,6 @@
 		678C89BF27C14949008D0B21 /* icc_type_s15f16_array.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 678C89BD27C14949008D0B21 /* icc_type_s15f16_array.cpp */; };
 		678C89C327C14F64008D0B21 /* color_manager_mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 678C89C127C14F64008D0B21 /* color_manager_mac.cpp */; };
 		678C89C427C14F64008D0B21 /* color_manager_mac.h in Headers */ = {isa = PBXBuildFile; fileRef = 678C89C227C14F64008D0B21 /* color_manager_mac.h */; };
-		67950D71261B45290012DE92 /* input_event_delegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 67950D6E261B45290012DE92 /* input_event_delegate.h */; };
 		67950D72261B45290012DE92 /* combo_box.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67950D6F261B45290012DE92 /* combo_box.cpp */; };
 		67950D73261B45290012DE92 /* combo_box.h in Headers */ = {isa = PBXBuildFile; fileRef = 67950D70261B45290012DE92 /* combo_box.h */; };
 		67950D79261B45500012DE92 /* tree_node_button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67950D75261B45500012DE92 /* tree_node_button.cpp */; };
@@ -617,6 +617,7 @@
 		672DD03526EE334200E49039 /* anitom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = anitom.h; sourceTree = "<group>"; };
 		674721C9270DF5D100478B85 /* vsync_provider_mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vsync_provider_mac.h; sourceTree = "<group>"; };
 		674721CA270DF5D100478B85 /* vsync_provider_mac.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vsync_provider_mac.cpp; sourceTree = "<group>"; };
+		675B1B1D288328E600E817EA /* view_delegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = view_delegate.h; sourceTree = "<group>"; };
 		676023B62590F45700DA26AA /* keyboard_mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = keyboard_mac.mm; sourceTree = "<group>"; };
 		6763044E280EF8B70097DD20 /* combo_box_selected_listener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = combo_box_selected_listener.h; sourceTree = "<group>"; };
 		67630450280EF8D90097DD20 /* list_handler_source.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = list_handler_source.h; sourceTree = "<group>"; };
@@ -766,7 +767,6 @@
 		678C89BD27C14949008D0B21 /* icc_type_s15f16_array.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = icc_type_s15f16_array.cpp; sourceTree = "<group>"; };
 		678C89C127C14F64008D0B21 /* color_manager_mac.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = color_manager_mac.cpp; sourceTree = "<group>"; };
 		678C89C227C14F64008D0B21 /* color_manager_mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = color_manager_mac.h; sourceTree = "<group>"; };
-		67950D6E261B45290012DE92 /* input_event_delegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = input_event_delegate.h; sourceTree = "<group>"; };
 		67950D6F261B45290012DE92 /* combo_box.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = combo_box.cpp; sourceTree = "<group>"; };
 		67950D70261B45290012DE92 /* combo_box.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = combo_box.h; sourceTree = "<group>"; };
 		67950D75261B45500012DE92 /* tree_node_button.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tree_node_button.cpp; sourceTree = "<group>"; };
@@ -1141,7 +1141,6 @@
 				67950D70261B45290012DE92 /* combo_box.h */,
 				670BD5D324B229ED00DF5B85 /* image_view.cpp */,
 				670BD58B24B229ED00DF5B85 /* image_view.h */,
-				67950D6E261B45290012DE92 /* input_event_delegate.h */,
 				670BD59024B229ED00DF5B85 /* layout */,
 				677392AB26076EAB00D03228 /* layout_info */,
 				670BD5B924B229ED00DF5B85 /* list */,
@@ -1166,6 +1165,7 @@
 				670BD58E24B229ED00DF5B85 /* text_view.h */,
 				670BD5A924B229ED00DF5B85 /* title_bar */,
 				670BD57A24B229ED00DF5B85 /* tree */,
+				675B1B1D288328E600E817EA /* view_delegate.h */,
 				671BEB382826C36D00AA65E6 /* view_ref.cpp */,
 				671BEB392826C36D00AA65E6 /* view_ref.h */,
 				670BD5A824B229ED00DF5B85 /* view.cpp */,
@@ -1773,10 +1773,10 @@
 				670BD6C324B229ED00DF5B85 /* text_view.h in Headers */,
 				6783F43B24D1E4D300056DA1 /* image_frame.h in Headers */,
 				6783F45B24DADD4100056DA1 /* rect.hpp in Headers */,
-				67950D71261B45290012DE92 /* input_event_delegate.h in Headers */,
 				6707AECD25DAB425009C6685 /* graphic_context_change_listener.h in Headers */,
 				67630454280EF8D90097DD20 /* list_handler_source.h in Headers */,
 				67998DF527BA84A800B9113C /* icc_type_multi_loc_unicode.h in Headers */,
+				675B1B1E288328E600E817EA /* view_delegate.h in Headers */,
 				678C89B927C1493C008D0B21 /* icc_profile.h in Headers */,
 				670BD7CF24B4C46500DF5B85 /* window_impl_mac.h in Headers */,
 				670BD68724B229ED00DF5B85 /* cursor.h in Headers */,

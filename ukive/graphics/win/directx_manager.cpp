@@ -95,13 +95,15 @@ namespace win {
         demolishRbs();
 
         shutdownDevice();
-        if (!initDevice()) {
-            return false;
-        }
+        /**
+         * 确保 demolish / rebuild 成对调用，
+         * 即使创建设备失败。
+         */
+        bool ret = initDevice();
 
-        rebuildRbs();
+        rebuildRbs(ret);
         notifyDeviceRestored();
-        return true;
+        return ret;
     }
 
     void DirectXManager::destroy() {
@@ -210,14 +212,29 @@ namespace win {
             D3D_FEATURE_LEVEL_9_1,
         };
 
-        //D3D_DRIVER_TYPE driver_type = D3D_DRIVER_TYPE_WARP;
-        //UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT | D3D11_CREATE_DEVICE_DEBUGGABLE;
-
-        D3D_DRIVER_TYPE driver_type = D3D_DRIVER_TYPE_HARDWARE;
+        HRESULT hr;
+        D3D_DRIVER_TYPE driver_type;
         UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+        utl::win::ComPtr<IDXGIAdapter1> adapter;
+        if (true) {
+            hr = dxgi_factory_->EnumAdapters1(0, &adapter);
+            if (SUCCEEDED(hr)) {
+                DXGI_ADAPTER_DESC1 ada_desc;
+                hr = adapter->GetDesc1(&ada_desc);
+                if (SUCCEEDED(hr)) {
+                }
+                driver_type = D3D_DRIVER_TYPE_UNKNOWN;
+            } else {
+                LOG(Log::WARNING) << "Failed to get adapter.";
+                driver_type = D3D_DRIVER_TYPE_HARDWARE;
+            }
+        } else {
+            driver_type = D3D_DRIVER_TYPE_WARP;
+            flags |= D3D11_CREATE_DEVICE_DEBUGGABLE;
+        }
 
-        HRESULT hr = ::D3D11CreateDevice(
-            nullptr, driver_type, nullptr, flags,
+        hr = ::D3D11CreateDevice(
+            adapter.get(), driver_type, nullptr, flags,
             feature_levels, ARRAYSIZE(feature_levels), D3D11_SDK_VERSION,
             &d3d_device_, nullptr, &d3d_devicecontext_);
         if (FAILED(hr)) {

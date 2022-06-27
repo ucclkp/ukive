@@ -92,7 +92,7 @@ namespace ukive {
     }
 
     void MediaView::onAttachedToWindow(Window* w) {
-        media_player_->openFile(uR"(G:\Test\test.mp4)", w);
+        //media_player_->openFile(uR"(G:\Test\test.mp4)", w);
     }
 
     void MediaView::onDetachFromWindow() {

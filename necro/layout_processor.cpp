@@ -250,7 +250,7 @@ namespace necro {
                 if (!s.good() || buf == 0) break;
                 path_u8.push_back(buf);
             }
-            his.xml_path = utl::UTF8ToUTF16(path_u8);
+            his.xml_path = utl::u8to16(path_u8);
             s.read(reinterpret_cast<char*>(&his.ts), 8);
             if (!s.good()) break;
             his.ts = utl::fromToBE(his.ts);

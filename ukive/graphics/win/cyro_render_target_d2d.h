@@ -99,7 +99,7 @@ namespace win {
 
     protected:
         void onDemolish() override;
-        void onRebuild() override;
+        void onRebuild(bool succeeded) override;
 
     private:
         struct StackData {
@@ -117,6 +117,7 @@ namespace win {
         utl::win::ComPtr<ID2D1SolidColorBrush> solid_brush_;
         utl::win::ComPtr<ID2D1BitmapBrush> bitmap_brush_;
 
+        std::mutex rt_sync_;
         CanvasStack<StackData> save_stack_;
 
         CyroBuffer* buffer_ = nullptr;

@@ -9,9 +9,6 @@
 #include "utils/log.h"
 #include "utils/time_utils.h"
 
-#include "ukive/graphics/display.h"
-#include "ukive/graphics/win/display_win.h"
-
 
 namespace ukive {
 namespace win {
@@ -81,9 +78,7 @@ namespace win {
                 break;
             }
 
-            // TODO: 移出该线程
-            auto primary_display = Display::fromPrimary();
-            auto primary = static_cast<DisplayWin*>(primary_display.get());
+            auto primary = primaryDisplay();
 
             auto before_ts = utl::TimeUtils::upTimeNanos();
             bool ret = primary->waitForVSync();
@@ -112,6 +107,18 @@ namespace win {
 
             sendVSyncToUI(after_ts, refresh_rate, uint32_t(real_interval));
         }
+    }
+
+    DisplayWin* VSyncProviderWin::primaryDisplay() {
+        POINT pt = { 0, 0 };
+        HMONITOR monitor = ::MonitorFromPoint(pt, MONITOR_DEFAULTTOPRIMARY);
+        if (!monitor) {
+            return nullptr;
+        }
+        if (!primary_ || primary_->getNative() != monitor) {
+            primary_ = std::make_unique<DisplayWin>(monitor);
+        }
+        return primary_.get();
     }
 
 }

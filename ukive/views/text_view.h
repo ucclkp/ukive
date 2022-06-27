@@ -221,9 +221,9 @@ namespace ukive {
 
         SizeInfo::Value parent_width_;
 
-        size_t last_sel_;
-        size_t first_sel_;
-        float last_sel_left_;
+        size_t last_sel_ = 0;
+        size_t first_sel_ = 0;
+        int sel_x_pos_ = 0;
 
         Padding space_;
         int vert_offset_ = 0;

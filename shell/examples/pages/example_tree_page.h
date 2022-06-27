@@ -47,7 +47,7 @@ namespace shell {
         public ukive::OnClickListener
     {
     public:
-        explicit ExampleTreePage(ukive::Window* w);
+        ExampleTreePage();
 
         // ukive::Page
         ukive::View* onCreate(ukive::LayoutView* parent) override;

@@ -11,8 +11,7 @@
 
 namespace ukive {
 
-    Page::Page(Window* w)
-        : window_(w) {}
+    Page::Page() {}
 
     View* Page::create(LayoutView* parent) {
         if (!is_created_ && !content_view_) {
@@ -26,7 +25,7 @@ namespace ukive {
 
     void Page::initialize() {
         if (is_created_) {
-            onInitialize();
+            onCreated(content_view_);
         }
     }
 
@@ -65,7 +64,10 @@ namespace ukive {
     }
 
     Window* Page::getWindow() const {
-        return window_;
+        if (content_view_) {
+            return content_view_->getWindow();
+        }
+        return nullptr;
     }
 
     View* Page::getContentView() const {

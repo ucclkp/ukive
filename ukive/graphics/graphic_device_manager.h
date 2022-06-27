@@ -47,7 +47,7 @@ namespace ukive {
         void notifyDeviceRestored();
 
         void demolishRbs();
-        void rebuildRbs();
+        void rebuildRbs(bool succeeded);
 
     private:
         std::recursive_mutex rb_sync_;

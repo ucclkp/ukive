@@ -22,7 +22,7 @@
 #include "ukive/animation/view_animator.h"
 #include "ukive/text/input_method_connection.h"
 #include "ukive/views/click_listener.h"
-#include "ukive/views/input_event_delegate.h"
+#include "ukive/views/view_delegate.h"
 #include "ukive/views/layout_info/layout_info.h"
 #include "ukive/views/layout/layout_view.h"
 #include "ukive/window/haul_source.h"
@@ -365,8 +365,8 @@ namespace ukive {
         click_listener_ = l;
     }
 
-    void View::setOnInputEventDelegate(OnInputEventDelegate* d) {
-        ie_delegate_ = d;
+    void View::setDelegate(ViewDelegate* d) {
+        delegate_ = d;
     }
 
     void View::setHaulSource(HaulSource* src) {
@@ -494,8 +494,8 @@ namespace ukive {
         return click_listener_;
     }
 
-    OnInputEventDelegate* View::getInputEventDelegate() const {
-        return ie_delegate_;
+    ViewDelegate* View::getDelegate() const {
+        return delegate_;
     }
 
     HaulSource* View::getHaulSource() const {
@@ -928,6 +928,9 @@ namespace ukive {
             c->translate(-float(scroll_x_), -float(scroll_y_));
 
             // 绘制自身
+            if (delegate_) {
+                delegate_->onDrawReceived(this, c);
+            }
             onDraw(c);
 
             c->restore();
@@ -948,6 +951,9 @@ namespace ukive {
 
             // 绘制盖在孩子之上的内容
             onDrawOverChildren(c);
+            if (delegate_) {
+                delegate_->onDrawOverChildrenReceived(this, c);
+            }
 
             c->restore();
         }
@@ -1032,9 +1038,9 @@ namespace ukive {
     }
 
     bool View::invokeOnInputEvent(InputEvent* e) {
-        if (ie_delegate_) {
+        if (delegate_) {
             bool ret = false;
-            if (ie_delegate_->onInputReceived(this, e, &ret)) {
+            if (delegate_->onInputReceived(this, e, &ret)) {
                 return ret;
             }
         }

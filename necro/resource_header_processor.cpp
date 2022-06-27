@@ -53,7 +53,7 @@ namespace necro {
         name_macro.append(u"_");
 
         std::string out_str;
-        generateOutput(utl::UTF16ToUTF8(name_macro), view_id_map, layout_id_map, &out_str);
+        generateOutput(utl::u16to8(name_macro), view_id_map, layout_id_map, &out_str);
 
         writer.write(out_str.data(), out_str.length());
 
