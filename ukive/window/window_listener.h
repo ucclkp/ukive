@@ -13,9 +13,11 @@
 namespace ukive {
 
     enum class WindowButton {
+        None,
         Min,
         Max,
         Close,
+        Restore,
     };
 
     class OnWindowStatusChangedListener {

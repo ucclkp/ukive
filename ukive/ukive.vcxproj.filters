@@ -706,6 +706,12 @@
     <ClCompile Include="diagnostic\input_tracker.cpp">
       <Filter>diagnostic</Filter>
     </ClCompile>
+    <ClCompile Include="views\title_bar\small_title_bar.cpp">
+      <Filter>views\title_bar</Filter>
+    </ClCompile>
+    <ClCompile Include="views\title_bar\title_bar_button.cpp">
+      <Filter>views\title_bar</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">
@@ -1592,6 +1598,12 @@
     </ClInclude>
     <ClInclude Include="graphics\canvas_stack.hpp">
       <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="views\title_bar\small_title_bar.h">
+      <Filter>views\title_bar</Filter>
+    </ClInclude>
+    <ClInclude Include="views\title_bar\title_bar_button.h">
+      <Filter>views\title_bar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

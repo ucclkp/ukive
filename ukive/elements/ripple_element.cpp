@@ -17,9 +17,6 @@
 #define DOWN_UP_SEC      200ms
 #define HOVER_LEAVE_SEC  200ms
 
-#define HOVER_ALPHA  0.07
-#define DOWN_ALPHA   0.13
-
 
 namespace ukive {
 
@@ -43,6 +40,10 @@ namespace ukive {
     }
 
     void RippleElement::initElement() {
+        down_alpha_ = 0.13;
+        hover_alpha_ = 0.07;
+        interact_color_ = Color::Transparent;
+
         using namespace std::chrono_literals;
 
         ripple_animator_.setDuration(500ms);
@@ -52,12 +53,12 @@ namespace ukive {
         hover_animator_.setListener(this);
         hover_animator_.setDuration(HOVER_LEAVE_SEC);
         hover_animator_.setInterpolator(new LinearInterpolator());
-        hover_animator_.setFinalValue(HOVER_ALPHA);
+        hover_animator_.setFinalValue(hover_alpha_);
 
         down_animator_.setListener(this);
         down_animator_.setDuration(DOWN_UP_SEC);
         down_animator_.setInterpolator(new LinearInterpolator());
-        down_animator_.setFinalValue(DOWN_ALPHA);
+        down_animator_.setFinalValue(down_alpha_);
 
         up_animator_.setListener(this);
         up_animator_.setDuration(DOWN_UP_SEC);
@@ -66,6 +67,21 @@ namespace ukive {
         leave_animator_.setDuration(HOVER_LEAVE_SEC);
         leave_animator_.setInterpolator(new LinearInterpolator());
         leave_animator_.setFinalValue(0);
+    }
+
+    void RippleElement::setDownAlpha(double a) {
+        down_alpha_ = a;
+        down_animator_.setFinalValue(down_alpha_);
+    }
+
+    void RippleElement::setHoverAlpha(double a) {
+        hover_alpha_ = a;
+        hover_animator_.setFinalValue(hover_alpha_);
+    }
+
+    void RippleElement::setInteractColor(const Color& c) {
+        interact_color_ = c;
+        requestDraw();
     }
 
     void RippleElement::setDrawMaskEnabled(bool enabled) {
@@ -77,7 +93,7 @@ namespace ukive {
 
     void RippleElement::draw(Canvas *canvas) {
         auto bound = getBounds();
-        Color color(0.f, 0.f, 0.f, float(alpha_));
+        Color color(interact_color_, float(alpha_));
 
         bool has_content = color.a > 0.f || ripple_animator_.isRunning();
         if (has_content) {
@@ -178,7 +194,7 @@ namespace ukive {
         case STATE_HOVERED:
             if (prev_state == STATE_NONE) {
                 up_animator_.stop();
-                hover_animator_.setValueRange(alpha_, HOVER_ALPHA);
+                hover_animator_.setInitValue(alpha_);
                 hover_animator_.reset();
                 hover_animator_.start();
                 startVSync();
@@ -186,7 +202,7 @@ namespace ukive {
                 need_redraw |= true;
             } else if (prev_state == STATE_PRESSED) {
                 down_animator_.stop();
-                up_animator_.setValueRange(alpha_, HOVER_ALPHA);
+                up_animator_.setValueRange(alpha_, hover_alpha_);
                 up_animator_.setInterpolator(new LinearInterpolator());
                 up_animator_.reset();
                 up_animator_.start();

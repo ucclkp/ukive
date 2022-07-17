@@ -11,6 +11,6 @@
     <TabStripView
         id="@+id/tsv_example_strip"
         width="fill"
-        height="auto" />
+        height="28" />
 
 </TitleBarLayout>

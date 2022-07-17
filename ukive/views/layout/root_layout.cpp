@@ -12,6 +12,7 @@
 #include "ukive/views/layout/shade_layout.h"
 #include "ukive/window/window.h"
 #include "ukive/views/title_bar/default_title_bar.h"
+#include "ukive/views/title_bar/small_title_bar.h"
 #include "ukive/resources/layout_parser.h"
 
 
@@ -85,8 +86,7 @@ namespace ukive {
 
     TitleBar* RootLayout::showTitleBar() {
         if (!title_bar_) {
-            title_bar_ = new DefaultTitleBar(getContext());
-            title_bar_->setLayoutSize(LS_FILL, LS_AUTO);
+            title_bar_ = new SmallTitleBar(getContext());
             content_layout_->addView(title_bar_);
         } else {
             title_bar_->setVisibility(SHOW);

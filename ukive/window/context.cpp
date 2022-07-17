@@ -93,12 +93,28 @@ namespace ukive {
         return impl_->dp2px(dp);
     }
 
+    float Context::dp2pxr(int dp) const {
+        return std::round(impl_->dp2px(dp));
+    }
+
+    float Context::dp2pxr(float dp) const {
+        return std::round(impl_->dp2px(dp));
+    }
+
     int Context::dp2pxi(int dp) const {
         return int(impl_->dp2px(dp));
     }
 
     int Context::dp2pxi(float dp) const {
         return int(impl_->dp2px(dp));
+    }
+
+    int Context::dp2pxri(int dp) const {
+        return int(std::round(impl_->dp2px(dp)));
+    }
+
+    int Context::dp2pxri(float dp) const {
+        return int(std::round(impl_->dp2px(dp)));
     }
 
     float Context::px2dp(int px) const {

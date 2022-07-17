@@ -429,6 +429,8 @@
     <ClInclude Include="views\size_info.h" />
     <ClInclude Include="views\space3d_view.h" />
     <ClInclude Include="views\image_view.h" />
+    <ClInclude Include="views\title_bar\title_bar_button.h" />
+    <ClInclude Include="views\title_bar\small_title_bar.h" />
     <ClInclude Include="views\view_delegate.h" />
     <ClInclude Include="views\layout\title_bar_layout.h" />
     <ClInclude Include="views\layout\non_client_layout.h" />
@@ -704,6 +706,8 @@
     <ClCompile Include="views\text_view.cpp" />
     <ClCompile Include="views\title_bar\circle_color_button.cpp" />
     <ClCompile Include="views\title_bar\default_title_bar.cpp" />
+    <ClCompile Include="views\title_bar\title_bar_button.cpp" />
+    <ClCompile Include="views\title_bar\small_title_bar.cpp" />
     <ClCompile Include="views\title_bar\title_bar.cpp" />
     <ClCompile Include="views\tree\tree_node.cpp" />
     <ClCompile Include="views\tree\tree_node_button.cpp" />

@@ -62,7 +62,7 @@ namespace ukive {
 
         if (sel_view_) {
             auto item = sel_view_;
-            int nav_height = int(std::round(getContext().dp2px(3)));
+            int nav_height = getContext().dp2pxri(3);
             Rect rect(item->getBounds());
             if (!prev_rect_.empty()) {
                 int width = int((rect.width() - prev_rect_.width()) * animator_.getCurValue()) + prev_rect_.width();
@@ -71,6 +71,7 @@ namespace ukive {
                 canvas->fillRect(RectF(cur_rect), Color::Blue400);
             } else {
                 rect.y(rect.bottom() - nav_height);
+                rect.height(nav_height);
                 canvas->fillRect(RectF(rect), Color::Blue400);
             }
         }
@@ -115,12 +116,13 @@ namespace ukive {
 
         auto view = new TextView(getContext());
         view->setText(title);
-        view->setTextSize(getContext().dp2pxi(14));
-        view->setPadding(padding, padding, padding, padding);
+        view->setTextSize(getContext().dp2pxi(12));
+        view->setPadding(padding, 0, padding, 0);
+        view->setParagraphAlignment(TextLayout::Alignment::CENTER);
         view->setBackground(new RippleElement());
         view->setClickable(true);
         view->setOnClickListener(this);
-        view->setLayoutSize(LS_AUTO, LS_AUTO);
+        view->setLayoutSize(LS_AUTO, LS_FILL);
         addView(view);
 
         size_t index = getChildCount() - 1;
@@ -140,12 +142,13 @@ namespace ukive {
 
         auto view = new TextView(getContext());
         view->setText(title);
-        view->setTextSize(getContext().dp2pxi(14));
-        view->setPadding(padding, padding, padding, padding);
+        view->setTextSize(getContext().dp2pxi(12));
+        view->setPadding(padding, 0, padding, 0);
+        view->setParagraphAlignment(TextLayout::Alignment::CENTER);
         view->setBackground(new RippleElement());
         view->setClickable(true);
         view->setOnClickListener(this);
-        view->setLayoutSize(LS_AUTO, LS_AUTO);
+        view->setLayoutSize(LS_AUTO, LS_FILL);
         addView(index, view);
 
         if (index == 0 && !sel_view_) {

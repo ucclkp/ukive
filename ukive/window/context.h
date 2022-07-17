@@ -51,10 +51,16 @@ namespace ukive {
 
         float dp2px(int dp) const;
         float dp2px(float dp) const;
+        float dp2pxr(int dp) const;
+        float dp2pxr(float dp) const;
+
         int dp2pxi(int dp) const;
         int dp2pxi(float dp) const;
+        int dp2pxri(int dp) const;
+        int dp2pxri(float dp) const;
 
         float px2dp(int px) const;
+
         int px2dpci(int px) const;
         int px2dpfi(int px) const;
 

@@ -26,6 +26,9 @@ namespace ukive {
         RippleElement(Shape shape, const Color& color);
         ~RippleElement();
 
+        void setDownAlpha(double a);
+        void setHoverAlpha(double a);
+        void setInteractColor(const Color& c);
         void setDrawMaskEnabled(bool enabled);
 
         void draw(Canvas* canvas) override;
@@ -49,7 +52,10 @@ namespace ukive {
         void initElement();
 
         double alpha_;
+        double down_alpha_;
+        double hover_alpha_;
         bool is_draw_mask_ = true;
+        Color interact_color_;
 
         Animator up_animator_;
         Animator down_animator_;

@@ -20,6 +20,9 @@ namespace ukive {
     Color::Color(float r, float g, float b, float a)
         : a(a), r(r), g(g), b(b) {}
 
+    Color::Color(const Color& c, float a)
+        : a(a), r(c.r), g(c.g), b(c.b) {}
+
     // static
     Color Color::parse(const std::string_view& color) {
         if (color.empty() || color.at(0) != '#') {
