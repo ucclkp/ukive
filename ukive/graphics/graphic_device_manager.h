@@ -27,7 +27,6 @@ namespace ukive {
         virtual ~GraphicDeviceManager() = default;
 
         virtual bool initialize() = 0;
-        virtual bool recreate() = 0;
         virtual void destroy() = 0;
 
         virtual GPtr<GPUDevice> getGPUDevice() const = 0;
@@ -46,8 +45,8 @@ namespace ukive {
         void notifyDeviceLost();
         void notifyDeviceRestored();
 
-        void demolishRbs();
-        void rebuildRbs(bool succeeded);
+        void demolish();
+        void rebuild(bool succeeded);
 
     private:
         std::recursive_mutex rb_sync_;

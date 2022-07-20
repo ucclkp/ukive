@@ -41,17 +41,6 @@ namespace win {
         return createHardwareBRT(width_, height_);
     }
 
-    bool OffscreenBufferWin::onRecreate() {
-        onDestroy();
-
-        if (width_ <= 0 || height_ <= 0) {
-            DLOG(Log::ERR) << "Invalid size value.";
-            return false;
-        }
-
-        return createHardwareBRT(width_, height_);
-    }
-
     GRet OffscreenBufferWin::onResize(int width, int height) {
         if (width <= 0 || height <= 0) {
             DLOG(Log::WARNING) << "Invalid size value.";
@@ -97,9 +86,11 @@ namespace win {
         HRESULT hr = nrt_.getNative()->EndDraw();
         if (FAILED(hr)) {
             if (hr == D2DERR_RECREATE_TARGET) {
-                return GRet::Retry;
+                if (DXMGR->recreate() && recreate()) {
+                    return GRet::Retry;
+                }
             }
-            LOG(Log::ERR) << "Failed to draw d2d content.";
+            LOG(Log::ERR) << "Failed to draw d2d content: " << hr;
             return GRet::Failed;
         }
         return GRet::Succeeded;
@@ -159,6 +150,17 @@ namespace win {
         return d3d_tex2d_;
     }
 
+    bool OffscreenBufferWin::recreate() {
+        onDestroy();
+
+        if (width_ <= 0 || height_ <= 0) {
+            DLOG(Log::ERR) << "Invalid size value.";
+            return false;
+        }
+
+        return createHardwareBRT(width_, height_);
+    }
+
     bool OffscreenBufferWin::createHardwareBRT(int width, int height) {
         switch (img_options_.dpi_type) {
         case ImageDPIType::SPECIFIED:
@@ -192,8 +194,8 @@ namespace win {
             return false;
         }
 
-        auto rt = static_cast<DirectXManager*>(Application::getGraphicDeviceManager())->
-            createDXGIRenderTarget(dxgi_surface.get(), false, img_options_);
+        auto rt = DXMGR->createDXGIRenderTarget(
+            dxgi_surface.get(), false, img_options_);
         if (!rt) {
             return false;
         }

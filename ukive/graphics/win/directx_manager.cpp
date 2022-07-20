@@ -85,30 +85,33 @@ namespace win {
         return true;
     }
 
+    void DirectXManager::destroy() {
+        shutdownDevice();
+        shutdownPersistance();
+    }
+
     bool DirectXManager::recreate() {
+        std::lock_guard<std::mutex> lg(devc_sync_);
+
         HRESULT hr = d3d_device_->GetDeviceRemovedReason();
         if (SUCCEEDED(hr)) {
             return true;
         }
 
         notifyDeviceLost();
-        demolishRbs();
+        demolish();
 
         shutdownDevice();
+
         /**
          * 确保 demolish / rebuild 成对调用，
          * 即使创建设备失败。
          */
         bool ret = initDevice();
 
-        rebuildRbs(ret);
+        rebuild(ret);
         notifyDeviceRestored();
         return ret;
-    }
-
-    void DirectXManager::destroy() {
-        shutdownPersistance();
-        shutdownDevice();
     }
 
     GPtr<GPUDevice> DirectXManager::getGPUDevice() const {
@@ -186,22 +189,23 @@ namespace win {
             return false;
         }
 
-        hr = ::CreateDXGIFactory1(IID_PPV_ARGS(&dxgi_factory_));
-        if (FAILED(hr)) {
-            LOG(Log::ERR) << "Failed to create dxgi factory.";
-            return false;
-        }
-
         return true;
     }
 
     void DirectXManager::shutdownPersistance() {
         d2d_factory_.reset();
         dwrite_factory_.reset();
-        dxgi_factory_.reset();
     }
 
     bool DirectXManager::initDevice() {
+        HRESULT hr;
+        dxgi_factory_.reset();
+        hr = ::CreateDXGIFactory1(IID_PPV_ARGS(&dxgi_factory_));
+        if (FAILED(hr)) {
+            LOG(Log::ERR) << "Failed to create dxgi factory.";
+            return false;
+        }
+
         D3D_FEATURE_LEVEL feature_levels[] = {
             D3D_FEATURE_LEVEL_11_1,
             D3D_FEATURE_LEVEL_11_0,
@@ -212,7 +216,6 @@ namespace win {
             D3D_FEATURE_LEVEL_9_1,
         };
 
-        HRESULT hr;
         D3D_DRIVER_TYPE driver_type;
         UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
         utl::win::ComPtr<IDXGIAdapter1> adapter;
@@ -239,7 +242,7 @@ namespace win {
             &d3d_device_, nullptr, &d3d_devicecontext_);
         if (FAILED(hr)) {
             hr = ::D3D11CreateDevice(
-                nullptr, driver_type, nullptr, flags,
+                adapter.get(), driver_type, nullptr, flags,
                 feature_levels + 1, ARRAYSIZE(feature_levels) - 1, D3D11_SDK_VERSION,
                 &d3d_device_, nullptr, &d3d_devicecontext_);
             if (FAILED(hr)) {
@@ -266,6 +269,7 @@ namespace win {
         d3d_devicecontext_.reset();
         d3d_device_.reset();
         dxgi_device_.reset();
+        dxgi_factory_.reset();
     }
 
     utl::win::ComPtr<ID2D1Factory> DirectXManager::getD2DFactory() const {

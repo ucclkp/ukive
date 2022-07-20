@@ -32,11 +32,6 @@ namespace win {
         return createSwapchainBRT();
     }
 
-    bool WindowBufferWin::onRecreate() {
-        onDestroy();
-        return createSwapchainBRT();
-    }
-
     GRet WindowBufferWin::onResize(int width, int height) {
         return resizeSwapchainBRT();
     }
@@ -75,7 +70,9 @@ namespace win {
         HRESULT hr = nrt_.getNative()->EndDraw();
         if (FAILED(hr)) {
             if (hr == D2DERR_RECREATE_TARGET) {
-                return GRet::Retry;
+                if (DXMGR->recreate() && recreate()) {
+                    return GRet::Retry;
+                }
             }
             LOG(Log::ERR) << "Failed to draw d2d content.";
             return GRet::Failed;
@@ -91,7 +88,9 @@ namespace win {
             if (hr == DXGI_ERROR_DEVICE_REMOVED ||
                 hr == DXGI_ERROR_DEVICE_RESET)
             {
-                return GRet::Retry;
+                if (DXMGR->recreate() && recreate()) {
+                    return GRet::Retry;
+                }
             }
 
             LOG(Log::ERR) << "Failed to present.";
@@ -126,6 +125,11 @@ namespace win {
 
     const ImageOptions& WindowBufferWin::getImageOptions() const {
         return img_options_;
+    }
+
+    bool WindowBufferWin::recreate() {
+        onDestroy();
+        return createSwapchainBRT();
     }
 
     bool WindowBufferWin::createSoftwareBRT() {
@@ -224,8 +228,7 @@ namespace win {
 
         hr = parent->MakeWindowAssociation(hwnd, DXGI_MWA_NO_ALT_ENTER);
         if (FAILED(hr)) {
-            LOG(Log::FATAL) << "Failed to disable Alt+Enter for SwapChain: " << hr;
-            return false;
+            LOG(Log::WARNING) << "Failed to disable Alt+Enter for SwapChain: " << hr;
         }
 
         utl::win::ComPtr<IDXGISurface> back_buffer;

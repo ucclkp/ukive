@@ -52,7 +52,7 @@ namespace ukive {
         }
     }
 
-    void GraphicDeviceManager::demolishRbs() {
+    void GraphicDeviceManager::demolish() {
         std::lock_guard<std::recursive_mutex> lg(rb_sync_);
         auto rb = rb_head_;
         while (rb) {
@@ -61,7 +61,7 @@ namespace ukive {
         }
     }
 
-    void GraphicDeviceManager::rebuildRbs(bool succeeded) {
+    void GraphicDeviceManager::rebuild(bool succeeded) {
         std::lock_guard<std::recursive_mutex> lg(rb_sync_);
         auto rb = rb_head_;
         while (rb) {

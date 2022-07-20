@@ -23,7 +23,6 @@ namespace win {
 
         bool onCreate(
             int width, int height, const ImageOptions& options) override;
-        bool onRecreate() override;
         GRet onResize(int width, int height) override;
         void onDPIChange(float dpi_x, float dpi_y) override;
         void onDestroy() override;
@@ -40,6 +39,7 @@ namespace win {
         const ImageOptions& getImageOptions() const override;
 
     private:
+        bool recreate();
         bool createHardwareBRT();
         bool createSoftwareBRT();
         bool createSwapchainBRT();

@@ -23,8 +23,7 @@ namespace ukive {
 namespace win {
 
     class CyroRenderTargetD2D :
-        public CyroRenderTarget,
-        public Rebuildable
+        public CyroRenderTarget
     {
     public:
         CyroRenderTargetD2D();
@@ -96,10 +95,6 @@ namespace win {
             float x, float y,
             const DWRITE_GLYPH_RUN* glyph_run,
             DWRITE_MEASURING_MODE measuring_mode, const Color& color);
-
-    protected:
-        void onDemolish() override;
-        void onRebuild(bool succeeded) override;
 
     private:
         struct StackData {

@@ -25,7 +25,6 @@ namespace win {
         bool onCreate(
             int width, int height,
             const ImageOptions& options) override;
-        bool onRecreate() override;
         GRet onResize(int width, int height) override;
         void onDPIChange(float dpi_x, float dpi_y) override;
         void onDestroy() override;
@@ -44,6 +43,7 @@ namespace win {
         GPtr<GPUTexture> getTexture() const;
 
     private:
+        bool recreate();
         bool createHardwareBRT(int width, int height);
 
         int width_, height_;

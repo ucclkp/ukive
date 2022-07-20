@@ -19,6 +19,8 @@
 #include "ukive/graphics/gpu/gpu_device.h"
 #include "ukive/graphics/graphic_device_manager.h"
 
+#define DXMGR static_cast<DirectXManager*>(Application::getGraphicDeviceManager())
+
 
 namespace ukive {
 
@@ -35,14 +37,13 @@ namespace win {
         ~DirectXManager();
 
         bool initialize() override;
-        bool recreate() override;
         void destroy() override;
 
         GPtr<GPUDevice> getGPUDevice() const override;
         GPtr<GPUContext> getGPUContext() const override;
 
+        bool recreate();
         void enumSystemFonts();
-
         bool isAdapterChanged() const;
 
         utl::win::ComPtr<ID2D1Factory> getD2DFactory() const;
@@ -78,6 +79,7 @@ namespace win {
 
         utl::win::ComPtr<IDXGIDevice> dxgi_device_;
 
+        std::mutex devc_sync_;
         GPtr<GPUDevice> gpu_device_;
         GPtr<GPUContext> gpu_context_;
     };

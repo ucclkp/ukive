@@ -890,10 +890,7 @@ namespace ukive {
         drawRootView(canvas_, region.rect0);
         drawRootView(canvas_, region.rect1);
 
-        // 处理设备丢失
-        if (canvas_->endDraw() == GRet::Retry) {
-            processDeviceLost();
-        }
+        canvas_->endDraw();
     }
 
     void Window::drawWithDebug(const DirtyRegion& region) {
@@ -943,10 +940,7 @@ namespace ukive {
                 bounds.width(), bounds.height(), canvas_);
         }
 
-        // 处理设备丢失
-        if (canvas_->endDraw() == GRet::Retry) {
-            processDeviceLost();
-        }
+        canvas_->endDraw();
     }
 
     void Window::drawRootView(Canvas* canvas, const Rect& rect) {
@@ -986,12 +980,6 @@ namespace ukive {
         canvas->popClip();
     }
 
-    void Window::processDeviceLost() {
-        onUpdateContext(Context::DEV_LOST);
-        Application::getGraphicDeviceManager()->recreate();
-        onUpdateContext(Context::DEV_RESTORE);
-    }
-
     void Window::onMove(int x, int y) {
     }
 
@@ -1005,11 +993,6 @@ namespace ukive {
             if (ret == GRet::Failed) {
                 LOG(Log::ERR) << "Resize canvas failed.";
                 return;
-            }
-
-            // 处理设备丢失
-            if (ret == GRet::Retry) {
-                processDeviceLost();
             }
         }
 

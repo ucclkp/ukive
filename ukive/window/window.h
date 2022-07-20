@@ -238,7 +238,6 @@ namespace ukive {
         void draw(const DirtyRegion& region);
         void drawWithDebug(const DirtyRegion& region);
         void drawRootView(Canvas* canvas, const Rect& rect);
-        void processDeviceLost();
         bool processPointerHolder(View* holder, InputEvent* e);
         void processKeyForDebugView(InputEvent* e);
 

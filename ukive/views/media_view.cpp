@@ -72,20 +72,6 @@ namespace ukive {
         View::onContextChanged(type, context);
 
         switch (type) {
-        case Context::DEV_LOST:
-        {
-            // 通知场景，要把设备资源释放掉
-            break;
-        }
-
-        case Context::DEV_RESTORE:
-        {
-            auto bounds(getContentBounds());
-
-            // 重新创建设备资源
-            break;
-        }
-
         default:
             break;
         }

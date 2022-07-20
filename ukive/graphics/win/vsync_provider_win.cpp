@@ -79,6 +79,9 @@ namespace win {
             }
 
             auto primary = primaryDisplay();
+            if (!primary) {
+                continue;
+            }
 
             auto before_ts = utl::TimeUtils::upTimeNanos();
             bool ret = primary->waitForVSync();

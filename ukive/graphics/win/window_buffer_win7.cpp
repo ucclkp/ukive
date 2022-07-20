@@ -38,19 +38,6 @@ namespace win {
         return ret;
     }
 
-    bool WindowBufferWin7::onRecreate() {
-        onDestroy();
-
-        bool ret;
-        is_layered_ = window_->isLayered();
-        if (is_layered_) {
-            ret = createHardwareBRT();
-        } else {
-            ret = createSwapchainBRT();
-        }
-        return ret;
-    }
-
     GRet WindowBufferWin7::onResize(int width, int height) {
         GRet ret;
         if (is_layered_) {
@@ -96,7 +83,9 @@ namespace win {
         HRESULT hr = nrt_.getNative()->EndDraw();
         if (FAILED(hr)) {
             if (hr == D2DERR_RECREATE_TARGET) {
-                return GRet::Retry;
+                if (DXMGR->recreate() && recreate()) {
+                    return GRet::Retry;
+                }
             }
             LOG(Log::ERR) << "Failed to draw d2d content.";
             return GRet::Failed;
@@ -111,7 +100,9 @@ namespace win {
             if (hr == DXGI_ERROR_DEVICE_REMOVED ||
                 hr == DXGI_ERROR_DEVICE_RESET)
             {
-                return GRet::Retry;
+                if (DXMGR->recreate() && recreate()) {
+                    return GRet::Retry;
+                }
             }
 
             LOG(Log::ERR) << "Failed to present.";
@@ -146,6 +137,19 @@ namespace win {
 
     const ImageOptions& WindowBufferWin7::getImageOptions() const {
         return img_options_;
+    }
+
+    bool WindowBufferWin7::recreate() {
+        onDestroy();
+
+        bool ret;
+        is_layered_ = window_->isLayered();
+        if (is_layered_) {
+            ret = createHardwareBRT();
+        } else {
+            ret = createSwapchainBRT();
+        }
+        return ret;
     }
 
     bool WindowBufferWin7::createHardwareBRT() {

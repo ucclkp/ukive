@@ -33,7 +33,6 @@ namespace ukive {
         virtual bool onCreate(
             int width, int height,
             const ImageOptions& options) = 0;
-        virtual bool onRecreate() = 0;
         virtual GRet onResize(int width, int height) = 0;
         virtual void onDPIChange(float dpi_x, float dpi_y) = 0;
         virtual void onDestroy() = 0;

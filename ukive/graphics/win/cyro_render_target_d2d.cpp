@@ -101,38 +101,6 @@ namespace win {
         }
     }
 
-    void CyroRenderTargetD2D::onDemolish() {
-        rt_sync_.lock();
-
-        uninitialize();
-        rt_.reset();
-
-        if (buffer_) {
-            buffer_->onDestroy();
-        }
-    }
-
-    void CyroRenderTargetD2D::onRebuild(bool succeeded) {
-        ESC_FROM_SCOPE{
-            rt_sync_.unlock();
-        };
-
-        if (!buffer_) {
-            return;
-        }
-
-        if (!buffer_->onRecreate()) {
-            return;
-        }
-
-        rt_ = static_cast<const NativeRTD2D*>(
-            buffer_->getNativeRT())->getNative();
-
-        if (!initialize()) {
-            return;
-        }
-    }
-
     bool CyroRenderTargetD2D::initialize() {
         if (!rt_) {
             return false;
@@ -330,7 +298,23 @@ namespace win {
         if (!buffer_) {
             return GRet::Failed;
         }
-        return buffer_->onEndDraw();
+
+        auto ret = buffer_->onEndDraw();
+        if (ret == GRet::Retry) {
+            std::lock_guard<std::mutex> lg(rt_sync_);
+
+            uninitialize();
+            rt_.reset();
+
+            rt_ = static_cast<const NativeRTD2D*>(
+                buffer_->getNativeRT())->getNative();
+
+            if (!initialize()) {
+                return GRet::Failed;
+            }
+        }
+
+        return ret;
     }
 
     GRet CyroRenderTargetD2D::onResize(int width, int height) {
