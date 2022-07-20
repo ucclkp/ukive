@@ -208,6 +208,10 @@
 		674721CB270DF5D200478B85 /* vsync_provider_mac.h in Headers */ = {isa = PBXBuildFile; fileRef = 674721C9270DF5D100478B85 /* vsync_provider_mac.h */; };
 		674721CC270DF5D200478B85 /* vsync_provider_mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 674721CA270DF5D100478B85 /* vsync_provider_mac.cpp */; };
 		675B1B1E288328E600E817EA /* view_delegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 675B1B1D288328E600E817EA /* view_delegate.h */; };
+		675B1B2C28886A8D00E817EA /* title_bar_button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 675B1B2828886A8D00E817EA /* title_bar_button.cpp */; };
+		675B1B2D28886A8D00E817EA /* title_bar_button.h in Headers */ = {isa = PBXBuildFile; fileRef = 675B1B2928886A8D00E817EA /* title_bar_button.h */; };
+		675B1B2E28886A8D00E817EA /* small_title_bar.h in Headers */ = {isa = PBXBuildFile; fileRef = 675B1B2A28886A8D00E817EA /* small_title_bar.h */; };
+		675B1B2F28886A8D00E817EA /* small_title_bar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 675B1B2B28886A8D00E817EA /* small_title_bar.cpp */; };
 		676023B72590F45700DA26AA /* keyboard_mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 676023B62590F45700DA26AA /* keyboard_mac.mm */; };
 		6763044F280EF8B70097DD20 /* combo_box_selected_listener.h in Headers */ = {isa = PBXBuildFile; fileRef = 6763044E280EF8B70097DD20 /* combo_box_selected_listener.h */; };
 		67630454280EF8D90097DD20 /* list_handler_source.h in Headers */ = {isa = PBXBuildFile; fileRef = 67630450280EF8D90097DD20 /* list_handler_source.h */; };
@@ -618,6 +622,10 @@
 		674721C9270DF5D100478B85 /* vsync_provider_mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vsync_provider_mac.h; sourceTree = "<group>"; };
 		674721CA270DF5D100478B85 /* vsync_provider_mac.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vsync_provider_mac.cpp; sourceTree = "<group>"; };
 		675B1B1D288328E600E817EA /* view_delegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = view_delegate.h; sourceTree = "<group>"; };
+		675B1B2828886A8D00E817EA /* title_bar_button.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = title_bar_button.cpp; sourceTree = "<group>"; };
+		675B1B2928886A8D00E817EA /* title_bar_button.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = title_bar_button.h; sourceTree = "<group>"; };
+		675B1B2A28886A8D00E817EA /* small_title_bar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = small_title_bar.h; sourceTree = "<group>"; };
+		675B1B2B28886A8D00E817EA /* small_title_bar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = small_title_bar.cpp; sourceTree = "<group>"; };
 		676023B62590F45700DA26AA /* keyboard_mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = keyboard_mac.mm; sourceTree = "<group>"; };
 		6763044E280EF8B70097DD20 /* combo_box_selected_listener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = combo_box_selected_listener.h; sourceTree = "<group>"; };
 		67630450280EF8D90097DD20 /* list_handler_source.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = list_handler_source.h; sourceTree = "<group>"; };
@@ -1215,6 +1223,10 @@
 				670BD5AC24B229ED00DF5B85 /* circle_color_button.h */,
 				6713357125BDD942007598C0 /* default_title_bar.cpp */,
 				6713357025BDD942007598C0 /* default_title_bar.h */,
+				675B1B2B28886A8D00E817EA /* small_title_bar.cpp */,
+				675B1B2A28886A8D00E817EA /* small_title_bar.h */,
+				675B1B2828886A8D00E817EA /* title_bar_button.cpp */,
+				675B1B2928886A8D00E817EA /* title_bar_button.h */,
 				670BD5AB24B229ED00DF5B85 /* title_bar.cpp */,
 				670BD5AD24B229ED00DF5B85 /* title_bar.h */,
 			);
@@ -1686,6 +1698,7 @@
 				6773928D26076DCD00D03228 /* texteditor_element.h in Headers */,
 				670BD60924B229ED00DF5B85 /* interpolator.h in Headers */,
 				670BD70124B229ED00DF5B85 /* scroll_view.h in Headers */,
+				675B1B2E28886A8D00E817EA /* small_title_bar.h in Headers */,
 				670BD65B24B229ED00DF5B85 /* menu_item.h in Headers */,
 				67985C712504E54B0092EACB /* grid_view.h in Headers */,
 				670BD63024B229ED00DF5B85 /* editable.h in Headers */,
@@ -1856,6 +1869,7 @@
 				670BD72A24B229ED00DF5B85 /* clipboard_manager.h in Headers */,
 				6770CE41256FB97F007B49F3 /* text_attributes_span.h in Headers */,
 				6723A7A824FE9C6E00F3FB53 /* view_animator_params.h in Headers */,
+				675B1B2D28886A8D00E817EA /* title_bar_button.h in Headers */,
 				677392CC26076F0D00D03228 /* size_info.h in Headers */,
 				6786E7722843765F0058A7DE /* haul_delegate.h in Headers */,
 				670BD60A24B229ED00DF5B85 /* timer.h in Headers */,
@@ -2091,6 +2105,7 @@
 				6769B60425A1F791009D23F2 /* text_inline_cell.mm in Sources */,
 				671BEB272812E50F00AA65E6 /* byte_data.cpp in Sources */,
 				678C89BB27C1493C008D0B21 /* icc_profile.cpp in Sources */,
+				675B1B2F28886A8D00E817EA /* small_title_bar.cpp in Sources */,
 				670BD64F24B229ED00DF5B85 /* keyboard.cpp in Sources */,
 				670BD6EC24B229ED00DF5B85 /* grid_list_layouter.cpp in Sources */,
 				6773928326076DCD00D03228 /* texteditor_element.cpp in Sources */,
@@ -2114,6 +2129,7 @@
 				670BD64124B229ED00DF5B85 /* editable.cpp in Sources */,
 				67950D8C261B457A0012DE92 /* list_columns.cpp in Sources */,
 				6770CE42256FB97F007B49F3 /* text_attributes_span.cpp in Sources */,
+				675B1B2C28886A8D00E817EA /* title_bar_button.cpp in Sources */,
 				670BD63A24B229ED00DF5B85 /* inline_object_span.cpp in Sources */,
 				678C89B527C1492D008D0B21 /* ucmm.cpp in Sources */,
 				6723A79E24FE9B1900F3FB53 /* context.cpp in Sources */,

@@ -25,10 +25,6 @@ namespace mac {
         return true;
     }
 
-    bool WindowBufferMac::onRecreate() {
-        return true;
-    }
-
     GRet WindowBufferMac::onResize(int width, int height) {
         return GRet::Succeeded;
     }
@@ -70,6 +66,10 @@ namespace mac {
 
     GPtr<ImageFrame> WindowBufferMac::onExtractImage(const ImageOptions& options) {
         return {};
+    }
+
+    bool WindowBufferMac::recreate() {
+        return true;
     }
 
 }

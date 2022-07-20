@@ -18,7 +18,6 @@ namespace mac {
         GraphicDeviceManagerMac() = default;
 
         bool initialize() override;
-        bool recreate() override;
         void destroy() override;
 
         GPtr<GPUDevice> getGPUDevice() const override;

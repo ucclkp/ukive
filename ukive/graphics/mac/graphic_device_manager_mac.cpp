@@ -14,10 +14,6 @@ namespace mac {
         return true;
     }
 
-    bool GraphicDeviceManagerMac::recreate() {
-        return true;
-    }
-
     void GraphicDeviceManagerMac::destroy() {
 
     }

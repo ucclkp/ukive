@@ -22,6 +22,17 @@ namespace mac {
         : width_(0), height_(0) {
     }
 
+    bool OffscreenBufferMac::recreate() {
+        onDestroy();
+
+        if (width_ <= 0 || height_ <= 0) {
+            DLOG(Log::ERR) << "Invalid size value.";
+            return false;
+        }
+
+        return createBuffer();
+    }
+
     bool OffscreenBufferMac::createBuffer() {
         auto color_space = CGColorSpaceCreateDeviceRGB();
 
@@ -66,17 +77,6 @@ namespace mac {
         width_ = width;
         height_ = height;
         img_options_ = options;
-        return createBuffer();
-    }
-
-    bool OffscreenBufferMac::onRecreate() {
-        onDestroy();
-
-        if (width_ <= 0 || height_ <= 0) {
-            DLOG(Log::ERR) << "Invalid size value.";
-            return false;
-        }
-
         return createBuffer();
     }
 
