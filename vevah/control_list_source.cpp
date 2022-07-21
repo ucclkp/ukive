@@ -65,7 +65,7 @@ namespace vevah {
         // 自定义容器
         for (const auto& pair : map2) {
             if (pair.second.is_layout) {
-                if (pair.first != "vevah::ContainerLayout") {
+                if (pair.first != "vevah.ContainerLayout") {
                     data_.push_back(
                         { utl::u8to16(pair.first), pair.first });
                 }

@@ -228,11 +228,6 @@ $(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro\$(ProjectName)" -d "$(O
     <ClCompile Include="examples\pages\example_tree_page.cpp" />
     <ClCompile Include="examples\example_list_source.cpp" />
     <ClCompile Include="examples\example_window.cpp" />
-    <ClCompile Include="gallery\gallery_utils.cpp" />
-    <ClCompile Include="gallery\gallery_window.cpp" />
-    <ClCompile Include="gallery\picture\slide_image_view.cpp" />
-    <ClCompile Include="gallery\picture\picture_window.cpp" />
-    <ClCompile Include="gallery\thumbnail_fetcher.cpp" />
     <ClCompile Include="grid\grid_window.cpp" />
     <ClCompile Include="lod\lod_window.cpp" />
     <ClCompile Include="lod\qtree_node.cpp" />
@@ -250,11 +245,6 @@ $(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro\$(ProjectName)" -d "$(O
     <ClInclude Include="examples\pages\example_tree_page.h" />
     <ClInclude Include="examples\example_list_source.h" />
     <ClInclude Include="examples\example_window.h" />
-    <ClInclude Include="gallery\gallery_utils.h" />
-    <ClInclude Include="gallery\gallery_window.h" />
-    <ClInclude Include="gallery\picture\slide_image_view.h" />
-    <ClInclude Include="gallery\picture\picture_window.h" />
-    <ClInclude Include="gallery\thumbnail_fetcher.h" />
     <ClInclude Include="grid\grid_window.h" />
     <ClInclude Include="lod\lod_window.h" />
     <ClInclude Include="lod\qtree_node.h" />
@@ -274,10 +264,6 @@ $(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro\$(ProjectName)" -d "$(O
     <ResourceCompile Include="resources\shell.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="resources\layout\gallery_item_layout.xml">
-      <SubType>Designer</SubType>
-    </Xml>
-    <Xml Include="resources\layout\gallery_window_layout.xml" />
     <Xml Include="resources\layout\example_misc_page_layout.xml" />
     <Xml Include="resources\layout\example_list_page_layout.xml" />
     <Xml Include="resources\layout\example_window_layout.xml" />

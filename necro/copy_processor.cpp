@@ -29,6 +29,7 @@ namespace necro {
             }
         }
 
+        fs::create_directories(dst, ec);
         fs::copy(
             src, dst,
             fs::copy_options::update_existing | fs::copy_options::recursive, ec);

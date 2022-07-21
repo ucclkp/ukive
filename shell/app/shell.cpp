@@ -12,9 +12,7 @@
 #include "ukive/app/application.h"
 #include "ukive/window/purpose.h"
 
-//#include "shell/gallery/gallery_window.h"
 //#include "shell/lod/lod_window.h"
-//#include "shell/gallery/picture/picture_window.h"
 #include "shell/examples/example_window.h"
 #include "shell/text/text_window.h"
 //#include "shell/effects/effect_window.h"
@@ -72,29 +70,6 @@ GUI_MAIN() {
     example_window->center();
     example_window->show();
     //example_window->maximize();
-
-    //auto xpic_window = std::make_shared<shell::PictureWindow>();
-    //xpic_window->init(ukive::Window::InitParams());
-    //xpic_window->setTitle(u"Picture");
-    //xpic_window->setWidth(ukive::Application::dp2pxi(600));
-    //xpic_window->setHeight(ukive::Application::dp2pxi(600));
-    //{
-    //    if (ukive::Application::getCommandCount() == 1) {
-    //        ukive::Purpose purpose;
-    //        purpose.params["target"] = ukive::Application::getCommand(0);
-    //        xpic_window->setPurpose(purpose);
-    //    }
-    //}
-    //xpic_window->center();
-    //xpic_window->show();
-
-    /*auto gallery_window = std::make_shared<shell::GalleryWindow>();
-    gallery_window->init(ukive::Window::InitParams());
-    gallery_window->setTitle(u"Gallery");
-    gallery_window->setWidth(ukive::Application::dp2pxi(1200));
-    gallery_window->setHeight(ukive::Application::dp2pxi(700));
-    gallery_window->center();
-    gallery_window->show();*/
 
     /*auto grid_window = std::make_shared<shell::GridWindow>();
     grid_window->init(ukive::Window::InitParams());

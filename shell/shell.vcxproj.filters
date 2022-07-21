@@ -14,12 +14,6 @@
     <Filter Include="resources\layout">
       <UniqueIdentifier>{32702468-1b1f-4d2b-9b1a-7679a1ce6bf7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gallery">
-      <UniqueIdentifier>{32361416-4611-41ef-b82c-77a001d2fe81}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gallery\picture">
-      <UniqueIdentifier>{7631e548-1fc9-42d3-98ba-f53acf3281ba}</UniqueIdentifier>
-    </Filter>
     <Filter Include="text">
       <UniqueIdentifier>{bc6c9ed1-f5de-4d31-9217-3435ba1564ca}</UniqueIdentifier>
     </Filter>
@@ -63,21 +57,6 @@
     </ClCompile>
     <ClCompile Include="lod\terrain_configure.cpp">
       <Filter>lod</Filter>
-    </ClCompile>
-    <ClCompile Include="gallery\gallery_window.cpp">
-      <Filter>gallery</Filter>
-    </ClCompile>
-    <ClCompile Include="gallery\gallery_utils.cpp">
-      <Filter>gallery</Filter>
-    </ClCompile>
-    <ClCompile Include="gallery\thumbnail_fetcher.cpp">
-      <Filter>gallery</Filter>
-    </ClCompile>
-    <ClCompile Include="gallery\picture\slide_image_view.cpp">
-      <Filter>gallery\picture</Filter>
-    </ClCompile>
-    <ClCompile Include="gallery\picture\picture_window.cpp">
-      <Filter>gallery\picture</Filter>
     </ClCompile>
     <ClCompile Include="text\text_window.cpp">
       <Filter>text</Filter>
@@ -129,21 +108,6 @@
     <ClInclude Include="lod\terrain_configure.h">
       <Filter>lod</Filter>
     </ClInclude>
-    <ClInclude Include="gallery\gallery_window.h">
-      <Filter>gallery</Filter>
-    </ClInclude>
-    <ClInclude Include="gallery\gallery_utils.h">
-      <Filter>gallery</Filter>
-    </ClInclude>
-    <ClInclude Include="gallery\thumbnail_fetcher.h">
-      <Filter>gallery</Filter>
-    </ClInclude>
-    <ClInclude Include="gallery\picture\slide_image_view.h">
-      <Filter>gallery\picture</Filter>
-    </ClInclude>
-    <ClInclude Include="gallery\picture\picture_window.h">
-      <Filter>gallery\picture</Filter>
-    </ClInclude>
     <ClInclude Include="text\text_window.h">
       <Filter>text</Filter>
     </ClInclude>
@@ -189,12 +153,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="resources\layout\gallery_item_layout.xml">
-      <Filter>resources\layout</Filter>
-    </Xml>
-    <Xml Include="resources\layout\gallery_window_layout.xml">
-      <Filter>resources\layout</Filter>
-    </Xml>
     <Xml Include="resources\layout\example_window_layout.xml">
       <Filter>resources\layout</Filter>
     </Xml>
