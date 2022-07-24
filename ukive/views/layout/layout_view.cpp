@@ -13,7 +13,7 @@
 #include "ukive/diagnostic/input_tracker.h"
 #include "ukive/views/layout_info/layout_info.h"
 #include "ukive/graphics/canvas.h"
-#include "ukive/resources/dimension_utils.h"
+#include "ukive/resources/attr_utils.h"
 #include "ukive/views/view_delegate.h"
 #include "ukive/window/window.h"
 
@@ -219,6 +219,63 @@ namespace ukive {
                 requestDraw();
             }
         }
+    }
+
+    bool LayoutView::replaceView(View* sv, View* dv, int flags) {
+        if (!sv || !dv) {
+            return false;
+        }
+        if (sv == dv) {
+            return false;
+        }
+        if (dv->getParent()) {
+            DLOG(Log::ERR) << "dv already have a parent!";
+            return false;
+        }
+
+        size_t index = 0;
+        bool attached = isAttachedToWindow();
+        for (auto it = views_.begin(); it != views_.end(); ++it, ++index) {
+            if ((*it) == sv) {
+                auto sid = sv->getId();
+                dv->setExtraLayoutInfo(
+                    sv->releaseExtraLayoutInfo());
+
+                isolateChild(sv, attached, !(flags & LVF_NO_DELETE));
+                views_.erase(it);
+
+                dv->setId(sid);
+                addView(index, dv, !(flags & LVF_NO_LAYOUT));
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool LayoutView::replaceView(size_t index, View* dv, int flags) {
+        if (!dv) {
+            return false;
+        }
+        if (dv->getParent()) {
+            DLOG(Log::ERR) << "dv already have a parent!";
+            return false;
+        }
+        if (index >= views_.size()) {
+            DLOG(Log::WARNING) << "Invalid index of View";
+            return false;
+        }
+
+        dv->setExtraLayoutInfo(
+            views_[index]->releaseExtraLayoutInfo());
+
+        bool attached = isAttachedToWindow();
+        isolateChild(views_[index], attached, !(flags & LVF_NO_DELETE));
+        views_.erase(views_.begin() + index);
+
+        addView(index, dv, !(flags & LVF_NO_LAYOUT));
+
+        return true;
     }
 
     void LayoutView::isolateChild(View* child, bool attached, bool del) {

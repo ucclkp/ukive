@@ -61,7 +61,7 @@ namespace ukive {
 
             auto next_page = pages_[sel_index_];
             if (!next_page->isCreated()) {
-                auto v = next_page->create(this);
+                auto v = next_page->create(getContext());
                 addViewByPageId(v, index);
                 next_page->initialize();
             }
@@ -87,7 +87,7 @@ namespace ukive {
 
         size_t index = getPageCount() - 1;
         if (index == sel_index_) {
-            View* v = p->create(this);
+            View* v = p->create(getContext());
             addView(v);
             p->initialize();
             p->show(true);
@@ -106,7 +106,7 @@ namespace ukive {
         pages_.insert(pages_.begin() + index, p);
 
         if (index == sel_index_) {
-            View* v = p->create(this);
+            View* v = p->create(getContext());
             addViewByPageId(v, index);
             p->initialize();
             p->show(true);

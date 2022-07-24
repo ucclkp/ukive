@@ -37,6 +37,7 @@
 #include "ukive/views/layout/root_layout.h"
 #include "ukive/views/tab/tab_strip_view.h"
 #include "ukive/views/tab/tab_view.h"
+#include "ukive/views/tree/tree_node_button.h"
 
 #include "necro/layout_constants.h"
 
@@ -74,6 +75,7 @@ namespace ukive {
         VIEW_CONSTRUCTOR(TextView);
         VIEW_CONSTRUCTOR(GridView);
         VIEW_CONSTRUCTOR(MediaView);
+        VIEW_CONSTRUCTOR(TreeNodeButton);
 
         VIEW_CONSTRUCTOR(LayoutView);
         VIEW_CONSTRUCTOR(TitleBarLayout);
@@ -270,8 +272,10 @@ namespace ukive {
             cur_view = createView(element->tag_name, context_, element->attrs);
             if (!*parent) {
                 *parent = cur_view;
-                auto lp = root_parent_->makeExtraLayoutInfo(element->attrs);
-                cur_view->setExtraLayoutInfo(lp);
+                if (root_parent_) {
+                    auto lp = root_parent_->makeExtraLayoutInfo(element->attrs);
+                    cur_view->setExtraLayoutInfo(lp);
+                }
             } else {
                 auto lv = static_cast<LayoutView*>(*parent);
                 auto lp = lv->makeExtraLayoutInfo(element->attrs);

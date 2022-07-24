@@ -19,6 +19,12 @@ namespace ukive {
 
     class LayoutView : public View {
     public:
+        enum Flags {
+            LVF_NONE = 0,
+            LVF_NO_LAYOUT = 1 << 0,
+            LVF_NO_DELETE = 1 << 1,
+        };
+
         explicit LayoutView(Context c);
         LayoutView(Context c, AttrsRef attrs);
         ~LayoutView();
@@ -76,6 +82,9 @@ namespace ukive {
          * @param req_layout 指定是否请求重布局。
          */
         void removeAllViews(bool del = true, bool req_layout = true);
+
+        bool replaceView(View* sv, View* dv, int flags = 0);
+        bool replaceView(size_t index, View* dv, int flags = 0);
 
         bool hasChildren() const;
         size_t getChildCount() const;

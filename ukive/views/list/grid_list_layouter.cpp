@@ -186,11 +186,11 @@ namespace ukive {
             if (is_at_ceil) {
                 auto topmost = columns_.getTopmost();
                 if (topmost) {
-                    can_scroll = (bounds.y() - topmost->getMgdTop() > 0);
+                    can_scroll = (bounds.y() - topmost->getY() > 0);
                 }
             }
             if (can_scroll) {
-                return bounds.bottom() - columns_.getBottomost()->getMgdBottom();
+                return bounds.bottom() - columns_.getBottomost()->getBottom();
             }
         }
 
@@ -393,7 +393,7 @@ namespace ukive {
                 if (prev_index > 0) {
                     --prev_index;
                     for (size_t i = 0; i < col_count_; ++i) {
-                        prev_bottom = (std::max)(prev_bottom, columns_[i].getItem(prev_index)->getMgdBottom());
+                        prev_bottom = (std::max)(prev_bottom, columns_[i].getItem(prev_index)->getBottom());
                     }
                 }
             }
@@ -473,7 +473,7 @@ namespace ukive {
             for (size_t j = 0; j < col_count_; ++j) {
                 auto item = columns_[j].getItem(i);
                 if (item) {
-                    row_height = (std::max)(row_height, item->getMgdHeight());
+                    row_height = (std::max)(row_height, item->getHeight());
                 }
             }
             row_heights.push_back(row_height);
@@ -554,12 +554,12 @@ namespace ukive {
             if (item) {
                 if (is_first) {
                     tmp_pos = item->data_pos;
-                    tmp_offset = bounds.y() - item->getMgdTop();
+                    tmp_offset = bounds.y() - item->getY();
                     is_first = false;
                 } else {
                     if (item->data_pos < tmp_pos) {
                         tmp_pos = item->data_pos;
-                        tmp_offset = bounds.y() - item->getMgdTop();
+                        tmp_offset = bounds.y() - item->getY();
                     }
                 }
             }
@@ -634,7 +634,7 @@ namespace ukive {
     int GridListLayouter::getColsTop() const {
         auto front = columns_[0].getFront();
         if (front) {
-            return front->getMgdTop();
+            return front->getY();
         }
         return 0;
     }
@@ -647,8 +647,8 @@ namespace ukive {
                 continue;
             }
 
-            if (rear->getMgdBottom() > bottom) {
-                bottom = rear->getMgdBottom();
+            if (rear->getBottom() > bottom) {
+                bottom = rear->getBottom();
             }
         }
         return bottom;

@@ -46,6 +46,15 @@
         margin="8, 8, 8, 8"
         handle_start="@id/sl_main_wnd_left_panel, end"
         handle_top="@id/rl_main_wnd_root"
+        handle_end="@id/v_placeholder, start"
+        handle_bottom="@id/rl_main_wnd_root" />
+
+    <SimpleLayout
+        id="@+id/v_placeholder"
+        width="200"
+        height="fill"
+        margin="8, 8, 8, 8"
+        handle_top="@id/rl_main_wnd_root"
         handle_end="@id/rl_main_wnd_root"
         handle_bottom="@id/rl_main_wnd_root" />
 

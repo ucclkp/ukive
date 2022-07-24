@@ -15,10 +15,13 @@
 #include "ukive/window/context.h"
 #include "ukive/window/haul_source.h"
 
+#include "vevah/view_selected_listener.h"
+
 
 namespace vevah {
 
-    SequenceLayoutDelegate::SequenceLayoutDelegate() {}
+    SequenceLayoutDelegate::SequenceLayoutDelegate(OnViewSelectedListener* l)
+        : listener_(l) {}
 
     bool SequenceLayoutDelegate::onHookInputReceived(
         ukive::LayoutView* v, ukive::InputEvent* e, bool* ret)
@@ -69,6 +72,27 @@ namespace vevah {
             consumed = true;
             break;
 
+        case ukive::InputEvent::EVM_DOWN:
+        {
+            ubassert(typeid(*v) == typeid(ukive::SequenceLayout));
+            auto sl = static_cast<ukive::SequenceLayout*>(v);
+
+            for (size_t i = 0; i < sl->getChildCount(); ++i) {
+                if (sl->getChildAt(i)->getBounds().hit(e->getPos())) {
+                    if (sel_.valid && sel_.pos == i) {
+                        sel_.valid = false;
+                        if (listener_) listener_->onViewSelected(nullptr);
+                    } else {
+                        sel_.pos = i;
+                        sel_.valid = true;
+                        if (listener_) listener_->onViewSelected(sl->getChildAt(i));
+                    }
+                    sl->requestDraw();
+                }
+            }
+            break;
+        }
+
         default:
             break;
         }
@@ -93,6 +117,14 @@ namespace vevah {
             ukive::PointF ps = ukive::PointF(placement_.place.pos());
             ukive::PointF pe = ukive::PointF(placement_.place.pos_rt());
             c->drawLine(ps, pe, ctx.dp2px(2), ukive::Color::Pink400);
+        }
+
+        if (sl->hasChildren() &&
+            sel_.valid &&
+            sel_.pos < sl->getChildCount())
+        {
+            auto bounds = sl->getChildAt(sel_.pos)->getBounds();
+            c->drawRect(ukive::RectF(bounds), ctx.dp2px(3), ukive::Color::Blue500);
         }
     }
 

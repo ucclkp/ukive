@@ -16,8 +16,8 @@
             horizontal_pos="start"
             vertical_pos="start"
             text="--"
-            is_selectable="false"
-            is_editable="false"
+            selectable="false"
+            editable="false"
             padding="6" />
 
         <MediaView
@@ -93,8 +93,8 @@
             width="fill"
             height="auto"
             margin="12"
-            is_selectable="true"
-            is_editable="true"
+            selectable="true"
+            editable="true"
             background="?color/white"
             shadow_radius="0"
             padding="6" />

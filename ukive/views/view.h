@@ -28,6 +28,7 @@ namespace ukive {
     class LayoutInfo;
     class LayoutView;
     class OnClickListener;
+    class OnViewStatusListener;
     class ShadowEffect;
     class InputMethodConnection;
     class HaulSource;
@@ -67,7 +68,7 @@ namespace ukive {
         void setScrollX(int x);
         void setScrollY(int y);
         void setVisibility(int visibility);
-        void setEnabled(bool enable);
+        void setEnabled(bool enabled);
         void setBackground(Element* element, bool owned = true);
         void setForeground(Element* element, bool owned = true);
         void setPadding(int lead, int top, int trail, int bottom);
@@ -94,6 +95,10 @@ namespace ukive {
 
         // 一般由框架调用
         void setParent(LayoutView* parent);
+
+        void addStatusListener(OnViewStatusListener* l);
+        void removeStatusListener(OnViewStatusListener* l);
+        void removeAllStatusListeners();
 
         void offsetVertical(int dy);
         void offsetHorizontal(int dx);
@@ -126,6 +131,7 @@ namespace ukive {
         const Margin& getLayoutMargin() const;
 
         LayoutInfo* getExtraLayoutInfo() const;
+        LayoutInfo* releaseExtraLayoutInfo();
 
         Window* getWindow() const;
         Context getContext() const;
@@ -364,10 +370,11 @@ namespace ukive {
 
         Cursor cursor_ = Cursor::ARROW;
 
-        std::unique_ptr<ViewAnimatorParams> anime_params_;
+        std::unique_ptr<LayoutInfo> layout_info_;
         std::unique_ptr<ViewAnimator> animator_;
         std::unique_ptr<ShadowEffect> shadow_effect_;
-        std::unique_ptr<LayoutInfo> layout_info_;
+        std::unique_ptr<ViewAnimatorParams> anime_params_;
+        std::vector<OnViewStatusListener*> status_listeners_;
 
         LayoutView* parent_;
         OnClickListener* click_listener_ = nullptr;

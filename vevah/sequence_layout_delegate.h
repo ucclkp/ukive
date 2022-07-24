@@ -18,11 +18,13 @@ namespace ukive {
 
 namespace vevah {
 
+    class OnViewSelectedListener;
+
     class SequenceLayoutDelegate :
         public ukive::ViewDelegate
     {
     public:
-        SequenceLayoutDelegate();
+        explicit SequenceLayoutDelegate(OnViewSelectedListener* l);
 
         bool onHookInputReceived(
             ukive::LayoutView* v, ukive::InputEvent* e, bool* ret) override;
@@ -44,10 +46,17 @@ namespace vevah {
             size_t insert_pos = 0;
         };
 
+        struct Selection {
+            bool valid = false;
+            size_t pos = 0;
+        };
+
         void determinePlacement(
             ukive::SequenceLayout* v, const ukive::Point& p);
 
+        Selection sel_;
         Placement placement_;
+        OnViewSelectedListener* listener_ = nullptr;
     };
 
 }

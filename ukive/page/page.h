@@ -13,13 +13,12 @@
 namespace ukive {
 
     class Window;
-    class LayoutView;
 
     class Page {
     public:
         virtual ~Page() = default;
 
-        View* create(LayoutView* parent);
+        View* create(Context c);
         void initialize();
         void show(bool show);
         void destroy();
@@ -41,7 +40,7 @@ namespace ukive {
     protected:
         Page();
 
-        virtual View* onCreate(LayoutView* parent) = 0;
+        virtual View* onCreate(Context c) = 0;
         virtual void onCreated(View* v) {}
         virtual void onShow(bool show) {}
         virtual void onDestroy() {}

@@ -7,6 +7,7 @@
 #ifndef UKIVE_RESOURCES_DIMENSION_UTILS_H_
 #define UKIVE_RESOURCES_DIMENSION_UTILS_H_
 
+#include "ukive/graphics/colors/color.h"
 #include "ukive/graphics/padding.hpp"
 #include "ukive/graphics/size.hpp"
 #include "ukive/resources/attributes.h"
@@ -39,10 +40,14 @@ namespace ukive {
     std::string resolveAttrString(
         AttrsRef attrs, const std::string& key, const std::string& def_val);
 
+    bool resolveAttrVisibility(
+        AttrsRef attrs, const std::string& key, int* visibility);
     bool resolveAttrPadding(
         const Context& c, AttrsRef attrs, const std::string& key, Padding* padding);
     bool resolveAttrMargin(
         const Context& c, AttrsRef attrs, const std::string& key, Margin* margin);
+    bool resolveAttrColor(
+        AttrsRef attrs, const std::string& key, Color* c);
 
     void resolveAttrLayoutSize(
         const Context& c, AttrsRef attrs, Size* size);

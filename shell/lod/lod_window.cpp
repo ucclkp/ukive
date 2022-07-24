@@ -117,8 +117,8 @@ namespace shell {
         //c1 label.
         ukive::TextView *c1Label = new ukive::TextView(getContext());
         c1Label->setId(ID_C1_LABEL);
-        c1Label->setIsEditable(false);
-        c1Label->setIsSelectable(false);
+        c1Label->setEditable(false);
+        c1Label->setSelectable(false);
         c1Label->setText(u"C1值:");
         c1Label->setTextSize(getContext().dp2pxi(13));
         c1Label->setLayoutSize(ukive::View::LS_AUTO, ukive::View::LS_AUTO);
@@ -152,8 +152,8 @@ namespace shell {
         //c1 value.
         c1_value_tv_ = new ukive::TextView(getContext());
         c1_value_tv_->setId(ID_C1_VALUE);
-        c1_value_tv_->setIsEditable(false);
-        c1_value_tv_->setIsSelectable(false);
+        c1_value_tv_->setEditable(false);
+        c1_value_tv_->setSelectable(false);
         c1_value_tv_->setText(u"2.00");
         c1_value_tv_->setTextSize(getContext().dp2pxi(13));
         c1_value_tv_->setLayoutSize(getContext().dp2pxi(36), ukive::View::LS_AUTO);
@@ -171,8 +171,8 @@ namespace shell {
         //c2 label.
         auto c2Label = new ukive::TextView(getContext());
         c2Label->setId(ID_C2_LABEL);
-        c2Label->setIsEditable(false);
-        c2Label->setIsSelectable(false);
+        c2Label->setEditable(false);
+        c2Label->setSelectable(false);
         c2Label->setText(u"C2值:");
         c2Label->setTextSize(getContext().dp2pxi(13));
         c2Label->setLayoutSize(ukive::View::LS_AUTO, ukive::View::LS_AUTO);
@@ -206,8 +206,8 @@ namespace shell {
         //c2 value.
         c2_value_tv_ = new ukive::TextView(getContext());
         c2_value_tv_->setId(ID_C2_VALUE);
-        c2_value_tv_->setIsEditable(false);
-        c2_value_tv_->setIsSelectable(false);
+        c2_value_tv_->setEditable(false);
+        c2_value_tv_->setSelectable(false);
         c2_value_tv_->setText(u"30.00");
         c2_value_tv_->setTextSize(getContext().dp2pxi(13));
         c2_value_tv_->setLayoutSize(getContext().dp2pxi(36), ukive::View::LS_AUTO);
@@ -225,8 +225,8 @@ namespace shell {
         //split label.
         auto splitLabel = new ukive::TextView(getContext());
         splitLabel->setId(ID_SPLIT_LABEL);
-        splitLabel->setIsEditable(false);
-        splitLabel->setIsSelectable(false);
+        splitLabel->setEditable(false);
+        splitLabel->setSelectable(false);
         splitLabel->setText(u"分割:");
         splitLabel->setTextSize(getContext().dp2pxi(13));
         splitLabel->setLayoutSize(ukive::View::LS_AUTO, ukive::View::LS_AUTO);
@@ -260,8 +260,8 @@ namespace shell {
         //split value.
         split_value_tv_ = new ukive::TextView(getContext());
         split_value_tv_->setId(ID_SPLIT_VALUE);
-        split_value_tv_->setIsEditable(false);
-        split_value_tv_->setIsSelectable(false);
+        split_value_tv_->setEditable(false);
+        split_value_tv_->setSelectable(false);
         split_value_tv_->setText(u"5");
         split_value_tv_->setTextSize(getContext().dp2pxi(13));
         split_value_tv_->setLayoutSize(getContext().dp2pxi(36), ukive::View::LS_AUTO);
@@ -315,8 +315,8 @@ namespace shell {
         //渲染参数显示器
         render_info_ = new ukive::TextView(getContext());
         render_info_->setId(ID_LOD_INFO);
-        render_info_->setIsEditable(false);
-        render_info_->setIsSelectable(false);
+        render_info_->setEditable(false);
+        render_info_->setSelectable(false);
         render_info_->setText(u"Render info.");
         render_info_->setTextSize(getContext().dp2pxi(12));
         render_info_->setLayoutSize(ukive::View::LS_FILL, ukive::View::LS_AUTO);
@@ -335,8 +335,8 @@ namespace shell {
         //帮助说明
         auto helperTV = new ukive::TextView(getContext());
         helperTV->setId(ID_HELPER);
-        helperTV->setIsEditable(true);
-        helperTV->setIsSelectable(true);
+        helperTV->setEditable(true);
+        helperTV->setSelectable(true);
         helperTV->setText(
             u"►拖动滑条，点击提交按钮来更改参数。\
         \n►鼠标滚轮可进行缩放。\

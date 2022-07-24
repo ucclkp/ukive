@@ -10,6 +10,7 @@
 
 #include "utils/log.h"
 #include "utils/strings/int_conv.hpp"
+#include "utils/strings/string_utils.hpp"
 
 
 namespace ukive {
@@ -25,9 +26,18 @@ namespace ukive {
 
     // static
     Color Color::parse(const std::string_view& color) {
-        if (color.empty() || color.at(0) != '#') {
+        Color c;
+        if (!parse(color, &c)) {
             LOG(Log::ERR) << "Unknown color: " << color;
             return Red500;
+        }
+        return c;
+    }
+
+    // static
+    bool Color::parse(const std::string_view& color, Color* c) {
+        if (color.empty() || color.at(0) != '#') {
+            return false;
         }
 
         if (color.length() == 7) {
@@ -36,11 +46,11 @@ namespace ukive {
                 !utl::stoi(color.substr(3, 2), &g, 16) ||
                 !utl::stoi(color.substr(5, 2), &b, 16))
             {
-                LOG(Log::ERR) << "Unknown color: " << color;
-                return Red500;
+                return false;
             }
 
-            return ofInt(r, g, b);
+            *c = ofInt(r, g, b);
+            return true;
         }
 
         if (color.length() == 9) {
@@ -50,15 +60,208 @@ namespace ukive {
                 !utl::stoi(color.substr(5, 2), &g, 16) ||
                 !utl::stoi(color.substr(7, 2), &b, 16))
             {
-                LOG(Log::ERR) << "Unknown color: " << color;
-                return Red500;
+                return false;
             }
 
-            return ofInt(r, g, b, a);
+            *c = ofInt(r, g, b, a);
+            return true;
         }
 
-        LOG(Log::ERR) << "Unknown color: " << color;
-        return Red500;
+        return false;
+    }
+
+    // static
+    bool Color::parseLiteral(const std::string_view& color, Color* c) {
+        if (utl::startWith(color, "red")) {
+            if (color.substr(3) == "50") {
+                *c = Red50;
+            } else if (color.substr(3) == "100") {
+                *c = Red100;
+            } else if (color.substr(3) == "200") {
+                *c = Red200;
+            } else if (color.substr(3) == "300") {
+                *c = Red300;
+            } else if (color.substr(3) == "400") {
+                *c = Red400;
+            } else if (color.substr(3) == "500") {
+                *c = Red500;
+            } else if (color.substr(3) == "600") {
+                *c = Red600;
+            } else if (color.substr(3) == "700") {
+                *c = Red700;
+            } else if (color.substr(3) == "800") {
+                *c = Red800;
+            } else if (color.substr(3) == "900") {
+                *c = Red900;
+            } else {
+                return false;
+            }
+            return true;
+        }
+
+        if (utl::startWith(color, "orange")) {
+            if (color.substr(3) == "50") {
+                *c = Orange50;
+            } else if (color.substr(3) == "100") {
+                *c = Orange100;
+            } else if (color.substr(3) == "200") {
+                *c = Orange200;
+            } else if (color.substr(3) == "300") {
+                *c = Orange300;
+            } else if (color.substr(3) == "400") {
+                *c = Orange400;
+            } else if (color.substr(3) == "500") {
+                *c = Orange500;
+            } else if (color.substr(3) == "600") {
+                *c = Orange600;
+            } else if (color.substr(3) == "700") {
+                *c = Orange700;
+            } else if (color.substr(3) == "800") {
+                *c = Orange800;
+            } else if (color.substr(3) == "900") {
+                *c = Orange900;
+            } else {
+                return false;
+            }
+            return true;
+        }
+
+        if (utl::startWith(color, "yellow")) {
+            if (color.substr(3) == "50") {
+                *c = Yellow50;
+            } else if (color.substr(3) == "100") {
+                *c = Yellow100;
+            } else if (color.substr(3) == "200") {
+                *c = Yellow200;
+            } else if (color.substr(3) == "300") {
+                *c = Yellow300;
+            } else if (color.substr(3) == "400") {
+                *c = Yellow400;
+            } else if (color.substr(3) == "500") {
+                *c = Yellow500;
+            } else if (color.substr(3) == "600") {
+                *c = Yellow600;
+            } else if (color.substr(3) == "700") {
+                *c = Yellow700;
+            } else if (color.substr(3) == "800") {
+                *c = Yellow800;
+            } else if (color.substr(3) == "900") {
+                *c = Yellow900;
+            } else {
+                return false;
+            }
+            return true;
+        }
+
+        if (utl::startWith(color, "pink")) {
+            if (color.substr(3) == "50") {
+                *c = Pink50;
+            } else if (color.substr(3) == "100") {
+                *c = Pink100;
+            } else if (color.substr(3) == "200") {
+                *c = Pink200;
+            } else if (color.substr(3) == "300") {
+                *c = Pink300;
+            } else if (color.substr(3) == "400") {
+                *c = Pink400;
+            } else if (color.substr(3) == "500") {
+                *c = Pink500;
+            } else if (color.substr(3) == "600") {
+                *c = Pink600;
+            } else if (color.substr(3) == "700") {
+                *c = Pink700;
+            } else if (color.substr(3) == "800") {
+                *c = Pink800;
+            } else if (color.substr(3) == "900") {
+                *c = Pink900;
+            } else {
+                return false;
+            }
+            return true;
+        }
+
+        if (utl::startWith(color, "green")) {
+            if (color.substr(3) == "50") {
+                *c = Green50;
+            } else if (color.substr(3) == "100") {
+                *c = Green100;
+            } else if (color.substr(3) == "200") {
+                *c = Green200;
+            } else if (color.substr(3) == "300") {
+                *c = Green300;
+            } else if (color.substr(3) == "400") {
+                *c = Green400;
+            } else if (color.substr(3) == "500") {
+                *c = Green500;
+            } else if (color.substr(3) == "600") {
+                *c = Green600;
+            } else if (color.substr(3) == "700") {
+                *c = Green700;
+            } else if (color.substr(3) == "800") {
+                *c = Green800;
+            } else if (color.substr(3) == "900") {
+                *c = Green900;
+            } else {
+                return false;
+            }
+            return true;
+        }
+
+        if (utl::startWith(color, "blue")) {
+            if (color.substr(3) == "50") {
+                *c = Blue50;
+            } else if (color.substr(3) == "100") {
+                *c = Blue100;
+            } else if (color.substr(3) == "200") {
+                *c = Blue200;
+            } else if (color.substr(3) == "300") {
+                *c = Blue300;
+            } else if (color.substr(3) == "400") {
+                *c = Blue400;
+            } else if (color.substr(3) == "500") {
+                *c = Blue500;
+            } else if (color.substr(3) == "600") {
+                *c = Blue600;
+            } else if (color.substr(3) == "700") {
+                *c = Blue700;
+            } else if (color.substr(3) == "800") {
+                *c = Blue800;
+            } else if (color.substr(3) == "900") {
+                *c = Blue900;
+            } else {
+                return false;
+            }
+            return true;
+        }
+
+        if (utl::startWith(color, "grey")) {
+            if (color.substr(3) == "50") {
+                *c = Grey50;
+            } else if (color.substr(3) == "100") {
+                *c = Grey100;
+            } else if (color.substr(3) == "200") {
+                *c = Grey200;
+            } else if (color.substr(3) == "300") {
+                *c = Grey300;
+            } else if (color.substr(3) == "400") {
+                *c = Grey400;
+            } else if (color.substr(3) == "500") {
+                *c = Grey500;
+            } else if (color.substr(3) == "600") {
+                *c = Grey600;
+            } else if (color.substr(3) == "700") {
+                *c = Grey700;
+            } else if (color.substr(3) == "800") {
+                *c = Grey800;
+            } else if (color.substr(3) == "900") {
+                *c = Grey900;
+            } else {
+                return false;
+            }
+            return true;
+        }
+
+        return false;
     }
 
     // static

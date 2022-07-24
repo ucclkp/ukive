@@ -27,13 +27,13 @@ namespace ukive {
         explicit ListItem(View* v);
         virtual ~ListItem();
 
-        int getMgdLeft() const;
-        int getMgdTop() const;
-        int getMgdRight() const;
-        int getMgdBottom() const;
+        int getX() const;
+        int getY() const;
+        int getRight() const;
+        int getBottom() const;
 
-        int getMgdWidth() const;
-        int getMgdHeight() const;
+        int getWidth() const;
+        int getHeight() const;
 
         int getHoriMargins() const;
         int getVertMargins() const;

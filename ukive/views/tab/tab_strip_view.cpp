@@ -118,7 +118,7 @@ namespace ukive {
         view->setText(title);
         view->setTextSize(getContext().dp2pxi(12));
         view->setPadding(padding, 0, padding, 0);
-        view->setParagraphAlignment(TextLayout::Alignment::CENTER);
+        view->setVertAlignment(TextLayout::Alignment::CENTER);
         view->setBackground(new RippleElement());
         view->setClickable(true);
         view->setOnClickListener(this);
@@ -144,7 +144,7 @@ namespace ukive {
         view->setText(title);
         view->setTextSize(getContext().dp2pxi(12));
         view->setPadding(padding, 0, padding, 0);
-        view->setParagraphAlignment(TextLayout::Alignment::CENTER);
+        view->setVertAlignment(TextLayout::Alignment::CENTER);
         view->setBackground(new RippleElement());
         view->setClickable(true);
         view->setOnClickListener(this);

@@ -12,7 +12,7 @@
 
 #include "utils/strings/string_utils.hpp"
 
-#include "ukive/resources/dimension_utils.h"
+#include "ukive/resources/attr_utils.h"
 #include "ukive/views/layout_info/sequence_layout_info.h"
 
 #include "necro/layout_constants.h"
@@ -20,17 +20,17 @@
 
 namespace ukive {
 
-    SequenceLayoutInfo::Position resolvePosition(const std::string& val) {
+    SequenceLayoutInfo::Align resolveAlign(const std::string& val) {
         if (val == necro::kAttrValSeqLayoutPosStart) {
-            return SequenceLayoutInfo::Position::START;
+            return SequenceLayoutInfo::Align::START;
         }
         if (val == necro::kAttrValSeqLayoutPosCenter) {
-            return SequenceLayoutInfo::Position::CENTER;
+            return SequenceLayoutInfo::Align::CENTER;
         }
         if (val == necro::kAttrValSeqLayoutPosEnd) {
-            return SequenceLayoutInfo::Position::END;
+            return SequenceLayoutInfo::Align::END;
         }
-        return SequenceLayoutInfo::Position::START;
+        return SequenceLayoutInfo::Align::START;
     }
 
 }
@@ -67,11 +67,11 @@ namespace ukive {
         auto weight = resolveAttrInt(attrs, necro::kAttrSeqLayoutWeight, 0);
         lp->weight = weight;
 
-        auto vert_pos = resolveAttrString(attrs, necro::kAttrSeqLayoutVertPos, "start");
-        lp->vertical_position = resolvePosition(vert_pos);
+        auto vert_align = resolveAttrString(attrs, necro::kAttrSeqLayoutVertAlign, "start");
+        lp->vert_align = resolveAlign(vert_align);
 
-        auto hori_pos = resolveAttrString(attrs, necro::kAttrSeqLayoutHoriPos, "start");
-        lp->horizontal_position = resolvePosition(hori_pos);
+        auto hori_align = resolveAttrString(attrs, necro::kAttrSeqLayoutHoriAlign, "start");
+        lp->hori_align = resolveAlign(hori_align);
 
         return lp;
     }
@@ -276,11 +276,11 @@ namespace ukive {
                 cur_top += margin.top();
 
                 int child_left;
-                switch (li->horizontal_position) {
-                case SequenceLayoutInfo::Position::CENTER:
+                switch (li->hori_align) {
+                case SequenceLayoutInfo::Align::CENTER:
                     child_left = getPadding().start() + margin.start() + (bounds.width() - size.width()) / 2;
                     break;
-                case SequenceLayoutInfo::Position::END:
+                case SequenceLayoutInfo::Align::END:
                     child_left = bounds.right() - margin.end() - size.width();
                     break;
                 default:
@@ -310,11 +310,11 @@ namespace ukive {
                 cur_left += margin.start();
 
                 int child_top;
-                switch (li->vertical_position) {
-                case SequenceLayoutInfo::Position::CENTER:
+                switch (li->vert_align) {
+                case SequenceLayoutInfo::Align::CENTER:
                     child_top = getPadding().top() + margin.top() + (bounds.height() - size.height()) / 2;
                     break;
-                case SequenceLayoutInfo::Position::END:
+                case SequenceLayoutInfo::Align::END:
                     child_top = bounds.bottom() - margin.bottom() - size.height();
                     break;
                 default:

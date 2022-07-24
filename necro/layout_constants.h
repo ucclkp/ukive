@@ -16,15 +16,43 @@ namespace necro {
     // View
     const char kAttrViewId[] = "id";
     const char kAttrViewPadding[] = "padding";
+    const char kAttrViewVisibility[] = "visibility";
     const char kAttrViewShadowRadius[] = "shadow_radius";
     const char kAttrViewClickable[] = "clickable";
+    const char kAttrViewDoubleClickable[] = "double_clickable";
+    const char kAttrViewFocusable[] = "focusable";
+    const char kAttrViewTouchCapturable[] = "touch_capturable";
+    const char kAttrViewEnabled[] = "enabled";
+    const char kAttrViewMinWidth[] = "min_width";
+    const char kAttrViewMinHeight[] = "min_height";
+
+    const char kAttrValViewShow[] = "show";
+    const char kAttrValViewHide[] = "hide";
+    const char kAttrValViewVanished[] = "vanished";
 
     // TextView
     const char kAttrTextViewText[] = "text";
+    const char kAttrTextViewFont[] = "font";
     const char kAttrTextViewTextSize[] = "text_size";
+    const char kAttrTextViewTextColor[] = "text_color";
+    const char kAttrTextViewTextStyle[] = "text_style";
+    const char kAttrTextViewTextWeight[] = "text_weight";
     const char kAttrTextViewAutoWrap[] = "auto_wrap";
-    const char kAttrTextViewIsSelectable[] = "is_selectable";
-    const char kAttrTextViewIsEditable[] = "is_editable";
+    const char kAttrTextViewIsSelectable[] = "selectable";
+    const char kAttrTextViewIsEditable[] = "editable";
+    const char kAttrTextViewVertAlign[] = "text_vert_align";
+    const char kAttrTextViewHoriAlign[] = "text_hori_align";
+
+    const char kAttrValTextViewStyleNormal[] = "normal";
+    const char kAttrValTextViewStyleItalic[] = "italic";
+
+    const char kAttrValTextViewWeightThin[] = "thin";
+    const char kAttrValTextViewWeightNormal[] = "normal";
+    const char kAttrValTextViewWeightBold[] = "bold";
+
+    const char kAttrValTextViewAlignStart[] = "start";
+    const char kAttrValTextViewAlignCenter[] = "center";
+    const char kAttrValTextViewAlignEnd[] = "end";
 
     // SequenceLayout (View)
     const char kAttrSeqLayoutViewOri[] = "orientation";
@@ -42,8 +70,8 @@ namespace necro {
 
     // SequenceLayout
     const char kAttrSeqLayoutWeight[] = "weight";
-    const char kAttrSeqLayoutVertPos[] = "vertical_pos";
-    const char kAttrSeqLayoutHoriPos[] = "horizontal_pos";
+    const char kAttrSeqLayoutVertAlign[] = "vert_align";
+    const char kAttrSeqLayoutHoriAlign[] = "hori_align";
 
     const char kAttrValSeqLayoutPosStart[] = "start";
     const char kAttrValSeqLayoutPosCenter[] = "center";

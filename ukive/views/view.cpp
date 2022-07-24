@@ -9,6 +9,7 @@
 #include <cmath>
 
 #include "utils/log.h"
+#include "utils/multi_callbacks.hpp"
 #include "utils/strings/int_conv.hpp"
 #include "utils/time_utils.h"
 #include "utils/weak_bind.hpp"
@@ -23,13 +24,14 @@
 #include "ukive/text/input_method_connection.h"
 #include "ukive/views/click_listener.h"
 #include "ukive/views/view_delegate.h"
+#include "ukive/views/view_status_listener.h"
 #include "ukive/views/layout_info/layout_info.h"
 #include "ukive/views/layout/layout_view.h"
 #include "ukive/window/haul_source.h"
 #include "ukive/window/window.h"
 #include "ukive/app/application.h"
 #include "ukive/graphics/effects/shadow_effect.h"
-#include "ukive/resources/dimension_utils.h"
+#include "ukive/resources/attr_utils.h"
 #include "ukive/system/ui_utils.h"
 
 #include "necro/layout_constants.h"
@@ -74,12 +76,23 @@ namespace ukive {
 
         resolveAttrLayoutSize(c, attrs, &layout_size_);
         resolveAttrMargin(c, attrs, necro::kAttrLayoutMargin, &layout_margin_);
+
         resolveAttrPadding(c, attrs, necro::kAttrViewPadding, &padding_);
-
-        int shadow_radius = int(resolveAttrDimension(c, attrs, necro::kAttrViewShadowRadius, 0));
-        setShadowRadius(shadow_radius);
-
-        setClickable(resolveAttrBool(attrs, necro::kAttrViewClickable, false));
+        resolveAttrVisibility(attrs, necro::kAttrViewVisibility, &visibility_);
+        setShadowRadius(
+            (int)resolveAttrDimension(
+                c, attrs, necro::kAttrViewShadowRadius, 0));
+        is_clickable_ = resolveAttrBool(attrs, necro::kAttrViewClickable, false);
+        is_dbclkable_ = resolveAttrBool(attrs, necro::kAttrViewDoubleClickable, false);
+        is_focusable_ = resolveAttrBool(attrs, necro::kAttrViewFocusable, false);
+        is_touch_capturable_ = resolveAttrBool(attrs, necro::kAttrViewTouchCapturable, false);
+        is_enabled_ = resolveAttrBool(attrs, necro::kAttrViewEnabled, true);
+        setMinimumWidth(
+            (int)resolveAttrDimension(
+                c, attrs, necro::kAttrViewMinWidth, 0));
+        setMinimumHeight(
+            (int)resolveAttrDimension(
+                c, attrs, necro::kAttrViewMinHeight, 0));
     }
 
     View::~View() {
@@ -151,16 +164,21 @@ namespace ukive {
             requestLayout();
         }
         requestDraw();
+
+        for (auto l : status_listeners_) {
+            l->onViewVisibilityChanged(visibility);
+        }
+
         onVisibilityChanged(visibility);
         dispatchAncestorVisibilityChanged(this, visibility);
     }
 
-    void View::setEnabled(bool enable) {
-        if (enable == is_enabled_) {
+    void View::setEnabled(bool enabled) {
+        if (enabled == is_enabled_) {
             return;
         }
 
-        is_enabled_ = enable;
+        is_enabled_ = enabled;
 
         if (!is_enabled_) {
             cleanInteracted();
@@ -170,8 +188,12 @@ namespace ukive {
         updateForegroundState();
         requestDraw();
 
-        onEnableChanged(enable);
-        dispatchAncestorEnableChanged(this, enable);
+        for (auto l : status_listeners_) {
+            l->onViewEnableChanged(enabled);
+        }
+
+        onEnableChanged(enabled);
+        dispatchAncestorEnableChanged(this, enabled);
     }
 
     void View::setBackground(Element* element, bool owned) {
@@ -301,6 +323,18 @@ namespace ukive {
 
     void View::setParent(LayoutView* parent) {
         parent_ = parent;
+    }
+
+    void View::addStatusListener(OnViewStatusListener* l) {
+        utl::addCallbackTo(status_listeners_, l);
+    }
+
+    void View::removeStatusListener(OnViewStatusListener* l) {
+        utl::removeCallbackFrom(status_listeners_, l);
+    }
+
+    void View::removeAllStatusListeners() {
+        status_listeners_.clear();
     }
 
     Size View::getPreferredSize(
@@ -516,6 +550,10 @@ namespace ukive {
 
     LayoutInfo* View::getExtraLayoutInfo() const {
         return layout_info_.get();
+    }
+
+    LayoutInfo* View::releaseExtraLayoutInfo() {
+        return layout_info_.release();
     }
 
     Window* View::getWindow() const {

@@ -28,9 +28,9 @@ namespace ukive {
         static TextLayout* create();
 
         enum class Alignment {
-            LEADING,
+            START,
             CENTER,
-            TRAILING,
+            END,
         };
 
         enum class FontStyle {
@@ -111,8 +111,8 @@ namespace ukive {
 
         virtual void setDefaultFontColor(const Color& color) = 0;
 
-        virtual void setTextAlignment(Alignment align) = 0;
-        virtual void setParagraphAlignment(Alignment align) = 0;
+        virtual void setHoriAlignment(Alignment align) = 0;
+        virtual void setVertAlignment(Alignment align) = 0;
         virtual void setTextWrapping(TextWrapping tw) = 0;
         virtual void setLineSpacing(LineSpacing ls, float spacing) = 0;
 

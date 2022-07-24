@@ -292,11 +292,11 @@ namespace ukive {
             if (is_at_ceil) {
                 auto topmost = columns_.getTopmost();
                 if (topmost) {
-                    can_scroll = (bounds.y() - topmost->getMgdTop() > 0);
+                    can_scroll = (bounds.y() - topmost->getY() > 0);
                 }
             }
             if (can_scroll) {
-                return bounds.bottom() - columns_.getBottomost()->getMgdBottom();
+                return bounds.bottom() - columns_.getBottomost()->getBottom();
             }
         }
 
@@ -402,11 +402,11 @@ namespace ukive {
             if (is_at_ceil) {
                 auto topmost = columns_.getTopmost();
                 if (topmost) {
-                    can_scroll = (bounds.y() - topmost->getMgdTop() > 0);
+                    can_scroll = (bounds.y() - topmost->getY() > 0);
                 }
             }
             if (can_scroll) {
-                return bounds.bottom() - columns_.getBottomost()->getMgdBottom();
+                return bounds.bottom() - columns_.getBottomost()->getBottom();
             }
         }
 
@@ -586,7 +586,7 @@ namespace ukive {
             auto count = columns_[i].getItemCount();
             for (size_t j = 0; j < count; ++j) {
                 auto item = columns_[i].getItem(j);
-                avg_height += item->getMgdHeight();
+                avg_height += item->getHeight();
             }
 
             if (avg_height > max_col_height) {
@@ -650,7 +650,7 @@ namespace ukive {
             if (item) {
                 record.is_null = false;
                 record.cur_data_pos = item->data_pos;
-                record.cur_offset = bounds.y() - item->getMgdTop();
+                record.cur_offset = bounds.y() - item->getY();
             }
             cur_records_[i] = record;
         }

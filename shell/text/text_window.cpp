@@ -58,8 +58,8 @@ namespace shell {
         //编辑器。
         ukive::TextView *editorTV = new ukive::TextView(getContext());
         editorTV->setId(ID_TV_EDITOR);
-        editorTV->setIsEditable(true);
-        editorTV->setIsSelectable(true);
+        editorTV->setEditable(true);
+        editorTV->setSelectable(true);
         //editorTV->setFontFamilyName(L"Consolas");
         editorTV->setTextSize(getContext().dp2pxi(14));
         editorTV->setPadding(18, 18, 18, 18);

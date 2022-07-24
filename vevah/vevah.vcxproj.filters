@@ -11,6 +11,9 @@
     <ClCompile Include="properties\property_page.cpp">
       <Filter>properties</Filter>
     </ClCompile>
+    <ClCompile Include="properties\property_items.cpp">
+      <Filter>properties</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main_window.h" />
@@ -20,6 +23,10 @@
     <ClInclude Include="properties\property_page.h">
       <Filter>properties</Filter>
     </ClInclude>
+    <ClInclude Include="properties\property_items.h">
+      <Filter>properties</Filter>
+    </ClInclude>
+    <ClInclude Include="view_selected_listener.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resources">
@@ -40,6 +47,9 @@
       <Filter>resources\layout</Filter>
     </Xml>
     <Xml Include="resources\layout\property_page_layout.xml">
+      <Filter>resources\layout</Filter>
+    </Xml>
+    <Xml Include="resources\layout\property_item_common.xml">
       <Filter>resources\layout</Filter>
     </Xml>
   </ItemGroup>

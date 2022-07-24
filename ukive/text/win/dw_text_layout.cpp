@@ -201,7 +201,8 @@ namespace win {
             inline_obj = nullptr;
         }
 
-        HRESULT hr = text_layout_->SetInlineObject(inline_obj, makeTextRange(range));
+        HRESULT hr = text_layout_->SetInlineObject(
+            inline_obj, makeTextRange(range));
         ubassert(SUCCEEDED(hr));
 
         if (line_spacing_method_ == LineSpacing::UNIFORM) {
@@ -213,12 +214,12 @@ namespace win {
         text_renderer_->setTextColor(color);
     }
 
-    void DWTextLayout::setTextAlignment(Alignment align) {
+    void DWTextLayout::setHoriAlignment(Alignment align) {
         DWRITE_TEXT_ALIGNMENT dw_align;
         switch (align) {
-        case Alignment::LEADING: dw_align = DWRITE_TEXT_ALIGNMENT_LEADING; break;
+        case Alignment::START:  dw_align = DWRITE_TEXT_ALIGNMENT_LEADING; break;
         case Alignment::CENTER: dw_align = DWRITE_TEXT_ALIGNMENT_CENTER; break;
-        case Alignment::TRAILING: dw_align = DWRITE_TEXT_ALIGNMENT_TRAILING; break;
+        case Alignment::END:    dw_align = DWRITE_TEXT_ALIGNMENT_TRAILING; break;
         default: dw_align = DWRITE_TEXT_ALIGNMENT_LEADING; break;
         }
 
@@ -226,12 +227,12 @@ namespace win {
         ubassert(SUCCEEDED(hr));
     }
 
-    void DWTextLayout::setParagraphAlignment(Alignment align) {
+    void DWTextLayout::setVertAlignment(Alignment align) {
         DWRITE_PARAGRAPH_ALIGNMENT dw_align;
         switch (align) {
-        case Alignment::LEADING: dw_align = DWRITE_PARAGRAPH_ALIGNMENT_NEAR; break;
+        case Alignment::START:  dw_align = DWRITE_PARAGRAPH_ALIGNMENT_NEAR; break;
         case Alignment::CENTER: dw_align = DWRITE_PARAGRAPH_ALIGNMENT_CENTER; break;
-        case Alignment::TRAILING: dw_align = DWRITE_PARAGRAPH_ALIGNMENT_FAR; break;
+        case Alignment::END:    dw_align = DWRITE_PARAGRAPH_ALIGNMENT_FAR; break;
         default: dw_align = DWRITE_PARAGRAPH_ALIGNMENT_NEAR; break;
         }
 

@@ -12,6 +12,9 @@
 #include "ukive/window/haul_delegate.h"
 #include "ukive/window/haul_source.h"
 #include "ukive/window/window.h"
+#include "ukive/page/page.h"
+
+#include "vevah/view_selected_listener.h"
 
 
 namespace ukive {
@@ -20,13 +23,15 @@ namespace ukive {
 
 namespace vevah {
 
+    class PropertyPage;
     class ContainerLayout;
     class ControlListSource;
 
     class MainWindow :
         public ukive::Window,
         public ukive::ListItemEventListener,
-        public ukive::HaulDelegate
+        public ukive::HaulDelegate,
+        public OnViewSelectedListener
     {
     public:
         MainWindow();
@@ -49,6 +54,9 @@ namespace vevah {
         void onHaulCancelled(ukive::HaulSource* src) override;
         bool onHauling(ukive::HaulSource* src, ukive::InputEvent* e) override;
 
+        // OnViewSelectedListener
+        void onViewSelected(ukive::View* v) override;
+
     private:
         using super = Window;
 
@@ -59,6 +67,7 @@ namespace vevah {
 
         ukive::Levitator levitator_;
         std::unique_ptr<ukive::HaulSource> haul_src_;
+        std::unique_ptr<PropertyPage> prop_page_;
     };
 
 }

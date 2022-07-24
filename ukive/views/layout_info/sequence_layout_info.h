@@ -14,17 +14,22 @@ namespace ukive {
 
     class SequenceLayoutInfo : public LayoutInfo {
     public:
-        enum class Position {
+        enum class Align {
             START,
             CENTER,
             END,
         };
 
-        SequenceLayoutInfo();
+        static SequenceLayoutInfo* ofWeight(int w);
+        static SequenceLayoutInfo* ofVertAlign(Align a);
+        static SequenceLayoutInfo* ofHoriAlign(Align a);
 
-        int weight = 0;
-        Position vertical_position = Position::START;
-        Position horizontal_position = Position::START;
+        SequenceLayoutInfo();
+        SequenceLayoutInfo(int w, Align v, Align h);
+
+        int weight;
+        Align vert_align;
+        Align hori_align;
     };
 
 }

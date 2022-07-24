@@ -16,12 +16,17 @@ namespace ukive {
 
 namespace vevah {
 
+    class OnViewSelectedListener;
+
     class ContainerLayout :
         public ukive::SimpleLayout
     {
     public:
         explicit ContainerLayout(ukive::Context c);
         ContainerLayout(ukive::Context c, ukive::AttrsRef attrs);
+
+        void setSelectedListener(OnViewSelectedListener* l);
+        OnViewSelectedListener* getSelectedListener() const;
 
     protected:
         ukive::Size onDetermineSize(const ukive::SizeInfo& info) override;
@@ -46,6 +51,7 @@ namespace vevah {
         bool is_haul_in_ = false;
         bool is_view_selected_ = false;
         std::unique_ptr<ukive::ViewDelegate> vd_;
+        OnViewSelectedListener* listener_ = nullptr;
     };
 
 }

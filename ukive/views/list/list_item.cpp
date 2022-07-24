@@ -24,31 +24,31 @@ namespace ukive {
         }
     }
 
-    int ListItem::getMgdLeft() const {
+    int ListItem::getX() const {
         return item_view->getX() -
             item_view->getLayoutMargin().start() - ex_margins.start();
     }
 
-    int ListItem::getMgdTop() const {
+    int ListItem::getY() const {
         return item_view->getY() -
             item_view->getLayoutMargin().top() - ex_margins.top();
     }
 
-    int ListItem::getMgdRight() const {
+    int ListItem::getRight() const {
         return item_view->getRight() +
             item_view->getLayoutMargin().end() + ex_margins.end();
     }
 
-    int ListItem::getMgdBottom() const {
+    int ListItem::getBottom() const {
         return item_view->getBottom() +
             item_view->getLayoutMargin().bottom() + ex_margins.bottom();
     }
 
-    int ListItem::getMgdWidth() const {
+    int ListItem::getWidth() const {
         return item_view->getWidth() + getHoriMargins();
     }
 
-    int ListItem::getMgdHeight() const {
+    int ListItem::getHeight() const {
         return item_view->getHeight() + getVertMargins();
     }
 

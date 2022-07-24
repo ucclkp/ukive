@@ -11,6 +11,7 @@
 #include "ukive/window/haul_source.h"
 
 #include "vevah/sequence_layout_delegate.h"
+#include "vevah/view_selected_listener.h"
 
 
 namespace {
@@ -25,9 +26,11 @@ namespace {
             name == "TabView";
     }
 
-    ukive::ViewDelegate* obtainViewDelegate(const std::string_view& name) {
+    ukive::ViewDelegate* obtainViewDelegate(
+        const std::string_view& name, vevah::OnViewSelectedListener* l)
+    {
         if (name == "SequenceLayout") {
-            return new vevah::SequenceLayoutDelegate();
+            return new vevah::SequenceLayoutDelegate(l);
         }
 
         return nullptr;
@@ -42,6 +45,14 @@ namespace vevah {
 
     ContainerLayout::ContainerLayout(ukive::Context c, ukive::AttrsRef attrs)
         : super(c, attrs) {}
+
+    void ContainerLayout::setSelectedListener(OnViewSelectedListener* l) {
+        listener_ = l;
+    }
+
+    OnViewSelectedListener* ContainerLayout::getSelectedListener() const {
+        return listener_;
+    }
 
     ukive::Size ContainerLayout::onDetermineSize(const ukive::SizeInfo& info) {
         return super::onDetermineSize(info);
@@ -111,7 +122,7 @@ namespace vevah {
 
                     if (isLayouter(e->getHaulSource()->getRaw())) {
                         view->setLayoutSize(LS_FILL, LS_FILL);
-                        vd_.reset(obtainViewDelegate(e->getHaulSource()->getRaw()));
+                        vd_.reset(obtainViewDelegate(e->getHaulSource()->getRaw(), listener_));
                         view->setDelegate(vd_.get());
                         addView(view);
                         mode_ = Mode::Layout;
@@ -134,6 +145,13 @@ namespace vevah {
         case InputEvent::EVM_DOWN:
             if (mode_ == Mode::View && hasChildren()) {
                 if (getChildAt(0)->getBounds().hit(e->getPos())) {
+                    if (listener_) {
+                        if (is_view_selected_) {
+                            listener_->onViewSelected(nullptr);
+                        } else {
+                            listener_->onViewSelected(getChildAt(0));
+                        }
+                    }
                     is_view_selected_ = !is_view_selected_;
                     requestDraw();
                 }

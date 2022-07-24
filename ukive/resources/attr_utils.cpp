@@ -4,7 +4,7 @@
 // This program is licensed under GPLv3 license that can be
 // found in the LICENSE file.
 
-#include "ukive/resources/dimension_utils.h"
+#include "attr_utils.h"
 
 #include "utils/log.h"
 #include "utils/strings/float_conv.h"
@@ -186,6 +186,27 @@ namespace ukive {
         return def_val;
     }
 
+    bool resolveAttrVisibility(
+        AttrsRef attrs, const std::string& key, int* visibility)
+    {
+        auto v_str = resolveAttrString(attrs, key, {});
+        if (v_str.empty()) {
+            return false;
+        }
+
+        if (v_str == necro::kAttrValViewShow) {
+            *visibility = View::SHOW;
+        } else if (v_str == necro::kAttrValViewHide) {
+            *visibility = View::HIDE;
+        } else if (v_str == necro::kAttrValViewVanished) {
+            *visibility = View::VANISHED;
+        } else {
+            return false;
+        }
+
+        return true;
+    }
+
     bool resolveAttrPadding(
         const Context& c, AttrsRef attrs, const std::string& key, Padding* padding)
     {
@@ -282,12 +303,26 @@ namespace ukive {
         return false;
     }
 
+    bool resolveAttrColor(
+        AttrsRef attrs, const std::string& key, Color* c)
+    {
+        auto str = resolveAttrString(attrs, key, {});
+        if (str.empty()) {
+            return false;
+        }
+
+        if (key[0] == '#') {
+            return Color::parse(str, c);
+        }
+
+        return Color::parseLiteral(str, c);
+    }
+
     void resolveAttrLayoutSize(
         const Context& c, AttrsRef attrs, Size* size)
     {
         auto width_attr = resolveAttrString(
             attrs, necro::kAttrLayoutWidth, necro::kAttrValLayoutAuto);
-        utl::tolatl(&width_attr);
 
         int width;
         if (!resolveDimension(c, width_attr, &width)) {
@@ -310,7 +345,6 @@ namespace ukive {
 
         auto height_attr = resolveAttrString(
             attrs, necro::kAttrLayoutHeight, necro::kAttrValLayoutAuto);
-        utl::tolatl(&height_attr);
 
         int height;
         if (!resolveDimension(c, height_attr, &height)) {
@@ -324,7 +358,7 @@ namespace ukive {
                 size->height(View::LS_FREE);
             }
             else {
-                DLOG(Log::ERR) << "Unknown attr: " << width_attr;
+                DLOG(Log::ERR) << "Unknown attr: " << height_attr;
                 size->height(View::LS_AUTO);
             }
         } else {

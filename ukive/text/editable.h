@@ -40,14 +40,12 @@ namespace ukive {
 
             virtual void onTextChanged(
                 Editable* editable,
-                size_t start, size_t old_end, size_t new_end, Reason r) = 0;
-
+                size_t start, size_t old_end, size_t new_end, Reason r) {}
             virtual void onSelectionChanged(
                 size_t ns, size_t ne,
-                size_t os, size_t oe, Reason r) = 0;
-
+                size_t os, size_t oe, Reason r) {}
             virtual void onSpanChanged(
-                Span* span, SpanChange action, Reason r) = 0;
+                Span* span, SpanChange action, Reason r) {}
         };
 
         explicit Editable(const std::u16string_view& text);

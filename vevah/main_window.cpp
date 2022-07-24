@@ -18,6 +18,7 @@
 
 #include "vevah/container_layout.h"
 #include "vevah/control_list_source.h"
+#include "vevah/properties/property_page.h"
 #include "vevah/resources/necro_resources_id.h"
 
 
@@ -57,6 +58,7 @@ namespace vevah {
 
         container_layout_ = findView<ContainerLayout>(Res::Id::cl_main_wnd_cur_view);
         container_layout_->setBackground(new ukive::Element(ukive::Color::Grey100));
+        container_layout_->setSelectedListener(this);
 
         ctrl_list_ = findView<ukive::ListView>(Res::Id::lv_main_wnd_controls);
 
@@ -70,13 +72,22 @@ namespace vevah {
         levitator_.setDismissByTouchOutside(true);
         levitator_.setOutsideTouchable(true);
         levitator_.setInputEnabled(false);
+
+        prop_page_ = std::make_unique<PropertyPage>();
+        auto prop_v = prop_page_->create(c);
+        prop_page_->initialize();
+
+        auto ph_v = findView<ukive::SimpleLayout>(Res::Id::v_placeholder);
+        auto root_v = findView<ukive::LayoutView>(Res::Id::rl_main_wnd_root);
+        ph_v->addView(prop_v);
     }
 
     void MainWindow::onDestroy() {
-        super::onDestroy();
-
+        prop_page_->destroy();
         delete ctrl_source_;
         ctrl_source_ = nullptr;
+
+        super::onDestroy();
     }
 
     void MainWindow::onItemPressed(
@@ -128,6 +139,10 @@ namespace vevah {
     bool MainWindow::onHauling(ukive::HaulSource* src, ukive::InputEvent* e) {
         levitator_.update(e->getRawX(), e->getRawY());
         return true;
+    }
+
+    void MainWindow::onViewSelected(ukive::View* v) {
+        prop_page_->showProps(v);
     }
 
 }

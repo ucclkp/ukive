@@ -4,4 +4,14 @@
     width="fill"
     height="fill">
 
+    <ListView
+        id="@+id/lv_prop_tree"
+        width="fill"
+        height="fill"
+        margin="4, 4, 4, 4"
+        handle_start="@id/rl_prop_page_root"
+        handle_top="@id/rl_prop_page_root"
+        handle_end="@id/rl_prop_page_root"
+        handle_bottom="@id/rl_prop_page_root" />
+
 </RestraintLayout>

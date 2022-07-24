@@ -25,9 +25,9 @@ namespace shell {
     ExampleListPage::ExampleListPage()
         : Page() {}
 
-    ukive::View* ExampleListPage::onCreate(ukive::LayoutView* parent) {
+    ukive::View* ExampleListPage::onCreate(ukive::Context c) {
         auto v = ukive::LayoutParser::from(
-            parent->getContext(), parent, Res::Layout::example_list_page_layout_xml);
+            c, nullptr, Res::Layout::example_list_page_layout_xml);
 
         // Buttons
         dwm_button_ = findView<ukive::Button>(v, Res::Id::bt_dwm_button);

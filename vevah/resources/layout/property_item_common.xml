@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RestraintLayout
+    id="@+id/rl_prop_item_root"
+    width="fill"
+    height="fill">
+
+    <TreeNodeButton
+        id="@+id/tnb_prop_btn"
+        width="auto"
+        height="auto"
+        padding="2, 2, 2, 2"
+        handle_start="@id/rl_prop_item_root"
+        handle_top="@id/rl_prop_item_root"
+        handle_bottom="@id/rl_prop_item_root" />
+
+    <ImageView
+        id="@+id/iv_prop_img"
+        width="12"
+        height="12"
+        margin="2, 2, 0, 2"
+        handle_start="@id/tnb_prop_btn, end"
+        handle_top="@id/rl_prop_item_root"
+        handle_bottom="@id/rl_prop_item_root" />
+
+    <TextView
+        id="@+id/tv_prop_label"
+        width="fill"
+        height="auto"
+        padding="2, 2, 2, 2"
+        font="Consolas"
+        text_size="13"
+        clickable="true"
+        double_clickable="true"
+        handle_start="@id/iv_prop_img, end"
+        handle_top="@id/rl_prop_item_root"
+        handle_end="@id/rl_prop_item_root"
+        handle_bottom="@id/rl_prop_item_root" />
+
+</RestraintLayout>

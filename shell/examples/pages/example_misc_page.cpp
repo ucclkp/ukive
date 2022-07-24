@@ -157,10 +157,9 @@ namespace shell {
     ExampleMiscPage::ExampleMiscPage()
         : Page() {}
 
-    ukive::View* ExampleMiscPage::onCreate(ukive::LayoutView* parent) {
-        auto c = parent->getContext();
+    ukive::View* ExampleMiscPage::onCreate(ukive::Context c) {
         auto v = ukive::LayoutParser::from(
-            c, parent, Res::Layout::example_misc_page_layout_xml);
+            c, nullptr, Res::Layout::example_misc_page_layout_xml);
         return v;
     }
 

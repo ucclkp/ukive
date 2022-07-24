@@ -24,9 +24,19 @@ namespace ukive {
         float b;
 
     public:
-        // 解析颜色字符串。
-        // 支持的格式：#RRGGBB 或 #AARRGGBB
+        /**
+         * 解析颜色字符串。
+         * 支持的格式：#RRGGBB 或 #AARRGGBB。
+         */
         static Color parse(const std::string_view& color);
+
+        /**
+         * 解析颜色字符串。
+         * 支持的格式：#RRGGBB 或 #AARRGGBB。
+         */
+        static bool parse(const std::string_view& color, Color* c);
+
+        static bool parseLiteral(const std::string_view& color, Color* c);
 
         static Color ofInt(int r, int g, int b, int a = 255);
         static Color ofRGB(uint32_t rgb, float a = 1.f);

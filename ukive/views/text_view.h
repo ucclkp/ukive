@@ -37,8 +37,8 @@ namespace ukive {
         void onDetachFromWindow() override;
 
         void autoWrap(bool enable);
-        void setIsEditable(bool editable);
-        void setIsSelectable(bool selectable);
+        void setEditable(bool editable);
+        void setSelectable(bool selectable);
         void setSpace(const Padding& space);
 
         bool isAutoWrap() const;
@@ -48,8 +48,8 @@ namespace ukive {
         void setText(const std::u16string_view& text);
         void setTextSize(int size);
         void setTextColor(const Color& color);
-        void setTextAlignment(TextLayout::Alignment alignment);
-        void setParagraphAlignment(TextLayout::Alignment alignment);
+        void setHoriAlignment(TextLayout::Alignment alignment);
+        void setVertAlignment(TextLayout::Alignment alignment);
         void setTextStyle(TextLayout::FontStyle style);
         void setTextWeight(TextLayout::FontWeight weight);
         void setFontFamilyName(const std::u16string_view& font);
@@ -199,8 +199,8 @@ namespace ukive {
 
         int font_size_;
         std::u16string font_family_name_;
-        TextLayout::Alignment text_alignment_;
-        TextLayout::Alignment paragraph_alignment_;
+        TextLayout::Alignment hori_alignment_;
+        TextLayout::Alignment vert_alignment_;
         TextLayout::FontWeight font_weight_;
         TextLayout::FontStyle font_style_;
 

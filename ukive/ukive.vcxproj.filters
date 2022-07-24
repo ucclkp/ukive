@@ -112,7 +112,7 @@
     <ClCompile Include="resources\layout_parser.cpp">
       <Filter>resources</Filter>
     </ClCompile>
-    <ClCompile Include="resources\dimension_utils.cpp">
+    <ClCompile Include="resources\attr_utils.cpp">
       <Filter>resources</Filter>
     </ClCompile>
     <ClCompile Include="animation\timer.cpp">
@@ -849,7 +849,7 @@
     <ClInclude Include="resources\layout_parser.h">
       <Filter>resources</Filter>
     </ClInclude>
-    <ClInclude Include="resources\dimension_utils.h">
+    <ClInclude Include="resources\attr_utils.h">
       <Filter>resources</Filter>
     </ClInclude>
     <ClInclude Include="animation\timer.h">
@@ -1604,6 +1604,9 @@
     </ClInclude>
     <ClInclude Include="graphics\3d\space_object.h">
       <Filter>graphics\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="views\view_status_listener.h">
+      <Filter>views</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

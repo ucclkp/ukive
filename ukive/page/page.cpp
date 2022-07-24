@@ -13,9 +13,9 @@ namespace ukive {
 
     Page::Page() {}
 
-    View* Page::create(LayoutView* parent) {
+    View* Page::create(Context c) {
         if (!is_created_ && !content_view_) {
-            content_view_ = onCreate(parent);
+            content_view_ = onCreate(c);
             if (content_view_) {
                 is_created_ = true;
             }

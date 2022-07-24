@@ -360,7 +360,7 @@
     <ClInclude Include="page\page.h" />
     <ClInclude Include="resources\attributes.h" />
     <ClInclude Include="resources\dim.hpp" />
-    <ClInclude Include="resources\dimension_utils.h" />
+    <ClInclude Include="resources\attr_utils.h" />
     <ClInclude Include="resources\layout_parser.h" />
     <ClInclude Include="resources\resource_manager.h" />
     <ClInclude Include="resources\tval.hpp" />
@@ -467,6 +467,7 @@
     <ClInclude Include="views\tree\tree_node_button.h" />
     <ClInclude Include="views\view.h" />
     <ClInclude Include="views\view_ref.h" />
+    <ClInclude Include="views\view_status_listener.h" />
     <ClInclude Include="window\context.h" />
     <ClInclude Include="window\context_changed_listener.h" />
     <ClInclude Include="window\context_impl.h" />
@@ -623,7 +624,7 @@
     <ClCompile Include="menu\menu_impl.cpp" />
     <ClCompile Include="menu\menu_item_impl.cpp" />
     <ClCompile Include="page\page.cpp" />
-    <ClCompile Include="resources\dimension_utils.cpp" />
+    <ClCompile Include="resources\attr_utils.cpp" />
     <ClCompile Include="resources\layout_parser.cpp" />
     <ClCompile Include="resources\resource_manager.cpp" />
     <ClCompile Include="system\clipboard_manager.cpp" />

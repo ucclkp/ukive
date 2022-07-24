@@ -44,8 +44,8 @@ namespace win {
 
         void setDefaultFontColor(const Color& color) override;
 
-        void setTextAlignment(Alignment align) override;
-        void setParagraphAlignment(Alignment align) override;
+        void setHoriAlignment(Alignment align) override;
+        void setVertAlignment(Alignment align) override;
         void setTextWrapping(TextWrapping tw) override;
         void setLineSpacing(LineSpacing ls, float spacing) override;
 

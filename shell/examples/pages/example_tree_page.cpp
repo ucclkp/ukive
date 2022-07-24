@@ -31,9 +31,9 @@ namespace shell {
     ExampleTreePage::ExampleTreePage()
         : Page() {}
 
-    ukive::View* ExampleTreePage::onCreate(ukive::LayoutView* parent) {
+    ukive::View* ExampleTreePage::onCreate(ukive::Context c) {
         auto v = ukive::LayoutParser::from(
-            parent->getContext(), parent, Res::Layout::example_tree_page_layout_xml);
+            c, nullptr, Res::Layout::example_tree_page_layout_xml);
 
         // ListView
         auto layouter = new ukive::LinearListLayouter();

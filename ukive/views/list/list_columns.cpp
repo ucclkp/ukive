@@ -72,14 +72,14 @@ namespace ukive {
 
     int Column::getItemsTop() const {
         if (!items_.empty()) {
-            return items_.front()->getMgdTop();
+            return items_.front()->getY();
         }
         return top_;
     }
 
     int Column::getItemsBottom() const {
         if (!items_.empty()) {
-            return items_.back()->getMgdBottom();
+            return items_.back()->getBottom();
         }
         return top_;
     }
@@ -118,7 +118,7 @@ namespace ukive {
     bool Column::getIndexOfFirstVisible(int dy, size_t* index) const {
         size_t i = 0;
         for (auto it = items_.cbegin(); it != items_.cend(); ++it, ++i) {
-            if ((*it)->getMgdBottom() + dy > top_) {
+            if ((*it)->getBottom() + dy > top_) {
                 *index = i;
                 return true;
             }
@@ -130,7 +130,7 @@ namespace ukive {
         size_t i = getItemCount();
         for (auto it = items_.crbegin(); it != items_.crend(); ++it) {
             --i;
-            if ((*it)->getMgdTop() + dy < bottom_) {
+            if ((*it)->getY() + dy < bottom_) {
                 *index = i;
                 return true;
             }
@@ -161,7 +161,7 @@ namespace ukive {
 
     ListItem* Column::getFirstVisible(int dy) const {
         for (auto it = items_.cbegin(); it != items_.cend(); ++it) {
-            if ((*it)->getMgdBottom() + dy > top_) {
+            if ((*it)->getBottom() + dy > top_) {
                 return *it;
             }
         }
@@ -170,7 +170,7 @@ namespace ukive {
 
     ListItem* Column::getLastVisible(int dy) const {
         for (auto it = items_.crbegin(); it != items_.crend(); ++it) {
-            if ((*it)->getMgdTop() + dy < bottom_) {
+            if ((*it)->getY() + dy < bottom_) {
                 return *it;
             }
         }
@@ -225,14 +225,14 @@ namespace ukive {
     }
 
     bool Column::atTop() const {
-        if (items_.empty() || items_.front()->getMgdTop() == top_) {
+        if (items_.empty() || items_.front()->getY() == top_) {
             return true;
         }
         return false;
     }
 
     bool Column::atBottom() const {
-        if (items_.empty() || items_.back()->getMgdBottom() == bottom_) {
+        if (items_.empty() || items_.back()->getBottom() == bottom_) {
             return true;
         }
         return false;
@@ -240,7 +240,7 @@ namespace ukive {
 
     bool Column::isTopFilled(int dy) const {
         if (!items_.empty()) {
-            if (items_.front()->getMgdTop() + dy <= top_) {
+            if (items_.front()->getY() + dy <= top_) {
                 return true;
             }
         }
@@ -249,7 +249,7 @@ namespace ukive {
 
     bool Column::isBottomFilled(int dy) const {
         if (!items_.empty()) {
-            if (items_.back()->getMgdBottom() + dy >= bottom_) {
+            if (items_.back()->getBottom() + dy >= bottom_) {
                 return true;
             }
         }
@@ -387,8 +387,8 @@ namespace ukive {
                 continue;
             }
 
-            if (!result || front->getMgdTop() < top) {
-                top = front->getMgdTop();
+            if (!result || front->getY() < top) {
+                top = front->getY();
                 result = front;
             }
         }
@@ -404,8 +404,8 @@ namespace ukive {
                 continue;
             }
 
-            if (!result || rear->getMgdBottom() > bottom) {
-                bottom = rear->getMgdBottom();
+            if (!result || rear->getBottom() > bottom) {
+                bottom = rear->getBottom();
                 result = rear;
             }
         }

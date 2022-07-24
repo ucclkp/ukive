@@ -36,7 +36,7 @@ namespace shell {
         ExampleMiscPage();
 
         // ukive::Page
-        ukive::View* onCreate(ukive::LayoutView* parent) override;
+        ukive::View* onCreate(ukive::Context c) override;
         void onCreated(ukive::View* v) override;
         void onDestroy() override;
 

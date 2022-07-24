@@ -50,17 +50,20 @@ namespace shell {
         ExampleTreePage();
 
         // ukive::Page
-        ukive::View* onCreate(ukive::LayoutView* parent) override;
+        ukive::View* onCreate(ukive::Context c) override;
         void onDestroy() override;
 
         // ukive::ListSource
         ukive::ListItem* onCreateListItem(
-            ukive::LayoutView* parent, ukive::ListItemEventRouter* router,
+            ukive::LayoutView* parent,
+            ukive::ListItemEventRouter* router,
             size_t position) override;
         void onSetListItemData(
-            ukive::LayoutView* parent, ukive::ListItemEventRouter* router,
+            ukive::LayoutView* parent,
+            ukive::ListItemEventRouter* router,
             ukive::ListItem* item) override;
-        size_t onGetListDataCount(ukive::LayoutView* parent) const override;
+        size_t onGetListDataCount(
+            ukive::LayoutView* parent) const override;
 
         // OnClickListener
         void onClick(ukive::View* v) override;

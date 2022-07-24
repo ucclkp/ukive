@@ -16,7 +16,7 @@ namespace ukive {
     public:
         virtual ~OnClickListener() = default;
 
-        virtual void onClick(View* v) = 0;
+        virtual void onClick(View* v) {}
         virtual void onDoubleClick(View* v) {}
     };
 

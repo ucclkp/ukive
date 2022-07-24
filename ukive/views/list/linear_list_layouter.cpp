@@ -130,9 +130,9 @@ namespace ukive {
         auto first_item = column_.getFirstVisible();
         if (last_item && first_item && last_item->data_pos + 1 == item_count) {
             bool can_scroll = (first_item->data_pos > 0 ||
-                bounds.y() - first_item->getMgdTop() > 0);
+                bounds.y() - first_item->getY() > 0);
             if (can_scroll) {
-                return bounds.bottom() - last_item->getMgdBottom();
+                return bounds.bottom() - last_item->getBottom();
             }
         }
 
@@ -180,7 +180,7 @@ namespace ukive {
                 item_size.width(), item_size.height());
             total_height += item_size.height();
 
-            diff = bounds.bottom() - item->getMgdBottom();
+            diff = bounds.bottom() - item->getBottom();
             if (total_height >= bounds.height() + offset) {
                 full_child_reached = true;
                 ++index;
@@ -292,7 +292,7 @@ namespace ukive {
         auto cur_data_pos = top_item->data_pos;
 
         int inc_y = 0;
-        int distance_y = top_item->getMgdTop() + dy - bounds.y();
+        int distance_y = top_item->getY() + dy - bounds.y();
         while (cur_data_pos > 0 && !column_.isTopFilled(dy)) {
             --cur_data_pos;
 
@@ -336,7 +336,7 @@ namespace ukive {
         auto cur_data_pos = bottom_item->data_pos;
 
         int inc_y = 0;
-        int distance_y = bottom_item->getMgdBottom() + dy - bounds.bottom();
+        int distance_y = bottom_item->getBottom() + dy - bounds.bottom();
         while (cur_data_pos + 1 < source_->onGetListDataCount(parent_) && !column_.isBottomFilled(dy)) {
             ++cur_data_pos;
 
@@ -386,7 +386,7 @@ namespace ukive {
         auto item = column_.getFirstVisible();
         if (item) {
             cur_pos_ = item->data_pos;
-            cur_offset_ = parent_->getContentBounds().y() - item->getMgdTop();
+            cur_offset_ = parent_->getContentBounds().y() - item->getY();
         } else {
             cur_pos_ = 0;
             cur_offset_ = 0;
@@ -416,7 +416,7 @@ namespace ukive {
         for (size_t i = 0; i < item_count; ++i) {
             auto item = column_.getItem(i);
             if (item) {
-                det_height += item->getMgdHeight();
+                det_height += item->getHeight();
             }
         }
         int avgc_height = int((det_height + item_count - 1) / item_count);
@@ -432,7 +432,7 @@ namespace ukive {
         size_t i;
         int prev_total_height = int(cur_offset_ + f_item->data_pos * avgc_height);
         for (i = 0; i < fv_item->data_pos - f_item->data_pos; ++i) {
-            prev_total_height += column_.getItem(i)->getMgdHeight();
+            prev_total_height += column_.getItem(i)->getHeight();
         }
 
         // 计算之后的高度
@@ -440,7 +440,7 @@ namespace ukive {
 
         int next_total_height = int(-cur_offset_ + (count - l_item->data_pos - 1) * avgc_height);
         for (; i <= l_item->data_pos - f_item->data_pos; ++i) {
-            next_total_height += column_.getItem(i)->getMgdHeight();
+            next_total_height += column_.getItem(i)->getHeight();
         }
 
         *prev = prev_total_height;

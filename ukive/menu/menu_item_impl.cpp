@@ -23,11 +23,11 @@ namespace ukive {
 
     void MenuItemImpl::initMenuItem() {
         setTextSize(getContext().dp2pxi(13));
-        setIsEditable(false);
-        setIsSelectable(false);
+        setEditable(false);
+        setSelectable(false);
         setClickable(true);
         setPadding(getContext().dp2pxi(16), 0, getContext().dp2pxi(16), 0);
-        setParagraphAlignment(TextLayout::Alignment::CENTER);
+        setVertAlignment(TextLayout::Alignment::CENTER);
         autoWrap(false);
     }
 

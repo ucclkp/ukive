@@ -29,8 +29,8 @@ namespace ukive {
             setText(u"Button");
         }
         setTextSize(c.dp2pxi(13));
-        setIsEditable(false);
-        setIsSelectable(false);
+        setEditable(false);
+        setSelectable(false);
         setClickable(true);
         setFocusable(true);
 

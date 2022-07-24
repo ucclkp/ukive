@@ -28,28 +28,91 @@
 #include "ukive/graphics/canvas.h"
 #include "ukive/menu/menu.h"
 #include "ukive/menu/menu_item.h"
-#include "ukive/resources/dimension_utils.h"
+#include "ukive/resources/attr_utils.h"
 
 #include "necro/layout_constants.h"
 
 
 namespace ukive {
 
-    namespace {
-        enum {
-            MENU_ID_COPY = 1,
-            MENU_ID_CUT,
-            MENU_ID_PASTE,
-            MENU_ID_SELECTALL,
-        };
+    enum {
+        MENU_ID_COPY = 1,
+        MENU_ID_CUT,
+        MENU_ID_PASTE,
+        MENU_ID_SELECTALL,
+    };
 
-        enum {
-            MENU_ORDER_COPY = 1,
-            MENU_ORDER_CUT,
-            MENU_ORDER_PASTE,
-            MENU_ORDER_SELECTALL,
-        };
+    enum {
+        MENU_ORDER_COPY = 1,
+        MENU_ORDER_CUT,
+        MENU_ORDER_PASTE,
+        MENU_ORDER_SELECTALL,
+    };
+
+    bool resolveTextAlign(
+        AttrsRef attrs, const std::string& key, TextLayout::Alignment* align)
+    {
+        auto str = resolveAttrString(attrs, key, {});
+        if (str.empty()) {
+            return false;
+        }
+
+        if (str == necro::kAttrValTextViewAlignStart) {
+            *align = TextLayout::Alignment::START;
+        } else if (str == necro::kAttrValTextViewAlignCenter) {
+            *align = TextLayout::Alignment::CENTER;
+        } else if (str == necro::kAttrValTextViewAlignEnd) {
+            *align = TextLayout::Alignment::END;
+        } else {
+            return false;
+        }
+
+        return true;
     }
+
+    bool resolveFontStyle(
+        AttrsRef attrs, const std::string& key, TextLayout::FontStyle* style)
+    {
+        auto str = resolveAttrString(attrs, key, {});
+        if (str.empty()) {
+            return false;
+        }
+
+        if (str == necro::kAttrValTextViewStyleNormal) {
+            *style = TextLayout::FontStyle::NORMAL;
+        } else if (str == necro::kAttrValTextViewStyleItalic) {
+            *style = TextLayout::FontStyle::ITALIC;
+        } else {
+            return false;
+        }
+
+        return true;
+    }
+
+    bool resolveFontWeight(
+        AttrsRef attrs, const std::string& key, TextLayout::FontWeight* weight)
+    {
+        auto str = resolveAttrString(attrs, key, {});
+        if (str.empty()) {
+            return false;
+        }
+
+        if (str == necro::kAttrValTextViewWeightThin) {
+            *weight = TextLayout::FontWeight::THIN;
+        } else if (str == necro::kAttrValTextViewWeightNormal) {
+            *weight = TextLayout::FontWeight::NORMAL;
+        } else if (str == necro::kAttrValTextViewWeightBold) {
+            *weight = TextLayout::FontWeight::BOLD;
+        } else {
+            return false;
+        }
+
+        return true;
+    }
+
+}
+
+namespace ukive {
 
     TextView::TextView(Context c)
         : TextView(c, {}) {}
@@ -58,23 +121,34 @@ namespace ukive {
         : View(c, attrs),
           text_color_(Color::Black),
           sel_bg_color_(Color::Blue200),
-          parent_width_(0, SizeInfo::FREEDOM)
+          parent_width_(0, SizeInfo::FREEDOM),
+          hori_alignment_(TextLayout::Alignment::START),
+          vert_alignment_(TextLayout::Alignment::START),
+          font_weight_(TextLayout::FontWeight::NORMAL),
+          font_style_(TextLayout::FontStyle::NORMAL)
     {
+        base_text_ = new Editable(
+            utl::u8to16(
+                resolveAttrString(attrs, necro::kAttrTextViewText, "")));
+        base_text_->addEditWatcher(this);
+
+        font_family_name_ = utl::u8to16(
+            resolveAttrString(attrs, necro::kAttrTextViewFont, u8p("微软雅黑")));
+        font_size_ = (int)resolveAttrDimension(
+            getContext(), attrs, necro::kAttrTextViewTextSize, std::round(c.dp2px(15.f)));
+        resolveAttrColor(attrs, necro::kAttrTextViewTextColor, &text_color_);
+        resolveFontStyle(attrs, necro::kAttrTextViewTextStyle, &font_style_);
+        resolveFontWeight(attrs, necro::kAttrTextViewTextWeight, &font_weight_);
+
+        is_auto_wrap_ = resolveAttrBool(attrs, necro::kAttrTextViewAutoWrap, true);
         is_selectable_ = resolveAttrBool(attrs, necro::kAttrTextViewIsSelectable, false);
         is_editable_ = resolveAttrBool(attrs, necro::kAttrTextViewIsEditable, false);
         if (is_editable_) {
             is_selectable_ = true;
         }
 
-        is_auto_wrap_ = resolveAttrBool(attrs, necro::kAttrTextViewAutoWrap, true);
-
-        auto text = resolveAttrString(attrs, necro::kAttrTextViewText, "");
-        base_text_ = new Editable(utl::u8to16(text));
-        base_text_->addEditWatcher(this);
-
-        auto def_text_size = std::round(c.dp2px(15.f));
-        font_size_ = int(resolveAttrDimension(
-            getContext(), attrs, necro::kAttrTextViewTextSize, def_text_size));
+        resolveTextAlign(attrs, necro::kAttrTextViewVertAlign, &vert_alignment_);
+        resolveTextAlign(attrs, necro::kAttrTextViewHoriAlign, &hori_alignment_);
 
         initTextView();
     }
@@ -98,12 +172,7 @@ namespace ukive {
         line_spacing_method_ = TextLayout::LineSpacing::DEFAULT;
 
         process_ref_ = 0;
-        font_family_name_ = u"微软雅黑";
         text_action_mode_ = nullptr;
-        text_alignment_ = TextLayout::Alignment::LEADING;
-        paragraph_alignment_ = TextLayout::Alignment::LEADING;
-        font_weight_ = TextLayout::FontWeight::NORMAL;
-        font_style_ = TextLayout::FontStyle::NORMAL;
 
         text_blink_ = new TextBlink(this);
         text_blink_->setColor(Color::Blue500);
@@ -549,8 +618,8 @@ namespace ukive {
         text_layout_->setLineSpacing(line_spacing_method_, line_spacing_);
         text_layout_->setTextWrapping(
             auto_wrap ? TextLayout::TextWrapping::WRAP : TextLayout::TextWrapping::NONE);
-        text_layout_->setTextAlignment(text_alignment_);
-        text_layout_->setParagraphAlignment(paragraph_alignment_);
+        text_layout_->setHoriAlignment(hori_alignment_);
+        text_layout_->setVertAlignment(vert_alignment_);
         text_layout_->setDefaultFontColor(text_color_);
 
         applyFontAttrSpans();
@@ -1098,7 +1167,7 @@ namespace ukive {
         requestDraw();
     }
 
-    void TextView::setIsEditable(bool editable) {
+    void TextView::setEditable(bool editable) {
         if (editable == is_editable_) {
             return;
         }
@@ -1119,7 +1188,7 @@ namespace ukive {
         requestDraw();
     }
 
-    void TextView::setIsSelectable(bool selectable) {
+    void TextView::setSelectable(bool selectable) {
         if (selectable == is_selectable_) {
             return;
         }
@@ -1188,22 +1257,22 @@ namespace ukive {
         requestDraw();
     }
 
-    void TextView::setTextAlignment(TextLayout::Alignment alignment) {
-        if (text_alignment_ == alignment) {
+    void TextView::setHoriAlignment(TextLayout::Alignment alignment) {
+        if (hori_alignment_ == alignment) {
             return;
         }
 
-        text_alignment_ = alignment;
-        text_layout_->setTextAlignment(alignment);
+        hori_alignment_ = alignment;
+        text_layout_->setHoriAlignment(alignment);
     }
 
-    void TextView::setParagraphAlignment(TextLayout::Alignment alignment) {
-        if (paragraph_alignment_ == alignment) {
+    void TextView::setVertAlignment(TextLayout::Alignment alignment) {
+        if (vert_alignment_ == alignment) {
             return;
         }
 
-        paragraph_alignment_ = alignment;
-        text_layout_->setParagraphAlignment(alignment);
+        vert_alignment_ = alignment;
+        text_layout_->setVertAlignment(alignment);
     }
 
     void TextView::setTextStyle(TextLayout::FontStyle style) {
