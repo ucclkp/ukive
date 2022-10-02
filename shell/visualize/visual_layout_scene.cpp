@@ -12,11 +12,10 @@
 #include "ukive/graphics/gpu/gpu_types.h"
 #include "ukive/graphics/gpu/gpu_context.h"
 #include "ukive/graphics/graphic_device_manager.h"
-#include "ukive/graphics/3d/drawing_object_manager.h"
+#include "ukive/graphics/3d/space_object_manager.h"
 #include "ukive/graphics/gpu/gpu_shader.h"
 #include "ukive/resources/resource_manager.h"
 #include "ukive/graphics/3d/camera.h"
-#include "ukive/graphics/3d/graph_creator.h"
 
 
 namespace vsul {
@@ -25,18 +24,20 @@ namespace vsul {
     VisualLayoutScene::~VisualLayoutScene() {}
 
     void VisualLayoutScene::onSceneCreate(ukive::Space3DView* d3d_view) {
-        drawing_obj_mgr_ = new ukv3d::DrawingObjectManager();
-        graph_creator_ = new ukv3d::GraphCreator(drawing_obj_mgr_);
+        space_obj_mgr_ = new ukv3d::SpaceObjectManager();
 
         camera_ = new ukv3d::Camera(1, 1);
         camera_->setCameraPosition(1024, 1024, -1024);
-        ///camera_->circuleCamera2(1.f, -0.2f);
+        //camera_->circuleCamera2(1.f, -0.2f);
 
         assist_configure_.init();
         model_configure_.init();
 
-        graph_creator_->putWorldAxis(0, 1024);
-        graph_creator_->putCube(1, 200);
+        auto obj = assist_configure_.createWorldAxisObj(0, 1024);
+        space_obj_mgr_->add(obj);
+
+        obj = model_configure_.createCubeObj(1, 200);
+        space_obj_mgr_->add(obj);
 
         createStates();
     }
@@ -67,18 +68,17 @@ namespace vsul {
         assist_configure_.active(context);
         assist_configure_.setMatrix(context, wvp_matrix_t);
         context->setPrimitiveTopology(ukive::GPUContext::Topology::LineList);
-        drawing_obj_mgr_->draw(0);
+        space_obj_mgr_->draw(context, 0);
 
         // Panel
         model_configure_.active(context);
         model_configure_.setMatrix(context, wvp_matrix_t);
         context->setPrimitiveTopology(ukive::GPUContext::Topology::TriangleList);
-        drawing_obj_mgr_->draw(1);
+        space_obj_mgr_->draw(context, 1);
     }
 
     void VisualLayoutScene::onSceneDestroy() {
-        delete drawing_obj_mgr_;
-        delete graph_creator_;
+        delete space_obj_mgr_;
         delete camera_;
         assist_configure_.close();
         model_configure_.close();
@@ -91,14 +91,14 @@ namespace vsul {
         releaseResources();
         assist_configure_.close();
         model_configure_.close();
-        drawing_obj_mgr_->notifyGraphicDeviceLost();
+        space_obj_mgr_->notifyGraphicDeviceLost();
     }
 
     void VisualLayoutScene::onGraphicDeviceRestored() {
         createStates();
         assist_configure_.init();
         model_configure_.init();
-        drawing_obj_mgr_->notifyGraphicDeviceRestored();
+        space_obj_mgr_->notifyGraphicDeviceRestored();
     }
 
     bool VisualLayoutScene::createStates() {

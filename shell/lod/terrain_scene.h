@@ -9,16 +9,16 @@
 
 #include <functional>
 
+#include "utils/math/algebra/point.hpp"
+
 #include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/gpu/gpu_types.h"
 #include "ukive/graphics/3d/scene.h"
-#include "ukive/graphics/3d/graph_creator.h"
 
 
 namespace ukv3d {
     class Camera;
-    class GraphCreator;
-    class DrawingObjectManager;
+    class SpaceObjectManager;
 }
 
 namespace ukive {
@@ -55,8 +55,7 @@ namespace shell {
         void onGraphicDeviceRestored() override;
 
         ukv3d::Camera* getCamera() const;
-        ukv3d::GraphCreator* getGraphCreator() const;
-        ukv3d::DrawingObjectManager* getDrawingObjectManager() const;
+        ukv3d::SpaceObjectManager* getSpaceObjectManager() const;
         LodGenerator* getLodGenerator() const;
 
     private:
@@ -96,10 +95,8 @@ namespace shell {
         ukive::GPtr<ukive::GPURasterizerState> rasterizer_state_;
 
         ukv3d::Camera* camera_;
-        ukv3d::GraphCreator* graph_creator_;
-
         ukive::Space3DView* space_view_;
-        ukv3d::DrawingObjectManager* drawing_obj_mgr_;
+        ukv3d::SpaceObjectManager* space_obj_mgr_;
 
         std::function<void()> on_render_handler_;
     };

@@ -13,8 +13,9 @@
 #include "ukive/event/input_event.h"
 #include "ukive/event/keyboard.h"
 #include "ukive/graphics/graphic_device_manager.h"
-#include "ukive/graphics/3d/drawing_object_manager.h"
+#include "ukive/graphics/3d/space_object_manager.h"
 #include "ukive/graphics/3d/camera.h"
+#include "ukive/graphics/3d/space_object.h"
 #include "ukive/graphics/gpu/gpu_rasterizer_state.h"
 #include "ukive/views/text_view.h"
 #include "ukive/views/space3d_view.h"
@@ -22,6 +23,9 @@
 
 #include "shell/lod/lod_generator.h"
 #include "shell/lod/terrain_configure.h"
+
+#include "ukive/graphics/win/3d/assist_configure.h"
+#include "ukive/graphics/win/3d/model_configure.h"
 
 
 namespace {
@@ -46,9 +50,7 @@ namespace shell {
         is_shift_key_pressed_ = false;
         is_mouse_left_key_pressed_ = false;
 
-        drawing_obj_mgr_ = new ukv3d::DrawingObjectManager();
-        graph_creator_ = new ukv3d::GraphCreator(drawing_obj_mgr_);
-        graph_creator_->putCube(kNormalCube, 100);
+        space_obj_mgr_ = new ukv3d::SpaceObjectManager();
 
         camera_ = new ukv3d::Camera(1, 1);
         lod_generator_ = new LodGenerator(8192, 5);
@@ -59,8 +61,7 @@ namespace shell {
     TerrainScene::~TerrainScene() {
         delete lod_generator_;
 
-        delete drawing_obj_mgr_;
-        delete graph_creator_;
+        delete space_obj_mgr_;
         delete camera_;
     }
 
@@ -114,7 +115,7 @@ namespace shell {
     }
 
     void TerrainScene::updateCube() {
-        auto object = getDrawingObjectManager()->getByTag(kNormalCube);
+        auto object = getSpaceObjectManager()->getByTag(kNormalCube);
         if (object) {
             auto gpu_context = ukive::Application::getGraphicDeviceManager()->getGPUContext();
 
@@ -167,7 +168,7 @@ namespace shell {
 
         bool isHitVer = false;
         utl::pt3d vPos;
-        auto *object = getDrawingObjectManager()->getByTag(kNormalCube);
+        auto *object = getSpaceObjectManager()->getByTag(kNormalCube);
         if (object) {
             auto vData = static_cast<ukive::ModelVertexData*>(object->vertices.get());
             for (unsigned int i = 0; i < object->vertex_count; ++i) {
@@ -181,13 +182,14 @@ namespace shell {
             }
 
             if (isHitVer) {
-                if (!drawing_obj_mgr_->contains(155)) {
-                    graph_creator_->putBlock(155, utl::pt3f(vPos), 10.f);
+                if (!space_obj_mgr_->contains(155)) {
+                    auto obj = assist_configure_->createBlockObj(155, utl::pt3f(vPos), 10.f);
+                    space_obj_mgr_->add(obj);
                     space_view_->requestDraw();
                 }
             } else {
-                if (getDrawingObjectManager()->contains(155)) {
-                    getDrawingObjectManager()->removeByTag(155);
+                if (getSpaceObjectManager()->contains(155)) {
+                    getSpaceObjectManager()->removeByTag(155);
                     space_view_->requestDraw();
                 }
             }
@@ -261,7 +263,11 @@ namespace shell {
         terrain_configure_ = new TerrainConfigure();
         terrain_configure_->init();
 
-        getGraphCreator()->putWorldAxis(kWorldAxis, 1024);
+        auto obj = assist_configure_->createWorldAxisObj(kWorldAxis, 1024);
+        space_obj_mgr_->add(obj);
+
+        obj = model_configure_->createCubeObj(kNormalCube, 100);
+        space_obj_mgr_->add(obj);
 
         createStates();
         updateLodTerrain();
@@ -379,7 +385,7 @@ namespace shell {
         assist_configure_->setMatrix(context, wvp_matrix_t);
 
         context->setPrimitiveTopology(ukive::GPUContext::Topology::LineList);
-        getDrawingObjectManager()->draw(kWorldAxis);
+        getSpaceObjectManager()->draw(context, kWorldAxis);
 
         terrain_configure_->active(context);
         terrain_configure_->setMatrix(context, wvp_matrix_t);
@@ -394,13 +400,13 @@ namespace shell {
         context->drawIndexed(lod_generator_->getIndexCount(), 0, 0);
 
         context->setPrimitiveTopology(ukive::GPUContext::Topology::TriangleList);
-        drawing_obj_mgr_->draw(155);
+        space_obj_mgr_->draw(context, 155);
 
         model_configure_->active(context);
         model_configure_->setMatrix(context, wvp_matrix_t);
 
         context->setPrimitiveTopology(ukive::GPUContext::Topology::TriangleList);
-        drawing_obj_mgr_->draw(kNormalCube);
+        space_obj_mgr_->draw(context, kNormalCube);
     }
 
     void TerrainScene::onSceneDestroy() {
@@ -444,7 +450,7 @@ namespace shell {
         index_buffer_.reset();
         rasterizer_state_.reset();
 
-        drawing_obj_mgr_->notifyGraphicDeviceLost();
+        space_obj_mgr_->notifyGraphicDeviceLost();
     }
 
     void TerrainScene::onGraphicDeviceRestored() {
@@ -463,19 +469,15 @@ namespace shell {
         createBuffers();
         createStates();
 
-        drawing_obj_mgr_->notifyGraphicDeviceRestored();
+        space_obj_mgr_->notifyGraphicDeviceRestored();
     }
 
     ukv3d::Camera* TerrainScene::getCamera() const {
         return camera_;
     }
 
-    ukv3d::GraphCreator* TerrainScene::getGraphCreator() const {
-        return graph_creator_;
-    }
-
-    ukv3d::DrawingObjectManager* TerrainScene::getDrawingObjectManager() const {
-        return drawing_obj_mgr_;
+    ukv3d::SpaceObjectManager* TerrainScene::getSpaceObjectManager() const {
+        return space_obj_mgr_;
     }
 
     LodGenerator* TerrainScene::getLodGenerator() const {

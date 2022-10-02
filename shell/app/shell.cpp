@@ -17,7 +17,7 @@
 #include "shell/text/text_window.h"
 //#include "shell/effects/effect_window.h"
 #include "shell/grid/grid_window.h"
-//#include "shell/visualize/visualization_window.h"
+#include "shell/visualize/visualization_window.h"
 
 
 GUI_MAIN() {
@@ -61,14 +61,14 @@ GUI_MAIN() {
     shadow_window->center();
     shadow_window->show();*/
 
-    auto example_window = std::make_shared<shell::ExampleWindow>();
+    /*auto example_window = std::make_shared<shell::ExampleWindow>();
     example_window->init(ukive::Window::InitParams());
     example_window->setTitle(u"Examples");
     example_window->setWidth(ukive::Application::dp2pxi(600));
     example_window->setHeight(ukive::Application::dp2pxi(600));
     example_window->setTranslucentType(ukive::TRANS_BLURBEHIND_SYSTEM);
     example_window->center();
-    example_window->show();
+    example_window->show();*/
     //example_window->maximize();
 
     /*auto grid_window = std::make_shared<shell::GridWindow>();
@@ -80,14 +80,14 @@ GUI_MAIN() {
     grid_window->center();
     grid_window->show();*/
 
-    /*auto vsul_window = std::make_shared<vsul::VisualizationWindow>();
+    auto vsul_window = std::make_shared<vsul::VisualizationWindow>();
     vsul_window->init(ukive::Window::InitParams());
     vsul_window->setTitle(u"Visualized Layout");
     vsul_window->setWidth(ukive::Application::dp2pxi(600));
     vsul_window->setHeight(ukive::Application::dp2pxi(600));
     vsul_window->setTranslucentType(ukive::TRANS_BLURBEHIND_SYSTEM);
     vsul_window->center();
-    vsul_window->show();*/
+    vsul_window->show();
 
     app->run();
 

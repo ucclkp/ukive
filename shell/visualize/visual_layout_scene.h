@@ -18,8 +18,7 @@
 
 namespace ukv3d {
     class Camera;
-    class DrawingObjectManager;
-    class GraphCreator;
+    class SpaceObjectManager;
 }
 
 namespace ukive {
@@ -59,8 +58,7 @@ namespace vsul {
         void setViewports(float x, float y, float width, float height);
 
         ukv3d::Camera* camera_ = nullptr;
-        ukv3d::GraphCreator* graph_creator_ = nullptr;
-        ukv3d::DrawingObjectManager* drawing_obj_mgr_ = nullptr;
+        ukv3d::SpaceObjectManager* space_obj_mgr_ = nullptr;
         ukive::AssistConfigure assist_configure_;
         ukive::ModelConfigure model_configure_;
 

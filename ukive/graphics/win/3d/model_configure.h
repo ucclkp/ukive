@@ -14,6 +14,10 @@
 #include "ukive/graphics/gptr.hpp"
 
 
+namespace ukv3d {
+    struct SpaceObject;
+}
+
 namespace ukive {
 
     class GPUBuffer;
@@ -42,6 +46,11 @@ namespace ukive {
         void close();
 
         void setMatrix(GPUContext* context, const utl::mat4f& matrix);
+
+        ukv3d::SpaceObject* createCubeObj(int tag, float edge_len);
+        void calculateNormalVector(
+            ukive::ModelVertexData* vertices,
+            int vertexCount, int* indices, int indexCount);
 
     private:
         struct MatrixConstBuffer {

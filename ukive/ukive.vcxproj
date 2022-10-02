@@ -221,9 +221,9 @@
     <ClInclude Include="event\velocity_calculator.h" />
     <ClInclude Include="event\win\window_message_buncher_win.h" />
     <ClInclude Include="graphics\3d\camera.h" />
-    <ClInclude Include="graphics\3d\drawing_object_manager.h" />
-    <ClInclude Include="graphics\3d\graph_creator.h" />
+    <ClInclude Include="graphics\3d\space_object_manager.h" />
     <ClInclude Include="graphics\3d\scene.h" />
+    <ClInclude Include="graphics\3d\space_object.h" />
     <ClInclude Include="graphics\byte_data.h" />
     <ClInclude Include="graphics\canvas.h" />
     <ClInclude Include="graphics\canvas_stack.hpp" />
@@ -522,9 +522,9 @@
     <ClCompile Include="event\win\keyboard_win.cpp" />
     <ClCompile Include="event\win\window_message_buncher_win.cpp" />
     <ClCompile Include="graphics\3d\camera.cpp" />
-    <ClCompile Include="graphics\3d\drawing_object_manager.cpp" />
-    <ClCompile Include="graphics\3d\graph_creator.cpp" />
+    <ClCompile Include="graphics\3d\space_object_manager.cpp" />
     <ClCompile Include="graphics\3d\scene.cpp" />
+    <ClCompile Include="graphics\3d\space_object.cpp" />
     <ClCompile Include="graphics\byte_data.cpp" />
     <ClCompile Include="graphics\canvas.cpp" />
     <ClCompile Include="graphics\colors\color.cpp" />

@@ -322,10 +322,7 @@
     <ClCompile Include="graphics\3d\camera.cpp">
       <Filter>graphics\3d</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\3d\drawing_object_manager.cpp">
-      <Filter>graphics\3d</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\3d\graph_creator.cpp">
+    <ClCompile Include="graphics\3d\space_object_manager.cpp">
       <Filter>graphics\3d</Filter>
     </ClCompile>
     <ClCompile Include="graphics\3d\scene.cpp">
@@ -711,6 +708,9 @@
     </ClCompile>
     <ClCompile Include="views\title_bar\title_bar_button.cpp">
       <Filter>views\title_bar</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\3d\space_object.cpp">
+      <Filter>graphics\3d</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1152,10 +1152,7 @@
     <ClInclude Include="graphics\3d\camera.h">
       <Filter>graphics\3d</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\3d\drawing_object_manager.h">
-      <Filter>graphics\3d</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\3d\graph_creator.h">
+    <ClInclude Include="graphics\3d\space_object_manager.h">
       <Filter>graphics\3d</Filter>
     </ClInclude>
     <ClInclude Include="graphics\3d\scene.h">
@@ -1604,6 +1601,9 @@
     </ClInclude>
     <ClInclude Include="views\title_bar\title_bar_button.h">
       <Filter>views\title_bar</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\3d\space_object.h">
+      <Filter>graphics\3d</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
