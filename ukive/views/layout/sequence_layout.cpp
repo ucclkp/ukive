@@ -10,6 +10,7 @@
 #include <cmath>
 #include <typeinfo>
 
+#include "utils/log.h"
 #include "utils/strings/string_utils.hpp"
 
 #include "ukive/resources/attr_utils.h"
@@ -134,39 +135,163 @@ namespace ukive {
         }
     }
 
-    void SequenceLayout::determineSeqLayoutChildrenSize(const SizeInfo& parent_info) {
-        int total_weight = 0;
-        for (auto child : *this) {
-            if (child->getVisibility() != VANISHED) {
-                auto li = static_cast<SequenceLayoutInfo*>(child->getExtraLayoutInfo());
-                total_weight += li->weight;
-            }
-        }
-
-        if (total_weight > 0 &&
-            (orientation_ == VERTICAL ?
-                parent_info.height().mode != SizeInfo::FREEDOM :
-                parent_info.width().mode != SizeInfo::FREEDOM))
-        {
-            determineWeightedChildrenSize(total_weight, parent_info);
-        } else {
-            determineChildrenSize(parent_info);
-        }
-    }
-
     Size SequenceLayout::getVerticalSize(const SizeInfo& info) {
         int final_width;
         int final_height;
 
-        determineSeqLayoutChildrenSize(info);
+        switch (info.height().mode) {
+        case SizeInfo::CONTENT:
+        {
+            // 子 View 竖向叠起来。此时 weight 无作用。
+            int cur_height = 0;
+            for (auto child : *this) {
+                if (child->getVisibility() != VANISHED) {
+                    auto w_val = getChildWidthValue(child, info.width(), 0);
+                    auto h_val = getChildHeightValue(child, info.height(), cur_height);
+                    child->determineSize(SizeInfo(w_val, h_val));
 
-        int total_height = 0;
+                    int child_h_space = child->getDeterminedSize().height() + child->getLayoutMargin().vert();
+                    cur_height += child_h_space;
+                }
+            }
+            final_height = (std::min)(info.height().val, cur_height + getPadding().vert());
+            break;
+        }
+
+        case SizeInfo::FREEDOM:
+        {
+            // 子 View 竖向叠起来。此时 weight 无作用。
+            int cur_height = 0;
+            for (auto child : *this) {
+                if (child->getVisibility() != VANISHED) {
+                    auto w_val = getChildWidthValue(child, info.width(), 0);
+                    auto h_val = getChildHeightValue(child, info.height(), cur_height);
+                    child->determineSize(SizeInfo(w_val, h_val));
+
+                    int child_h_space = child->getDeterminedSize().height() + child->getLayoutMargin().vert();
+                    cur_height += child_h_space;
+                }
+            }
+            final_height = cur_height + getPadding().vert();
+            break;
+        }
+
+        case SizeInfo::DEFINED:
+        default:
+        {
+            /**
+             * 子 View 竖向叠起来，同时可以使用 fill 布局和 weight 参数。
+             * 应先测量 weight 为 0 而且使用 auto 或 free 布局的子 View。
+             * 余下的将由 weight 参数确定其占据的剩余空间的比例。
+             */
+            int rem_count = 0;
+            int cur_height = 0;
+            int total_weight = 0;
+            for (auto child : *this) {
+                if (child->getVisibility() != VANISHED) {
+                    auto& ls = child->getLayoutSize();
+                    auto li = static_cast<SequenceLayoutInfo*>(child->getExtraLayoutInfo());
+                    total_weight += li->weight;
+
+                    // margin 总是计算在内
+                    int child_h_space = child->getLayoutMargin().vert();
+
+                    if (li->weight == 0 &&
+                        ls.height() != View::LS_FILL)
+                    {
+                        auto w_val = getChildWidthValue(child, info.width(), 0);
+                        auto h_val = getChildHeightValue(child, info.height(), cur_height);
+                        child->determineSize(SizeInfo(w_val, h_val));
+
+                        child_h_space += child->getDeterminedSize().height();
+                    } else {
+                        ++rem_count;
+                    }
+                    cur_height += child_h_space;
+                }
+            }
+
+            int rem_height = (std::max)(
+                0, info.height().val - getPadding().vert() - cur_height);
+
+            if (total_weight == 0) {
+                // 这种情况，布局为 fill 的子 View 平分剩余空间
+                int child_h = rem_count ? (rem_height / rem_count) : 0;
+                int child_h_rem = rem_count ? (rem_height % rem_count) : 0;
+                for (auto child : *this) {
+                    if (child->getVisibility() != VANISHED) {
+                        auto& ls = child->getLayoutSize();
+                        if (ls.height() == View::LS_FILL) {
+                            auto w_val = getChildWidthValue(child, info.width(), 0);
+
+                            // 平均分配余数
+                            int c_h_val;
+                            if (child_h_rem) {
+                                c_h_val = child_h + 1;
+                                --child_h_rem;
+                            } else {
+                                c_h_val = child_h;
+                            }
+                            SizeInfo::Value h_val(child_h, SizeInfo::DEFINED);
+
+                            child->determineSize(SizeInfo(w_val, h_val));
+                        }
+                    }
+                }
+            } else {
+                // 这种情况，只有 weight 不为 0 的子 View 能获得布局空间
+                int alloc_height = 0;
+                int cur_count = 0;
+                for (auto child : *this) {
+                    if (child->getVisibility() != VANISHED) {
+                        auto& ls = child->getLayoutSize();
+                        auto li = static_cast<SequenceLayoutInfo*>(child->getExtraLayoutInfo());
+
+                        if (ls.height() == View::LS_FILL ||
+                            li->weight != 0)
+                        {
+                            ++cur_count;
+                            auto w_val = getChildWidthValue(child, info.width(), 0);
+
+                            int child_h = int(std::round(
+                                li->weight / static_cast<float>(total_weight) * rem_height));
+                            child_h = (std::max)(0, child_h);
+
+                            // 防止超过可用空间
+                            if (child_h + alloc_height > rem_height) {
+                                child_h = 0;
+                            } else {
+                                alloc_height += child_h;
+                            }
+
+                            // 在该方法之内，子 View 的布局参数不应该发生改变
+                            ubassert(cur_count <= rem_count);
+
+                            // 分配余数到最后一个子 View 上面
+                            if (cur_count == rem_count &&
+                                alloc_height < rem_height)
+                            {
+                                child_h += rem_height - alloc_height;
+                            }
+                            SizeInfo::Value h_val(child_h, SizeInfo::DEFINED);
+
+                            child->determineSize(SizeInfo(w_val, h_val));
+                        }
+                    }
+                }
+            }
+            final_height = info.height().val;
+            break;
+        }
+        }
 
         switch (info.width().mode) {
         case SizeInfo::CONTENT:
+        {
             final_width = getWrappedWidth();
             final_width = (std::min)(final_width + getPadding().hori(), info.width().val);
             break;
+        }
 
         case SizeInfo::FREEDOM:
             final_width = getWrappedWidth() + getPadding().hori();
@@ -178,33 +303,6 @@ namespace ukive {
             break;
         }
 
-        switch (info.height().mode) {
-        case SizeInfo::CONTENT: {
-            for (auto child : *this) {
-                if (child->getVisibility() != VANISHED) {
-                    total_height += child->getDeterminedSize().height() + child->getLayoutMargin().vert();
-                }
-            }
-            final_height = (std::min)(info.height().val, total_height + getPadding().vert());
-            break;
-        }
-
-        case SizeInfo::FREEDOM: {
-            for (auto child : *this) {
-                if (child->getVisibility() != VANISHED) {
-                    total_height += child->getDeterminedSize().height() + child->getLayoutMargin().vert();
-                }
-            }
-            final_height = total_height + getPadding().vert();
-            break;
-        }
-
-        case SizeInfo::DEFINED:
-        default:
-            final_height = info.height().val;
-            break;
-        }
-
         return Size(final_width, final_height);
     }
 
@@ -212,35 +310,150 @@ namespace ukive {
         int final_width;
         int final_height;
 
-        determineSeqLayoutChildrenSize(info);
-
-        int total_width = 0;
-
         switch (info.width().mode) {
-        case SizeInfo::CONTENT: {
+        case SizeInfo::CONTENT:
+        {
+            // 子 View 横向叠起来。此时 weight 无作用。
+            int cur_width = 0;
             for (auto child : *this) {
                 if (child->getVisibility() != VANISHED) {
-                    total_width += child->getDeterminedSize().width() + child->getLayoutMargin().hori();
+                    auto w_val = getChildWidthValue(child, info.width(), cur_width);
+                    auto h_val = getChildHeightValue(child, info.height(), 0);
+                    child->determineSize(SizeInfo(w_val, h_val));
+
+                    int child_w_space = child->getDeterminedSize().width() + child->getLayoutMargin().hori();
+                    cur_width += child_w_space;
                 }
             }
-            final_width = (std::min)(total_width + getPadding().hori(), info.width().val);
+            final_width = (std::min)(info.width().val, cur_width + getPadding().hori());
             break;
         }
 
-        case SizeInfo::FREEDOM: {
+        case SizeInfo::FREEDOM:
+        {
+            // 子 View 横向叠起来。此时 weight 无作用。
+            int cur_width = 0;
             for (auto child : *this) {
                 if (child->getVisibility() != VANISHED) {
-                    total_width += child->getDeterminedSize().width() + child->getLayoutMargin().hori();
+                    auto w_val = getChildWidthValue(child, info.width(), cur_width);
+                    auto h_val = getChildHeightValue(child, info.height(), 0);
+                    child->determineSize(SizeInfo(w_val, h_val));
+
+                    int child_w_space = child->getDeterminedSize().width() + child->getLayoutMargin().hori();
+                    cur_width += child_w_space;
                 }
             }
-            final_width = total_width + getPadding().hori();
+            final_width = cur_width + getPadding().hori();
             break;
         }
 
         case SizeInfo::DEFINED:
         default:
+        {
+            /**
+             * 子 View 横向叠起来，同时可以使用 fill 布局和 weight 参数。
+             * 应先测量 weight 为 0 而且使用 auto 或 free 布局的子 View。
+             * 余下的将由 weight 参数确定其占据的剩余空间的比例。
+             */
+            int rem_count = 0;
+            int cur_width = 0;
+            int total_weight = 0;
+            for (auto child : *this) {
+                if (child->getVisibility() != VANISHED) {
+                    auto& ls = child->getLayoutSize();
+                    auto li = static_cast<SequenceLayoutInfo*>(child->getExtraLayoutInfo());
+                    total_weight += li->weight;
+
+                    // margin 总是计算在内
+                    int child_w_space = child->getLayoutMargin().hori();
+
+                    if (li->weight == 0 &&
+                        ls.width() != View::LS_FILL)
+                    {
+                        auto w_val = getChildWidthValue(child, info.width(), cur_width);
+                        auto h_val = getChildHeightValue(child, info.height(), 0);
+                        child->determineSize(SizeInfo(w_val, h_val));
+
+                        child_w_space += child->getDeterminedSize().width();
+                    } else {
+                        ++rem_count;
+                    }
+                    cur_width += child_w_space;
+                }
+            }
+
+            int rem_width = (std::max)(
+                0, info.width().val - getPadding().hori() - cur_width);
+
+            if (total_weight == 0) {
+                // 这种情况，布局为 fill 的子 View 平分剩余空间
+                int child_w = rem_count ? (rem_width / rem_count) : 0;
+                int child_w_rem = rem_count ? (rem_width % rem_count) : 0;
+                for (auto child : *this) {
+                    if (child->getVisibility() != VANISHED) {
+                        auto& ls = child->getLayoutSize();
+                        if (ls.width() == View::LS_FILL) {
+                            auto h_val = getChildHeightValue(child, info.height(), 0);
+
+                            // 平均分配余数
+                            int c_w_val;
+                            if (child_w_rem) {
+                                c_w_val = child_w + 1;
+                                --child_w_rem;
+                            } else {
+                                c_w_val = child_w;
+                            }
+                            SizeInfo::Value w_val(child_w, SizeInfo::DEFINED);
+
+                            child->determineSize(SizeInfo(w_val, h_val));
+                        }
+                    }
+                }
+            } else {
+                // 这种情况，只有 weight 不为 0 的子 View 能获得布局空间
+                int alloc_width = 0;
+                int cur_count = 0;
+                for (auto child : *this) {
+                    if (child->getVisibility() != VANISHED) {
+                        auto& ls = child->getLayoutSize();
+                        auto li = static_cast<SequenceLayoutInfo*>(child->getExtraLayoutInfo());
+
+                        if (ls.width() == View::LS_FILL ||
+                            li->weight != 0)
+                        {
+                            ++cur_count;
+                            auto h_val = getChildHeightValue(child, info.height(), 0);
+
+                            int child_w = int(std::round(
+                                li->weight / static_cast<float>(total_weight) * rem_width));
+                            child_w = (std::max)(0, child_w);
+
+                            // 防止超过可用空间
+                            if (child_w + alloc_width > rem_width) {
+                                child_w = 0;
+                            } else {
+                                alloc_width += child_w;
+                            }
+
+                            // 在该方法之内，子 View 的布局参数不应该发生改变
+                            ubassert(cur_count <= rem_count);
+
+                            // 分配余数到最后一个子 View 上面
+                            if (cur_count == rem_count &&
+                                alloc_width < rem_width)
+                            {
+                                child_w += rem_width - alloc_width;
+                            }
+                            SizeInfo::Value w_val(child_w, SizeInfo::DEFINED);
+
+                            child->determineSize(SizeInfo(w_val, h_val));
+                        }
+                    }
+                }
+            }
             final_width = info.width().val;
             break;
+        }
         }
 
         switch (info.height().mode) {

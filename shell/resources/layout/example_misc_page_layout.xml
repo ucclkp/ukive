@@ -1,115 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    id="@+id/sv_misc_page"
+<SequenceLayout
     width="fill"
-    height="fill" >
+    height="fill">
 
-    <SequenceLayout
+    <TextView
+        id="@+id/tv_test"
+        width="auto"
+        height="auto"
+        margin="12"
+        text="测试页面"/>
+
+    <ScrollView
+        id="@+id/sv_misc_page"
         width="fill"
-        height="fill">
-
-        <TextView
-            id="@+id/tv_dev_text_params"
-            width="auto"
-            height="auto"
-            margin="12"
-            horizontal_pos="start"
-            vertical_pos="start"
-            text="--"
-            selectable="false"
-            editable="false"
-            padding="6" />
-
-        <MediaView
-            id="@+id/mv_media_view"
-            width="fill"
-            height="200"
-            margin="12"
-            padding="8" />
-
-        <ChartView
-            id="@+id/cv_data_chart"
-            width="fill"
-            height="200"
-            margin="12"
-            padding="8" />
-
-        <SeekBar
-            id="@+id/sb_misc_anim_test"
-            width="200"
-            height="auto"
-            margin="12" />
-
-        <CheckBox
-            id="@+id/cb_misc_anim_test"
-            width="auto"
-            height="auto"
-            margin="12"
-            text="测试用"/>
+        height="fill" >
 
         <SequenceLayout
             width="fill"
-            height="fill"
-            orientation="horizontal">
+            height="free">
 
-            <RadioGroup>
-                <RadioButton
-                    id="@+id/rb_misc_anim_test1"
-                    width="auto"
-                    height="auto"
-                    margin="12"
-                    text="测试用1" />
+            <TextView
+                id="@+id/tv_dev_text_params"
+                width="auto"
+                height="auto"
+                margin="12"
+                horizontal_pos="start"
+                vertical_pos="start"
+                text="--"
+                selectable="false"
+                editable="false"
+                padding="6" />
 
-                <RadioButton
-                    id="@+id/rb_misc_anim_test2"
-                    width="auto"
-                    height="auto"
-                    margin="12"
-                    text="测试用2" />
-            </RadioGroup>
+            <MediaView
+                id="@+id/mv_media_view"
+                width="fill"
+                height="200"
+                margin="12"
+                padding="8" />
+
+            <ChartView
+                id="@+id/cv_data_chart"
+                width="fill"
+                height="200"
+                margin="12"
+                padding="8" />
+
+            <SeekBar
+                id="@+id/sb_misc_anim_test"
+                width="200"
+                height="auto"
+                margin="12" />
+
+            <CheckBox
+                id="@+id/cb_misc_anim_test"
+                width="auto"
+                height="auto"
+                margin="12"
+                text="测试用"/>
+
+            <SequenceLayout
+                width="fill"
+                height="auto"
+                orientation="horizontal">
+
+                <RadioGroup>
+                    <RadioButton
+                        id="@+id/rb_misc_anim_test1"
+                        width="auto"
+                        height="auto"
+                        margin="12"
+                        text="测试用1" />
+
+                    <RadioButton
+                        id="@+id/rb_misc_anim_test2"
+                        width="auto"
+                        height="auto"
+                        margin="12"
+                        text="测试用2" />
+                </RadioGroup>
+
+            </SequenceLayout>
+
+            <SwitchView
+                id="@+id/sw_misc_anim_test"
+                width="auto"
+                height="auto"
+                margin="12" />
+
+            <ProgressBar
+                id="@+id/pb_misc_anim_test"
+                width="auto"
+                height="auto"
+                margin="12" />
+
+            <ComboBox
+                id="@+id/sv_misc_combobox"
+                width="auto"
+                height="auto"
+                margin="12" />
+
+            <TextView
+                id="@+id/tv_misc_txt"
+                width="fill"
+                height="auto"
+                margin="12"
+                selectable="true"
+                editable="true"
+                background="?color/white"
+                shadow_radius="0"
+                padding="6" />
+
+            <ImageView
+                id="@+id/iv_misc_img"
+                width="auto"
+                height="auto" />
+
+            <Button
+                id="@+id/bt_misc_button"
+                width="auto"
+                height="auto"
+                margin="12" />
 
         </SequenceLayout>
 
-        <SwitchView
-            id="@+id/sw_misc_anim_test"
-            width="auto"
-            height="auto"
-            margin="12" />
-
-        <ProgressBar
-            id="@+id/pb_misc_anim_test"
-            width="auto"
-            height="auto"
-            margin="12" />
-
-        <ComboBox
-            id="@+id/sv_misc_combobox"
-            width="auto"
-            height="auto"
-            margin="12" />
-
-        <TextView
-            id="@+id/tv_misc_txt"
-            width="fill"
-            height="auto"
-            margin="12"
-            selectable="true"
-            editable="true"
-            background="?color/white"
-            shadow_radius="0"
-            padding="6" />
-
-        <ImageView
-            id="@+id/iv_misc_img"
-            width="auto"
-            height="auto" />
-
-        <Button
-            id="@+id/bt_misc_button"
-            width="auto"
-            height="auto"
-            margin="12" />
-
-    </SequenceLayout>
-
-</ScrollView>
+    </ScrollView>
+</SequenceLayout>

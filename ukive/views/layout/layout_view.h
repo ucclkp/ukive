@@ -96,7 +96,19 @@ namespace ukive {
         void drawChild(Canvas* canvas, View* child);
         void drawChildren(Canvas* canvas);
 
-        void determineChildSize(View* child, const SizeInfo& parent_info);
+        SizeInfo::Value getChildWidthValue(
+            View* child,
+            const SizeInfo::Value& parent_w_val,
+            int ex_margin_w) const;
+        SizeInfo::Value getChildHeightValue(
+            View* child,
+            const SizeInfo::Value& parent_h_val,
+            int ex_margin_h) const;
+
+        void determineChildSize(
+            View* child,
+            const SizeInfo& parent_info,
+            const Size& ex_margin = {});
         void determineChildrenSize(const SizeInfo& parent_info);
 
         STL_VECTOR_ITERATORS(View*, views_);

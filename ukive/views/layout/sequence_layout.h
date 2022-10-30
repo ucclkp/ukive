@@ -39,7 +39,6 @@ namespace ukive {
     private:
         void determineWeightedChildrenSize(
             int total_weight, const SizeInfo& parent_info);
-        void determineSeqLayoutChildrenSize(const SizeInfo& parent_info);
 
         Size getVerticalSize(const SizeInfo& info);
         Size getHorizontalSize(const SizeInfo& info);

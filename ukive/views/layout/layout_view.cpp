@@ -624,16 +624,52 @@ namespace ukive {
         }
     }
 
-    void LayoutView::determineChildSize(View* child, const SizeInfo& parent_info) {
+    SizeInfo::Value LayoutView::getChildWidthValue(
+        View* child,
+        const SizeInfo::Value& parent_w_val,
+        int ex_margin_w) const
+    {
+        int hori_margin = child->getLayoutMargin().hori();
+        auto& ls = child->getLayoutSize();
+
+        return SizeInfo::getChildSizeInfo(
+            parent_w_val,
+            hori_margin + getPadding().hori() + ex_margin_w,
+            ls.width());
+    }
+
+    SizeInfo::Value LayoutView::getChildHeightValue(
+        View* child,
+        const SizeInfo::Value& parent_h_val,
+        int ex_margin_h) const
+    {
+        int vert_margin = child->getLayoutMargin().vert();
+        auto& ls = child->getLayoutSize();
+
+        return SizeInfo::getChildSizeInfo(
+            parent_h_val,
+            vert_margin + getPadding().vert() + ex_margin_h,
+            ls.height());
+    }
+
+    void LayoutView::determineChildSize(
+        View* child,
+        const SizeInfo& parent_info,
+        const Size& ex_margin)
+    {
         int hori_margin = child->getLayoutMargin().hori();
         int vert_margin = child->getLayoutMargin().vert();
         auto& ls = child->getLayoutSize();
 
         auto child_w = SizeInfo::getChildSizeInfo(
-            parent_info.width(), hori_margin + getPadding().hori(), ls.width());
+            parent_info.width(),
+            hori_margin + getPadding().hori() + ex_margin.width(),
+            ls.width());
 
         auto child_h = SizeInfo::getChildSizeInfo(
-            parent_info.height(), vert_margin + getPadding().vert(), ls.height());
+            parent_info.height(),
+            vert_margin + getPadding().vert() + ex_margin.height(),
+            ls.height());
 
         child->determineSize(SizeInfo(child_w, child_h));
     }
