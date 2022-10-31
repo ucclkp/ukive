@@ -51,7 +51,7 @@ namespace ukive {
                 item = parent_->makeNewItem(i, index);
                 column_.addItem(item, index);
             } else {
-                if (item->data_pos != pos) {
+                if (item->data_pos != i) {
                     parent_->setItemData(item, i);
                 }
             }

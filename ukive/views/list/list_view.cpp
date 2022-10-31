@@ -99,13 +99,11 @@ namespace ukive {
     void ListView::onLayout(
         const Rect& new_bounds, const Rect& old_bounds)
     {
-        if (new_bounds.size() != old_bounds.size()) {
-            layoutAtPosition(true);
-            recordCurPositionAndOffset();
+        layoutAtPosition(true);
+        recordCurPositionAndOffset();
 
-            scroll_bar_->setBounds(Rect(0, 0, new_bounds.width(), new_bounds.height()));
-            updateOverlayScrollBar();
-        }
+        scroll_bar_->setBounds(Rect(0, 0, new_bounds.width(), new_bounds.height()));
+        updateOverlayScrollBar();
     }
 
     bool ListView::onHookInputEvent(InputEvent* e) {

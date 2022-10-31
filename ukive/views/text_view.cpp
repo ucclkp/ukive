@@ -1520,7 +1520,7 @@ namespace ukive {
         // 因为刚刚输入的文字会被换到下一行，并在下次布局后回到正确的位置。
         // 为了能在第一时间获知文本布局框的正确大小，应提前进行测量工作。
         if (is_auto_wrap_ &&
-            getLayoutSize().width() == LS_AUTO)
+            parent_width_.mode != SizeInfo::DEFINED)
         {
             determineWidth(parent_width_);
         }
