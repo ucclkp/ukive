@@ -12,6 +12,9 @@
 #include <string>
 #include <vector>
 
+#include "ukive/text/range.hpp"
+#include "ukive/text/selection.hpp"
+
 
 namespace ukive {
 
@@ -39,16 +42,18 @@ namespace ukive {
             };
 
             virtual void onTextChanged(
-                Editable* editable,
-                size_t start, size_t old_end, size_t new_end, Reason r) {}
+                Editable* editable, const RangeChg& rc, Reason r) {}
             virtual void onSelectionChanged(
-                size_t ns, size_t ne,
-                size_t os, size_t oe, Reason r) {}
+                Editable* editable,
+                const Selection& nsl,
+                const Selection& osl,
+                Reason r) {}
             virtual void onSpanChanged(
+                Editable* editable,
                 Span* span, SpanChange action, Reason r) {}
         };
 
-        explicit Editable(const std::u16string_view& text);
+        explicit Editable(const std::u16string_view& text, void* ctx = nullptr);
         ~Editable();
 
         size_t length() const;
@@ -69,37 +74,36 @@ namespace ukive {
         void removeAllSpans(Reason r = API);
 
         bool isInteractable() const;
-        size_t getSelectionStart() const;
-        size_t getSelectionEnd() const;
         bool hasSelection() const;
-        std::u16string getSelection() const;
+        const Selection& getSelection() const;
+        std::u16string_view getSelectionString() const;
         char16_t at(size_t pos) const;
         const std::u16string& getString() const;
         size_t getPrevOffset(size_t cur) const;
         size_t getNextOffset(size_t cur) const;
         Span* getSpan(size_t index) const;
         size_t getSpanCount() const;
+        void* getContext() const;
 
         void addEditWatcher(EditWatcher* watcher);
         void removeEditWatcher(EditWatcher* watcher);
 
     private:
         void notifyTextChanged(
-            size_t start, size_t old_end, size_t new_end, Reason r);
+            const RangeChg& rc, Reason r);
         void notifySelectionChanged(
-            size_t ns, size_t ne, size_t os, size_t oe, Reason r);
+            const Selection& nsl, const Selection& osl, Reason r);
         void notifyEditWatcher(
-            size_t text_start, size_t old_text_end, size_t new_text_end,
-            size_t new_sel_start, size_t new_sel_end, size_t old_sel_start, size_t old_sel_end, Reason r);
+            const RangeChg& text_rc,
+            const Selection& nsl, const Selection& osl, Reason r);
         void notifySpanChanged(
             Span* span, EditWatcher::SpanChange action, Reason r);
 
+        void* ctx_;
         std::u16string text_;
-        std::list<EditWatcher*> watchers_;
+        std::vector<EditWatcher*> watchers_;
         std::vector<std::shared_ptr<Span>> spans_;
-
-        size_t sel_beg_;
-        size_t sel_end_;
+        Selection sel_;
     };
 
 }

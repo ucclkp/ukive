@@ -22,6 +22,7 @@ namespace ukive {
     class TextActionMenu;
     class TextKeyListener;
     class DWTextDrawingEffect;
+    class TextViewStatusListener;
 
     class TextView : public View,
         public Editable::EditWatcher,
@@ -61,11 +62,10 @@ namespace ukive {
 
         void setSelection(size_t position);
         void setSelection(size_t start, size_t end);
-        void drawSelection(size_t start, size_t end);
-        std::u16string getSelection() const;
-        size_t getSelectionStart() const;
-        size_t getSelectionEnd() const;
+        void drawSelection(const Selection& sel);
         bool hasSelection() const;
+        const Selection& getSelection() const;
+        std::u16string_view getSelectionString() const;
 
         size_t getTextPositionAtPoint(int text_x, int text_y) const;
         bool isTextAtPoint(
@@ -78,14 +78,20 @@ namespace ukive {
 
         void computeVisibleRegion(RectF* region);
 
+        void addStatusListener(TextViewStatusListener* l);
+        void removeStatusListener(TextViewStatusListener* l);
+
     protected:
         // Editable::EditWatcher
         void onTextChanged(
             Editable* editable,
-            size_t start, size_t old_end, size_t new_end, Editable::Reason r) override;
+            const RangeChg& rc, Editable::Reason r) override;
         void onSelectionChanged(
-            size_t ns, size_t ne, size_t os, size_t oe, Editable::Reason r) override;
+            Editable* editable,
+            const Selection& nsl, const Selection& osl,
+            Editable::Reason r) override;
         void onSpanChanged(
+            Editable* editable,
             Span* span, SpanChange action, Editable::Reason r) override;
 
         // TextActionMenuCallback
@@ -194,6 +200,7 @@ namespace ukive {
         TextActionMenu* text_action_mode_;
         InputMethodConnection* input_connection_;
         TextKeyListener* text_key_listener_;
+        std::vector<TextViewStatusListener*> status_listeners_;
 
         uint64_t process_ref_;
 

@@ -382,6 +382,7 @@
     <ClInclude Include="text\editable.h" />
     <ClInclude Include="text\input_method_manager.h" />
     <ClInclude Include="text\range.hpp" />
+    <ClInclude Include="text\selection.hpp" />
     <ClInclude Include="text\text_breaker.h" />
     <ClInclude Include="text\input_method_connection.h" />
     <ClInclude Include="text\span\inline_object_span.h" />
@@ -429,6 +430,7 @@
     <ClInclude Include="views\size_info.h" />
     <ClInclude Include="views\space3d_view.h" />
     <ClInclude Include="views\image_view.h" />
+    <ClInclude Include="views\text_view_status_listener.h" />
     <ClInclude Include="views\title_bar\title_bar_button.h" />
     <ClInclude Include="views\title_bar\small_title_bar.h" />
     <ClInclude Include="views\view_delegate.h" />

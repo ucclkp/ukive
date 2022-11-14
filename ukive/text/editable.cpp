@@ -7,6 +7,7 @@
 #include "editable.h"
 
 #include "utils/log.h"
+#include "utils/multi_callbacks.hpp"
 
 #include "ukive/text/span/span.h"
 #include "ukive/text/text_breaker.h"
@@ -14,10 +15,10 @@
 
 namespace ukive {
 
-    Editable::Editable(const std::u16string_view& text)
-        : text_(text),
-          sel_beg_(0),
-          sel_end_(0) {
+    Editable::Editable(const std::u16string_view& text, void* ctx)
+        : ctx_(ctx),
+          text_(text)
+    {
     }
 
     Editable::~Editable() {
@@ -28,37 +29,37 @@ namespace ukive {
     // 如果你删除最后一个 "t"，acpStart=3, acpOldEnd=4, and acpNewEnd=3.
     // 如果将 "a" 放在 "e" 和 "x" 之间，acpStart=2, acpOldEnd=2, and acpNewEnd=3.
     void Editable::notifyTextChanged(
-        size_t start, size_t old_end, size_t new_end, Reason r)
+        const RangeChg& rc, Reason r)
     {
         for (auto span : spans_) {
             auto span_start = span->getStart();
             auto span_end = span->getEnd();
 
-            if (span_start >= start && span_start < old_end) {
+            if (span_start >= rc.pos && span_start < rc.old_end()) {
             }
         }
 
         for (auto watcher : watchers_) {
-            watcher->onTextChanged(this, start, old_end, new_end, r);
+            watcher->onTextChanged(this, rc, r);
         }
     }
 
     void Editable::notifySelectionChanged(
-        size_t ns, size_t ne, size_t os, size_t oe, Reason r)
+        const Selection& nsl, const Selection& osl, Reason r)
     {
         for (auto watcher : watchers_) {
-            watcher->onSelectionChanged(ns, ne, os, oe, r);
+            watcher->onSelectionChanged(this, nsl, osl, r);
         }
     }
 
     void Editable::notifyEditWatcher(
-        size_t text_start, size_t old_text_end, size_t new_text_end,
-        size_t new_sel_start, size_t new_sel_end,
-        size_t old_sel_start, size_t old_sel_end, Reason r)
+        const RangeChg& text_rc,
+        const Selection& nsl, const Selection& osl,
+        Reason r)
     {
         for (auto watcher : watchers_) {
-            watcher->onTextChanged(this, text_start, old_text_end, new_text_end, r);
-            watcher->onSelectionChanged(new_sel_start, new_sel_end, old_sel_start, old_sel_end, r);
+            watcher->onTextChanged(this, text_rc, r);
+            watcher->onSelectionChanged(this, nsl, osl, r);
         }
     }
 
@@ -66,7 +67,7 @@ namespace ukive {
         Span* span, EditWatcher::SpanChange action, Reason r)
     {
         for (auto watcher : watchers_) {
-            watcher->onSpanChanged(span, action, r);
+            watcher->onSpanChanged(this, span, action, r);
         }
     }
 
@@ -78,10 +79,12 @@ namespace ukive {
         insert(text, length(), r);
     }
 
-    void Editable::insert(const std::u16string_view& text, size_t position, Reason r) {
+    void Editable::insert(
+        const std::u16string_view& text, size_t position, Reason r)
+    {
         if (!text.empty()) {
             text_.insert(position, text);
-            notifyTextChanged(position, position, position + text.length(), r);
+            notifyTextChanged({ position, 0, text.length() }, r);
         }
     }
 
@@ -91,61 +94,52 @@ namespace ukive {
         }
     }
 
-    void Editable::replace(const std::u16string_view& text, size_t start, size_t length, Reason r) {
+    void Editable::replace(
+        const std::u16string_view& text, size_t start, size_t length, Reason r)
+    {
         text_.replace(start, length, text);
-        notifyTextChanged(start, start + length, start + text.length(), r);
+        notifyTextChanged({ start, length, text.length() }, r);
     }
 
     void Editable::clear(Reason r) {
         if (!text_.empty()) {
-            auto old_start = sel_beg_;
-            auto old_end = sel_end_;
+            auto old_sel = sel_;
             auto old_length = length();
 
             text_.clear();
+            sel_.zero();
 
-            sel_beg_ = 0;
-            sel_end_ = 0;
-
-            if (old_start != 0 || old_end != 0) {
-                notifyEditWatcher(
-                    0, old_length, 0,
-                    sel_beg_, sel_end_,
-                    old_start, old_end, r);
+            if (!old_sel.is_zero()) {
+                notifyEditWatcher({ 0, old_length, 0 }, sel_, old_sel, r);
             } else {
-                notifyTextChanged(0, old_length, 0, r);
+                notifyTextChanged({ 0, old_length, 0 }, r);
             }
         }
     }
 
-    void Editable::replace(const std::u16string_view& find, const std::u16string_view& rep, Reason r) {
+    void Editable::replace(
+        const std::u16string_view& find, const std::u16string_view& rep, Reason r)
+    {
         auto first = text_.find(find);
         if (first != std::u16string::npos) {
             text_.replace(first, find.length(), rep);
-            notifyTextChanged(
-                first,
-                first + find.length(),
-                first + rep.length(), r);
+            notifyTextChanged({ first, find.length(), rep.length() }, r);
         }
     }
 
     void Editable::insert(const std::u16string_view& text, Reason r) {
-        auto old_start = sel_beg_;
-        auto old_end = sel_end_;
-
-        if (old_start == old_end) {
-            if (length() < old_end) {
+        auto old_sel = sel_;
+        if (old_sel.empty()) {
+            if (length() < old_sel.end) {
                 ubassert(false);
                 text_.insert(text_.length(), text);
             } else {
-                text_.insert(old_end, text);
+                text_.insert(old_sel.end, text);
             }
-            sel_beg_ += text.length();
-            sel_end_ += text.length();
 
-            notifyEditWatcher(
-                old_start, old_start, old_start + text.length(),
-                sel_beg_, sel_end_, old_start, old_end, r);
+            sel_.offset(text.length());
+
+            notifyEditWatcher({ old_sel.start, 0, text.length() }, sel_, old_sel, r);
         }
     }
 
@@ -154,18 +148,13 @@ namespace ukive {
     }
 
     void Editable::replace(const std::u16string_view& text, Reason r) {
-        auto old_start = sel_beg_;
-        auto old_end = sel_end_;
-
-        bool has_selection = old_start != old_end;
-
-        if (has_selection) {
-            text_.replace(old_start, old_end - old_start, text);
-            sel_beg_ = sel_end_ = old_start + text.length();
+        auto old_sel = sel_;
+        if (!old_sel.empty()) {
+            text_.replace(old_sel.start, old_sel.length(), text);
+            sel_.set(old_sel.start + text.length());
 
             notifyEditWatcher(
-                old_start, old_end, old_start + text.length(),
-                sel_beg_, sel_end_, old_start, old_end, r);
+                { old_sel.start, old_sel.length(), text.length() }, sel_, old_sel, r);
         }
     }
 
@@ -174,7 +163,7 @@ namespace ukive {
     }
 
     void Editable::setSelection(size_t start, size_t end, Reason r) {
-        if (start == sel_beg_ && end == sel_end_) {
+        if (sel_.equal(start, end)) {
             return;
         }
 
@@ -187,13 +176,10 @@ namespace ukive {
             end = tmp;
         }
 
-        auto old_se_start = sel_beg_;
-        auto old_se_end = sel_end_;
+        auto old_sel = sel_;
+        sel_.set(start, end);
 
-        sel_beg_ = start;
-        sel_end_ = end;
-
-        notifySelectionChanged(start, end, old_se_start, old_se_end, r);
+        notifySelectionChanged({ start, end }, old_sel, r);
     }
 
     void Editable::addSpan(Span* span, Reason r) {
@@ -228,24 +214,21 @@ namespace ukive {
         return false;
     }
 
-    size_t Editable::getSelectionStart() const {
-        return sel_beg_;
-    }
-
-    size_t Editable::getSelectionEnd() const {
-        return sel_end_;
-    }
-
     bool Editable::hasSelection() const {
-        return sel_beg_ != sel_end_;
+        return !sel_.empty();
     }
 
-    std::u16string Editable::getSelection() const {
-        if (sel_beg_ == sel_end_) {
+    const Selection& Editable::getSelection() const {
+        return sel_;
+    }
+
+    std::u16string_view Editable::getSelectionString() const {
+        if (sel_.empty()) {
             return {};
         }
 
-        return text_.substr(sel_beg_, sel_end_ - sel_beg_);
+        std::u16string_view r(text_);
+        return r.substr(sel_.start, sel_.length());
     }
 
     char16_t Editable::at(size_t pos) const {
@@ -278,18 +261,16 @@ namespace ukive {
         return spans_.size();
     }
 
+    void* Editable::getContext() const {
+        return ctx_;
+    }
+
     void Editable::addEditWatcher(EditWatcher* watcher) {
-        watchers_.push_back(watcher);
+        utl::addCallbackTo(watchers_, watcher);
     }
 
     void Editable::removeEditWatcher(EditWatcher* watcher) {
-        for (auto it = watchers_.begin(); it != watchers_.end();) {
-            if (watcher == (*it)) {
-                it = watchers_.erase(it);
-            } else {
-                ++it;
-            }
-        }
+        utl::removeCallbackFrom(watchers_, watcher);
     }
 
 }

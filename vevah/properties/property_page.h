@@ -63,7 +63,7 @@ namespace vevah {
         // ukive::Editable::EditWatcher
         void onTextChanged(
             ukive::Editable* editable,
-            size_t start, size_t old_end, size_t new_end,
+            const ukive::RangeChg& rc,
             ukive::Editable::Reason r) override;
 
     private:

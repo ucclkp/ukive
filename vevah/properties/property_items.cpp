@@ -61,6 +61,7 @@ namespace vevah {
 
         expand_button = new TreeNodeButton(c);
         {
+            expand_button->setLayoutSize(View::LS_AUTO, View::LS_AUTO);
             expand_button->setPadding(c.dp2pxi(2), c.dp2pxi(2), c.dp2pxi(2), c.dp2pxi(2));
             expand_button->setExtraLayoutInfo(SLI::ofVertAlign(SLI::Align::CENTER));
             root->addView(expand_button);
@@ -90,6 +91,7 @@ namespace vevah {
             edit->setDoubleClickable(true);
             edit->setExtraLayoutInfo(SLI::ofVertAlign(SLI::Align::CENTER));
             edit->getEditable()->addEditWatcher(w);
+            edit->setBackground(new ukive::Element(ukive::Color::Blue100));
             root->addView(edit);
         }
 

@@ -1608,6 +1608,12 @@
     <ClInclude Include="views\view_status_listener.h">
       <Filter>views</Filter>
     </ClInclude>
+    <ClInclude Include="views\text_view_status_listener.h">
+      <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="text\selection.hpp">
+      <Filter>text</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="window">

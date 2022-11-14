@@ -21,7 +21,7 @@ namespace ukive {
         if (editable->hasSelection()) {
             editable->remove(Editable::Reason::USER_INPUT);
         } else {
-            auto start = editable->getSelectionStart();
+            auto start = editable->getSelection().start;
             auto off = editable->getNextOffset(start);
             if (off > 0) {
                 editable->remove(start, off, Editable::Reason::USER_INPUT);
@@ -34,7 +34,7 @@ namespace ukive {
         if (editable->hasSelection()) {
             editable->remove(Editable::Reason::USER_INPUT);
         } else {
-            auto start = editable->getSelectionStart();
+            auto start = editable->getSelection().start;
             auto off = editable->getPrevOffset(start);
             if (off > 0) {
                 editable->remove(start - off, off, Editable::Reason::USER_INPUT);
@@ -122,14 +122,14 @@ namespace ukive {
 
         case Keyboard::KEY_X:  //x: cut.
             if (editable->hasSelection()) {
-                ClipboardManager::saveToClipboard(editable->getSelection());
+                ClipboardManager::saveToClipboard(editable->getSelectionString());
                 editable->remove(Editable::Reason::USER_INPUT);
             }
             break;
 
         case Keyboard::KEY_C:  //c: copy.
             if (editable->hasSelection())
-                ClipboardManager::saveToClipboard(editable->getSelection());
+                ClipboardManager::saveToClipboard(editable->getSelectionString());
             break;
 
         case Keyboard::KEY_V:  //v: paste.

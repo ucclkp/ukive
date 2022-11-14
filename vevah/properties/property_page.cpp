@@ -74,7 +74,7 @@ namespace vevah {
         list_view_ = findView<ukive::ListView>(v, Res::Id::lv_prop_tree);
         list_view_->setLayouter(new ukive::LinearListLayouter());
         list_view_->setSource(this);
-        list_view_->setSecDimUnknown(true);
+        list_view_->setSecDimUnknown(false);
 
         root_node_.setExpanded(true);
     }
@@ -344,7 +344,7 @@ namespace vevah {
 
     void PropertyPage::onTextChanged(
         ukive::Editable* editable,
-        size_t start, size_t old_end, size_t new_end,
+        const ukive::RangeChg& rc,
         ukive::Editable::Reason r)
     {
     }

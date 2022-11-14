@@ -208,8 +208,8 @@ namespace win {
             return false;
         }
 
-        auto sel_start = client_->getTICEditable()->getSelectionStart();
-        auto sel_end = client_->getTICEditable()->getSelectionEnd();
+        auto sel_start = client_->getTICEditable()->getSelection().start;
+        auto sel_end = client_->getTICEditable()->getSelection().end;
 
         selections[0].acpStart = utl::num_cast<LONG>(sel_start);
         selections[0].acpEnd = utl::num_cast<LONG>(sel_end);
@@ -228,8 +228,8 @@ namespace win {
 
         size_t sel_start = utl::num_cast<size_t>(selections[0].acpStart);
         size_t sel_end = utl::num_cast<size_t>(selections[0].acpEnd);
-        if (sel_start == client_->getTICEditable()->getSelectionStart() &&
-            sel_end == client_->getTICEditable()->getSelectionEnd())
+        if (sel_start == client_->getTICEditable()->getSelection().start &&
+            sel_end == client_->getTICEditable()->getSelection().end)
         {
             client_->onTICRedrawSelection();
             return true;
@@ -330,8 +330,8 @@ namespace win {
     {
         switch (dwFlags) {
         case 0: {
-            auto sel_start = utl::num_cast<LONG>(client_->getTICEditable()->getSelectionStart());
-            auto sel_end = utl::num_cast<LONG>(client_->getTICEditable()->getSelectionEnd());
+            auto sel_start = utl::num_cast<LONG>(client_->getTICEditable()->getSelection().start);
+            auto sel_end = utl::num_cast<LONG>(client_->getTICEditable()->getSelection().end);
 
             *pacpStart = sel_start;
             *pacpEnd = sel_end;
@@ -343,8 +343,8 @@ namespace win {
         }
 
         case TF_IAS_NOQUERY: {
-            auto sel_start = utl::num_cast<LONG>(client_->getTICEditable()->getSelectionStart());
-            auto sel_end = utl::num_cast<LONG>(client_->getTICEditable()->getSelectionEnd());
+            auto sel_start = utl::num_cast<LONG>(client_->getTICEditable()->getSelection().start);
+            auto sel_end = utl::num_cast<LONG>(client_->getTICEditable()->getSelection().end);
 
             pChange->acpStart = sel_start;
             pChange->acpOldEnd = sel_end;
@@ -353,8 +353,8 @@ namespace win {
         }
 
         case TF_IAS_QUERYONLY:
-            *pacpStart = utl::num_cast<LONG>(client_->getTICEditable()->getSelectionStart());
-            *pacpEnd = utl::num_cast<LONG>(client_->getTICEditable()->getSelectionEnd());
+            *pacpStart = utl::num_cast<LONG>(client_->getTICEditable()->getSelection().start);
+            *pacpEnd = utl::num_cast<LONG>(client_->getTICEditable()->getSelection().end);
             break;
 
         default:

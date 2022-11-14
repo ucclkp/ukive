@@ -10,6 +10,7 @@
 #include <cmath>
 
 #include "utils/strings/string_utils.hpp"
+#include "utils/multi_callbacks.hpp"
 
 #include "ukive/text/span/inline_object_span.h"
 #include "ukive/text/span/interactable_span.h"
@@ -29,6 +30,7 @@
 #include "ukive/menu/menu.h"
 #include "ukive/menu/menu_item.h"
 #include "ukive/resources/attr_utils.h"
+#include "ukive/views/text_view_status_listener.h"
 
 #include "necro/layout_constants.h"
 
@@ -129,7 +131,7 @@ namespace ukive {
     {
         base_text_ = new Editable(
             utl::u8to16(
-                resolveAttrString(attrs, necro::kAttrTextViewText, "")));
+                resolveAttrString(attrs, necro::kAttrTextViewText, "")), this);
         base_text_->addEditWatcher(this);
 
         font_family_name_ = utl::u8to16(
@@ -329,7 +331,7 @@ namespace ukive {
                 if (hasSelection()) {
                     selection = last_sel_;
                 } else {
-                    selection = getSelectionStart();
+                    selection = getSelection().start;
                 }
 
                 std::vector<TextLayout::HitTestInfo> metrics;
@@ -389,7 +391,7 @@ namespace ukive {
             int scroll_offset = 0;
 
             if (consider_sel) {
-                auto selection = hasSelection() ? last_sel_ : getSelectionStart();
+                auto selection = hasSelection() ? last_sel_ : getSelection().start;
 
                 Rect rect;
                 if (getTextBlinkLocation(selection, &rect)) {
@@ -526,9 +528,9 @@ namespace ukive {
 
     void TextView::blinkNavigator(int key) {
         if (key == Keyboard::KEY_LEFT) {
-            auto start = base_text_->getSelectionStart();
+            auto start = getSelection().start;
 
-            if (base_text_->hasSelection()) {
+            if (hasSelection()) {
                 base_text_->setSelection(start, Editable::Reason::USER_INPUT);
             } else {
                 auto off = base_text_->getPrevOffset(start);
@@ -537,9 +539,9 @@ namespace ukive {
                 }
             }
         } else if (key == Keyboard::KEY_RIGHT) {
-            auto end = base_text_->getSelectionEnd();
+            auto end = getSelection().end;
 
-            if (base_text_->hasSelection()) {
+            if (hasSelection()) {
                 base_text_->setSelection(end, Editable::Reason::USER_INPUT);
             } else {
                 auto off = base_text_->getNextOffset(end);
@@ -550,12 +552,12 @@ namespace ukive {
         } else if (key == Keyboard::KEY_UP) {
             size_t start;
             if (hasSelection() &&
-                (last_sel_ == base_text_->getSelectionStart() ||
-                last_sel_ == base_text_->getSelectionEnd()))
+                (last_sel_ == getSelection().start ||
+                last_sel_ == getSelection().end))
             {
                 start = last_sel_;
             } else {
-                start = base_text_->getSelectionStart();
+                start = getSelection().start;
             }
 
             std::vector<TextLayout::HitTestInfo> range_metrics;
@@ -574,12 +576,12 @@ namespace ukive {
         } else if (key == Keyboard::KEY_DOWN) {
             size_t start;
             if (hasSelection() &&
-                (last_sel_ == base_text_->getSelectionStart() ||
-                last_sel_ == base_text_->getSelectionEnd()))
+                (last_sel_ == getSelection().start ||
+                last_sel_ == getSelection().end))
             {
                 start = last_sel_;
             } else {
-                start = base_text_->getSelectionStart();
+                start = getSelection().start;
             }
 
             std::vector<TextLayout::HitTestInfo> range_metrics;
@@ -757,7 +759,7 @@ namespace ukive {
             }
 
             text_blink_->hide();
-            base_text_->setSelection(base_text_->getSelectionStart(), Editable::Reason::USER_INPUT);
+            base_text_->setSelection(getSelection().start, Editable::Reason::USER_INPUT);
             requestDraw();
         }
     }
@@ -862,13 +864,12 @@ namespace ukive {
             return;
         }
 
-        size_t sel_start = base_text_->getSelectionStart();
-        size_t sel_end = base_text_->getSelectionEnd();
+        auto& sel = getSelection();
 
-        if (sel_start == sel_end && is_editable_) {
-            locateTextBlink(sel_start);
-        } else if (sel_start != sel_end && is_selectable_) {
-            drawSelection(sel_start, sel_end);
+        if (sel.empty() && is_editable_) {
+            locateTextBlink(sel.start);
+        } else if (!sel.empty() && is_selectable_) {
+            drawSelection(sel);
         }
 
         if (hasFocus() && is_editable_) {
@@ -1112,16 +1113,14 @@ namespace ukive {
     }
 
     void TextView::onTICRedrawSelection() {
-        auto start = getSelectionStart();
-        auto end = getSelectionEnd();
-
-        if (start == end) {
+        auto& sel = getSelection();
+        if (sel.empty()) {
             if (is_editable_) {
-                locateTextBlink(start);
+                locateTextBlink(sel.start);
                 requestDraw();
             }
         } else {
-            drawSelection(start, end);
+            drawSelection(sel);
         }
     }
 
@@ -1340,14 +1339,14 @@ namespace ukive {
         base_text_->setSelection(start, end);
     }
 
-    void TextView::drawSelection(size_t start, size_t end) {
-        if (end <= start) {
+    void TextView::drawSelection(const Selection& sel) {
+        if (sel.end <= sel.start) {
             return;
         }
 
         std::vector<TextLayout::HitTestInfo> hit_metrics;
         if (!text_layout_->hitTestTextRange(
-            start, end - start, 0.f, 0.f, &hit_metrics))
+            sel.start, sel.length(), 0.f, 0.f, &hit_metrics))
         {
             return;
         }
@@ -1388,20 +1387,16 @@ namespace ukive {
         requestDraw();
     }
 
-    std::u16string TextView::getSelection() const {
+    bool TextView::hasSelection() const {
+        return base_text_->hasSelection();
+    }
+
+    const Selection& TextView::getSelection() const {
         return base_text_->getSelection();
     }
 
-    size_t TextView::getSelectionStart() const {
-        return base_text_->getSelectionStart();
-    }
-
-    size_t TextView::getSelectionEnd() const {
-        return base_text_->getSelectionEnd();
-    }
-
-    bool TextView::hasSelection() const {
-        return base_text_->hasSelection();
+    std::u16string_view TextView::getSelectionString() const {
+        return base_text_->getSelectionString();
     }
 
     size_t TextView::getTextPositionAtPoint(int text_x, int text_y) const {
@@ -1506,10 +1501,22 @@ namespace ukive {
             text_layout_->getMaxHeight());
     }
 
+    void TextView::addStatusListener(TextViewStatusListener* l) {
+        utl::addCallbackTo(status_listeners_, l);
+    }
+
+    void TextView::removeStatusListener(TextViewStatusListener* l) {
+        utl::removeCallbackFrom(status_listeners_, l);
+    }
+
     void TextView::onTextChanged(
         Editable* editable,
-        size_t start, size_t old_end, size_t new_end, Editable::Reason r)
+        const RangeChg& rc, Editable::Reason r)
     {
+        for (auto l : status_listeners_) {
+            l->onBeforeTextChanged(this, rc, r);
+        }
+
         auto max_width = text_layout_->getMaxWidth();
         auto max_height = text_layout_->getMaxHeight();
         makeNewTextLayout(max_width, max_height, isAutoWrap());
@@ -1533,23 +1540,32 @@ namespace ukive {
             is_editable_)
         {
             InputMethodConnection::TextChangeInfo info;
-            info.start = start;
-            info.old_end = old_end;
-            info.new_end = new_end;
+            info.start = rc.pos;
+            info.old_end = rc.old_end();
+            info.new_end = rc.new_end();
             input_connection_->notifyTextChanged(false, info);
         }
 
         scrollVertToFit(false);
         scrollHoriToFit(false);
+
+        for (auto l : status_listeners_) {
+            l->onAfterTextChanged(this, rc, r);
+        }
     }
 
     void TextView::onSelectionChanged(
-        size_t ns, size_t ne,
-        size_t os, size_t oe, Editable::Reason r)
+        Editable* editable,
+        const Selection& nsl, const Selection& osl,
+        Editable::Reason r)
     {
+        for (auto l : status_listeners_) {
+            l->onBeforeSelectionChanged(this, nsl, osl, r);
+        }
+
         bool locate_blink = false;
-        if (ns == ne) {
-            if (os != oe) {
+        if (nsl.empty()) {
+            if (!osl.empty()) {
                 if (text_action_mode_) {
                     text_action_mode_->close();
                 }
@@ -1561,10 +1577,10 @@ namespace ukive {
             if (is_editable_) {
                 locate_blink = true;
             }
-            last_sel_ = first_sel_ = ns;
+            last_sel_ = first_sel_ = nsl.start;
         } else {
             text_blink_->hide();
-            drawSelection(ns, ne);
+            drawSelection(nsl);
         }
 
         if (process_ref_ == 0 && hasFocus() && is_editable_) {
@@ -1575,14 +1591,27 @@ namespace ukive {
         scrollHoriToFit(true);
 
         if (locate_blink) {
-            locateTextBlink(ns);
+            locateTextBlink(nsl.start);
             if (hasFocus()) {
                 text_blink_->show();
             }
         }
+
+        for (auto l : status_listeners_) {
+            l->onAfterSelectionChanged(this, nsl, osl, r);
+        }
     }
 
-    void TextView::onSpanChanged(Span* span, SpanChange action, Editable::Reason r) {
+    void TextView::onSpanChanged(
+        Editable* editable,
+        Span* span,
+        SpanChange action,
+        Editable::Reason r)
+    {
+        for (auto l : status_listeners_) {
+            l->onBeforeSpanChanged(this, span, action, r);
+        }
+
         Range range;
         range.pos = span->getStart();
         range.length = span->getEnd() - span->getStart();
@@ -1656,14 +1685,18 @@ namespace ukive {
         default:
             break;
         }
+
+        for (auto l : status_listeners_) {
+            l->onAfterSpanChanged(this, span, action, r);
+        }
     }
 
     bool TextView::canCut() const {
-        return is_editable_ && base_text_->hasSelection();
+        return is_editable_ && hasSelection();
     }
 
     bool TextView::canCopy() const {
-        return base_text_->hasSelection();
+        return hasSelection();
     }
 
     bool TextView::canPaste() const {
@@ -1679,9 +1712,7 @@ namespace ukive {
             return false;
         }
 
-        if (base_text_->getSelectionStart() == 0 &&
-            base_text_->getSelectionEnd() == base_text_->length())
-        {
+        if (getSelection().equal(0, base_text_->length())) {
             return false;
         }
 
@@ -1689,7 +1720,7 @@ namespace ukive {
     }
 
     void TextView::performCut() {
-        ClipboardManager::saveToClipboard(getSelection());
+        ClipboardManager::saveToClipboard(getSelectionString());
         base_text_->replace(u"", Editable::Reason::USER_INPUT);
 
         if (text_action_mode_) {
@@ -1698,7 +1729,7 @@ namespace ukive {
     }
 
     void TextView::performCopy() {
-        ClipboardManager::saveToClipboard(getSelection());
+        ClipboardManager::saveToClipboard(getSelectionString());
 
         if (text_action_mode_) {
             text_action_mode_->close();

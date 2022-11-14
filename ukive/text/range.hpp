@@ -56,7 +56,41 @@ namespace ukive {
         Ty length;
     };
 
+    template<typename Ty>
+    class RangeChgT {
+    public:
+        RangeChgT()
+            : pos(0), old_length(0), new_length(0) {}
+        RangeChgT(Ty pos, Ty old_length, Ty new_length)
+            : pos(pos), old_length(old_length), new_length(new_length) {}
+
+        void set(Ty pos, Ty old_length, Ty new_length) {
+            this->pos = pos;
+            this->old_length = old_length;
+            this->new_length = new_length;
+        }
+
+        Ty old_end() const {
+            return pos + old_length;
+        }
+        Ty new_end() const {
+            return pos + new_length;
+        }
+
+        bool old_empty() const {
+            return old_length == 0;
+        }
+        bool new_empty() const {
+            return old_length == 0;
+        }
+
+        Ty pos;
+        Ty old_length;
+        Ty new_length;
+    };
+
     using Range = RangeT<size_t>;
+    using RangeChg = RangeChgT<size_t>;
 
 }
 
