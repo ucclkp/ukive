@@ -9,6 +9,7 @@
 #include "utils/log.h"
 
 #include "ukive/app/application.h"
+#include "ukive/event/input_event.h"
 #include "ukive/graphics/gpu/gpu_types.h"
 #include "ukive/graphics/gpu/gpu_context.h"
 #include "ukive/graphics/graphic_device_manager.h"
@@ -16,6 +17,9 @@
 #include "ukive/graphics/gpu/gpu_shader.h"
 #include "ukive/resources/resource_manager.h"
 #include "ukive/graphics/3d/camera.h"
+#include "ukive/event/keyboard.h"
+#include "ukive/graphics/3d/camera.h"
+#include "ukive/views/space3d_view.h"
 
 
 namespace vsul {
@@ -24,6 +28,8 @@ namespace vsul {
     VisualLayoutScene::~VisualLayoutScene() {}
 
     void VisualLayoutScene::onSceneCreate(ukive::Space3DView* d3d_view) {
+        space_view_ = d3d_view;
+
         space_obj_mgr_ = new ukv3d::SpaceObjectManager();
 
         camera_ = new ukv3d::Camera(1, 1);
@@ -46,8 +52,86 @@ namespace vsul {
         camera_->resize(width, height);
         setViewports(0, 0, float(width), float(height));
 
+        width_ = width;
+        height_ = height;
+
         releaseResources();
         createResources(width, height);
+    }
+
+    bool VisualLayoutScene::onSceneInput(ukive::InputEvent* e) {
+        bool result = Scene::onSceneInput(e);
+
+        switch (e->getEvent()) {
+        case ukive::InputEvent::EVM_DOWN:
+            if (e->getMouseKey() == ukive::InputEvent::MK_LEFT) {
+                is_mouse_left_key_pressed_ = true;
+                prev_x_ = e->getX();
+                prev_y_ = e->getY();
+                result = true;
+            }
+            break;
+
+        case ukive::InputEvent::EVM_MOVE:
+            if (is_mouse_left_key_pressed_ == true) {
+                mouse_action_mode_ = MOUSE_ACTION_MOVED;
+
+                int dx = e->getX() - prev_x_;
+                int dy = e->getY() - prev_y_;
+
+                if (ukive::Keyboard::isKeyPressed(ukive::Keyboard::KEY_SHIFT)) {
+                    camera_->circuleCamera2(
+                        float(-dx) / width_ * 4,
+                        float(-dy) / height_ * 4);
+                    space_view_->requestDraw();
+                } else if (ukive::Keyboard::isKeyPressed(ukive::Keyboard::KEY_CONTROL)) {
+                    camera_->moveCamera(float(-dx), float(dy));
+                    space_view_->requestDraw();
+                }
+
+                prev_x_ = e->getX();
+                prev_y_ = e->getY();
+            }
+            break;
+
+        case ukive::InputEvent::EVM_UP:
+            if (e->getMouseKey() == ukive::InputEvent::MK_LEFT) {
+                if (mouse_action_mode_ != MOUSE_ACTION_MOVED) {
+                }
+
+                is_mouse_left_key_pressed_ = false;
+            }
+
+            mouse_action_mode_ = MOUSE_ACTION_NONE;
+            break;
+
+        case ukive::InputEvent::EVK_DOWN:
+            if (e->getKeyboardKey() == ukive::Keyboard::KEY_SHIFT) {
+                is_shift_key_pressed_ = true;
+            }
+            if (e->getKeyboardKey() == ukive::Keyboard::KEY_CONTROL) {
+                is_ctrl_key_pressed_ = true;
+            }
+            break;
+
+        case ukive::InputEvent::EVK_UP:
+            if (e->getKeyboardKey() == ukive::Keyboard::KEY_SHIFT) {
+                is_shift_key_pressed_ = false;
+            }
+            if (e->getKeyboardKey() == ukive::Keyboard::KEY_CONTROL) {
+                is_ctrl_key_pressed_ = false;
+            }
+            break;
+
+        case ukive::InputEvent::EVM_WHEEL:
+            camera_->scaleCamera(e->getWheelValue() > 0 ? 0.9f : 1.1f);
+            space_view_->requestDraw();
+            break;
+        default:
+            break;
+        }
+
+        return result;
     }
 
     void VisualLayoutScene::onSceneRender(ukive::GPUContext* context, ukive::GPURenderTarget* rt) {
@@ -135,7 +219,7 @@ namespace vsul {
         // 设置光栅化描述，指定多边形如何被渲染.
         ukive::GPURasterizerState::Desc desc;
         desc.antialiased_line_enabled = false;
-        desc.cull_mode = ukive::GPURasterizerState::CullMode::Back;
+        desc.cull_mode = ukive::GPURasterizerState::CullMode::None;
         desc.depth_clip_enabled = true;
         desc.fill_mode = ukive::GPURasterizerState::FillMode::Solid;
         desc.front_counter_clockwise = false;

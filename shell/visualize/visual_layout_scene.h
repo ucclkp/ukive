@@ -45,17 +45,34 @@ namespace vsul {
         // ukive::Scene
         void onSceneCreate(ukive::Space3DView* d3d_view) override;
         void onSceneResize(int width, int height) override;
+        bool onSceneInput(ukive::InputEvent* e) override;
         void onSceneRender(ukive::GPUContext* context, ukive::GPURenderTarget* rt) override;
         void onSceneDestroy() override;
         void onGraphicDeviceLost() override;
         void onGraphicDeviceRestored() override;
 
     private:
+        enum {
+            MOUSE_ACTION_NONE = 1,
+            MOUSE_ACTION_MOVED = 2,
+            MOUSE_ACTION_MOVING = 3,
+        };
+
         bool createStates();
         void releaseStates();
         bool createResources(int width, int height);
         void releaseResources();
         void setViewports(float x, float y, float width, float height);
+
+        int prev_x_ = 0;
+        int prev_y_ = 0;
+        int width_ = 0;
+        int height_ = 0;
+        int mouse_action_mode_;
+        bool is_ctrl_key_pressed_;
+        bool is_shift_key_pressed_;
+        bool is_mouse_left_key_pressed_;
+        ukive::Space3DView* space_view_ = nullptr;
 
         ukv3d::Camera* camera_ = nullptr;
         ukv3d::SpaceObjectManager* space_obj_mgr_ = nullptr;

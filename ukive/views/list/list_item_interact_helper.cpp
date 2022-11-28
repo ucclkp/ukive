@@ -91,6 +91,13 @@ namespace ukive {
         return multi_sel_enabled_;
     }
 
+    bool ListItemInteractHelper::isItemSelected(size_t index) const {
+        return std::find(
+            sel_indices_.cbegin(),
+            sel_indices_.cend(),
+            index) != sel_indices_.cend();
+    }
+
     const std::vector<size_t>& ListItemInteractHelper::getSelectedIndices() const {
         return sel_indices_;
     }

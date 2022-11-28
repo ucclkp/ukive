@@ -23,6 +23,7 @@ namespace ukive {
         virtual void onItemPressed(ListView* list_view, ListItem* item, View* v) {}
         virtual void onItemClicked(ListView* list_view, ListItem* item, View* v) {}
         virtual void onItemDoubleClicked(ListView* list_view, ListItem* item, View* v) {}
+        virtual void onItemInputEvent(ListView* list_view, ListItem* item, View* v, InputEvent* e) {}
     };
 
     class ListItemEventRouter :

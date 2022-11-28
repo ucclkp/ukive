@@ -45,7 +45,7 @@ namespace ukive {
         if (!view) {
             return rect;
         }
-        rect = view->getContentBoundsInRoot();
+        rect = view->getBoundsInRoot();
         return rect;
     }
 

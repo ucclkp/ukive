@@ -143,8 +143,8 @@ namespace ukv3d {
         auto lookVec = utl::hvec4d{ look_.x(), look_.y(), look_.z(), 0 };
 
         auto rotateMatrix = utl::math::rotateAxis4x4<double>(yVec, -dxAngle);
-        lookVec = lookVec.mul(rotateMatrix);
-        rightVec = rightVec.mul(rotateMatrix);
+        lookVec = lookVec * rotateMatrix;
+        rightVec = rightVec * rotateMatrix;
         rightVec.nor();
 
         auto lookAtVec = posVec + lookVec.reduce<3>() * radius_;
@@ -168,7 +168,6 @@ namespace ukv3d {
         look_ = utl::vec3f(lookVec.reduce<3>().T());
         look_at_ = utl::pt3f(lookAtVec);
     }
-
 
     void Camera::moveWorld(float dx, float dy) {
         utl::vec3d frontVec{ look_.x(), 0, look_.z() };
@@ -203,10 +202,14 @@ namespace ukv3d {
     }
 
     void Camera::rotateWorld(float dxAngle, float dyAngle) {
-        auto rotateMatrix = utl::math::rotateY4x4<double>(dxAngle);
+        auto yVec = utl::vec3d(up_);
+        auto rightVec = utl::vec3d(right_);
+
+        auto rotateMatrix = utl::math::rotateAxis4x4<double>(yVec, -dxAngle);
+        auto rotateMatrix2 = utl::math::rotateAxis4x4<double>(rightVec, -dyAngle);
 
         auto worldMatrix = utl::mat4d(world_matrix_);
-        worldMatrix = worldMatrix * rotateMatrix;
+        worldMatrix = worldMatrix * (rotateMatrix2 * rotateMatrix);
         world_matrix_ = utl::mat4f(worldMatrix);
     }
 

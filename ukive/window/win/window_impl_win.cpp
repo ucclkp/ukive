@@ -60,7 +60,7 @@ namespace win {
     const int kDefaultClassStyle = CS_HREDRAW | CS_VREDRAW;
     // WS_OVERLAPPEDWINDOW 中包含 WS_MAXIMIZEBOX，该标志会使窗口在最大化时
     // 为其上下左右添加额外的边框。因此如果要自绘整个窗口的话，这一点需要进行处理。
-    const int kDefaultWindowStyle = WS_OVERLAPPEDWINDOW;
+    const int kDefaultWindowStyle = WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN;
     const int kDefaultWindowExStyle = WS_EX_APPWINDOW;
 
 
@@ -2415,21 +2415,21 @@ namespace win {
                 LOG(Log::WARNING) << "Failed to get system power status: " << ::GetLastError();
                 break;
             }
-            LOG(Log::INFO) << "Power status: [AC-" << status.ACLineStatus
+            /*LOG(Log::INFO) << "Power status: [AC-" << status.ACLineStatus
                 << ", Battery-" << status.BatteryFlag
                 << ", Battery Life<" << status.BatteryLifePercent << "%, "
                 << status.SystemStatusFlag << ", " << status.BatteryLifeTime << ", " << status.BatteryFullLifeTime
-                << ">]";
+                << ">]";*/
             break;
         }
         case PBT_APMRESUMEAUTOMATIC:
-            LOG(Log::INFO) << "Power event: resume automatic";
+            //LOG(Log::INFO) << "Power event: resume automatic";
             break;
         case PBT_APMRESUMESUSPEND:
-            LOG(Log::INFO) << "Power event: resume suspend";
+            //LOG(Log::INFO) << "Power event: resume suspend";
             break;
         case PBT_APMSUSPEND:
-            LOG(Log::INFO) << "Power event: suspend";
+            //LOG(Log::INFO) << "Power event: suspend";
             break;
         case PBT_POWERSETTINGCHANGE:
         {
@@ -2439,7 +2439,7 @@ namespace win {
             {
                 ubassert(settings->DataLength == 4);
                 auto value = *reinterpret_cast<DWORD*>(settings->Data);
-                LOG(Log::INFO) << "Power settings: Monitor[" << value << "]";
+                //LOG(Log::INFO) << "Power settings: Monitor[" << value << "]";
 
                 auto vsync_provider = static_cast<VSyncProviderWin*>(Application::getVSyncProvider());
                 vsync_provider->setPrimaryMonitorStatus(value != 0);

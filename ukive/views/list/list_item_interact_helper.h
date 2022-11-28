@@ -30,6 +30,7 @@ namespace ukive {
         void notifyHelperItemRemoved(size_t start, size_t count);
 
         bool isMultiSelectionEnabled() const;
+        bool isItemSelected(size_t index) const;
         const std::vector<size_t>& getSelectedIndices() const;
 
     private:

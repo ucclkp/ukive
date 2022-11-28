@@ -38,20 +38,27 @@ namespace ukive {
     }
 
     bool ListItemEventRouter::onInputReceived(View* v, InputEvent* e, bool* ret) {
+        if (!listener_ || !list_view_) {
+            return false;
+        }
+
+        auto item = list_view_->findItemFromView(v);
+        if (!item) {
+            return false;
+        }
+
+        listener_->onItemInputEvent(list_view_, item, v, e);
+
         switch (e->getEvent()) {
         case InputEvent::EVM_DOWN:
         case InputEvent::EVT_DOWN:
-            if (listener_ && list_view_) {
-                auto item = list_view_->findItemFromView(v);
-                if (item) {
-                    listener_->onItemPressed(list_view_, item, v);
-                }
-            }
+            listener_->onItemPressed(list_view_, item, v);
             break;
 
         default:
             break;
         }
+
         return false;
     }
 

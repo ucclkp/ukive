@@ -12,7 +12,7 @@
 #include "ukive/app/application.h"
 #include "ukive/window/purpose.h"
 
-//#include "shell/lod/lod_window.h"
+#include "shell/lod/lod_window.h"
 #include "shell/examples/example_window.h"
 #include "shell/text/text_window.h"
 //#include "shell/effects/effect_window.h"
