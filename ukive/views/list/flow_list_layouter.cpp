@@ -283,6 +283,14 @@ namespace ukive {
             }
         }
 
+        for (size_t i = 0; i < col_count_; ++i) {
+            auto count = columns_[i].getItemCount();
+            for (size_t j = c_ids[i]; j < count; ++j) {
+                parent_->recycleItem(columns_[i].getItem(j));
+            }
+            columns_[i].removeItems(c_ids[i]);
+        }
+
         parent_->unfreezeLayout();
 
         // 防止列表大小变化时项目超出滑动范围。

@@ -147,9 +147,11 @@ namespace ukive {
         size_t row_index = 0;
         size_t view_index = 0;
         int total_height = 0;
+        size_t cur_col = 0;
         for (auto row = cur_row; row * col_count_ < item_count; ++row) {
+            size_t col;
             int row_height = 0;
-            for (size_t col = 0; col < col_count_; ++col) {
+            for (col = 0; col < col_count_; ++col) {
                 auto pos = row * col_count_ + col;
                 if (pos >= item_count) {
                     break;
@@ -171,10 +173,26 @@ namespace ukive {
 
             ++row_index;
             total_height += row_height;
+            // 一行填不满的话，记下到哪一列为止
+            cur_col = col < col_count_ ? col : 0;
 
             if (total_height >= bounds.height() + offset) {
                 break;
             }
+        }
+
+        for (size_t i = 0; i < col_count_; ++i) {
+            auto start = row_index;
+            // 如果存在未填满的行，要把空位留出来
+            if (cur_col > 0 && i >= cur_col) {
+                --start;
+            }
+
+            auto count = columns_[i].getItemCount();
+            for (auto j = start; j < count; ++j) {
+                parent_->recycleItem(columns_[i].getItem(j));
+            }
+            columns_[i].removeItems(start);
         }
 
         parent_->unfreezeLayout();

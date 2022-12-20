@@ -123,6 +123,11 @@ namespace ukive {
             total_height += item_size.height();
         }
 
+        for (auto i = index; i < column_.getItemCount(); ++i) {
+            parent_->recycleItem(column_.getItem(i));
+        }
+        column_.removeItems(index);
+
         parent_->unfreezeLayout();
 
         // 防止列表大小变化时项目超出滑动范围。
