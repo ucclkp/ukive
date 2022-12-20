@@ -20,6 +20,8 @@
 		67BFCFEB2843CDE300DE7B82 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 67BFCFE52843CDE300DE7B82 /* Assets.xcassets */; };
 		67BFCFEC2843CDE300DE7B82 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67BFCFE72843CDE300DE7B82 /* MainMenu.xib */; };
 		67BFCFEE2843CDE300DE7B82 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67BFCFEA2843CDE300DE7B82 /* main.cpp */; };
+		67C06E3E2951F11800661108 /* property_items.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67C06E3D2951F11800661108 /* property_items.cpp */; };
+		67C06E412951F15000661108 /* property_item_common.xml in Resources */ = {isa = PBXBuildFile; fileRef = 67C06E402951F15000661108 /* property_item_common.xml */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +46,10 @@
 		67BFCFE62843CDE300DE7B82 /* vevah.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = vevah.entitlements; sourceTree = "<group>"; };
 		67BFCFE82843CDE300DE7B82 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		67BFCFEA2843CDE300DE7B82 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		67C06E3C2951F11800661108 /* property_items.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = property_items.h; sourceTree = "<group>"; };
+		67C06E3D2951F11800661108 /* property_items.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = property_items.cpp; sourceTree = "<group>"; };
+		67C06E3F2951F14100661108 /* view_selected_listener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = view_selected_listener.h; sourceTree = "<group>"; };
+		67C06E402951F15000661108 /* property_item_common.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = property_item_common.xml; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +68,8 @@
 		675B1B1F2883290F00E817EA /* properties */ = {
 			isa = PBXGroup;
 			children = (
+				67C06E3D2951F11800661108 /* property_items.cpp */,
+				67C06E3C2951F11800661108 /* property_items.h */,
 				675B1B212883290F00E817EA /* property_page.cpp */,
 				675B1B202883290F00E817EA /* property_page.h */,
 			);
@@ -85,6 +93,7 @@
 				6786E79F28437BF50058A7DE /* resources */,
 				675B1B252883294900E817EA /* sequence_layout_delegate.cpp */,
 				675B1B262883294900E817EA /* sequence_layout_delegate.h */,
+				67C06E3F2951F14100661108 /* view_selected_listener.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -109,6 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				6786E7A128437BF50058A7DE /* main_window_layout.xml */,
+				67C06E402951F15000661108 /* property_item_common.xml */,
 				675B1B232883292900E817EA /* property_page_layout.xml */,
 			);
 			path = layout;
@@ -195,6 +205,7 @@
 				675B1B242883292900E817EA /* property_page_layout.xml in Resources */,
 				6786E7A328437BF50058A7DE /* main_window_layout.xml in Resources */,
 				67BFCFEB2843CDE300DE7B82 /* Assets.xcassets in Resources */,
+				67C06E412951F15000661108 /* property_item_common.xml in Resources */,
 				67BFCFEC2843CDE300DE7B82 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -207,6 +218,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				675B1B222883290F00E817EA /* property_page.cpp in Sources */,
+				67C06E3E2951F11800661108 /* property_items.cpp in Sources */,
 				675B1B272883294900E817EA /* sequence_layout_delegate.cpp in Sources */,
 				6786E79E28437BE80058A7DE /* control_list_source.cpp in Sources */,
 				6786E79D28437BE80058A7DE /* container_layout.cpp in Sources */,

@@ -45,6 +45,8 @@ namespace vevah {
 
     MainWindow::MainWindow() {}
 
+    MainWindow::~MainWindow() {}
+
     void MainWindow::onCreated() {
         super::onCreated();
 

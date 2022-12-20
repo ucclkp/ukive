@@ -49,8 +49,6 @@
 		670BD64124B229ED00DF5B85 /* editable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 670BD4FB24B229EC00DF5B85 /* editable.cpp */; };
 		670BD64224B229ED00DF5B85 /* input_method_manager.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD4FC24B229EC00DF5B85 /* input_method_manager.h */; };
 		670BD64324B229ED00DF5B85 /* application.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD4FD24B229EC00DF5B85 /* application.h */; };
-		670BD64624B229ED00DF5B85 /* dimension_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD50124B229EC00DF5B85 /* dimension_utils.h */; };
-		670BD64724B229ED00DF5B85 /* dimension_utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 670BD50224B229EC00DF5B85 /* dimension_utils.cpp */; };
 		670BD64824B229ED00DF5B85 /* velocity_calculator.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD50424B229EC00DF5B85 /* velocity_calculator.h */; };
 		670BD64924B229ED00DF5B85 /* input_event.h in Headers */ = {isa = PBXBuildFile; fileRef = 670BD50524B229EC00DF5B85 /* input_event.h */; };
 		670BD64A24B229ED00DF5B85 /* input_consts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 670BD50624B229EC00DF5B85 /* input_consts.cpp */; };
@@ -415,6 +413,11 @@
 		67BD763A25EA8F9800F200DB /* window_dpi_utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67BD763825EA8F9800F200DB /* window_dpi_utils.cpp */; };
 		67BD763F25EAA12200F200DB /* image_options_mac_utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67BD763D25EAA12200F200DB /* image_options_mac_utils.cpp */; };
 		67BD764025EAA12200F200DB /* image_options_mac_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 67BD763E25EAA12200F200DB /* image_options_mac_utils.h */; };
+		67C06E382951F0D000661108 /* attr_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 67C06E362951F0D000661108 /* attr_utils.h */; };
+		67C06E392951F0D000661108 /* attr_utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67C06E372951F0D000661108 /* attr_utils.cpp */; };
+		67C06E3B2951F0F300661108 /* view_status_listener.h in Headers */ = {isa = PBXBuildFile; fileRef = 67C06E3A2951F0F200661108 /* view_status_listener.h */; };
+		67C06E432951F3B000661108 /* selection.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 67C06E422951F3B000661108 /* selection.hpp */; };
+		67C06E452951F3C900661108 /* text_view_status_listener.h in Headers */ = {isa = PBXBuildFile; fileRef = 67C06E442951F3C900661108 /* text_view_status_listener.h */; };
 		67CAAADF2528AE0C00965E68 /* check_listener.h in Headers */ = {isa = PBXBuildFile; fileRef = 67CAAADE2528AE0C00965E68 /* check_listener.h */; };
 /* End PBXBuildFile section */
 
@@ -463,8 +466,6 @@
 		670BD4FB24B229EC00DF5B85 /* editable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = editable.cpp; sourceTree = "<group>"; };
 		670BD4FC24B229EC00DF5B85 /* input_method_manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = input_method_manager.h; sourceTree = "<group>"; };
 		670BD4FD24B229EC00DF5B85 /* application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = application.h; sourceTree = "<group>"; };
-		670BD50124B229EC00DF5B85 /* dimension_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dimension_utils.h; sourceTree = "<group>"; };
-		670BD50224B229EC00DF5B85 /* dimension_utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dimension_utils.cpp; sourceTree = "<group>"; };
 		670BD50424B229EC00DF5B85 /* velocity_calculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = velocity_calculator.h; sourceTree = "<group>"; };
 		670BD50524B229EC00DF5B85 /* input_event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = input_event.h; sourceTree = "<group>"; };
 		670BD50624B229EC00DF5B85 /* input_consts.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = input_consts.cpp; sourceTree = "<group>"; };
@@ -847,6 +848,11 @@
 		67BD763825EA8F9800F200DB /* window_dpi_utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = window_dpi_utils.cpp; sourceTree = "<group>"; };
 		67BD763D25EAA12200F200DB /* image_options_mac_utils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = image_options_mac_utils.cpp; sourceTree = "<group>"; };
 		67BD763E25EAA12200F200DB /* image_options_mac_utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = image_options_mac_utils.h; sourceTree = "<group>"; };
+		67C06E362951F0D000661108 /* attr_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = attr_utils.h; sourceTree = "<group>"; };
+		67C06E372951F0D000661108 /* attr_utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = attr_utils.cpp; sourceTree = "<group>"; };
+		67C06E3A2951F0F200661108 /* view_status_listener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = view_status_listener.h; sourceTree = "<group>"; };
+		67C06E422951F3B000661108 /* selection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = selection.hpp; sourceTree = "<group>"; };
+		67C06E442951F3C900661108 /* text_view_status_listener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text_view_status_listener.h; sourceTree = "<group>"; };
 		67CAAADE2528AE0C00965E68 /* check_listener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = check_listener.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -968,6 +974,7 @@
 				670BD4FC24B229EC00DF5B85 /* input_method_manager.h */,
 				670BD7CB24B4C3AD00DF5B85 /* mac */,
 				6770CE38256FB958007B49F3 /* range.hpp */,
+				67C06E422951F3B000661108 /* selection.hpp */,
 				670BD4EB24B229EC00DF5B85 /* span */,
 				6773929626076E4200D03228 /* text_action_menu_callback.h */,
 				6773929826076E4200D03228 /* text_action_menu.cpp */,
@@ -1008,10 +1015,10 @@
 		670BD4FE24B229EC00DF5B85 /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				67C06E372951F0D000661108 /* attr_utils.cpp */,
+				67C06E362951F0D000661108 /* attr_utils.h */,
 				6723A7A024FE9BA700F3FB53 /* attributes.h */,
 				672DD03026EE332200E49039 /* dim.hpp */,
-				670BD50224B229EC00DF5B85 /* dimension_utils.cpp */,
-				670BD50124B229EC00DF5B85 /* dimension_utils.h */,
 				6786E7622833DA9D0058A7DE /* layout_parser.cpp */,
 				6786E7612833DA9D0058A7DE /* layout_parser.h */,
 				6783F42624D1E43000056DA1 /* resource_manager.cpp */,
@@ -1169,6 +1176,7 @@
 				670BD58724B229ED00DF5B85 /* switch_view.cpp */,
 				670BD58A24B229ED00DF5B85 /* switch_view.h */,
 				670BD5AE24B229ED00DF5B85 /* tab */,
+				67C06E442951F3C900661108 /* text_view_status_listener.h */,
 				670BD5D124B229ED00DF5B85 /* text_view.cpp */,
 				670BD58E24B229ED00DF5B85 /* text_view.h */,
 				670BD5A924B229ED00DF5B85 /* title_bar */,
@@ -1176,6 +1184,7 @@
 				675B1B1D288328E600E817EA /* view_delegate.h */,
 				671BEB382826C36D00AA65E6 /* view_ref.cpp */,
 				671BEB392826C36D00AA65E6 /* view_ref.h */,
+				67C06E3A2951F0F200661108 /* view_status_listener.h */,
 				670BD5A824B229ED00DF5B85 /* view.cpp */,
 				670BD5A724B229ED00DF5B85 /* view.h */,
 			);
@@ -1703,10 +1712,10 @@
 				67985C712504E54B0092EACB /* grid_view.h in Headers */,
 				670BD63024B229ED00DF5B85 /* editable.h in Headers */,
 				671BEB262812E50F00AA65E6 /* byte_data.h in Headers */,
-				670BD64624B229ED00DF5B85 /* dimension_utils.h in Headers */,
 				6763046D280EF9610097DD20 /* sys_message_dialog.h in Headers */,
 				67BD764025EAA12200F200DB /* image_options_mac_utils.h in Headers */,
 				670BD61524B229ED00DF5B85 /* text_key_listener.h in Headers */,
+				67C06E432951F3B000661108 /* selection.hpp in Headers */,
 				671374E624DFBA970043047F /* uk_ns_window.h in Headers */,
 				670BD64024B229ED00DF5B85 /* text_input_client.h in Headers */,
 				6723A7CA24FEA4A800F3FB53 /* display_mac.h in Headers */,
@@ -1744,8 +1753,10 @@
 				670BD65424B229ED00DF5B85 /* menu_impl.h in Headers */,
 				670BD69724B229ED00DF5B85 /* canvas.h in Headers */,
 				6773928B26076DCD00D03228 /* element.h in Headers */,
+				67C06E382951F0D000661108 /* attr_utils.h in Headers */,
 				6723A79224FE99B800F3FB53 /* graphics_utils.h in Headers */,
 				670BD64324B229ED00DF5B85 /* application.h in Headers */,
+				67C06E3B2951F0F300661108 /* view_status_listener.h in Headers */,
 				670BD6F124B229ED00DF5B85 /* grid_list_layouter.h in Headers */,
 				678C89BE27C14949008D0B21 /* icc_type_s15f16_array.h in Headers */,
 				6783F40324C4554400056DA1 /* input_connection_mac.h in Headers */,
@@ -1793,6 +1804,7 @@
 				678C89B927C1493C008D0B21 /* icc_profile.h in Headers */,
 				670BD7CF24B4C46500DF5B85 /* window_impl_mac.h in Headers */,
 				670BD68724B229ED00DF5B85 /* cursor.h in Headers */,
+				67C06E452951F3C900661108 /* text_view_status_listener.h in Headers */,
 				677392C226076EBB00D03228 /* layout_view.h in Headers */,
 				67985C722504E54B0092EACB /* grid_navigator.h in Headers */,
 				6783F45424D1E94800056DA1 /* lc_image_frame_mac.h in Headers */,
@@ -2007,12 +2019,12 @@
 				6783F3D624C31B6A00056DA1 /* cyro_render_target_mac.mm in Sources */,
 				67998E0127BA84A800B9113C /* icc_type_xyz.cpp in Sources */,
 				678C89BF27C14949008D0B21 /* icc_type_s15f16_array.cpp in Sources */,
+				67C06E392951F0D000661108 /* attr_utils.cpp in Sources */,
 				678C89C327C14F64008D0B21 /* color_manager_mac.cpp in Sources */,
 				670BD6FA24B229ED00DF5B85 /* overlay_scroll_bar.cpp in Sources */,
 				672DCFF826EE2FAD00E49039 /* media_player_mac.cpp in Sources */,
 				67998E0827BA84A800B9113C /* color.cpp in Sources */,
 				670BD66624B229ED00DF5B85 /* canvas.cpp in Sources */,
-				670BD64724B229ED00DF5B85 /* dimension_utils.cpp in Sources */,
 				677392B526076EAB00D03228 /* sequence_layout_info.cpp in Sources */,
 				670BD60224B229ED00DF5B85 /* interpolator.cpp in Sources */,
 				670BD69224B229ED00DF5B85 /* cyro_buffer.cpp in Sources */,

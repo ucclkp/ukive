@@ -229,13 +229,13 @@ namespace mac {
                                                         alpha:color.a];
     }
 
-    void TextLayoutMac::setTextAlignment(Alignment align) {
+    void TextLayoutMac::setHoriAlignment(Alignment align) {
         NSTextAlignment ns_align;
         switch (align) {
-            case Alignment::LEADING:
+            case Alignment::START:
                 ns_align = NSTextAlignmentLeft;
                 break;
-            case Alignment::TRAILING:
+            case Alignment::END:
                 ns_align = NSTextAlignmentRight;
                 break;
             case Alignment::CENTER:
@@ -248,7 +248,7 @@ namespace mac {
                               range:NSMakeRange(0, text_storage_.length)];
     }
 
-    void TextLayoutMac::setParagraphAlignment(Alignment align) {
+    void TextLayoutMac::setVertAlignment(Alignment align) {
         vert_align_ = align;
     }
 
@@ -476,14 +476,14 @@ namespace mac {
                 y += (text_container_.size.height - rect.size.height) / 2.f;
                 break;
             }
-            case Alignment::TRAILING:
+            case Alignment::END:
             {
                 calculateGlyphRange();
                 auto rect = [layout_mgr_ usedRectForTextContainer:text_container_];
                 y += text_container_.size.height - rect.size.height;
                 break;
             }
-            case Alignment::LEADING:
+            case Alignment::START:
             default:
                 break;
         };
@@ -527,14 +527,14 @@ namespace mac {
                 y += (text_container_.size.height - rect.size.height) / 2.f;
                 break;
             }
-            case Alignment::TRAILING:
+            case Alignment::END:
             {
                 calculateGlyphRange();
                 auto rect = [layout_mgr_ usedRectForTextContainer:text_container_];
                 y += text_container_.size.height - rect.size.height;
                 break;
             }
-            case Alignment::LEADING:
+            case Alignment::START:
             default:
                 break;
         };

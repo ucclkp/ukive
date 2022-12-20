@@ -44,8 +44,8 @@ namespace mac {
 
         void setDefaultFontColor(const Color &color) override;
 
-        void setTextAlignment(Alignment align) override;
-        void setParagraphAlignment(Alignment align) override;
+        void setHoriAlignment(Alignment align) override;
+        void setVertAlignment(Alignment align) override;
         void setTextWrapping(TextWrapping tw) override;
         void setLineSpacing(LineSpacing ls, float spacing) override;
 
@@ -77,7 +77,7 @@ namespace mac {
         NSTextContainer* text_container_ = nullptr;
 
         float def_font_size_ = 0;
-        Alignment vert_align_ = Alignment::LEADING;
+        Alignment vert_align_ = Alignment::START;
     };
 
 }

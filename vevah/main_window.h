@@ -35,6 +35,7 @@ namespace vevah {
     {
     public:
         MainWindow();
+        ~MainWindow();
 
     protected:
         // ukive::Window

@@ -17,9 +17,7 @@
 		6723A7B624FE9F0700F3FB53 /* example_misc_page.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6723A7AE24FE9F0700F3FB53 /* example_misc_page.cpp */; };
 		6723A7B724FE9F0700F3FB53 /* example_list_page.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6723A7AF24FE9F0700F3FB53 /* example_list_page.cpp */; };
 		6723A7B824FE9F0700F3FB53 /* example_tree_page.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6723A7B024FE9F0700F3FB53 /* example_tree_page.cpp */; };
-		6723A7C124FE9F4800F3FB53 /* gallery_window_layout.xml in Resources */ = {isa = PBXBuildFile; fileRef = 6723A7BB24FE9F4700F3FB53 /* gallery_window_layout.xml */; };
 		6723A7C224FE9F4800F3FB53 /* example_window_layout.xml in Resources */ = {isa = PBXBuildFile; fileRef = 6723A7BC24FE9F4700F3FB53 /* example_window_layout.xml */; };
-		6723A7C324FE9F4800F3FB53 /* gallery_item_layout.xml in Resources */ = {isa = PBXBuildFile; fileRef = 6723A7BD24FE9F4700F3FB53 /* gallery_item_layout.xml */; };
 		6723A7C424FE9F4800F3FB53 /* example_tree_page_layout.xml in Resources */ = {isa = PBXBuildFile; fileRef = 6723A7BE24FE9F4700F3FB53 /* example_tree_page_layout.xml */; };
 		6723A7C524FE9F4800F3FB53 /* example_misc_page_layout.xml in Resources */ = {isa = PBXBuildFile; fileRef = 6723A7BF24FE9F4700F3FB53 /* example_misc_page_layout.xml */; };
 		6723A7C624FE9F4800F3FB53 /* example_list_page_layout.xml in Resources */ = {isa = PBXBuildFile; fileRef = 6723A7C024FE9F4700F3FB53 /* example_list_page_layout.xml */; };
@@ -50,9 +48,7 @@
 		6723A7B124FE9F0700F3FB53 /* example_tree_page.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = example_tree_page.h; sourceTree = "<group>"; };
 		6723A7B224FE9F0700F3FB53 /* example_list_page.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = example_list_page.h; sourceTree = "<group>"; };
 		6723A7B424FE9F0700F3FB53 /* example_window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = example_window.h; sourceTree = "<group>"; };
-		6723A7BB24FE9F4700F3FB53 /* gallery_window_layout.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = gallery_window_layout.xml; sourceTree = "<group>"; };
 		6723A7BC24FE9F4700F3FB53 /* example_window_layout.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = example_window_layout.xml; sourceTree = "<group>"; };
-		6723A7BD24FE9F4700F3FB53 /* gallery_item_layout.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = gallery_item_layout.xml; sourceTree = "<group>"; };
 		6723A7BE24FE9F4700F3FB53 /* example_tree_page_layout.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = example_tree_page_layout.xml; sourceTree = "<group>"; };
 		6723A7BF24FE9F4700F3FB53 /* example_misc_page_layout.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = example_misc_page_layout.xml; sourceTree = "<group>"; };
 		6723A7C024FE9F4700F3FB53 /* example_list_page_layout.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = example_list_page_layout.xml; sourceTree = "<group>"; };
@@ -149,9 +145,7 @@
 		6723A7BA24FE9F4700F3FB53 /* layout */ = {
 			isa = PBXGroup;
 			children = (
-				6723A7BB24FE9F4700F3FB53 /* gallery_window_layout.xml */,
 				6723A7BC24FE9F4700F3FB53 /* example_window_layout.xml */,
-				6723A7BD24FE9F4700F3FB53 /* gallery_item_layout.xml */,
 				6723A7BE24FE9F4700F3FB53 /* example_tree_page_layout.xml */,
 				6723A7BF24FE9F4700F3FB53 /* example_misc_page_layout.xml */,
 				6723A7C024FE9F4700F3FB53 /* example_list_page_layout.xml */,
@@ -231,13 +225,11 @@
 				6723A7C224FE9F4800F3FB53 /* example_window_layout.xml in Resources */,
 				670BD7BD24B22A5B00DF5B85 /* freshpaint.png in Resources */,
 				670BD7C024B22A5B00DF5B85 /* shell.ico in Resources */,
-				6723A7C124FE9F4800F3FB53 /* gallery_window_layout.xml in Resources */,
 				670BD7BC24B22A5B00DF5B85 /* altitude.raw in Resources */,
 				670BD4AA24B227FB00DF5B85 /* MainMenu.xib in Resources */,
 				6723A7C424FE9F4800F3FB53 /* example_tree_page_layout.xml in Resources */,
 				6723A7C624FE9F4800F3FB53 /* example_list_page_layout.xml in Resources */,
 				670BD7BB24B22A5B00DF5B85 /* small.ico in Resources */,
-				6723A7C324FE9F4800F3FB53 /* gallery_item_layout.xml in Resources */,
 				6723A7C524FE9F4800F3FB53 /* example_misc_page_layout.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
