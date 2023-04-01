@@ -33,15 +33,19 @@ namespace ukive {
 
         void invalidateMenu();
 
-        void show(int x, int y);
+        void show(View* rel, int x, int y);
         void show(View* anchor, int gravity);
         void close();
+
+        void setId(int id);
+        int getId() const;
 
     protected:
         // OnInnerWindowEventListener
         void onRequestDismissByTouchOutside(Levitator* lev) override;
 
     private:
+        int id_ = -1;
         int menu_width_;
         int menu_item_height_;
         bool is_finished_;

@@ -37,7 +37,11 @@ namespace ukive {
         void show();
         void close();
 
+        void setId(int id);
+        int getId() const;
+
     private:
+        int id_ = -1;
         int menu_width_;
         int menu_item_height_;
         bool is_finished_;

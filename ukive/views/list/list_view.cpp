@@ -52,11 +52,12 @@ namespace ukive {
     }
 
     Size ListView::onDetermineSize(const SizeInfo& info) {
-        if (info.width().mode == SizeInfo::FREEDOM ||
+        // 直到 RestraintLayout 修好为止，这里先注释掉
+        /*if (info.width().mode == SizeInfo::FREEDOM ||
             info.height().mode == SizeInfo::FREEDOM)
         {
             return {};
-        }
+        }*/
 
         int width;
         int height;

@@ -178,8 +178,14 @@ namespace ukive {
         }
 
         ContextMenu* startContextMenu(
-            ContextMenuCallback* callback, View* anchor, int gravity);
-        TextActionMenu* startTextActionMenu(TextActionMenuCallback* callback);
+            ContextMenuCallback* callback,
+            View* anchor, int gravity, int id = -1);
+        ContextMenu* startContextMenuAtPos(
+            ContextMenuCallback* callback,
+            View* rel, int x, int y, int id = -1);
+        TextActionMenu* startTextActionMenu(
+            TextActionMenuCallback* callback,
+            int id = -1);
 
         void startHaul(HaulSource* src);
         void stopHaul(HaulSource* src);

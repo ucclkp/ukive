@@ -31,7 +31,8 @@ namespace ukive {
          * @param x 横坐标。
          * @param y 纵坐标。
          */
-        virtual void onGetContentPosition(View** v, int* x, int* y) = 0;
+        virtual void onGetContentPosition(
+            TextActionMenu* mode, View** v, int* x, int* y) = 0;
     };
 
 }

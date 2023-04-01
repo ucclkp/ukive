@@ -599,9 +599,10 @@ namespace ukive {
     }
 
     ContextMenu* Window::startContextMenu(
-        ContextMenuCallback* callback, View* anchor, int gravity)
+        ContextMenuCallback* callback, View* anchor, int gravity, int id)
     {
         auto context_menu = new ContextMenu(this, callback);
+        context_menu->setId(id);
 
         if (!callback->onCreateContextMenu(
             context_menu, context_menu->getMenu())) {
@@ -622,8 +623,37 @@ namespace ukive {
         return context_menu;
     }
 
-    TextActionMenu* Window::startTextActionMenu(TextActionMenuCallback* callback) {
+    ContextMenu* Window::startContextMenuAtPos(
+        ContextMenuCallback* callback, View* rel, int x, int y, int id)
+    {
+        auto context_menu = new ContextMenu(this, callback);
+        context_menu->setId(id);
+
+        if (!callback->onCreateContextMenu(
+            context_menu, context_menu->getMenu())) {
+            delete context_menu;
+            return nullptr;
+        }
+
+        callback->onPrepareContextMenu(
+            context_menu, context_menu->getMenu());
+
+        if (context_menu->getMenu()->getItemCount() == 0) {
+            delete context_menu;
+            return nullptr;
+        }
+
+        context_menu_.reset(context_menu);
+        context_menu_->show(rel, x, y);
+        return context_menu;
+    }
+
+    TextActionMenu* Window::startTextActionMenu(
+        TextActionMenuCallback* callback, int id)
+    {
         auto action_menu = new TextActionMenu(this, callback);
+        action_menu->setId(id);
+
         if (!callback->onCreateActionMode(
             action_menu, action_menu->getMenu())) {
             delete action_menu;

@@ -72,7 +72,7 @@ namespace ukive {
     void TextActionMenu::invalidatePosition() {
         View* rel;
         int x = 0, y = 0;
-        callback_->onGetContentPosition(&rel, &x, &y);
+        callback_->onGetContentPosition(this, &rel, &x, &y);
         levitator_->update(x, y);
     }
 
@@ -85,7 +85,7 @@ namespace ukive {
 
         View* rel;
         int x = 0, y = 0;
-        callback_->onGetContentPosition(&rel, &x, &y);
+        callback_->onGetContentPosition(this, &rel, &x, &y);
 
         levitator_->dismiss();
 
@@ -130,6 +130,14 @@ namespace ukive {
                 }
             }).start();
         }
+    }
+
+    void TextActionMenu::setId(int id) {
+        id_ = id;
+    }
+
+    int TextActionMenu::getId() const {
+        return id_;
     }
 
 }

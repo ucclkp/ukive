@@ -1831,7 +1831,9 @@ namespace ukive {
         text_action_mode_ = nullptr;
     }
 
-    void TextView::onGetContentPosition(View** v, int* x, int* y) {
+    void TextView::onGetContentPosition(
+        TextActionMenu* mode, View** v, int* x, int* y)
+    {
         auto bounds = getBounds();
         bounds.pos({ 0, 0 });
 

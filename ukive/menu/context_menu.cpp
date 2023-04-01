@@ -64,13 +64,17 @@ namespace ukive {
         callback_->onPrepareContextMenu(this, menu_);
     }
 
-    void ContextMenu::show(int x, int y) {
+    void ContextMenu::show(View* rel, int x, int y) {
         if (!is_finished_) return;
 
         is_finished_ = false;
 
+        Levitator::PosInfo info;
+        info.rel_view = rel;
+        info.pp = Padding(1, 1, 1, 1);
+
         levitator_->dismiss();
-        levitator_->show(window_, x, y);
+        levitator_->show(window_, x, y, info);
     }
 
     void ContextMenu::show(View* anchor, int gravity) {
@@ -104,6 +108,14 @@ namespace ukive {
                 window->dismiss();
             }
         }).start();
+    }
+
+    void ContextMenu::setId(int id) {
+        id_ = id;
+    }
+
+    int ContextMenu::getId() const {
+        return id_;
     }
 
     void ContextMenu::onRequestDismissByTouchOutside(Levitator* lev) {

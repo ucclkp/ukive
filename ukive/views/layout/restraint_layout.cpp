@@ -216,18 +216,17 @@ namespace ukive {
             int size = (std::max)(0,
                 parent_width.val - getPadding().hori() - hori_margins);
 
-            // child 有固定的大小。
             if (layout_size.width() >= 0 || !isAttended(child)) {
+                // child 有固定的大小
                 child_width = SizeInfo::Value(
                     isAttended(child) ? layout_size.width() : 0, SizeInfo::DEFINED);
                 rli->hori_couple_handler_type = RestraintLayoutInfo::CH_FIXED;
-            }
-            // child 将填充 handler couple 之间的区域。
-            else {
-                // handler couple 绑定于父 View。
+            } else {
+                // child 将填充 handler couple 之间的区域
                 if (rli->start_handle_id == getId()
                     && rli->end_handle_id == getId())
                 {
+                    // handler couple 绑定于父 View
                     switch (parent_width.mode) {
                     case SizeInfo::CONTENT:
                     {
@@ -260,7 +259,7 @@ namespace ukive {
                     case SizeInfo::FREEDOM:
                     default:
                     {
-                        // 此处，由于不知道父 View 的大小，无法填充 handler couple 之间的区域。
+                        // 此处，由于不知道父 View 的大小，无法填充 handler couple 之间的区域，
                         // 让 View 自己决定大小即可。
                         child_width = SizeInfo::Value(size, SizeInfo::FREEDOM);
                         rli->hori_couple_handler_type = RestraintLayoutInfo::CH_FILL;
@@ -268,14 +267,14 @@ namespace ukive {
                     }
                     }
                 }
-                // handler couple 没有绑定于父 View。这意味着它与其他子 View 绑定。
-                // 此时必须先测量绑定到的 View，然后才能测量该 View。将使用
-                // 递归完成此过程，为此需要额外的变量来记录某一 View 是否已测量。
                 else
                 {
-                    // 左右 Handler 绑定在同一个 View 上。
+                    // handler couple 没有绑定于父 View。这意味着它与其他子 View 绑定。
+                    // 此时必须先测量绑定到的 View，然后才能测量该 View。将使用
+                    // 递归完成此过程，为此需要额外的变量来记录某一 View 是否已测量。
                     if (rli->start_handle_id == rli->end_handle_id)
                     {
+                        // 左右 Handler 绑定在同一个 View 上
                         int measured_target_width = 0;
                         View* target = getChildById(rli->start_handle_id);
                         auto target_li = static_cast<RestraintLayoutInfo*>(target->getExtraLayoutInfo());
