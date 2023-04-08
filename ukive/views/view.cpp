@@ -82,8 +82,8 @@ namespace ukive {
         setShadowRadius(
             (int)resolveAttrDimension(
                 c, attrs, necro::kAttrViewShadowRadius, 0));
-        is_clickable_ = resolveAttrBool(attrs, necro::kAttrViewClickable, false);
-        is_dbclkable_ = resolveAttrBool(attrs, necro::kAttrViewDoubleClickable, false);
+        is_clkable_ = resolveAttrBool(attrs, necro::kAttrViewClickable, false);
+        is_dclkable_ = resolveAttrBool(attrs, necro::kAttrViewDoubleClickable, false);
         is_focusable_ = resolveAttrBool(attrs, necro::kAttrViewFocusable, false);
         is_touch_capturable_ = resolveAttrBool(attrs, necro::kAttrViewTouchCapturable, false);
         is_enabled_ = resolveAttrBool(attrs, necro::kAttrViewEnabled, true);
@@ -262,16 +262,25 @@ namespace ukive {
     }
 
     void View::setClickable(bool clickable) {
-        if (is_clickable_ != clickable) {
-            is_clickable_ = clickable;
+        if (is_clkable_ != clickable) {
+            is_clkable_ = clickable;
         }
     }
 
-    void View::setDoubleClickable(bool dbclkable) {
-        if (is_dbclkable_ != dbclkable) {
-            is_dbclkable_ = dbclkable;
-            if (!dbclkable) {
-                wait_for_dbclk_ = false;
+    void View::setDoubleClickable(bool dclkable) {
+        if (is_dclkable_ != dclkable) {
+            is_dclkable_ = dclkable;
+            if (!dclkable) {
+                wait_for_dclk_ = false;
+            }
+        }
+    }
+
+    void View::setTripleClickable(bool tclkable) {
+        if (is_tclkable_ != tclkable) {
+            is_tclkable_ = tclkable;
+            if (!tclkable) {
+                wait_for_tclk_ = false;
             }
         }
     }
@@ -713,11 +722,15 @@ namespace ukive {
     }
 
     bool View::isClickable() const {
-        return is_clickable_;
+        return is_clkable_;
     }
 
     bool View::isDoubleClickable() const {
-        return is_dbclkable_;
+        return is_dclkable_;
+    }
+
+    bool View::isTripleClickable() const {
+        return is_tclkable_;
     }
 
     bool View::isFocusable() const {
@@ -824,6 +837,12 @@ namespace ukive {
     void View::performDoubleClick() {
         if (click_listener_) {
             click_listener_->onDoubleClick(this);
+        }
+    }
+
+    void View::performTripleClick() {
+        if (click_listener_) {
+            click_listener_->onTripleClick(this);
         }
     }
 
@@ -1329,31 +1348,68 @@ namespace ukive {
             return true;
         }
 
-        bool need_perform_click = true;
+        enum ClickType {
+            CLK_SINGLE,
+            CLK_DOUBLE,
+            CLK_TRIPLE,
+        };
+
+        int perform_type = CLK_SINGLE;
+        auto cur_millis = utl::TimeUtils::upTimeMillis();
         std::weak_ptr<void> wptr = cur_ev_;
-        if (is_dbclkable_) {
-            if (!wait_for_dbclk_) {
-                wait_for_dbclk_ = true;
-                first_clk_ts = utl::TimeUtils::upTimeMillis();
-            } else {
-                if (utl::TimeUtils::upTimeMillis() - first_clk_ts <= getDoubleClickTime()) {
-                    wait_for_dbclk_ = false;
-                    need_perform_click = false;
-                    performDoubleClick();
-                    if (wptr.expired() || !isAttachedToWindow()) {
-                        return false;
-                    }
-                } else {
-                    first_clk_ts = utl::TimeUtils::upTimeMillis();
-                }
+
+        if (wait_for_tclk_) {
+            wait_for_tclk_ = false;
+            if (cur_millis - prev_clk_ts_ <= getTripleClickTime()) {
+                perform_type = CLK_TRIPLE;
+            }
+        } else if (wait_for_dclk_) {
+            wait_for_dclk_ = false;
+            if (cur_millis - prev_clk_ts_ <= getDoubleClickTime()) {
+                perform_type = CLK_DOUBLE;
             }
         }
 
-        if (is_clickable_ && need_perform_click) {
-            performClick();
-            if (wptr.expired() || !isAttachedToWindow()) {
-                return false;
+        if ((is_dclkable_ || is_tclkable_) && perform_type == CLK_SINGLE) {
+            if (!wait_for_dclk_) {
+                wait_for_dclk_ = true;
+                prev_clk_ts_ = cur_millis;
             }
+        }
+        if (is_tclkable_ && perform_type == CLK_DOUBLE) {
+            if (!wait_for_tclk_) {
+                wait_for_tclk_ = true;
+                prev_clk_ts_ = cur_millis;
+            }
+        }
+
+        switch (perform_type) {
+        case CLK_SINGLE:
+            if (is_clkable_) {
+                performClick();
+                if (wptr.expired() || !isAttachedToWindow()) {
+                    return false;
+                }
+            }
+            break;
+        case CLK_DOUBLE:
+            if (is_dclkable_) {
+                performDoubleClick();
+                if (wptr.expired() || !isAttachedToWindow()) {
+                    return false;
+                }
+            }
+            break;
+        case CLK_TRIPLE:
+            if (is_tclkable_) {
+                performTripleClick();
+                if (wptr.expired() || !isAttachedToWindow()) {
+                    return false;
+                }
+            }
+            break;
+        default:
+            break;
         }
 
         return true;
@@ -1852,7 +1908,7 @@ namespace ukive {
         {
             return false;
         }
-        return is_clickable_ || is_dbclkable_;
+        return is_clkable_ || is_dclkable_;
     }
 
     Size View::onDetermineSize(const SizeInfo& info) {

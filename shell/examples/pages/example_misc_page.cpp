@@ -36,8 +36,6 @@
 #include "ukive/graphics/colors/color.h"
 #include "ukive/window/haul_source.h"
 #include "ukive/window/window.h"
-#include "ukive/graphics/colors/color_manager.h"
-#include "ukive/graphics/colors/ucmm.h"
 #include "ukive/system/dialogs/sys_message_dialog.h"
 
 #include "shell/resources/necro_resources_id.h"
@@ -249,6 +247,8 @@ namespace shell {
 
         test_button_ = findView<ukive::Button>(v, Res::Id::bt_misc_button);
         test_button_->setOnClickListener(this);
+        test_button_->setDoubleClickable(true);
+        test_button_->setTripleClickable(true);
         {
             haul_src_ = std::make_unique<ukive::HaulSource>(0, this);
             test_button_->setHaulSource(haul_src_.get());
@@ -263,27 +263,6 @@ namespace shell {
             levitator_.setOutsideTouchable(true);
             levitator_.setInputEnabled(false);
         }
-
-        ukive::Color dst;
-        std::unique_ptr<ukive::ColorManager> cm(ukive::ColorManager::create());
-        cm->convertColor(ukive::Color(0.25f, 0.89f, 0.47f), &dst);
-
-        std::u16string icc_path;
-        if (ukive::ColorManager::getDefaultProfile(&icc_path))
-        {
-            ukive::icc::ICCProfile pf;
-            pf.load(icc_path);
-
-            ukive::Color tc;
-            ukive::UCMM cmm;
-            cmm.sRGBToTarget(
-                ukive::UCMM::Intent::Perceptual,
-                ukive::Color(0.25f, 0.89f, 0.47f),
-                pf, &tc);
-
-            int sdg = 0;
-        }
-
     }
 
     void ExampleMiscPage::onDestroy() {
@@ -313,6 +292,19 @@ namespace shell {
                 director_.start();
                 startVSync();
             }
+            test_button_->setText(u"单击");
+        }
+    }
+
+    void ExampleMiscPage::onDoubleClick(ukive::View* v) {
+        if (test_button_ == v) {
+            test_button_->setText(u"双击");
+        }
+    }
+
+    void ExampleMiscPage::onTripleClick(ukive::View* v) {
+        if (test_button_ == v) {
+            test_button_->setText(u"三击");
         }
     }
 

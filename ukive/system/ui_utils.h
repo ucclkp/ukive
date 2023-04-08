@@ -10,7 +10,15 @@
 
 namespace ukive {
 
+    /**
+     * 返回双击判定时间，单位为毫秒。
+     */
     unsigned int getDoubleClickTime();
+
+    /**
+     * 返回双击后第三击的判定时间，单位为毫秒。
+     */
+    unsigned int getTripleClickTime();
 
 }
 

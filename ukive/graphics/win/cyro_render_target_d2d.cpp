@@ -153,7 +153,7 @@ namespace win {
             std::lock_guard<std::mutex> lg(rt_sync_);
             HRESULT hr = rt_->CreateBitmapFromWicBitmap(native_src.get(), &props, &d2d_bmp);
             if (FAILED(hr)) {
-                assert(false);
+                ubassert(false);
                 return {};
             }
         }

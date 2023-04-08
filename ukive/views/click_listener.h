@@ -18,6 +18,7 @@ namespace ukive {
 
         virtual void onClick(View* v) {}
         virtual void onDoubleClick(View* v) {}
+        virtual void onTripleClick(View* v) {}
     };
 
 }

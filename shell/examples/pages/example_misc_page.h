@@ -45,6 +45,8 @@ namespace shell {
 
         // ukive::OnClickListener
         void onClick(ukive::View* v) override;
+        void onDoubleClick(ukive::View* v) override;
+        void onTripleClick(ukive::View* v) override;
 
         // ukive::VSyncable
         void onVSync(

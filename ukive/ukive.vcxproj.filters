@@ -712,6 +712,9 @@
     <ClCompile Include="graphics\3d\space_object.cpp">
       <Filter>graphics\3d</Filter>
     </ClCompile>
+    <ClCompile Include="system\ui_utils.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">

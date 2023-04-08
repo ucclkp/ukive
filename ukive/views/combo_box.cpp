@@ -57,6 +57,7 @@ namespace ukive {
         button_ = new DropdownButton(c);
         button_->setOnClickListener(this);
         button_->setLayoutSize(LS_AUTO, LS_FILL);
+        button_->setEnabled(false);
         addView(button_);
 
         list_view_ = new ListView(c);
@@ -83,6 +84,7 @@ namespace ukive {
     void ComboBox::addItem(const std::u16string_view& title) {
         data_.push_back(std::u16string(title));
         notifyDataChanged();
+        button_->setEnabled(true);
     }
 
     void ComboBox::addItem(const std::u16string_view& title, size_t index) {
@@ -97,6 +99,7 @@ namespace ukive {
 
         data_.insert(data_.begin() + index, std::u16string(title));
         notifyDataChanged();
+        button_->setEnabled(true);
     }
 
     void ComboBox::removeItem(size_t index) {
@@ -114,6 +117,10 @@ namespace ukive {
 
         data_.erase(data_.begin() + index);
         notifyDataChanged();
+
+        if (data_.empty()) {
+            button_->setEnabled(false);
+        }
     }
 
     void ComboBox::clearItems() {
@@ -121,6 +128,7 @@ namespace ukive {
         selected_index_ = -1;
         text_view_->setText(default_title_);
         notifyDataChanged();
+        button_->setEnabled(false);
     }
 
     void ComboBox::setDefaultItem(const std::u16string_view& title) {
@@ -328,9 +336,11 @@ namespace ukive {
     void ComboBox::onClick(View* v) {
         if (v == button_) {
             if (is_finished_) {
-                auto bounds = getBoundsInRoot();
-                auto width = (std::max)(bounds.width(), min_dropdown_width_);
-                show(width);
+                if (!data_.empty()) {
+                    auto bounds = getBoundsInRoot();
+                    auto width = (std::max)(bounds.width(), min_dropdown_width_);
+                    show(width);
+                }
             } else {
                 close();
             }

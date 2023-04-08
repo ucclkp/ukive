@@ -24,6 +24,9 @@ namespace ukive {
         void setChecked(bool checked);
         void setOnCheckListener(OnCheckListener* l);
 
+        bool isChecked() const;
+
+    protected:
         void onDraw(Canvas* canvas) override;
         bool onInputEvent(InputEvent* e) override;
 

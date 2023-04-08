@@ -633,6 +633,7 @@
     <ClCompile Include="system\dialogs\sys_open_file_dialog.cpp" />
     <ClCompile Include="system\ipc\pipe_client.cpp" />
     <ClCompile Include="system\ipc\pipe_server.cpp" />
+    <ClCompile Include="system\ui_utils.cpp" />
     <ClCompile Include="system\win\dialogs\sys_message_dialog_win.cpp" />
     <ClCompile Include="system\win\dialogs\sys_open_file_dialog_win.cpp" />
     <ClCompile Include="system\win\dynamic_windows_api.cpp" />

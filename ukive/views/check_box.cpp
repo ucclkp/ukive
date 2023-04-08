@@ -62,6 +62,10 @@ namespace ukive {
         listener_ = l;
     }
 
+    bool CheckBox::isChecked() const {
+        return checked_;
+    }
+
     void CheckBox::onDraw(Canvas* canvas) {
         super::onDraw(canvas);
 

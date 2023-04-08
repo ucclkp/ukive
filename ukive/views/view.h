@@ -76,7 +76,8 @@ namespace ukive {
         void setPressed(bool pressed);
         void setCursor(Cursor cursor);
         void setClickable(bool clickable);
-        void setDoubleClickable(bool dbclkable);
+        void setDoubleClickable(bool dclkable);
+        void setTripleClickable(bool tclkable);
         void setFocusable(bool focusable);
         void setTouchCapturable(bool capturable);
         void setShadowRadius(int radius);
@@ -176,6 +177,7 @@ namespace ukive {
         bool hasFocus() const;
         bool isClickable() const;
         bool isDoubleClickable() const;
+        bool isTripleClickable() const;
         bool isFocusable() const;
         bool isTouchCapturable() const;
         bool isLayouted() const;
@@ -229,8 +231,9 @@ namespace ukive {
         Size getPreferredSize(
             const SizeInfo& info, int pref_width, int pref_height);
 
-        void performClick();
-        void performDoubleClick();
+        virtual void performClick();
+        virtual void performDoubleClick();
+        virtual void performTripleClick();
 
         bool needDrawBackground();
         bool needDrawForeground();
@@ -344,8 +347,9 @@ namespace ukive {
         bool is_enabled_;
         bool is_attached_to_window_;
         bool is_pressed_;
-        bool is_clickable_ = false;
-        bool is_dbclkable_ = false;
+        bool is_clkable_ = false;
+        bool is_dclkable_ = false;
+        bool is_tclkable_ = false;
         bool is_focusable_;
         bool is_touch_capturable_ = false;
         bool is_receive_outside_input_event_;
@@ -365,8 +369,10 @@ namespace ukive {
         Element* fg_element_ = nullptr;
 
         // 双击判定
-        bool wait_for_dbclk_ = false;
-        uint64_t first_clk_ts = 0;
+        bool wait_for_dclk_ = false;
+        // 三击判定
+        bool wait_for_tclk_ = false;
+        uint64_t prev_clk_ts_ = 0;
 
         Cursor cursor_ = Cursor::ARROW;
 
