@@ -268,6 +268,7 @@ $(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro\$(ProjectName)" -d "$(O
     <Xml Include="resources\layout\example_list_page_layout.xml" />
     <Xml Include="resources\layout\example_window_layout.xml" />
     <Xml Include="resources\layout\example_tree_page_layout.xml" />
+    <UpToDateCheckInput Include="@(Xml)" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="lod\direct3d\hlsl\terrain_pixel_shader.hlsl">

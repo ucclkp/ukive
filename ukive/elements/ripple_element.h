@@ -22,8 +22,8 @@ namespace ukive {
     {
     public:
         RippleElement();
-        explicit RippleElement(const Color& color);
-        RippleElement(Shape shape, const Color& color);
+        explicit RippleElement(const Color& color, bool draw_mask = true);
+        RippleElement(Shape shape, const Color& color, bool draw_mask = true);
         ~RippleElement();
 
         void setDownAlpha(double a);

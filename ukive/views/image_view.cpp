@@ -108,7 +108,9 @@ namespace ukive {
 
     void ImageView::onBoundsChanged(const Rect& new_bounds, const Rect& old_bounds) {
         View::onBoundsChanged(new_bounds, old_bounds);
-        setImageBounds(new_bounds.width(), new_bounds.height());
+
+        auto b = getContentBounds();
+        setImageBounds(b.width(), b.height());
     }
 
     void ImageView::setMatrix(const Matrix2x3F& m) {
@@ -122,7 +124,8 @@ namespace ukive {
         }
 
         scale_type_ = type;
-        setImageBounds(getWidth(), getHeight());
+        auto b = getContentBounds();
+        setImageBounds(b.width(), b.height());
 
         requestDraw();
     }
@@ -130,7 +133,8 @@ namespace ukive {
     void ImageView::setImage(const GPtr<ImageFrame>& img) {
         if (img) {
             img_element_.reset(new ImageElement(img));
-            setImageBounds(getWidth(), getHeight());
+            auto b = getContentBounds();
+            setImageBounds(b.width(), b.height());
         } else {
             img_element_.reset();
         }

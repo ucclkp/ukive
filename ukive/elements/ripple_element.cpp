@@ -26,12 +26,13 @@ namespace ukive {
         initElement();
     }
 
-    RippleElement::RippleElement(const Color& color)
-        : RippleElement(SHAPE_RECT, color) {}
+    RippleElement::RippleElement(const Color& color, bool draw_mask)
+        : RippleElement(SHAPE_RECT, color, draw_mask) {}
 
-    RippleElement::RippleElement(Shape shape, const Color& color)
+    RippleElement::RippleElement(Shape shape, const Color& color, bool draw_mask)
         : super(shape, color),
-          alpha_(0)
+          alpha_(0),
+          is_draw_mask_(draw_mask)
     {
         initElement();
     }

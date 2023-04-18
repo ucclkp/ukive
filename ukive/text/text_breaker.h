@@ -12,22 +12,49 @@
 
 namespace ukive {
 
-    class CharacterBreaker {
+    class TextBreaker {
     public:
-        explicit CharacterBreaker(const std::u16string* text);
+        explicit TextBreaker(const std::u16string* text);
 
         void setCur(size_t cur_pos);
 
-        bool next();
-        bool prev();
+        virtual bool next() = 0;
+        virtual bool prev() = 0;
 
         size_t getCur() const { return cur_; }
         size_t getPrev() const { return prev_; }
 
-    private:
+    protected:
         size_t cur_;
         size_t prev_;
         const std::u16string* text_;
+    };
+
+
+    class CharacterBreaker : public TextBreaker {
+    public:
+        explicit CharacterBreaker(const std::u16string* text);
+
+        bool next() override;
+        bool prev() override;
+    };
+
+
+    class WordBreaker : public TextBreaker {
+    public:
+        explicit WordBreaker(const std::u16string* text);
+
+        bool next() override;
+        bool prev() override;
+    };
+
+
+    class ParagraphBreaker : public TextBreaker {
+    public:
+        explicit ParagraphBreaker(const std::u16string* text);
+
+        bool next() override;
+        bool prev() override;
     };
 
 }
