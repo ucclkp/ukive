@@ -19,7 +19,7 @@ namespace necro {
 
     class LayoutProcessor {
     public:
-        using IdMap = std::map<std::string, int>;
+        using IdMap = std::map<std::string, long long>;
         using ElementPtr = std::shared_ptr<utl::xml::Element>;
 
         LayoutProcessor();
@@ -40,8 +40,8 @@ namespace necro {
         bool traverseTree(const ElementPtr& element, bool is_first, IdMap* cur_map);
 
         bool need_second_;
-        int cur_view_id_;
-        int cur_layout_id_;
+        unsigned long long cur_view_id_;
+        unsigned long long cur_layout_id_;
         IdMap view_id_map_;
         IdMap layout_id_map_;
     };

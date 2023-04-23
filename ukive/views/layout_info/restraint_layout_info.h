@@ -55,19 +55,19 @@ namespace ukive {
         CoupleHandleType hori_couple_handler_type;
         CoupleHandleType vert_couple_handler_type;
 
-        int start_handle_id;
+        long long start_handle_id;
         Edge start_handle_edge = NONE;
-        int top_handle_id;
+        long long top_handle_id;
         Edge top_handle_edge = NONE;
-        int end_handle_id;
+        long long end_handle_id;
         Edge end_handle_edge = NONE;
-        int bottom_handle_id;
+        long long bottom_handle_id;
         Edge bottom_handle_edge = NONE;
 
-        RestraintLayoutInfo* startHandle(int handle_id, Edge handle_edge);
-        RestraintLayoutInfo* topHandle(int handle_id, Edge handle_edge);
-        RestraintLayoutInfo* endHandle(int handle_id, Edge handle_edge);
-        RestraintLayoutInfo* bottomHandle(int handle_id, Edge handle_edge);
+        RestraintLayoutInfo* startHandle(long long handle_id, Edge handle_edge);
+        RestraintLayoutInfo* topHandle(long long handle_id, Edge handle_edge);
+        RestraintLayoutInfo* endHandle(long long handle_id, Edge handle_edge);
+        RestraintLayoutInfo* bottomHandle(long long handle_id, Edge handle_edge);
 
     public:
         class Builder {
@@ -76,22 +76,22 @@ namespace ukive {
                 : li_(new RestraintLayoutInfo()) {}
             ~Builder() { if (!built_) delete li_; }
 
-            Builder& start(int handle_id, Edge handle_edge = START) {
+            Builder& start(long long handle_id, Edge handle_edge = START) {
                 li_->startHandle(handle_id, handle_edge);
                 return *this;
             }
 
-            Builder& top(int handle_id, Edge handle_edge = TOP) {
+            Builder& top(long long handle_id, Edge handle_edge = TOP) {
                 li_->topHandle(handle_id, handle_edge);
                 return *this;
             }
 
-            Builder& end(int handle_id, Edge handle_edge = END) {
+            Builder& end(long long handle_id, Edge handle_edge = END) {
                 li_->endHandle(handle_id, handle_edge);
                 return *this;
             }
 
-            Builder& bottom(int handle_id, Edge handle_edge = BOTTOM) {
+            Builder& bottom(long long handle_id, Edge handle_edge = BOTTOM) {
                 li_->bottomHandle(handle_id, handle_edge);
                 return *this;
             }

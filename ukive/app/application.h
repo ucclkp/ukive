@@ -45,7 +45,7 @@ namespace ukive {
         static DisplayManager* getDisplayManager();
         static ColorManager* getColorManager();
 
-        static int getViewID();
+        static long long getNextViewID();
         static const Options& getOptions();
 
         static float dp2px(int dp);
@@ -60,8 +60,8 @@ namespace ukive {
         void initPlatform();
         void cleanPlatform();
 
-        static int view_uid_;
         static bool vsync_enabled_;
+        static long long view_uid_;
         static Application* instance_;
 
         Options options_;

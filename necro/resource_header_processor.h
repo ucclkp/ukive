@@ -17,7 +17,7 @@ namespace necro {
 
     class ResourceHeaderProcessor {
     public:
-        using IdMap = std::map<std::string, int>;
+        using IdMap = std::map<std::string, long long>;
 
         enum class Indent {
             Tab,

@@ -10,6 +10,8 @@
 
 namespace necro {
 
+    const long long kXmlLayoutIdStart = 100ll;
+
     const char16_t kLayoutIdFileName[] = u"necro_layout_id";
     const char16_t kLayoutHistoryFileName[] = u"necro_layout_histories";
 

@@ -54,6 +54,12 @@ namespace ukive {
         return necro_path_;
     }
 
+    std::filesystem::path ResourceManager::getImagePath(
+        const std::u16string_view& name) const
+    {
+        return resource_root_path_ / u"images" / name;
+    }
+
     bool ResourceManager::getFileData(
         const std::filesystem::path& p, std::string* out) const
     {

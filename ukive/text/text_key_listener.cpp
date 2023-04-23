@@ -118,32 +118,36 @@ namespace ukive {
             break;
 
         case Keyboard::KEY_Z:  //z: undo.
+            if (can_edit) {
+
+            }
             break;
 
         case Keyboard::KEY_X:  //x: cut.
-            if (editable->hasSelection()) {
+            if (can_edit && editable->hasSelection()) {
                 ClipboardManager::saveToClipboard(editable->getSelectionString());
                 editable->remove(Editable::Reason::USER_INPUT);
             }
             break;
 
         case Keyboard::KEY_C:  //c: copy.
-            if (editable->hasSelection())
+            if (can_edit && editable->hasSelection()) {
                 ClipboardManager::saveToClipboard(editable->getSelectionString());
+            }
             break;
 
         case Keyboard::KEY_V:  //v: paste.
-        {
-            auto content = ClipboardManager::getFromClipboard();
-            if (!content.empty()) {
-                if (editable->hasSelection()) {
-                    editable->replace(content, Editable::Reason::USER_INPUT);
-                } else {
-                    editable->insert(content, Editable::Reason::USER_INPUT);
+            if (can_edit) {
+                auto content = ClipboardManager::getFromClipboard();
+                if (!content.empty()) {
+                    if (editable->hasSelection()) {
+                        editable->replace(content, Editable::Reason::USER_INPUT);
+                    } else {
+                        editable->insert(content, Editable::Reason::USER_INPUT);
+                    }
                 }
             }
             break;
-        }
 
         default:
             break;
@@ -151,7 +155,8 @@ namespace ukive {
     }
 
     void TextKeyListener::onKeyUp(
-        Editable* editable, bool can_edit, bool can_select, int key) {
+        Editable* editable, bool can_edit, bool can_select, int key)
+    {
     }
 
 }

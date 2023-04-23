@@ -13,25 +13,25 @@ namespace ukive {
 
     RestraintLayoutInfo::~RestraintLayoutInfo() {}
 
-    RestraintLayoutInfo* RestraintLayoutInfo::startHandle(int handle_id, Edge handle_edge) {
+    RestraintLayoutInfo* RestraintLayoutInfo::startHandle(long long handle_id, Edge handle_edge) {
         start_handle_id = handle_id;
         start_handle_edge = handle_edge;
         return this;
     }
 
-    RestraintLayoutInfo* RestraintLayoutInfo::topHandle(int handle_id, Edge handle_edge) {
+    RestraintLayoutInfo* RestraintLayoutInfo::topHandle(long long handle_id, Edge handle_edge) {
         top_handle_id = handle_id;
         top_handle_edge = handle_edge;
         return this;
     }
 
-    RestraintLayoutInfo* RestraintLayoutInfo::endHandle(int handle_id, Edge handle_edge) {
+    RestraintLayoutInfo* RestraintLayoutInfo::endHandle(long long handle_id, Edge handle_edge) {
         end_handle_id = handle_id;
         end_handle_edge = handle_edge;
         return this;
     }
 
-    RestraintLayoutInfo* RestraintLayoutInfo::bottomHandle(int handle_id, Edge handle_edge) {
+    RestraintLayoutInfo* RestraintLayoutInfo::bottomHandle(long long handle_id, Edge handle_edge) {
         bottom_handle_id = handle_id;
         bottom_handle_edge = handle_edge;
         return this;

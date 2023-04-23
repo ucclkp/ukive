@@ -71,7 +71,7 @@ namespace ukive {
             }
         }
         if (!has_id) {
-            id_ = Application::getViewID();
+            id_ = Application::getNextViewID();
         }
 
         resolveAttrLayoutSize(c, attrs, &layout_size_);
@@ -120,7 +120,7 @@ namespace ukive {
         return *anime_params_;
     }
 
-    void View::setId(int id) {
+    void View::setId(long long id) {
         id_ = id;
     }
 
@@ -461,7 +461,7 @@ namespace ukive {
         requestDraw();
     }
 
-    int View::getId() const {
+    long long View::getId() const {
         return id_;
     }
 

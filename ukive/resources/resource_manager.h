@@ -23,6 +23,8 @@ namespace ukive {
         const std::filesystem::path& getResRootPath() const;
         const std::filesystem::path& getNecroPath() const;
 
+        std::filesystem::path getImagePath(const std::u16string_view& name) const;
+
         bool getFileData(const std::filesystem::path& p, std::string* out) const;
 
     private:

@@ -24,7 +24,7 @@
 
 namespace ukive {
 
-    int Application::view_uid_ = 10;
+    long long Application::view_uid_ = 100000000ll;
     bool Application::vsync_enabled_ = true;
     Application* Application::instance_ = nullptr;
 
@@ -166,7 +166,7 @@ namespace ukive {
     }
 
     // static
-    int Application::getViewID() {
+    long long Application::getNextViewID() {
         ++view_uid_;
         return view_uid_;
     }

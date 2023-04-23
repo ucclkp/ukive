@@ -62,7 +62,7 @@ namespace ukive {
         ViewAnimator& animate();
         ViewAnimatorParams& animeParams();
 
-        void setId(int id);
+        void setId(long long id);
         void setTag(int tag);
         void setCategory(int category);
         void setScrollX(int x);
@@ -104,7 +104,7 @@ namespace ukive {
         void offsetVertical(int dy);
         void offsetHorizontal(int dx);
 
-        int getId() const;
+        long long getId() const;
         int getTag() const;
         int getCategory() const;
         int getScrollX() const;
@@ -320,7 +320,7 @@ namespace ukive {
         bool processPointerUp();
         bool processInputEvent(InputEvent* e);
 
-        int id_;
+        long long id_;
         int tag_ = 0;
         int category_ = 0;
 

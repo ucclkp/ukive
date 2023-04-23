@@ -19,8 +19,7 @@ namespace ukive {
 
     ImageView::ImageView(Context c, AttrsRef attrs)
         : View(c, attrs),
-          scale_type_(FIT_WHEN_LARGE) {
-    }
+          scale_type_(FIT_ALWAYS) {}
 
     ImageView::~ImageView() {}
 

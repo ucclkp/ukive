@@ -22,8 +22,8 @@ namespace necro {
 
     LayoutProcessor::LayoutProcessor()
         : need_second_(false),
-          cur_view_id_(10000),
-          cur_layout_id_(10000) {}
+          cur_view_id_(kXmlLayoutIdStart),
+          cur_layout_id_(kXmlLayoutIdStart) {}
 
     bool LayoutProcessor::process(
         const fs::path& res_dir, const fs::path& out_dir, bool* changed)

@@ -32,7 +32,8 @@ namespace ukive {
         if (mode_ == Wrap) {
             canvas->fillImageRepeat(RectF(getBounds()), image_.get());
         } else {
-            canvas->drawImage(RectF(getBounds()), opacity_, image_.get());
+            canvas->drawImage(
+                RectF(getBounds()), opacity_ * canvas->getOpacity(), image_.get());
         }
     }
 
