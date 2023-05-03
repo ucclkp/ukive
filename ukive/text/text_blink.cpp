@@ -10,7 +10,6 @@
 
 #include "ukive/graphics/canvas.h"
 #include "ukive/views/view.h"
-#include "ukive/window/window.h"
 
 
 namespace ukive {

@@ -17,7 +17,6 @@
 #include "ukive/graphics/size.hpp"
 #include "ukive/system/theme_info.h"
 #include "ukive/views/layout_info/gravity.h"
-#include "ukive/views/view.h"
 #include "ukive/window/context.h"
 #include "ukive/window/purpose.h"
 #include "ukive/window/window_manager.h"
@@ -27,6 +26,7 @@
 
 namespace ukive {
 
+    class View;
     class Canvas;
     class InputEvent;
     class WindowNative;

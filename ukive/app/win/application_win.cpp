@@ -6,6 +6,7 @@
 
 #include "ukive/app/application.h"
 
+#define NOMINMAX
 #include <Windows.h>
 
 #include "utils/log.h"

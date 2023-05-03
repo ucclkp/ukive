@@ -7,6 +7,8 @@
 #ifndef UKIVE_SYSTEM_WIN_UI_UTILS_WIN_H_
 #define UKIVE_SYSTEM_WIN_UI_UTILS_WIN_H_
 
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
 #include <Windows.h>
 
 

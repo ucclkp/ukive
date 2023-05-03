@@ -6,6 +6,8 @@
 
 #include "ukive/system/dialogs/sys_message_dialog.h"
 
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
 #include <Windows.h>
 
 #include "utils/message/win/message_pump_ui_win.h"

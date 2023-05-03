@@ -8,8 +8,10 @@
 
 #include <algorithm>
 
+#include "ukive/app/application.h"
 #include "ukive/elements/image_element.h"
 #include "ukive/graphics/canvas.h"
+#include "ukive/resources/resource_manager.h"
 
 
 namespace ukive {
@@ -140,6 +142,12 @@ namespace ukive {
 
         requestLayout();
         requestDraw();
+    }
+
+    void ImageView::setImageName(const std::u16string_view& name) {
+        auto rm = Application::getResourceManager();
+        rm->getImagePath(name);
+        // TODO
     }
 
     void ImageView::setImageBounds(int width, int height) {

@@ -12,6 +12,7 @@
 #include "ukive/graphics/display.h"
 
 #define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
 #include <Windows.h>
 #include <dxgi.h>
 #include <dxgi1_6.h>

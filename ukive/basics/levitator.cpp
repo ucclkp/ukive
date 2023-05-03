@@ -70,8 +70,6 @@ namespace ukive {
         frame_view_->setReceiveOutsideInputEvent(!outside_touchable_);
         frame_view_->setLayoutMargin(
             margin_.start(), margin_.top(), margin_.end(), margin_.bottom());
-
-        content_view_->setLayoutSize(width_, height_);
         frame_view_->addView(content_view_);
     }
 
@@ -205,9 +203,8 @@ namespace ukive {
             return;
         }
 
-        if (content_view_) {
+        if (content_view_ && content_view_ != v) {
             if (frame_view_) {
-                v->setLayoutSize(width_, height_);
                 frame_view_->removeAllViews();
                 frame_view_->addView(v);
             } else {
@@ -454,8 +451,8 @@ namespace ukive {
                 new_size.same(Size(bounds.width() - margin.hori(), bounds.height() - margin.vert()));
                 new_size.join(Size(0, 0));
 
-                int child_left = getPadding().start() + child->getLayoutMargin().start();
-                int child_top = getPadding().top() + child->getLayoutMargin().top();
+                int child_left = getPadding().start() + margin.start();
+                int child_top = getPadding().top() + margin.top();
 
                 child->layout(
                     Rect(child_left, child_top, new_size.width(), new_size.height()));

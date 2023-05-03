@@ -751,6 +751,7 @@ namespace ukive {
 
         if (get_focus) {
             if (is_editable_) {
+                locateTextBlink(getSelection().start);
                 text_blink_->show();
             }
         } else {

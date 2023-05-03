@@ -39,6 +39,7 @@ namespace ukive {
         void setMatrix(const Matrix2x3F& m);
         void setScaleType(ScaleType type);
         void setImage(const GPtr<ImageFrame>& img);
+        void setImageName(const std::u16string_view& name);
 
         Matrix2x3F getMatrix() const;
         ScaleType getScaleType() const;

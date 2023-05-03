@@ -6,9 +6,6 @@
 
 #include "texteditor_element.h"
 
-#include <cmath>
-
-#include "ukive/window/window.h"
 #include "ukive/graphics/canvas.h"
 
 

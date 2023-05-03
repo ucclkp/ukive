@@ -11,6 +11,8 @@
 
 #include "ukive/system/ipc/pipe_server.h"
 
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
 #include <Windows.h>
 
 

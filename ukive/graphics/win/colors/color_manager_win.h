@@ -11,6 +11,8 @@
 
 #include "ukive/graphics/colors/color_manager.h"
 
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
 #include <Windows.h>
 #include <Icm.h>
 

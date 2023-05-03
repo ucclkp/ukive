@@ -24,6 +24,7 @@ namespace ukive {
 
     protected:
         void draw(Canvas* canvas) override;
+        bool isTransparent() const override { return false; }
 
     private:
         Func drawer_;
