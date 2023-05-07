@@ -491,7 +491,8 @@ namespace ukive {
                 int child_left;
                 switch (li->hori_align) {
                 case SequenceLayoutInfo::Align::CENTER:
-                    child_left = getPadding().start() + margin.start() + (bounds.width() - size.width()) / 2;
+                    child_left = getPadding().start() + margin.start()
+                        + (bounds.width() - margin.hori() - size.width()) / 2;
                     break;
                 case SequenceLayoutInfo::Align::END:
                     child_left = bounds.right() - margin.end() - size.width();
@@ -525,7 +526,8 @@ namespace ukive {
                 int child_top;
                 switch (li->vert_align) {
                 case SequenceLayoutInfo::Align::CENTER:
-                    child_top = getPadding().top() + margin.top() + (bounds.height() - size.height()) / 2;
+                    child_top = getPadding().top() + margin.top()
+                        + (bounds.height() - margin.vert() - size.height()) / 2;
                     break;
                 case SequenceLayoutInfo::Align::END:
                     child_top = bounds.bottom() - margin.bottom() - size.height();

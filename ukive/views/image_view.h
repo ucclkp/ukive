@@ -40,10 +40,12 @@ namespace ukive {
         void setScaleType(ScaleType type);
         void setImage(const GPtr<ImageFrame>& img);
         void setImageName(const std::u16string_view& name);
+        void setImageOpacity(float opacity);
 
         Matrix2x3F getMatrix() const;
         ScaleType getScaleType() const;
         GPtr<ImageFrame> getImage() const;
+        float GetImageOpacity() const;
 
     protected:
         void onContextChanged(Context::Type type, const Context& context) override;
@@ -52,6 +54,7 @@ namespace ukive {
         void setImageBounds(int width, int height);
         void fitImageBounds(int width, int height, bool always);
 
+        float opacity_ = 1.f;
         Matrix2x3F matrix_;
         ScaleType scale_type_;
         std::unique_ptr<ImageElement> img_element_;

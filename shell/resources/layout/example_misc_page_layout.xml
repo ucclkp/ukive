@@ -3,12 +3,28 @@
     width="fill"
     height="fill">
 
-    <TextView
-        id="@+id/tv_test"
-        width="auto"
+    <SequenceLayout
+        width="fill"
         height="auto"
-        margin="12"
-        text="测试页面"/>
+        orientation="horizontal">
+
+        <TextView
+            id="@+id/tv_test"
+            width="auto"
+            height="auto"
+            margin="12"
+            text="测试页面"
+            vert_align="center" />
+
+        <Button
+            id="@+id/bt_test"
+            width="auto"
+            height="auto"
+            margin="12"
+            text="测试页面"
+            vert_align="center" />
+
+    </SequenceLayout>
 
     <ScrollView
         id="@+id/sv_misc_page"
@@ -106,7 +122,6 @@
                 margin="12"
                 selectable="true"
                 editable="true"
-                background="?color/white"
                 shadow_radius="0"
                 padding="6" />
 

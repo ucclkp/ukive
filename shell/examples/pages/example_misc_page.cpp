@@ -202,7 +202,7 @@ namespace shell {
         check_box_->setChecked(true);
 
         combo_box_ = findView<ukive::ComboBox>(v, Res::Id::sv_misc_combobox);
-        combo_box_->addItem(u"Test01");
+        combo_box_->addItem(u"Test01", 2);
         combo_box_->addItem(u"Test02");
         combo_box_->addItem(u"Test03");
 
@@ -243,6 +243,7 @@ namespace shell {
         auto img_path = rm->getResRootPath() / u"freshpaint.png";
         auto img = ukive::ImageFrame::decodeFile(getWindow()->getCanvas(), img_path.u16string());
         image_view_->setImage(img);
+        image_view_->setImageOpacity(0.5f);
         image_view_->animeParams().setOrder(ukive::ViewAnimatorParams::RST);
 
         test_button_ = findView<ukive::Button>(v, Res::Id::bt_misc_button);

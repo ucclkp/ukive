@@ -7,6 +7,7 @@
 #ifndef UKIVE_VIEWS_COMBO_BOX_H_
 #define UKIVE_VIEWS_COMBO_BOX_H_
 
+#include "utils/var.hpp"
 #include "utils/weak_ref_nest.hpp"
 
 #include "ukive/basics/levitator.h"
@@ -37,7 +38,8 @@ namespace ukive {
         ~ComboBox();
 
         void addItem(const std::u16string_view& title);
-        void addItem(const std::u16string_view& title, size_t index);
+        void addItem(size_t index, const std::u16string_view& title);
+        bool modifyItem(size_t index, const std::u16string_view& title);
         void removeItem(size_t index);
         void clearItems();
 
@@ -46,7 +48,65 @@ namespace ukive {
         void setDropdownMinWidth(int min_width);
         void setListener(ComboBoxSelectedListener* l);
 
+        size_t getItemCount() const;
+        const std::u16string& getItemTitle(size_t index) const;
+        const std::u16string& getDefaultTitle(size_t index) const;
         int getSelectedIndex() const;
+
+        bool hasItemData(size_t index) const;
+        bool hasDefaultData() const;
+
+        template <typename Ty>
+        void addItem(const std::u16string_view& title, const Ty& data) {
+            addItemItl(title, std::make_shared<Ty>(data));
+        }
+
+        template <typename Ty>
+        void addItem(size_t index, const std::u16string_view& title, const Ty& data) {
+            addItemItl(index, title, std::make_shared<Ty>(data));
+        }
+
+        template <typename Ty>
+        bool modifyItemData(size_t index, const Ty& data) {
+            if (index > items_.size()) {
+                return false;
+            }
+            items_[index].data = std::make_shared<Ty>(data);
+        }
+
+        template <typename Ty>
+        bool modifyItem(size_t index, const std::u16string_view& title, const Ty& data) {
+            if (index > items_.size()) {
+                return false;
+            }
+            items_[index].title = title;
+            items_[index].data = std::make_shared<Ty>(data);
+            notifyDataChanged();
+        }
+
+        template <typename Ty>
+        void setDefaultItemData(const Ty& data) {
+            default_item_.data = std::make_shared<Ty>(data);
+        }
+
+        template <typename Ty>
+        void setDefaultItem(const std::u16string_view& title, const Ty& data) {
+            setDefaultItem(title);
+            setDefaultItemData(data);
+        }
+
+        template <typename Ty>
+        const Ty& getItemData(size_t index) const {
+            if (index > items_.size()) {
+                index = items_.size();
+            }
+            return *static_cast<Ty*>(items_[index].data.get());
+        }
+
+        template <typename Ty>
+        const Ty& getDefaultData(size_t index) const {
+            return *static_cast<Ty*>(default_item_.data.get());
+        }
 
     protected:
         class TextViewListItem : public ListItem {
@@ -79,8 +139,19 @@ namespace ukive {
         size_t onGetListDataCount(LayoutView* parent) const override;
 
     private:
+        typedef std::shared_ptr<void> DataPtr;
+
+        struct ItemData {
+            std::u16string title;
+            DataPtr data;
+        };
+
         void initViews();
         void determineViewsSize(const SizeInfo& info);
+
+        void addItemItl(const std::u16string_view& title, const DataPtr& data);
+        void addItemItl(size_t index, const std::u16string_view& title, const DataPtr& data);
+        void itemAdded();
 
         void show(int width);
         void close();
@@ -90,8 +161,8 @@ namespace ukive {
         ListView* list_view_ = nullptr;
 
         int selected_index_ = -1;
-        std::vector<std::u16string> data_;
-        std::u16string default_title_;
+        std::vector<ItemData> items_;
+        ItemData default_item_;
 
         bool is_finished_ = true;
         int min_dropdown_width_ = 0;

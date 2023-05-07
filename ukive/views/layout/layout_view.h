@@ -111,7 +111,7 @@ namespace ukive {
             const Size& ex_margin = {});
         void determineChildrenSize(const SizeInfo& parent_info);
 
-        STL_VECTOR_ITERATORS(View*, views_);
+        STL_VECTOR_ALL_ITERATORS(View*, views_);
 
     protected:
         // 重置 LayoutView 记录的事件拦截状态。

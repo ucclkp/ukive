@@ -28,7 +28,10 @@ namespace ukive {
         if (attrs.find(necro::kAttrTextViewText) == attrs.end()) {
             setText(u"Button");
         }
-        setTextSize(c.dp2pxi(13));
+        if (attrs.find(necro::kAttrTextViewTextSize) == attrs.end()) {
+            setTextSize(c.dp2pxi(13));
+        }
+
         setEditable(false);
         setSelectable(false);
         setClickable(true);

@@ -38,7 +38,7 @@ namespace ukive {
         TreeNode* getExpandedDescendantAt(size_t pos) const;
         size_t getExpandedDescendantCount() const;
 
-        STL_VECTOR_ITERATORS(TreeNode*, children_);
+        STL_VECTOR_ALL_ITERATORS(TreeNode*, children_);
 
     private:
         void addEDC(size_t inc);

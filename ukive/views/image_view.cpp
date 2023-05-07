@@ -134,6 +134,7 @@ namespace ukive {
     void ImageView::setImage(const GPtr<ImageFrame>& img) {
         if (img) {
             img_element_.reset(new ImageElement(img));
+            img_element_->setOpacity(opacity_);
             auto b = getContentBounds();
             setImageBounds(b.width(), b.height());
         } else {
@@ -148,6 +149,13 @@ namespace ukive {
         auto rm = Application::getResourceManager();
         rm->getImagePath(name);
         // TODO
+    }
+
+    void ImageView::setImageOpacity(float opacity) {
+        opacity_ = opacity;
+        if (img_element_) {
+            img_element_->setOpacity(opacity_);
+        }
     }
 
     void ImageView::setImageBounds(int width, int height) {
@@ -215,6 +223,10 @@ namespace ukive {
             return {};
         }
         return img_element_->getImage();
+    }
+
+    float ImageView::GetImageOpacity() const {
+        return opacity_;
     }
 
     void ImageView::onContextChanged(Context::Type type, const Context& context) {
