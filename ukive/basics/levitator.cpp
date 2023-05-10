@@ -215,7 +215,7 @@ namespace ukive {
         content_view_ = v;
     }
 
-    void Levitator::setEventListener(OnInnerWindowEventListener* l) {
+    void Levitator::setEventListener(OnLeviatorEventListener* l) {
         listener_ = l;
     }
 

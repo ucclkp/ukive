@@ -14,6 +14,7 @@
 #include "utils/time_utils.h"
 #include "utils/weak_bind.hpp"
 
+#include "ukive/basics/tooltip.h"
 #include "ukive/diagnostic/input_tracker.h"
 #include "ukive/diagnostic/ui_tracker.h"
 #include "ukive/event/input_event.h"
@@ -424,6 +425,14 @@ namespace ukive {
         outline_ = outline;
     }
 
+    void View::setTooltipEnabled(bool enabled) {
+        if (enabled == is_tooltip_enabled_) {
+            return;
+        }
+
+        is_tooltip_enabled_ = enabled;
+    }
+
     void View::setLayoutSize(int width, int height) {
         bool changed = layout_size_.width() != width ||
             layout_size_.height() != height;
@@ -797,6 +806,10 @@ namespace ukive {
 
     bool View::isReceiveOutsideInputEvent() const {
         return is_receive_outside_input_event_;
+    }
+
+    bool View::isTooltipEnabled() const {
+        return is_tooltip_enabled_;
     }
 
     bool View::canGetFocus() const {
@@ -1908,7 +1921,17 @@ namespace ukive {
         {
             return false;
         }
-        return is_clkable_ || is_dclkable_;
+
+        if (e->getEvent() == InputEvent::EVM_HOVER) {
+            if (is_tooltip_enabled_) {
+                if (!tooltip_) {
+                    tooltip_ = std::make_unique<Tooltip>(getContext());
+                }
+                tooltip_->show(this, e->getRawX(), e->getRawY());
+                return true;
+            }
+        }
+        return is_clkable_ || is_dclkable_ || is_tclkable_;
     }
 
     Size View::onDetermineSize(const SizeInfo& info) {

@@ -7,6 +7,8 @@
 #ifndef UKIVE_SYSTEM_UI_UTILS_H_
 #define UKIVE_SYSTEM_UI_UTILS_H_
 
+#include "ukive/graphics/size.hpp"
+
 
 namespace ukive {
 
@@ -19,6 +21,8 @@ namespace ukive {
      * 返回双击后第三击的判定时间，单位为毫秒。
      */
     unsigned int getTripleClickTime();
+
+    Size getCurrentCursorSize();
 
 }
 

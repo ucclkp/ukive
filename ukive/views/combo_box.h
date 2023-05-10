@@ -28,7 +28,7 @@ namespace ukive {
     class ComboBox :
         public LayoutView,
         public OnClickListener,
-        public OnInnerWindowEventListener,
+        public OnLeviatorEventListener,
         public ListItemEventListener,
         public ListSource
     {
@@ -128,7 +128,7 @@ namespace ukive {
         // ListItemEventListener
         void onItemClicked(ListView* list_view, ListItem* item, View* v) override;
 
-        // OnInnerWindowEventListener
+        // OnLeviatorEventListener
         void onRequestDismissByTouchOutside(Levitator* lev) override;
 
         // ListSource

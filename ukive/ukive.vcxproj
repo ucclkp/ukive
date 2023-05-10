@@ -201,6 +201,7 @@
     <ClInclude Include="animation\view_tval.h" />
     <ClInclude Include="app\application.h" />
     <ClInclude Include="basics\levitator.h" />
+    <ClInclude Include="basics\tooltip.h" />
     <ClInclude Include="diagnostic\grid_navigator.h" />
     <ClInclude Include="diagnostic\grid_view.h" />
     <ClInclude Include="diagnostic\input_tracker.h" />
@@ -504,6 +505,7 @@
     <ClCompile Include="app\application.cpp" />
     <ClCompile Include="app\win\application_win.cpp" />
     <ClCompile Include="basics\levitator.cpp" />
+    <ClCompile Include="basics\tooltip.cpp" />
     <ClCompile Include="diagnostic\grid_navigator.cpp" />
     <ClCompile Include="diagnostic\grid_view.cpp" />
     <ClCompile Include="diagnostic\input_tracker.cpp" />

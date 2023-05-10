@@ -95,7 +95,7 @@ namespace win {
                     path = buf;
                     is_dynamic = true;
                 } else {
-                    delete buf;
+                    delete[] buf;
                     path = nullptr;
                 }
             } else {
@@ -110,20 +110,47 @@ namespace win {
         if (path) {
             mod = ::LoadLibraryW(path);
             if (is_dynamic) {
-                delete path;
+                delete[] path;
             }
             return mod;
         }
 
         // Reduce risk
         ::SetDllDirectoryW(L"");
-        return ::LoadLibraryW(path);
+        return ::LoadLibraryW(name);
     }
 
 }
 
     unsigned int getDoubleClickTime() {
         return ::GetDoubleClickTime();
+    }
+
+    Size getCurrentCursorSize() {
+        // https://stackoverflow.com/questions/1699666/how-do-i-know-the-size-of-a-hcursor-object
+        Size r(0, 0);
+        auto cur = ::GetCursor();
+        if (!cur) {
+            return r;
+        }
+
+        ICONINFO info;
+        if (::GetIconInfo(cur, &info) == 0) {
+            return r;
+        }
+
+        BITMAP bmp_info;
+        if (::GetObjectW(info.hbmMask, sizeof(BITMAP), &bmp_info) != 0) {
+            r.width(bmp_info.bmWidth);
+            r.height(std::abs(bmp_info.bmHeight) / ((!info.hbmColor) ? 2 : 1));
+        }
+
+        if (info.hbmColor) {
+            ::DeleteObject(info.hbmColor);
+        }
+        ::DeleteObject(info.hbmMask);
+
+        return r;
     }
 
 }

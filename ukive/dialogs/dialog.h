@@ -12,7 +12,7 @@
 
 namespace ukive {
 
-    class Dialog : public OnInnerWindowEventListener {
+    class Dialog : public OnLeviatorEventListener {
     public:
         explicit Dialog(Context c);
         virtual ~Dialog();
@@ -27,7 +27,7 @@ namespace ukive {
         virtual View* onCreate(Context c) = 0;
         virtual void onDestroy() {}
 
-        // OnInnerWindowEventListener
+        // OnLeviatorEventListener
         void onRequestDismissByTouchOutside(Levitator* lev) override;
 
     private:

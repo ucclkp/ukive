@@ -35,6 +35,7 @@ namespace ukive {
     class ViewAnimator;
     class ViewDelegate;
     class Window;
+    class Tooltip;
 
     class View : public ElementCallback {
     public:
@@ -88,6 +89,7 @@ namespace ukive {
         void setDelegate(ViewDelegate* d);
         void setHaulSource(HaulSource* src);
         void setOutline(Outline outline);
+        void setTooltipEnabled(bool enabled);
 
         void setLayoutSize(int width, int height);
         void setLayoutMargin(int start, int top, int end, int bottom);
@@ -185,6 +187,7 @@ namespace ukive {
         bool isLocalPointerInThisVisible(InputEvent* e) const;
         bool isParentPointerInThis(InputEvent* e) const;
         bool isReceiveOutsideInputEvent() const;
+        bool isTooltipEnabled() const;
 
         bool canGetFocus() const;
         bool canInteract() const;
@@ -355,6 +358,7 @@ namespace ukive {
         bool is_receive_outside_input_event_;
         bool is_mouse_down_;
         bool is_touch_down_;
+        bool is_tooltip_enabled_ = false;
 
         bool is_measured_ = false;
         bool is_layouted_ = false;
@@ -376,6 +380,7 @@ namespace ukive {
 
         Cursor cursor_ = Cursor::ARROW;
 
+        std::unique_ptr<Tooltip> tooltip_;
         std::unique_ptr<LayoutInfo> layout_info_;
         std::unique_ptr<ViewAnimator> animator_;
         std::unique_ptr<ShadowEffect> shadow_effect_;

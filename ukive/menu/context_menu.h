@@ -20,7 +20,7 @@ namespace ukive {
     class MenuItem;
     class ContextMenuCallback;
 
-    class ContextMenu : public MenuCallback, public OnInnerWindowEventListener {
+    class ContextMenu : public MenuCallback, public OnLeviatorEventListener {
     public:
         ContextMenu(Window* w, ContextMenuCallback* callback);
         ~ContextMenu();
@@ -41,7 +41,7 @@ namespace ukive {
         int getId() const;
 
     protected:
-        // OnInnerWindowEventListener
+        // OnLeviatorEventListener
         void onRequestDismissByTouchOutside(Levitator* lev) override;
 
     private:

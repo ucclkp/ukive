@@ -4,8 +4,8 @@
 // This program is licensed under GPLv3 license that can be
 // found in the LICENSE file.
 
-#ifndef UKIVE_BASICS_INNER_WINDOW_H_
-#define UKIVE_BASICS_INNER_WINDOW_H_
+#ifndef UKIVE_BASICS_LEVITATOR_H_
+#define UKIVE_BASICS_LEVITATOR_H_
 
 #include "ukive/views/layout/simple_layout.h"
 #include "ukive/views/layout_info/gravity.h"
@@ -19,9 +19,9 @@ namespace ukive {
     class Element;
     class Levitator;
 
-    class OnInnerWindowEventListener {
+    class OnLeviatorEventListener {
     public:
-        virtual ~OnInnerWindowEventListener() = default;
+        virtual ~OnLeviatorEventListener() = default;
 
         virtual void onBeforeInnerWindowLayout(
             Levitator* lev, Rect* new_bounds, const Rect& old_bounds) {}
@@ -100,7 +100,7 @@ namespace ukive {
         void setDismissByTouchOutside(bool enable);
 
         void setContentView(View* v);
-        void setEventListener(OnInnerWindowEventListener* l);
+        void setEventListener(OnLeviatorEventListener* l);
 
         int getLayoutWidth() const;
         int getLayoutHeight() const;
@@ -141,11 +141,11 @@ namespace ukive {
         Window* window_ = nullptr;
         View* content_view_;
         LayoutView* frame_view_;
-        OnInnerWindowEventListener* listener_ = nullptr;
+        OnLeviatorEventListener* listener_ = nullptr;
         bool is_showing_;
         bool is_dismissing_ = false;
     };
 
 }
 
-#endif  // UKIVE_BASICS_INNER_WINDOW_H_
+#endif  // UKIVE_BASICS_LEVITATOR_H_

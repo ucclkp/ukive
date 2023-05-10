@@ -15,7 +15,7 @@ namespace ukive {
     class View;
 
     class GridNavigator :
-        public OnInnerWindowEventListener
+        public OnLeviatorEventListener
     {
     public:
         explicit GridNavigator(View* v);
@@ -28,7 +28,7 @@ namespace ukive {
         void showNav(const Point& center_pos);
         void closeNav();
 
-        // OnInnerWindowEventListener
+        // OnLeviatorEventListener
         void onBeforeInnerWindowLayout(
             Levitator* lev, Rect* new_bounds, const Rect& old_bounds) override;
 

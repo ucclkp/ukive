@@ -890,7 +890,7 @@ namespace win {
         if (is_enable_mouse_track_) {
             TRACKMOUSEEVENT tme;
             tme.cbSize = sizeof(tme);
-            tme.dwFlags = TME_LEAVE;// | TME_HOVER;
+            tme.dwFlags = TME_LEAVE | TME_HOVER;
             tme.hwndTrack = hWnd_;// 指定要 追踪 的窗口
             tme.dwHoverTime = 1000;  // 鼠标在按钮上停留超过 1s ，才认为状态为 HOVER
             ::TrackMouseEvent(&tme); // 开启 Windows 的 WM_MOUSELEAVE ， WM_MOUSEHOVER 事件支持
@@ -1856,9 +1856,11 @@ namespace win {
                 *handled = true;
                 return 0;
             }
+            break;
         }
+
         default:
-        break;
+            break;
         }
         return 0;
     }
@@ -1874,6 +1876,10 @@ namespace win {
         InputEvent ev;
         ev.setEvent(InputEvent::EVM_HOVER);
         ev.setPointerType(InputEvent::PT_MOUSE);
+        ev.setX(GET_X_LPARAM(lParam));
+        ev.setY(GET_Y_LPARAM(lParam));
+        ev.setRawX(GET_X_LPARAM(lParam));
+        ev.setRawY(GET_Y_LPARAM(lParam));
         if (onInputEvent(&ev)) {
             *handled = true;
             return 0;

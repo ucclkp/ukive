@@ -131,7 +131,7 @@ namespace ukive {
             break;
 
         case Keyboard::KEY_C:  //c: copy.
-            if (can_edit && editable->hasSelection()) {
+            if (editable->hasSelection()) {
                 ClipboardManager::saveToClipboard(editable->getSelectionString());
             }
             break;

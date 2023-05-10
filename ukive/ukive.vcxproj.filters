@@ -715,6 +715,9 @@
     <ClCompile Include="system\ui_utils.cpp">
       <Filter>system</Filter>
     </ClCompile>
+    <ClCompile Include="basics\tooltip.cpp">
+      <Filter>basics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">
@@ -1616,6 +1619,9 @@
     </ClInclude>
     <ClInclude Include="text\selection.hpp">
       <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="basics\tooltip.h">
+      <Filter>basics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

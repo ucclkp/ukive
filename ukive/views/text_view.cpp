@@ -615,6 +615,11 @@ namespace ukive {
             font_weight_,
             u"zh-CN");
 
+        Color text_color = text_color_;
+        if (!isEnabled()) {
+            text_color.a *= 0.5f;
+        }
+
         text_layout_->setMaxWidth(max_width);
         text_layout_->setMaxHeight(max_height);
         text_layout_->setLineSpacing(line_spacing_method_, line_spacing_);
@@ -622,7 +627,7 @@ namespace ukive {
             auto_wrap ? TextLayout::TextWrapping::WRAP : TextLayout::TextWrapping::NONE);
         text_layout_->setHoriAlignment(hori_alignment_);
         text_layout_->setVertAlignment(vert_alignment_);
-        text_layout_->setDefaultFontColor(text_color_);
+        text_layout_->setDefaultFontColor(text_color);
 
         applyFontAttrSpans();
         applyOtherSpans();
