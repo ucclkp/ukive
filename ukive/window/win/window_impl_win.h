@@ -118,7 +118,7 @@ namespace win {
         void sendFrameChanged();
         void forceResize();
 
-        void setMouseTrack();
+        bool setMouseTrack();
         bool isMouseTrackEnabled() const;
 
         bool showTitlebarMenu();
@@ -252,7 +252,7 @@ namespace win {
 
         bool is_created_;
         bool is_showing_;
-        bool is_enable_mouse_track_;
+        bool need_mouse_track_;
         bool is_first_nccalc_;
         bool is_fullscreen_ = false;
         bool is_resizable_ = true;

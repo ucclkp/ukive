@@ -80,7 +80,7 @@ namespace win {
           title_(kDefaultTitle),
           is_created_(false),
           is_showing_(false),
-          is_enable_mouse_track_(true),
+          need_mouse_track_(true),
           is_first_nccalc_(true),
           close_methods_(WINDOW_CLOSE_BY_BUTTON | WINDOW_CLOSE_BY_MENU)
     {
@@ -882,21 +882,27 @@ namespace win {
         ::ReleaseCapture();
     }
 
-    void WindowImplWin::setMouseTrack() {
+    bool WindowImplWin::setMouseTrack() {
+        if (!need_mouse_track_) {
+            return false;
+        }
+
         if (!::IsWindow(hWnd_)) {
-            return;
+            return false;
         }
 
-        if (is_enable_mouse_track_) {
-            TRACKMOUSEEVENT tme;
-            tme.cbSize = sizeof(tme);
-            tme.dwFlags = TME_LEAVE | TME_HOVER;
-            tme.hwndTrack = hWnd_;// 指定要 追踪 的窗口
-            tme.dwHoverTime = 1000;  // 鼠标在按钮上停留超过 1s ，才认为状态为 HOVER
-            ::TrackMouseEvent(&tme); // 开启 Windows 的 WM_MOUSELEAVE ， WM_MOUSEHOVER 事件支持
-
-            is_enable_mouse_track_ = false;
+        // 开启 Windows 的 WM_MOUSELEAVE, WM_MOUSEHOVER 事件支持
+        TRACKMOUSEEVENT tme;
+        tme.cbSize = sizeof(tme);
+        tme.dwFlags = TME_LEAVE/* | TME_HOVER*/;
+        tme.hwndTrack = hWnd_;
+        tme.dwHoverTime = 1000;
+        if (::TrackMouseEvent(&tme) == 0) {
+            return false;
         }
+
+        need_mouse_track_ = false;
+        return true;
     }
 
     void WindowImplWin::setWindowStyle(int style, bool ex, bool enabled) {
@@ -1102,7 +1108,7 @@ namespace win {
     }
 
     bool WindowImplWin::isMouseTrackEnabled() const {
-        return is_enable_mouse_track_;
+        return need_mouse_track_;
     }
 
     bool WindowImplWin::showTitlebarMenu() {
@@ -1308,7 +1314,9 @@ namespace win {
     bool WindowImplWin::onInputEvent(InputEvent* e) {
         // 追踪鼠标，以便产生 EVM_LEAVE_WIN 事件。
         if (e->getEvent() == InputEvent::EVM_LEAVE_WIN) {
-            is_enable_mouse_track_ = true;
+            need_mouse_track_ = true;
+        } else if (e->getEvent() == InputEvent::EVM_HOVER) {
+            need_mouse_track_ = true;
         } else if (e->getEvent() == InputEvent::EVM_MOVE) {
             setMouseTrack();
         }

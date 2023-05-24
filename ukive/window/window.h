@@ -39,6 +39,7 @@ namespace ukive {
     class ContextMenuCallback;
     class TextActionMenu;
     class TextActionMenuCallback;
+    class Tooltip;
     class HaulSource;
     class OnWindowStatusChangedListener;
     struct ThemeConfig;
@@ -184,8 +185,11 @@ namespace ukive {
             ContextMenuCallback* callback,
             View* rel, int x, int y, int id = -1);
         TextActionMenu* startTextActionMenu(
-            TextActionMenuCallback* callback,
-            int id = -1);
+            TextActionMenuCallback* callback, int id = -1);
+
+        Tooltip* startTooltip(
+            int x, int y,
+            const std::u16string_view& text);
 
         void startHaul(HaulSource* src);
         void stopHaul(HaulSource* src);
@@ -270,6 +274,7 @@ namespace ukive {
         Window* parent_ = nullptr;
         HaulSource* haul_src_ = nullptr;
 
+        std::unique_ptr<Tooltip> tooltip_;
         std::unique_ptr<ContextMenu> context_menu_;
         std::unique_ptr<TextActionMenu> text_action_menu_;
         std::vector<OnWindowStatusChangedListener*> status_changed_listeners_;

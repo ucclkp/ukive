@@ -19,7 +19,7 @@ namespace ukive {
         Tooltip(Context c);
 
         void show(View* anchor, int gravity);
-        void show(View* host, int x, int y);
+        void show(Window* host, int x, int y);
         void close();
 
         void setText(const std::u16string_view& text);

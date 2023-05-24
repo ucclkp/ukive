@@ -23,47 +23,58 @@ namespace ukive {
     ClipboardManager::~ClipboardManager() {
     }
 
-    void ClipboardManager::saveToClipboard(const std::u16string_view& text) {
+    bool ClipboardManager::saveToClipboard(const std::u16string_view& text) {
 #ifdef OS_WINDOWS
+        bool succeeded = false;
         if (::OpenClipboard(nullptr)) {
             ::EmptyClipboard();
 
             size_t space = (text.length() + 1) * sizeof(wchar_t);
+            HANDLE handle = ::GlobalAlloc(GMEM_FIXED, space);
+            if (handle) {
+                wchar_t* pData = static_cast<wchar_t*>(::GlobalLock(handle));
+                if (pData) {
+                    std::copy(text.begin(), text.end(), pData);
+                    pData[text.length()] = L'\0';
+                    ::GlobalUnlock(handle);
 
-            HANDLE hHandle = ::GlobalAlloc(GMEM_FIXED, space);
-            wchar_t* pData = static_cast<wchar_t*>(::GlobalLock(hHandle));
+                    if (::SetClipboardData(CF_UNICODETEXT, handle)) {
+                        succeeded = true;
+                    }
+                }
 
-            for (size_t i = 0; i < text.length(); ++i) {
-                pData[i] = text[i];
+                if (!succeeded) {
+                    ::GlobalFree(handle);
+                }
             }
-            pData[text.length()] = L'\0';
-
-            ::SetClipboardData(CF_UNICODETEXT, hHandle);
-            ::GlobalUnlock(hHandle);
             ::CloseClipboard();
         }
+        return succeeded;
 #elif defined OS_MAC
+        return false;
 #endif
     }
 
-    std::u16string ClipboardManager::getFromClipboard() {
-        std::u16string content;
+    bool ClipboardManager::getFromClipboard(std::u16string* out) {
 #ifdef OS_WINDOWS
+        bool succeeded = false;
         if (::OpenClipboard(nullptr)) {
             HGLOBAL hMem = ::GetClipboardData(CF_UNICODETEXT);
-            if (hMem != nullptr) {
+            if (hMem) {
                 wchar_t* lpStr = static_cast<wchar_t*>(::GlobalLock(hMem));
-                if (lpStr != nullptr) {
-                    content = std::u16string(lpStr, lpStr + std::char_traits<wchar_t>::length(lpStr));
+                if (lpStr) {
+                    *out = std::u16string(lpStr, lpStr + std::char_traits<wchar_t>::length(lpStr));
                     ::GlobalUnlock(hMem);
+                    succeeded = true;
                 }
             }
 
             ::CloseClipboard();
         }
+        return succeeded;
 #elif defined OS_MAC
+        return false;
 #endif
-        return content;
     }
 
 }

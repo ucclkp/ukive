@@ -17,8 +17,8 @@ namespace ukive {
         ClipboardManager();
         ~ClipboardManager();
 
-        static void saveToClipboard(const std::u16string_view& text);
-        static std::u16string getFromClipboard();
+        static bool saveToClipboard(const std::u16string_view& text);
+        static bool getFromClipboard(std::u16string* out);
     };
 
 }

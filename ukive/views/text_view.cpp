@@ -1707,8 +1707,9 @@ namespace ukive {
 
     bool TextView::canPaste() const {
         if (is_editable_) {
-            auto content = ClipboardManager::getFromClipboard();
-            return !content.empty();
+            // TODO: 优化
+            std::u16string content;
+            return ClipboardManager::getFromClipboard(&content) && !content.empty();
         }
         return false;
     }
@@ -1743,7 +1744,11 @@ namespace ukive {
     }
 
     void TextView::performPaste() {
-        auto content = ClipboardManager::getFromClipboard();
+        std::u16string content;
+        if (!ClipboardManager::getFromClipboard(&content)) {
+            return;
+        }
+
         if (hasSelection()) {
             base_text_->replace(content, Editable::Reason::USER_INPUT);
         } else {

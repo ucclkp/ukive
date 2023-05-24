@@ -95,7 +95,9 @@ namespace ukive {
         ev.setEvent(InputEvent::EV_LEAVE);
         ev.setIsNoDispatch(true);
         INPUT_TRACK_PRINT("Levitator", &e);
-        liv->dispatchInputEvent(&ev);
+        if (liv) {
+            liv->dispatchInputEvent(&ev);
+        }
         window_->setLastInputView(nullptr);
     }
 
@@ -121,7 +123,9 @@ namespace ukive {
         ev.setEvent(InputEvent::EV_LEAVE);
         ev.setIsNoDispatch(true);
         INPUT_TRACK_PRINT("Levitator", &e);
-        liv->dispatchInputEvent(&ev);
+        if (liv) {
+            liv->dispatchInputEvent(&ev);
+        }
         window_->setLastInputView(nullptr);
     }
 
@@ -415,7 +419,10 @@ namespace ukive {
 
     void Levitator::dismiss() {
         if (frame_view_ && is_showing_) {
-            window_->getRootLayout()->removeShade(frame_view_);
+            auto root_layout = window_->getRootLayout();
+            if (root_layout) {
+                root_layout->removeShade(frame_view_);
+            }
         }
         is_showing_ = false;
         window_ = nullptr;

@@ -138,8 +138,8 @@ namespace ukive {
 
         case Keyboard::KEY_V:  //v: paste.
             if (can_edit) {
-                auto content = ClipboardManager::getFromClipboard();
-                if (!content.empty()) {
+                std::u16string content;
+                if (ClipboardManager::getFromClipboard(&content) && !content.empty()) {
                     if (editable->hasSelection()) {
                         editable->replace(content, Editable::Reason::USER_INPUT);
                     } else {

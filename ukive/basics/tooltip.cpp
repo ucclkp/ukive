@@ -14,6 +14,8 @@ namespace ukive {
 
     Tooltip::Tooltip(Context c) {
         auto element = new Element(Element::SHAPE_RRECT, Color::White);
+        element->setRadius(c.dp2px(2));
+
         auto view = new TextView(c);
         view->setText(u"test");
         view->setPadding(c.dp2pxi(6), c.dp2pxi(4), c.dp2pxi(6), c.dp2pxi(4));
@@ -28,8 +30,8 @@ namespace ukive {
         levitator_.show(anchor, gravity);
     }
 
-    void Tooltip::show(View* host, int x, int y) {
-        levitator_.show(host->getWindow(), x, y);
+    void Tooltip::show(Window* host, int x, int y) {
+        levitator_.show(host, x, y);
     }
 
     void Tooltip::close() {

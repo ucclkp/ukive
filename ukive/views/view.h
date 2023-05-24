@@ -90,6 +90,7 @@ namespace ukive {
         void setHaulSource(HaulSource* src);
         void setOutline(Outline outline);
         void setTooltipEnabled(bool enabled);
+        void setTooltipText(const std::u16string_view& text);
 
         void setLayoutSize(int width, int height);
         void setLayoutMargin(int start, int top, int end, int bottom);
@@ -140,6 +141,7 @@ namespace ukive {
         Context getContext() const;
         Element* getBackground() const;
         Element* getForeground() const;
+        const std::u16string& getTooltipText() const;
 
         // 相对于父 View 的 bounds
         Rect getBounds() const;
@@ -371,6 +373,7 @@ namespace ukive {
         bool owned_fg_ = true;
         Element* bg_element_ = nullptr;
         Element* fg_element_ = nullptr;
+        std::u16string tooltip_text_;
 
         // 双击判定
         bool wait_for_dclk_ = false;
@@ -380,13 +383,13 @@ namespace ukive {
 
         Cursor cursor_ = Cursor::ARROW;
 
-        std::unique_ptr<Tooltip> tooltip_;
         std::unique_ptr<LayoutInfo> layout_info_;
         std::unique_ptr<ViewAnimator> animator_;
         std::unique_ptr<ShadowEffect> shadow_effect_;
         std::unique_ptr<ViewAnimatorParams> anime_params_;
         std::vector<OnViewStatusListener*> status_listeners_;
 
+        Tooltip* tooltip_ = nullptr;
         LayoutView* parent_;
         OnClickListener* click_listener_ = nullptr;
         HaulSource* haul_src_ = nullptr;

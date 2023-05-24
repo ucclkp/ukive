@@ -431,6 +431,17 @@ namespace ukive {
         }
 
         is_tooltip_enabled_ = enabled;
+        if (!enabled && tooltip_) {
+            tooltip_->close();
+            tooltip_ = nullptr;
+        }
+    }
+
+    void View::setTooltipText(const std::u16string_view& text) {
+        tooltip_text_ = text;
+        if (tooltip_) {
+            tooltip_->setText(text);
+        }
     }
 
     void View::setLayoutSize(int width, int height) {
@@ -588,6 +599,10 @@ namespace ukive {
 
     Element* View::getForeground() const {
         return fg_element_;
+    }
+
+    const std::u16string& View::getTooltipText() const {
+        return tooltip_text_;
     }
 
     Rect View::getBounds() const {
@@ -1177,17 +1192,19 @@ namespace ukive {
                 }
             }
 
-            if (is_haul) {
-                if (consumed) {
-                    window_->setLastHaulView(this);
-                } else if (need_null) {
-                    window_->setLastHaulView(nullptr);
-                }
-            } else {
-                if (consumed) {
-                    window_->setLastInputView(this);
-                } else if (need_null) {
-                    window_->setLastInputView(nullptr);
+            if (window_) {
+                if (is_haul) {
+                    if (consumed) {
+                        window_->setLastHaulView(this);
+                    } else if (need_null) {
+                        window_->setLastHaulView(nullptr);
+                    }
+                } else {
+                    if (consumed) {
+                        window_->setLastInputView(this);
+                    } else if (need_null) {
+                        window_->setLastInputView(nullptr);
+                    }
                 }
             }
         } else if (e->isTouchEvent() &&
@@ -1246,17 +1263,19 @@ namespace ukive {
                 }
             }
 
-            if (is_haul) {
-                if (consumed) {
-                    window_->setLastHaulView(this);
-                } else if (need_null) {
-                    window_->setLastHaulView(nullptr);
-                }
-            } else {
-                if (consumed) {
-                    window_->setLastInputView(this);
-                } else if (need_null) {
-                    window_->setLastInputView(nullptr);
+            if (window_) {
+                if (is_haul) {
+                    if (consumed) {
+                        window_->setLastHaulView(this);
+                    } else if (need_null) {
+                        window_->setLastHaulView(nullptr);
+                    }
+                } else {
+                    if (consumed) {
+                        window_->setLastInputView(this);
+                    } else if (need_null) {
+                        window_->setLastInputView(nullptr);
+                    }
                 }
             }
         }
@@ -1916,21 +1935,39 @@ namespace ukive {
         if (e->getEvent() == InputEvent::EVM_WHEEL ||
             e->getEvent() == InputEvent::EV_HAUL ||
             e->getEvent() == InputEvent::EV_HAUL_END ||
-            e->getEvent() == InputEvent::EV_HAUL_LEAVE ||
-            e->getEvent() == InputEvent::EV_LEAVE)
+            e->getEvent() == InputEvent::EV_HAUL_LEAVE)
         {
             return false;
         }
 
-        if (e->getEvent() == InputEvent::EVM_HOVER) {
+        switch (e->getEvent()) {
+        case InputEvent::EVM_MOVE:
             if (is_tooltip_enabled_) {
-                if (!tooltip_) {
-                    tooltip_ = std::make_unique<Tooltip>(getContext());
-                }
-                tooltip_->show(this, e->getRawX(), e->getRawY());
-                return true;
             }
+            break;
+
+        case InputEvent::EVM_HOVER:
+            if (is_tooltip_enabled_ && !tooltip_) {
+                auto w = getWindow();
+                if (w && !tooltip_text_.empty()) {
+                    tooltip_ = w->startTooltip(
+                        e->getRawX(), e->getRawY(), tooltip_text_);
+                    return true;
+                }
+            }
+            return false;
+
+        case InputEvent::EV_LEAVE:
+            if (is_tooltip_enabled_ && tooltip_) {
+                tooltip_->close();
+                tooltip_ = nullptr;
+            }
+            return false;
+
+        default:
+            break;
         }
+
         return is_clkable_ || is_dclkable_ || is_tclkable_;
     }
 

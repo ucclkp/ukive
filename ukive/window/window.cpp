@@ -11,6 +11,7 @@
 #include "utils/time_utils.h"
 
 #include "ukive/app/application.h"
+#include "ukive/basics/tooltip.h"
 #include "ukive/diagnostic/input_tracker.h"
 #include "ukive/window/window_native.h"
 #include "ukive/window/window_dpi_utils.h"
@@ -674,6 +675,19 @@ namespace ukive {
         return action_menu;
     }
 
+    Tooltip* Window::startTooltip(
+        int x, int y,
+        const std::u16string_view& text)
+    {
+        if (!tooltip_) {
+            tooltip_ = std::make_unique<Tooltip>(getContext());
+        }
+
+        tooltip_->setText(text);
+        tooltip_->show(this, x, y);
+        return tooltip_.get();
+    }
+
     void Window::startHaul(HaulSource* src) {
         haul_src_ = src;
         if (src) {
@@ -1069,6 +1083,7 @@ namespace ukive {
     }
 
     void Window::onDestroy() {
+        tooltip_.reset();
         context_menu_.reset();
         text_action_menu_.reset();
 
