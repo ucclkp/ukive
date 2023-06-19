@@ -92,8 +92,10 @@ namespace ukive {
         virtual bool isIgnoreMouseEvents() const = 0;
         virtual bool hasSizeBorder() const = 0;
 
-        virtual void setMouseCapture() = 0;
-        virtual void releaseMouseCapture() = 0;
+        virtual bool setMouseCapture() = 0;
+        virtual bool releaseMouseCapture() = 0;
+
+        virtual bool trackMouseHover(bool force) = 0;
 
         virtual void convScreenToClient(Point* p) const = 0;
         virtual void convClientToScreen(Point* p) const = 0;

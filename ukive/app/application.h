@@ -52,6 +52,7 @@ namespace ukive {
         static float dp2px(float dp);
         static int dp2pxi(int dp);
         static int dp2pxi(float dp);
+        static int sp2px(int sp);
 
     private:
         void initApplication();

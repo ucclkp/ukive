@@ -117,6 +117,10 @@ namespace ukive {
         return int(std::round(impl_->dp2px(dp)));
     }
 
+    int Context::sp2px(int sp) const {
+        return impl_->sp2px(sp);
+    }
+
     float Context::px2dp(int px) const {
         return impl_->px2dp(px);
     }

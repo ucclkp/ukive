@@ -78,7 +78,7 @@ namespace ukive {
 
     void OverlayScrollBar::onDraw(Canvas* canvas) {
         if (!thumb_bounds_.empty()) {
-            canvas->fillRect(RectF(thumb_bounds_), Color::Grey400);
+            canvas->fillRect(RectF(thumb_bounds_), Color(Color::Grey400, 0.7f));
         }
     }
 

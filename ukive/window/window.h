@@ -187,6 +187,7 @@ namespace ukive {
         TextActionMenu* startTextActionMenu(
             TextActionMenuCallback* callback, int id = -1);
 
+        bool waitForHover(bool force);
         Tooltip* startTooltip(
             int x, int y,
             const std::u16string_view& text);
@@ -234,6 +235,7 @@ namespace ukive {
         enum {
             SCHEDULE_RENDER = 0,
             SCHEDULE_LAYOUT = 1,
+            SCHEDULE_MOUSE_HOVER = 10,
         };
 
         enum CaptureRole {

@@ -8,6 +8,8 @@
 
 #include "ukive/elements/element.h"
 #include "ukive/views/text_view.h"
+#include "ukive/system/ui_utils.h"
+#include "ukive/window/window.h"
 
 
 namespace ukive {
@@ -31,7 +33,17 @@ namespace ukive {
     }
 
     void Tooltip::show(Window* host, int x, int y) {
-        levitator_.show(host, x, y);
+        auto cursor_size = getCurrentCursorSize();
+        auto c = host->getContext();
+        auto cursor_w = c.px2dpci(cursor_size.width());
+        auto cursor_h = c.px2dpci(cursor_size.height());
+
+        Levitator::PosInfo info;
+        info.corner = GV_TOP | GV_MID_START;
+        info.is_evaded = true;
+        info.pp.set(1, 1, 0, cursor_h);
+
+        levitator_.show(host, x, y, info);
     }
 
     void Tooltip::close() {

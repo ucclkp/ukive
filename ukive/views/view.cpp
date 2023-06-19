@@ -434,6 +434,7 @@ namespace ukive {
         if (!enabled && tooltip_) {
             tooltip_->close();
             tooltip_ = nullptr;
+            is_tracking_hover_ = false;
         }
     }
 
@@ -1940,9 +1941,28 @@ namespace ukive {
             return false;
         }
 
+        // TODO: 移到 processInputEvent() 里？
         switch (e->getEvent()) {
-        case InputEvent::EVM_MOVE:
+        case InputEvent::EVM_DOWN:
+        case InputEvent::EVT_DOWN:
+        case InputEvent::EVT_MULTI_DOWN:
+        case InputEvent::EVM_UP:
+        case InputEvent::EVT_UP:
+        case InputEvent::EVT_MULTI_UP:
             if (is_tooltip_enabled_) {
+                if (tooltip_) {
+                    tooltip_->close();
+                    tooltip_ = nullptr;
+                }
+            }
+            break;
+
+        case InputEvent::EVM_MOVE:
+            if (is_tooltip_enabled_ && !is_tracking_hover_) {
+                if (window_) {
+                    window_->waitForHover(true);
+                    is_tracking_hover_ = true;
+                }
             }
             break;
 
@@ -1958,9 +1978,12 @@ namespace ukive {
             return false;
 
         case InputEvent::EV_LEAVE:
-            if (is_tooltip_enabled_ && tooltip_) {
-                tooltip_->close();
-                tooltip_ = nullptr;
+            if (is_tooltip_enabled_) {
+                is_tracking_hover_ = false;
+                if (tooltip_) {
+                    tooltip_->close();
+                    tooltip_ = nullptr;
+                }
             }
             return false;
 

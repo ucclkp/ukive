@@ -220,4 +220,18 @@ namespace ukive {
         return static_cast<int>(sy * dp);
     }
 
+    // static
+    int Application::sp2px(int sp) {
+        int mid;
+        if (instance_->options_.is_auto_dpi_scale) {
+            mid = sp;
+        } else {
+            float sx, sy;
+            instance_->dm_->fromPrimary()->getUserScale(&sx, &sy);
+            mid = static_cast<int>(sx * sp);
+        }
+        mid += mid % 2;
+        return mid;
+    }
+
 }

@@ -137,7 +137,7 @@ namespace ukive {
         font_family_name_ = utl::u8to16(
             resolveAttrString(attrs, necro::kAttrTextViewFont, u8p("微软雅黑")));
         font_size_ = (int)resolveAttrDimension(
-            getContext(), attrs, necro::kAttrTextViewTextSize, std::round(c.dp2px(15.f)));
+            getContext(), attrs, necro::kAttrTextViewTextSize, c.dp2px(14.f));
         resolveAttrColor(attrs, necro::kAttrTextViewTextColor, &text_color_);
         resolveFontStyle(attrs, necro::kAttrTextViewTextStyle, &font_style_);
         resolveFontWeight(attrs, necro::kAttrTextViewTextWeight, &font_weight_);

@@ -80,7 +80,6 @@ namespace win {
           title_(kDefaultTitle),
           is_created_(false),
           is_showing_(false),
-          need_mouse_track_(true),
           is_first_nccalc_(true),
           close_methods_(WINDOW_CLOSE_BY_BUTTON | WINDOW_CLOSE_BY_MENU)
     {
@@ -868,62 +867,110 @@ namespace win {
         return false;
     }
 
-    void WindowImplWin::setMouseCapture() {
+    bool WindowImplWin::setMouseCapture() {
         if (!::IsWindow(hWnd_)) {
-            return;
+            return false;
         }
         ::SetCapture(hWnd_);
+        return true;
     }
 
-    void WindowImplWin::releaseMouseCapture() {
+    bool WindowImplWin::releaseMouseCapture() {
         if (!::IsWindow(hWnd_)) {
-            return;
+            return false;
         }
-        ::ReleaseCapture();
+        if (::ReleaseCapture() == 0) {
+            return false;
+        }
+        return true;
     }
 
-    bool WindowImplWin::setMouseTrack() {
-        if (!need_mouse_track_) {
+    bool WindowImplWin::trackMouseHover(bool force) {
+        return setMouseTrack(TME_HOVER, force);
+    }
+
+    bool WindowImplWin::setMouseTrack(DWORD flags, bool force) {
+        if (!force) {
+            if (!need_mouse_leave_track_ && flags == TME_LEAVE) {
+                return false;
+            }
+            if (!need_mouse_hover_track_ && flags == TME_HOVER) {
+                return false;
+            }
+        }
+
+        if (!::IsWindow(hWnd_)) {
             return false;
         }
 
-        if (!::IsWindow(hWnd_)) {
-            return false;
+        UINT hover_time;
+        // 返回毫秒
+        if (::SystemParametersInfoW(SPI_GETMOUSEHOVERTIME, 0, &hover_time, 0) == 0) {
+            hover_time = 400;
         }
 
         // 开启 Windows 的 WM_MOUSELEAVE, WM_MOUSEHOVER 事件支持
         TRACKMOUSEEVENT tme;
         tme.cbSize = sizeof(tme);
-        tme.dwFlags = TME_LEAVE/* | TME_HOVER*/;
+        tme.dwFlags = flags;
         tme.hwndTrack = hWnd_;
-        tme.dwHoverTime = 1000;
+        tme.dwHoverTime = hover_time;
         if (::TrackMouseEvent(&tme) == 0) {
             return false;
         }
 
-        need_mouse_track_ = false;
+        if (flags & TME_LEAVE) {
+            need_mouse_leave_track_ = false;
+        }
+        if (flags & TME_HOVER) {
+            need_mouse_hover_track_ = false;
+        }
         return true;
     }
 
-    void WindowImplWin::setWindowStyle(int style, bool ex, bool enabled) {
+    bool WindowImplWin::setWindowStyle(int style, bool ex, bool enabled) {
+        if (!::IsWindow(hWnd_)) {
+            return false;
+        }
+
+        // GetWindowLongPtr 调用成功也可能返回 0
+        ::SetLastError(0);
         auto win_style = ::GetWindowLongPtr(hWnd_, ex ? GWL_EXSTYLE : GWL_STYLE);
+        if (win_style == 0) {
+            auto err = ::GetLastError();
+            if (err != 0) {
+                return false;
+            }
+        }
+
         if (enabled) {
             win_style |= style;
         } else {
             win_style &= ~style;
         }
-        ::SetWindowLongPtr(hWnd_, ex ? GWL_EXSTYLE : GWL_STYLE, win_style);
+
+        // SetWindowLongPtr 调用成功也可能返回 0
+        ::SetLastError(0);
+        auto prev_win_style = ::SetWindowLongPtr(hWnd_, ex ? GWL_EXSTYLE : GWL_STYLE, win_style);
+        if (prev_win_style == 0) {
+            auto err = ::GetLastError();
+            if (err != 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    void WindowImplWin::sendFrameChanged() {
+    bool WindowImplWin::sendFrameChanged() {
         if (!::IsWindow(hWnd_)) {
-            return;
+            return false;
         }
 
-        ::SetWindowPos(hWnd_, nullptr, 0, 0, 0, 0,
+        auto ret = ::SetWindowPos(hWnd_, nullptr, 0, 0, 0, 0,
             SWP_FRAMECHANGED | SWP_NOACTIVATE | SWP_NOCOPYBITS |
             SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOREPOSITION |
             SWP_NOSENDCHANGING | SWP_NOSIZE | SWP_NOZORDER);
+        return ret != 0;
     }
 
     void WindowImplWin::forceResize() {
@@ -1107,8 +1154,12 @@ namespace win {
         return pointer_type;
     }
 
-    bool WindowImplWin::isMouseTrackEnabled() const {
-        return need_mouse_track_;
+    bool WindowImplWin::isMouseLeaveTrackEnabled() const {
+        return need_mouse_leave_track_;
+    }
+
+    bool WindowImplWin::isMouseHoverTrackEnabled() const {
+        return need_mouse_hover_track_;
     }
 
     bool WindowImplWin::showTitlebarMenu() {
@@ -1314,11 +1365,12 @@ namespace win {
     bool WindowImplWin::onInputEvent(InputEvent* e) {
         // 追踪鼠标，以便产生 EVM_LEAVE_WIN 事件。
         if (e->getEvent() == InputEvent::EVM_LEAVE_WIN) {
-            need_mouse_track_ = true;
+            need_mouse_leave_track_ = true;
+            need_mouse_hover_track_ = true;
         } else if (e->getEvent() == InputEvent::EVM_HOVER) {
-            need_mouse_track_ = true;
+            need_mouse_hover_track_ = true;
         } else if (e->getEvent() == InputEvent::EVM_MOVE) {
-            setMouseTrack();
+            setMouseTrack(TME_LEAVE, false);
         }
 
         e->transformInputPos(
@@ -2628,31 +2680,35 @@ namespace win {
         return ::DefWindowProc(hWnd, uMsg, wParam, lParam);
     }
 
-    void WindowImplWin::setLayered(bool enabled) {
-        setWindowStyle(WS_EX_LAYERED, true, enabled);
+    bool WindowImplWin::setLayered(bool enabled) {
+        if (!setWindowStyle(WS_EX_LAYERED, true, enabled)) {
+            return false;
+        }
         non_client_frame_->onTranslucentChanged(enabled);
         sendFrameChanged();
+        return true;
     }
 
-    void WindowImplWin::setBlurBehind(bool enabled) {
+    bool WindowImplWin::setBlurBehind(bool enabled) {
         static bool is_win8_or_greater = IsWindows8OrGreater();
         static bool is_win10_or_greater = IsWindows10OrGreater();
 
         if (is_win10_or_greater) {
-            setBlurBehindOnWin10(enabled);
+            return setBlurBehindOnWin10(enabled);
         } else if (!is_win8_or_greater) {
-            setBlurBehindOnWin7(enabled);
+            return setBlurBehindOnWin7(enabled);
         }
+        return false;
     }
 
-    void WindowImplWin::setTransparent(bool enabled) {
+    bool WindowImplWin::setTransparent(bool enabled) {
         // Create and populate the Blur Behind structure
         DWM_BLURBEHIND bb = { 0 };
 
         if (!blur_rgn_ && enabled) {
             blur_rgn_ = ::CreateRectRgn(0, 0, -1, -1);
             if (!blur_rgn_) {
-                return;
+                return false;
             }
         }
 
@@ -2669,10 +2725,10 @@ namespace win {
 
         // Apply Blur Behind
         HRESULT hr = ::DwmEnableBlurBehindWindow(hWnd_, &bb);
-        ubassert(SUCCEEDED(hr));
+        return SUCCEEDED(hr);
     }
 
-    void WindowImplWin::setBlurBehindOnWin7(bool enabled) {
+    bool WindowImplWin::setBlurBehindOnWin7(bool enabled) {
         // Create and populate the Blur Behind structure
         DWM_BLURBEHIND bb = { 0 };
 
@@ -2683,10 +2739,10 @@ namespace win {
 
         // Apply Blur Behind
         HRESULT hr = ::DwmEnableBlurBehindWindow(hWnd_, &bb);
-        ubassert(SUCCEEDED(hr));
+        return SUCCEEDED(hr);
     }
 
-    void WindowImplWin::setBlurBehindOnWin10(bool enabled) {
+    bool WindowImplWin::setBlurBehindOnWin10(bool enabled) {
         /*
          * 在 Windows 10 下使用这种方法的模糊效果没有 UWP 好看，UWP 模糊半径更大。
          * 而且存在三个问题：
@@ -2708,16 +2764,17 @@ namespace win {
         data.cbData = sizeof(accent);
 
         BOOL result = win::UDSetWindowCompositionAttribute(hWnd_, &data);
-        ubassert(result != 0);
+        return (result != 0);
     }
 
-    void WindowImplWin::setTranslucent(bool trans_enabled) {
+    bool WindowImplWin::setTranslucent(bool trans_enabled) {
         auto context = delegate_->onGetContext();
         if (context.getTranslucentType() & TRANS_BLURBEHIND) {
-            setBlurBehind(trans_enabled);
+            return setBlurBehind(trans_enabled);
         } else if (context.getTranslucentType() & TRANS_TRANSPARENT) {
-            setTransparent(trans_enabled);
+            return setTransparent(trans_enabled);
         }
+        return false;
     }
 
     void WindowImplWin::enableCurTranslucent(TranslucentType cur) {

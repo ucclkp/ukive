@@ -675,6 +675,10 @@ namespace ukive {
         return action_menu;
     }
 
+    bool Window::waitForHover(bool force) {
+        return impl_->trackMouseHover(force);
+    }
+
     Tooltip* Window::startTooltip(
         int x, int y,
         const std::u16string_view& text)
@@ -1198,7 +1202,10 @@ namespace ukive {
         }
 
         if (!ret && e->isMouseEvent()) {
-            setDefaultCursor();
+            // HOVER 消息没人处理的话，保持光标不变
+            if (e->getEvent() != InputEvent::EVM_HOVER) {
+                setDefaultCursor();
+            }
         }
         return ret;
     }

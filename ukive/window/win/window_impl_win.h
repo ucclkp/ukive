@@ -104,8 +104,10 @@ namespace win {
         bool isIgnoreMouseEvents() const override;
         bool hasSizeBorder() const override;
 
-        void setMouseCapture() override;
-        void releaseMouseCapture() override;
+        bool setMouseCapture() override;
+        bool releaseMouseCapture() override;
+
+        bool trackMouseHover(bool force) override;
 
         void convScreenToClient(Point* p) const override;
         void convClientToScreen(Point* p) const override;
@@ -114,12 +116,13 @@ namespace win {
         float scaleFromNative(float val) const override;
 
         bool initialize(HWND parent = nullptr);
-        void setWindowStyle(int style, bool ex, bool enabled);
-        void sendFrameChanged();
+        bool setWindowStyle(int style, bool ex, bool enabled);
+        bool sendFrameChanged();
         void forceResize();
 
-        bool setMouseTrack();
-        bool isMouseTrackEnabled() const;
+        bool setMouseTrack(DWORD flags, bool force);
+        bool isMouseLeaveTrackEnabled() const;
+        bool isMouseHoverTrackEnabled() const;
 
         bool showTitlebarMenu();
 
@@ -222,12 +225,12 @@ namespace win {
         void onStyleChanged(bool normal, bool ext, const STYLESTRUCT* ss);
         bool onDataCopy(ULONG_PTR id, DWORD size, void* data);
 
-        void setLayered(bool enabled);
-        void setBlurBehind(bool enabled);
-        void setTransparent(bool enabled);
-        void setBlurBehindOnWin7(bool enabled);
-        void setBlurBehindOnWin10(bool enabled);
-        void setTranslucent(bool trans_enabled);
+        bool setLayered(bool enabled);
+        bool setBlurBehind(bool enabled);
+        bool setTransparent(bool enabled);
+        bool setBlurBehindOnWin7(bool enabled);
+        bool setBlurBehindOnWin10(bool enabled);
+        bool setTranslucent(bool trans_enabled);
 
         void enableCurTranslucent(TranslucentType cur);
         void disablePrevTranslucent(TranslucentType cur);
@@ -252,7 +255,8 @@ namespace win {
 
         bool is_created_;
         bool is_showing_;
-        bool need_mouse_track_;
+        bool need_mouse_leave_track_ = true;
+        bool need_mouse_hover_track_ = true;
         bool is_first_nccalc_;
         bool is_fullscreen_ = false;
         bool is_resizable_ = true;

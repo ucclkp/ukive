@@ -361,6 +361,7 @@ namespace ukive {
         bool is_mouse_down_;
         bool is_touch_down_;
         bool is_tooltip_enabled_ = false;
+        bool is_tracking_hover_ = false;
 
         bool is_measured_ = false;
         bool is_layouted_ = false;

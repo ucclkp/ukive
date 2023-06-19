@@ -42,4 +42,10 @@ namespace ukive {
         return px / scale;
     }
 
+    int ContextImpl::sp2px(int sp) const {
+        int mid = static_cast<int>(scale * sp);
+        mid += (/*1 -*/ mid % 2);
+        return mid;
+    }
+
 }

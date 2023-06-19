@@ -11,6 +11,7 @@
 
 #include "ukive/window/context.h"
 #include "ukive/system/theme_info.h"
+#include "ukive/window/window_dpi_utils.h"
 
 
 namespace ukive {
@@ -27,10 +28,11 @@ namespace ukive {
         float dp2px(int dp) const;
         float dp2px(float dp) const;
         float px2dp(int px) const;
+        int sp2px(int sp) const;
 
         float scale = 1.f;
         float auto_scale = 1.f;
-        uint32_t def_dpi = 96;
+        uint32_t def_dpi = kDefaultDpi;
         bool hdr_enabled = false;
 
         ThemeConfig def_theme_config;

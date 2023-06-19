@@ -30,8 +30,9 @@ namespace ukive {
         : LayoutView(c, attrs)
     {
         scroll_bar_ = std::make_unique<OverlayScrollBar>();
-        scroll_bar_->registerScrollHandler(std::bind(&ListView::onScrollBarChanged, this, std::placeholders::_1));
-        scroll_bar_->setScrollBarWidth(c.dp2pxi(8));
+        scroll_bar_->registerScrollHandler(
+            std::bind(&ListView::onScrollBarChanged, this, std::placeholders::_1));
+        scroll_bar_->setScrollBarWidth(c.dp2pxi(12));
         scroll_bar_->setScrollBarMinHeight(c.dp2pxi(16));
 
         recycler_ = std::make_unique<ListItemRecycler>(this);

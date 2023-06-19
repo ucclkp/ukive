@@ -9,6 +9,7 @@
 #include "utils/log.h"
 #include "utils/numbers.hpp"
 #include "utils/scope_utils.hpp"
+#include "utils/memory/win/com_ptr.hpp"
 
 #include "ukive/graphics/cyro_buffer.h"
 #include "ukive/graphics/paint.h"
@@ -19,6 +20,9 @@
 #include "ukive/graphics/win/native_rt_d2d.h"
 #include "ukive/graphics/win/path_win.h"
 #include "ukive/text/win/dw_text_layout.h"
+
+#include "ukive/app/application.h"
+#include "ukive/graphics/win/directx_manager.h"
 
 #include <d2d1_1.h>
 #include <d2d1effects_2.h>
@@ -86,6 +90,25 @@ namespace win {
         if (!initialize()) {
             return false;
         }
+
+        /*auto dwrite_factory = static_cast<DirectXManager*>(Application::getGraphicDeviceManager())->
+            getDWriteFactory();
+        utl::win::ComPtr<IDWriteRenderingParams> base_rp;
+        HRESULT hr = dwrite_factory->CreateRenderingParams(&base_rp);
+        if (SUCCEEDED(hr)) {
+            auto ctl = base_rp->GetClearTypeLevel();
+            auto gamma = base_rp->GetGamma();
+            auto contrast = base_rp->GetEnhancedContrast();
+            auto pixel_geo = base_rp->GetPixelGeometry();
+            auto mode = base_rp->GetRenderingMode();
+
+            utl::win::ComPtr<IDWriteRenderingParams> new_params;
+            hr = dwrite_factory->CreateCustomRenderingParams(
+                gamma, contrast, ctl, pixel_geo, DWRITE_RENDERING_MODE_GDI_NATURAL, &new_params);
+            if (SUCCEEDED(hr)) {
+                rt_->SetTextRenderingParams(new_params.get());
+            }
+        }*/
 
         return true;
     }
