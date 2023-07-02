@@ -33,6 +33,7 @@
 #include "ukive/app/application.h"
 #include "ukive/graphics/effects/shadow_effect.h"
 #include "ukive/resources/attr_utils.h"
+#include "ukive/resources/element_parser.h"
 #include "ukive/system/ui_utils.h"
 
 #include "necro/layout_constants.h"
@@ -94,6 +95,14 @@ namespace ukive {
         setMinimumHeight(
             (int)resolveAttrDimension(
                 c, attrs, necro::kAttrViewMinHeight, 0));
+
+        auto bg_it = attrs.find(necro::kAttrViewBackground);
+        if (bg_it != attrs.end()) {
+            Element* ele;
+            if (ElementParser::parse(bg_it->second, &ele)) {
+                setBackground(ele);
+            }
+        }
     }
 
     View::~View() {

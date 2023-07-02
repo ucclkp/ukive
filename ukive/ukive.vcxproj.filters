@@ -718,6 +718,9 @@
     <ClCompile Include="basics\tooltip.cpp">
       <Filter>basics</Filter>
     </ClCompile>
+    <ClCompile Include="resources\element_parser.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">
@@ -1622,6 +1625,9 @@
     </ClInclude>
     <ClInclude Include="basics\tooltip.h">
       <Filter>basics</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\element_parser.h">
+      <Filter>resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

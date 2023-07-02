@@ -25,18 +25,28 @@ namespace ukive {
 
     public:
         /**
-         * 解析颜色字符串。
-         * 支持的格式：#RRGGBB 或 #AARRGGBB。
+         * 解析颜色字符串，其中的 Alpha 部分被忽略。
+         * 支持的格式：#RGB, #ARGB, #RRGGBB 或 #AARRGGBB。
          */
-        static Color parse(const std::string_view& color);
+        static bool parseRGB(
+            const std::string_view& color,
+            int a, Color* c);
 
         /**
          * 解析颜色字符串。
-         * 支持的格式：#RRGGBB 或 #AARRGGBB。
+         * 支持的格式：#RGB, #ARGB, #RRGGBB 或 #AARRGGBB。
          */
-        static bool parse(const std::string_view& color, Color* c);
+        static bool parseARGB(const std::string_view& color, Color* c);
 
-        static bool parseLiteral(const std::string_view& color, Color* c);
+        /**
+         * 解析颜色字符串。
+         * 支持的格式：#RGB, #ARGB, #RRGGBB 或 #AARRGGBB。
+         */
+        static Color parseARGB(
+            const std::string_view& color,
+            const Color& def_color = Color::Red500);
+
+        static bool parseName(const std::string_view& name, Color* c);
 
         static Color ofInt(int r, int g, int b, int a = 255);
         static Color ofRGB(uint32_t rgb, float a = 1.f);
@@ -52,11 +62,8 @@ namespace ukive {
         static float sRGBToLinear(float S);
         static void sRGBToLinear(Color* c);
 
-        // Color Black.
         const static Color Black;
-        // Color White.
         const static Color White;
-        // Color Transparent
         const static Color Transparent;
 
         // Material Color Red.

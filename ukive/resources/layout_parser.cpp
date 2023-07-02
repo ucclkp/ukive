@@ -250,8 +250,7 @@ namespace ukive {
 
     bool LayoutParser::traverseTree(const ElementPtr& element, View** parent) {
         ubassert(parent != nullptr);
-
-        if (!element) {
+        if (!element || !parent) {
             return false;
         }
 

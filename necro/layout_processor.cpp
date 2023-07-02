@@ -306,6 +306,7 @@ namespace necro {
         for (auto& attr : element->attrs) {
             auto attr_val = attr.second;
             if (utl::startWith(attr_val, "@+id/")) {
+                // 声明 ID
                 auto id_val = attr_val.substr(5);
                 if (id_val.empty()) {
                     LOG(Log::ERR) << "The id attr: " << attr.first
@@ -344,41 +345,56 @@ namespace necro {
                         break;
                     }
 
-                    if (!utl::startWith(attr_val, "@id/", idx)) {
+                    if (utl::startWith(attr_val, "@id/", idx)) {
+                        // 引用 ID
+                        auto end_idx = attr_val.find(',', idx);
+                        if (end_idx == decltype(attr_val)::npos) {
+                            end_idx = attr_val.length();
+                        }
+
+                        auto id_val = attr_val.substr(idx + 4, end_idx - idx - 4);
+                        utl::trim(&id_val);
+                        if (id_val.empty()) {
+                            LOG(Log::ERR) << "The id in attr: " << attr.first
+                                << " of element: " << element->tag_name
+                                << " is invalid.";
+                            return false;
+                        }
+
+                        auto it = cur_map->find(id_val);
+                        if (it == cur_map->end()) {
+                            if (is_first) {
+                                need_second_ = true;
+                                cur_idx = end_idx;
+                            } else {
+                                LOG(Log::ERR) << "Cannot find id: " << id_val
+                                    << " in attr: " << attr.first
+                                    << " of element: " << element->tag_name;
+                                return false;
+                            }
+                        } else {
+                            attr_val.replace(idx, end_idx - idx, std::to_string(it->second));
+                            cur_idx = idx;
+                            modified = true;
+                        }
+                    } else if (utl::startWith(attr_val, "@color/", idx)) {
+                        // 颜色由运行时解析
+                        auto end_idx = attr_val.find(',', idx);
+                        if (end_idx == decltype(attr_val)::npos) {
+                            end_idx = attr_val.length();
+                        }
+                        cur_idx = end_idx;
+                    } else if (utl::startWith(attr_val, "@element/", idx)) {
+                        // Element 由运行时解析
+                        auto end_idx = attr_val.find(',', idx);
+                        if (end_idx == decltype(attr_val)::npos) {
+                            end_idx = attr_val.length();
+                        }
+                        cur_idx = end_idx;
+                    } else {
                         LOG(Log::ERR) << "Unsupported @ operation in: " << attr_val
                             << " of element: " << element->tag_name;
                         return false;
-                    }
-
-                    auto end_idx = attr_val.find(',', idx);
-                    if (end_idx == decltype(attr_val)::npos) {
-                        end_idx = attr_val.length();
-                    }
-
-                    auto id_val = attr_val.substr(idx + 4, end_idx - idx - 4);
-                    utl::trim(&id_val);
-                    if (id_val.empty()) {
-                        LOG(Log::ERR) << "The id in attr: " << attr.first
-                            << " of element: " << element->tag_name
-                            << " is invalid.";
-                        return false;
-                    }
-
-                    auto it = cur_map->find(id_val);
-                    if (it == cur_map->end()) {
-                        if (is_first) {
-                            need_second_ = true;
-                            cur_idx = end_idx;
-                        } else {
-                            LOG(Log::ERR) << "Cannot find id: " << id_val
-                                << " in attr: " << attr.first
-                                << " of element: " << element->tag_name;
-                            return false;
-                        }
-                    } else {
-                        attr_val.replace(idx, end_idx - idx, std::to_string(it->second));
-                        cur_idx = idx;
-                        modified = true;
                     }
                 }
             }

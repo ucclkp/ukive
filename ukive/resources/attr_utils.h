@@ -46,11 +46,11 @@ namespace ukive {
         const Context& c, AttrsRef attrs, const std::string& key, Padding* padding);
     bool resolveAttrMargin(
         const Context& c, AttrsRef attrs, const std::string& key, Margin* margin);
-    bool resolveAttrColor(
-        AttrsRef attrs, const std::string& key, Color* c);
-
     void resolveAttrLayoutSize(
         const Context& c, AttrsRef attrs, Size* size);
+
+    bool resolveAttrColor(
+        AttrsRef attrs, const std::string& key, Color* c);
 
 }
 

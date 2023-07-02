@@ -16,28 +16,62 @@
 namespace ukive {
 
     Color::Color()
-        : a(0.f), r(0.f), g(0.f), b(0.f) {}
+        : r(0.f), g(0.f), b(0.f), a(0.f) {}
 
     Color::Color(float r, float g, float b, float a)
-        : a(a), r(r), g(g), b(b) {}
+        : r(r), g(g), b(b), a(a) {}
 
     Color::Color(const Color& c, float a)
-        : a(a), r(c.r), g(c.g), b(c.b) {}
+        : r(c.r), g(c.g), b(c.b), a(a) {}
 
     // static
-    Color Color::parse(const std::string_view& color) {
-        Color c;
-        if (!parse(color, &c)) {
-            LOG(Log::ERR) << "Unknown color: " << color;
-            return Red500;
+    bool Color::parseRGB(
+        const std::string_view& color,
+        int a, Color* c)
+    {
+        if (!parseARGB(color, c)) {
+            return false;
         }
-        return c;
+        c->a = a;
+        return true;
     }
 
     // static
-    bool Color::parse(const std::string_view& color, Color* c) {
+    bool Color::parseARGB(const std::string_view& color, Color* c) {
         if (color.empty() || color.at(0) != '#') {
             return false;
+        }
+
+        if (color.length() == 4) {
+            int r = utl::ctoi(color[1]);
+            int g = utl::ctoi(color[2]);
+            int b = utl::ctoi(color[3]);
+            if (r >= 16 || g >= 16 || b >= 16) {
+                return false;
+            }
+            r = r * 16 + r;
+            g = g * 16 + g;
+            b = b * 16 + b;
+
+            *c = ofInt(r, g, b);
+            return true;
+        }
+
+        if (color.length() == 5) {
+            int a = utl::ctoi(color[1]);
+            int r = utl::ctoi(color[2]);
+            int g = utl::ctoi(color[3]);
+            int b = utl::ctoi(color[4]);
+            if (r >= 16 || g >= 16 || b >= 16) {
+                return false;
+            }
+            a = a * 16 + a;
+            r = r * 16 + r;
+            g = g * 16 + g;
+            b = b * 16 + b;
+
+            *c = ofInt(r, g, b, a);
+            return true;
         }
 
         if (color.length() == 7) {
@@ -71,27 +105,40 @@ namespace ukive {
     }
 
     // static
-    bool Color::parseLiteral(const std::string_view& color, Color* c) {
+    Color Color::parseARGB(
+        const std::string_view& color,
+        const Color& def_color)
+    {
+        Color c;
+        if (!parseARGB(color, &c)) {
+            return def_color;
+        }
+        return c;
+    }
+
+    // static
+    bool Color::parseName(const std::string_view& color, Color* c) {
         if (utl::startWith(color, "red")) {
-            if (color.substr(3) == "50") {
+            auto level = color.substr(3);
+            if (level == "50") {
                 *c = Red50;
-            } else if (color.substr(3) == "100") {
+            } else if (level == "100") {
                 *c = Red100;
-            } else if (color.substr(3) == "200") {
+            } else if (level == "200") {
                 *c = Red200;
-            } else if (color.substr(3) == "300") {
+            } else if (level == "300") {
                 *c = Red300;
-            } else if (color.substr(3) == "400") {
+            } else if (level == "400") {
                 *c = Red400;
-            } else if (color.substr(3) == "500") {
+            } else if (level == "500") {
                 *c = Red500;
-            } else if (color.substr(3) == "600") {
+            } else if (level == "600") {
                 *c = Red600;
-            } else if (color.substr(3) == "700") {
+            } else if (level == "700") {
                 *c = Red700;
-            } else if (color.substr(3) == "800") {
+            } else if (level == "800") {
                 *c = Red800;
-            } else if (color.substr(3) == "900") {
+            } else if (level == "900") {
                 *c = Red900;
             } else {
                 return false;
@@ -100,25 +147,26 @@ namespace ukive {
         }
 
         if (utl::startWith(color, "orange")) {
-            if (color.substr(3) == "50") {
+            auto level = color.substr(6);
+            if (level == "50") {
                 *c = Orange50;
-            } else if (color.substr(3) == "100") {
+            } else if (level == "100") {
                 *c = Orange100;
-            } else if (color.substr(3) == "200") {
+            } else if (level == "200") {
                 *c = Orange200;
-            } else if (color.substr(3) == "300") {
+            } else if (level == "300") {
                 *c = Orange300;
-            } else if (color.substr(3) == "400") {
+            } else if (level == "400") {
                 *c = Orange400;
-            } else if (color.substr(3) == "500") {
+            } else if (level == "500") {
                 *c = Orange500;
-            } else if (color.substr(3) == "600") {
+            } else if (level == "600") {
                 *c = Orange600;
-            } else if (color.substr(3) == "700") {
+            } else if (level == "700") {
                 *c = Orange700;
-            } else if (color.substr(3) == "800") {
+            } else if (level == "800") {
                 *c = Orange800;
-            } else if (color.substr(3) == "900") {
+            } else if (level == "900") {
                 *c = Orange900;
             } else {
                 return false;
@@ -127,25 +175,26 @@ namespace ukive {
         }
 
         if (utl::startWith(color, "yellow")) {
-            if (color.substr(3) == "50") {
+            auto level = color.substr(6);
+            if (level == "50") {
                 *c = Yellow50;
-            } else if (color.substr(3) == "100") {
+            } else if (level == "100") {
                 *c = Yellow100;
-            } else if (color.substr(3) == "200") {
+            } else if (level == "200") {
                 *c = Yellow200;
-            } else if (color.substr(3) == "300") {
+            } else if (level == "300") {
                 *c = Yellow300;
-            } else if (color.substr(3) == "400") {
+            } else if (level == "400") {
                 *c = Yellow400;
-            } else if (color.substr(3) == "500") {
+            } else if (level == "500") {
                 *c = Yellow500;
-            } else if (color.substr(3) == "600") {
+            } else if (level == "600") {
                 *c = Yellow600;
-            } else if (color.substr(3) == "700") {
+            } else if (level == "700") {
                 *c = Yellow700;
-            } else if (color.substr(3) == "800") {
+            } else if (level == "800") {
                 *c = Yellow800;
-            } else if (color.substr(3) == "900") {
+            } else if (level == "900") {
                 *c = Yellow900;
             } else {
                 return false;
@@ -154,25 +203,26 @@ namespace ukive {
         }
 
         if (utl::startWith(color, "pink")) {
-            if (color.substr(3) == "50") {
+            auto level = color.substr(4);
+            if (level == "50") {
                 *c = Pink50;
-            } else if (color.substr(3) == "100") {
+            } else if (level == "100") {
                 *c = Pink100;
-            } else if (color.substr(3) == "200") {
+            } else if (level == "200") {
                 *c = Pink200;
-            } else if (color.substr(3) == "300") {
+            } else if (level == "300") {
                 *c = Pink300;
-            } else if (color.substr(3) == "400") {
+            } else if (level == "400") {
                 *c = Pink400;
-            } else if (color.substr(3) == "500") {
+            } else if (level == "500") {
                 *c = Pink500;
-            } else if (color.substr(3) == "600") {
+            } else if (level == "600") {
                 *c = Pink600;
-            } else if (color.substr(3) == "700") {
+            } else if (level == "700") {
                 *c = Pink700;
-            } else if (color.substr(3) == "800") {
+            } else if (level == "800") {
                 *c = Pink800;
-            } else if (color.substr(3) == "900") {
+            } else if (level == "900") {
                 *c = Pink900;
             } else {
                 return false;
@@ -181,25 +231,26 @@ namespace ukive {
         }
 
         if (utl::startWith(color, "green")) {
-            if (color.substr(3) == "50") {
+            auto level = color.substr(5);
+            if (level == "50") {
                 *c = Green50;
-            } else if (color.substr(3) == "100") {
+            } else if (level == "100") {
                 *c = Green100;
-            } else if (color.substr(3) == "200") {
+            } else if (level == "200") {
                 *c = Green200;
-            } else if (color.substr(3) == "300") {
+            } else if (level == "300") {
                 *c = Green300;
-            } else if (color.substr(3) == "400") {
+            } else if (level == "400") {
                 *c = Green400;
-            } else if (color.substr(3) == "500") {
+            } else if (level == "500") {
                 *c = Green500;
-            } else if (color.substr(3) == "600") {
+            } else if (level == "600") {
                 *c = Green600;
-            } else if (color.substr(3) == "700") {
+            } else if (level == "700") {
                 *c = Green700;
-            } else if (color.substr(3) == "800") {
+            } else if (level == "800") {
                 *c = Green800;
-            } else if (color.substr(3) == "900") {
+            } else if (level == "900") {
                 *c = Green900;
             } else {
                 return false;
@@ -208,25 +259,26 @@ namespace ukive {
         }
 
         if (utl::startWith(color, "blue")) {
-            if (color.substr(3) == "50") {
+            auto level = color.substr(4);
+            if (level == "50") {
                 *c = Blue50;
-            } else if (color.substr(3) == "100") {
+            } else if (level == "100") {
                 *c = Blue100;
-            } else if (color.substr(3) == "200") {
+            } else if (level == "200") {
                 *c = Blue200;
-            } else if (color.substr(3) == "300") {
+            } else if (level == "300") {
                 *c = Blue300;
-            } else if (color.substr(3) == "400") {
+            } else if (level == "400") {
                 *c = Blue400;
-            } else if (color.substr(3) == "500") {
+            } else if (level == "500") {
                 *c = Blue500;
-            } else if (color.substr(3) == "600") {
+            } else if (level == "600") {
                 *c = Blue600;
-            } else if (color.substr(3) == "700") {
+            } else if (level == "700") {
                 *c = Blue700;
-            } else if (color.substr(3) == "800") {
+            } else if (level == "800") {
                 *c = Blue800;
-            } else if (color.substr(3) == "900") {
+            } else if (level == "900") {
                 *c = Blue900;
             } else {
                 return false;
@@ -235,25 +287,26 @@ namespace ukive {
         }
 
         if (utl::startWith(color, "grey")) {
-            if (color.substr(3) == "50") {
+            auto level = color.substr(4);
+            if (level == "50") {
                 *c = Grey50;
-            } else if (color.substr(3) == "100") {
+            } else if (level == "100") {
                 *c = Grey100;
-            } else if (color.substr(3) == "200") {
+            } else if (level == "200") {
                 *c = Grey200;
-            } else if (color.substr(3) == "300") {
+            } else if (level == "300") {
                 *c = Grey300;
-            } else if (color.substr(3) == "400") {
+            } else if (level == "400") {
                 *c = Grey400;
-            } else if (color.substr(3) == "500") {
+            } else if (level == "500") {
                 *c = Grey500;
-            } else if (color.substr(3) == "600") {
+            } else if (level == "600") {
                 *c = Grey600;
-            } else if (color.substr(3) == "700") {
+            } else if (level == "700") {
                 *c = Grey700;
-            } else if (color.substr(3) == "800") {
+            } else if (level == "800") {
                 *c = Grey800;
-            } else if (color.substr(3) == "900") {
+            } else if (level == "900") {
                 *c = Grey900;
             } else {
                 return false;
@@ -347,94 +400,94 @@ namespace ukive {
 
 
     // Color White.
-    const Color Color::White = Color::parse("#FFFFFF");
+    const Color Color::White = Color::parseARGB("#FFFFFF");
     // Color Black.
-    const Color Color::Black = Color::parse("#000000");
+    const Color Color::Black = Color::parseARGB("#000000");
     // Color Transparent.
-    const Color Color::Transparent = Color::parse("#00000000");
+    const Color Color::Transparent = Color::parseARGB("#00000000");
 
     // Material Color Red.
-    Color Color::Red50 = Color::parse("#FFEBEE");
-    Color Color::Red100 = Color::parse("#FFCDD2");
-    Color Color::Red200 = Color::parse("#EF9A9A");
-    Color Color::Red300 = Color::parse("#E57373");
-    Color Color::Red400 = Color::parse("#EF5350");
-    Color Color::Red500 = Color::parse("#F44336");
-    Color Color::Red600 = Color::parse("#E53935");
-    Color Color::Red700 = Color::parse("#D32F2F");
-    Color Color::Red800 = Color::parse("#C62828");
-    Color Color::Red900 = Color::parse("#B71C1C");
+    Color Color::Red50 = Color::parseARGB("#FFEBEE");
+    Color Color::Red100 = Color::parseARGB("#FFCDD2");
+    Color Color::Red200 = Color::parseARGB("#EF9A9A");
+    Color Color::Red300 = Color::parseARGB("#E57373");
+    Color Color::Red400 = Color::parseARGB("#EF5350");
+    Color Color::Red500 = Color::parseARGB("#F44336");
+    Color Color::Red600 = Color::parseARGB("#E53935");
+    Color Color::Red700 = Color::parseARGB("#D32F2F");
+    Color Color::Red800 = Color::parseARGB("#C62828");
+    Color Color::Red900 = Color::parseARGB("#B71C1C");
 
     // Material Color Orange.
-    Color Color::Orange50 = Color::parse("#FFF3E0");
-    Color Color::Orange100 = Color::parse("#FFE0B2");
-    Color Color::Orange200 = Color::parse("#FFCC80");
-    Color Color::Orange300 = Color::parse("#FFB74D");
-    Color Color::Orange400 = Color::parse("#FFA726");
-    Color Color::Orange500 = Color::parse("#FF9800");
-    Color Color::Orange600 = Color::parse("#FB8C00");
-    Color Color::Orange700 = Color::parse("#F57C00");
-    Color Color::Orange800 = Color::parse("#EF6C00");
-    Color Color::Orange900 = Color::parse("#E65100");
+    Color Color::Orange50 = Color::parseARGB("#FFF3E0");
+    Color Color::Orange100 = Color::parseARGB("#FFE0B2");
+    Color Color::Orange200 = Color::parseARGB("#FFCC80");
+    Color Color::Orange300 = Color::parseARGB("#FFB74D");
+    Color Color::Orange400 = Color::parseARGB("#FFA726");
+    Color Color::Orange500 = Color::parseARGB("#FF9800");
+    Color Color::Orange600 = Color::parseARGB("#FB8C00");
+    Color Color::Orange700 = Color::parseARGB("#F57C00");
+    Color Color::Orange800 = Color::parseARGB("#EF6C00");
+    Color Color::Orange900 = Color::parseARGB("#E65100");
 
     // Material Color Yellow.
-    Color Color::Yellow50 = Color::parse("#FFFDE7");
-    Color Color::Yellow100 = Color::parse("#FFF9C4");
-    Color Color::Yellow200 = Color::parse("#FFF59D");
-    Color Color::Yellow300 = Color::parse("#FFF176");
-    Color Color::Yellow400 = Color::parse("#FFEE58");
-    Color Color::Yellow500 = Color::parse("#FFEB3B");
-    Color Color::Yellow600 = Color::parse("#FDD835");
-    Color Color::Yellow700 = Color::parse("#FBC02D");
-    Color Color::Yellow800 = Color::parse("#F9A825");
-    Color Color::Yellow900 = Color::parse("#F57F17");
+    Color Color::Yellow50 = Color::parseARGB("#FFFDE7");
+    Color Color::Yellow100 = Color::parseARGB("#FFF9C4");
+    Color Color::Yellow200 = Color::parseARGB("#FFF59D");
+    Color Color::Yellow300 = Color::parseARGB("#FFF176");
+    Color Color::Yellow400 = Color::parseARGB("#FFEE58");
+    Color Color::Yellow500 = Color::parseARGB("#FFEB3B");
+    Color Color::Yellow600 = Color::parseARGB("#FDD835");
+    Color Color::Yellow700 = Color::parseARGB("#FBC02D");
+    Color Color::Yellow800 = Color::parseARGB("#F9A825");
+    Color Color::Yellow900 = Color::parseARGB("#F57F17");
 
     // Material Color Pink.
-    Color Color::Pink50 = Color::parse("#FCE4EC");
-    Color Color::Pink100 = Color::parse("#F8BBD0");
-    Color Color::Pink200 = Color::parse("#F48FB1");
-    Color Color::Pink300 = Color::parse("#F06292");
-    Color Color::Pink400 = Color::parse("#EC407A");
-    Color Color::Pink500 = Color::parse("#E91E63");
-    Color Color::Pink600 = Color::parse("#D81B60");
-    Color Color::Pink700 = Color::parse("#C2185B");
-    Color Color::Pink800 = Color::parse("#AD1457");
-    Color Color::Pink900 = Color::parse("#880E4F");
+    Color Color::Pink50 = Color::parseARGB("#FCE4EC");
+    Color Color::Pink100 = Color::parseARGB("#F8BBD0");
+    Color Color::Pink200 = Color::parseARGB("#F48FB1");
+    Color Color::Pink300 = Color::parseARGB("#F06292");
+    Color Color::Pink400 = Color::parseARGB("#EC407A");
+    Color Color::Pink500 = Color::parseARGB("#E91E63");
+    Color Color::Pink600 = Color::parseARGB("#D81B60");
+    Color Color::Pink700 = Color::parseARGB("#C2185B");
+    Color Color::Pink800 = Color::parseARGB("#AD1457");
+    Color Color::Pink900 = Color::parseARGB("#880E4F");
 
     // Material Color Green.
-    Color Color::Green50 = Color::parse("#E8F5E9");
-    Color Color::Green100 = Color::parse("#C8E6C9");
-    Color Color::Green200 = Color::parse("#A5D6A7");
-    Color Color::Green300 = Color::parse("#81C784");
-    Color Color::Green400 = Color::parse("#66BB6A");
-    Color Color::Green500 = Color::parse("#4CAF50");
-    Color Color::Green600 = Color::parse("#43A047");
-    Color Color::Green700 = Color::parse("#388E3C");
-    Color Color::Green800 = Color::parse("#2E7D32");
-    Color Color::Green900 = Color::parse("#1B5E20");
+    Color Color::Green50 = Color::parseARGB("#E8F5E9");
+    Color Color::Green100 = Color::parseARGB("#C8E6C9");
+    Color Color::Green200 = Color::parseARGB("#A5D6A7");
+    Color Color::Green300 = Color::parseARGB("#81C784");
+    Color Color::Green400 = Color::parseARGB("#66BB6A");
+    Color Color::Green500 = Color::parseARGB("#4CAF50");
+    Color Color::Green600 = Color::parseARGB("#43A047");
+    Color Color::Green700 = Color::parseARGB("#388E3C");
+    Color Color::Green800 = Color::parseARGB("#2E7D32");
+    Color Color::Green900 = Color::parseARGB("#1B5E20");
 
     // Material Color Blue.
-    Color Color::Blue50 = Color::parse("#E3F2FD");
-    Color Color::Blue100 = Color::parse("#BBDEFB");
-    Color Color::Blue200 = Color::parse("#90CAF9");
-    Color Color::Blue300 = Color::parse("#64B5F6");
-    Color Color::Blue400 = Color::parse("#42A5F5");
-    Color Color::Blue500 = Color::parse("#2196F3");
-    Color Color::Blue600 = Color::parse("#1E88E5");
-    Color Color::Blue700 = Color::parse("#1976D2");
-    Color Color::Blue800 = Color::parse("#1565C0");
-    Color Color::Blue900 = Color::parse("#0D47A1");
+    Color Color::Blue50 = Color::parseARGB("#E3F2FD");
+    Color Color::Blue100 = Color::parseARGB("#BBDEFB");
+    Color Color::Blue200 = Color::parseARGB("#90CAF9");
+    Color Color::Blue300 = Color::parseARGB("#64B5F6");
+    Color Color::Blue400 = Color::parseARGB("#42A5F5");
+    Color Color::Blue500 = Color::parseARGB("#2196F3");
+    Color Color::Blue600 = Color::parseARGB("#1E88E5");
+    Color Color::Blue700 = Color::parseARGB("#1976D2");
+    Color Color::Blue800 = Color::parseARGB("#1565C0");
+    Color Color::Blue900 = Color::parseARGB("#0D47A1");
 
     // Material Color Grey.
-    Color Color::Grey50 = Color::parse("#FAFAFA");
-    Color Color::Grey100 = Color::parse("#F5F5F5");
-    Color Color::Grey200 = Color::parse("#EEEEEE");
-    Color Color::Grey300 = Color::parse("#E0E0E0");
-    Color Color::Grey400 = Color::parse("#BDBDBD");
-    Color Color::Grey500 = Color::parse("#9E9E9E");
-    Color Color::Grey600 = Color::parse("#757575");
-    Color Color::Grey700 = Color::parse("#616161");
-    Color Color::Grey800 = Color::parse("#424242");
-    Color Color::Grey900 = Color::parse("#212121");
+    Color Color::Grey50 = Color::parseARGB("#FAFAFA");
+    Color Color::Grey100 = Color::parseARGB("#F5F5F5");
+    Color Color::Grey200 = Color::parseARGB("#EEEEEE");
+    Color Color::Grey300 = Color::parseARGB("#E0E0E0");
+    Color Color::Grey400 = Color::parseARGB("#BDBDBD");
+    Color Color::Grey500 = Color::parseARGB("#9E9E9E");
+    Color Color::Grey600 = Color::parseARGB("#757575");
+    Color Color::Grey700 = Color::parseARGB("#616161");
+    Color Color::Grey800 = Color::parseARGB("#424242");
+    Color Color::Grey900 = Color::parseARGB("#212121");
 
 }

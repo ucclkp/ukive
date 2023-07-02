@@ -303,21 +303,6 @@ namespace ukive {
         return false;
     }
 
-    bool resolveAttrColor(
-        AttrsRef attrs, const std::string& key, Color* c)
-    {
-        auto str = resolveAttrString(attrs, key, {});
-        if (str.empty()) {
-            return false;
-        }
-
-        if (key[0] == '#') {
-            return Color::parse(str, c);
-        }
-
-        return Color::parseLiteral(str, c);
-    }
-
     void resolveAttrLayoutSize(
         const Context& c, AttrsRef attrs, Size* size)
     {
@@ -364,6 +349,21 @@ namespace ukive {
         } else {
             size->height(height);
         }
+    }
+
+    bool resolveAttrColor(
+        AttrsRef attrs, const std::string& key, Color* c)
+    {
+        auto str = resolveAttrString(attrs, key, {});
+        if (str.empty()) {
+            return false;
+        }
+
+        if (key[0] == '#') {
+            return Color::parseARGB(str, c);
+        }
+
+        return Color::parseName(str, c);
     }
 
 }

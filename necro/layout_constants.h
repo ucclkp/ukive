@@ -27,6 +27,8 @@ namespace necro {
     const char kAttrViewEnabled[] = "enabled";
     const char kAttrViewMinWidth[] = "min_width";
     const char kAttrViewMinHeight[] = "min_height";
+    const char kAttrViewBackground[] = "background";
+    const char kAttrViewForeground[] = "foreground";
 
     const char kAttrValViewShow[] = "show";
     const char kAttrValViewHide[] = "hide";

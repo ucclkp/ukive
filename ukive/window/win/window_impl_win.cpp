@@ -906,7 +906,11 @@ namespace win {
         UINT hover_time;
         // 返回毫秒
         if (::SystemParametersInfoW(SPI_GETMOUSEHOVERTIME, 0, &hover_time, 0) == 0) {
-            hover_time = 400;
+            hover_time = 1000;
+        } else {
+            if (hover_time < 1000) {
+                hover_time = 1000;
+            }
         }
 
         // 开启 Windows 的 WM_MOUSELEAVE, WM_MOUSEHOVER 事件支持
