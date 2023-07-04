@@ -20,6 +20,7 @@
 #include "ukive/views/combo_box.h"
 #include "ukive/views/image_view.h"
 #include "ukive/views/chart_view.h"
+#include "ukive/views/seek_bar.h"
 #include "ukive/views/scroll_view.h"
 #include "ukive/views/progress_bar.h"
 #include "ukive/text/span/effect_span.h"
@@ -197,6 +198,10 @@ namespace shell {
         //fillChartView2(chart_view);
         //fillChartView3(chart_view);
         fillChartView4(chart_view);
+
+        seek_bar_ = findView<ukive::SeekBar>(Res::Id::sb_misc_anim_test);
+        //seek_bar_->setVertical(true);
+        //seek_bar_->setLayoutSize(ukive::View::LS_AUTO, c.dp2pxi(200));
 
         check_box_ = findView<ukive::CheckBox>(v, Res::Id::cb_misc_anim_test);
         check_box_->setChecked(true);

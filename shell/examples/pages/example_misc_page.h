@@ -21,6 +21,7 @@ namespace ukive {
     class ImageView;
     class ComboBox;
     class HaulSource;
+    class SeekBar;
 }
 
 namespace shell {
@@ -69,6 +70,7 @@ namespace shell {
 
         ukive::Button* test_button_ = nullptr;
         ukive::ImageView* image_view_ = nullptr;
+        ukive::SeekBar* seek_bar_ = nullptr;
         ukive::CheckBox* check_box_ = nullptr;
         ukive::ComboBox* combo_box_ = nullptr;
     };

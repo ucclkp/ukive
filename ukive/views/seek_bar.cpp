@@ -34,9 +34,9 @@ namespace ukive {
         seek_percent_ = 0.f;
         listener_ = nullptr;
 
-        track_height_ = getContext().dp2pxi(2);
-        if (track_height_ % 2 != 0) {
-            ++track_height_;
+        track_thickness_ = getContext().dp2pxi(2);
+        if (track_thickness_ % 2 != 0) {
+            ++track_thickness_;
         }
 
         thumb_min_diameter_ = getContext().dp2pxi(10);
@@ -56,6 +56,15 @@ namespace ukive {
 
         setFocusable(true);
         setTouchCapturable(true);
+    }
+
+    void SeekBar::setVertical(bool vert) {
+        if (is_vert_ == vert) {
+            return;
+        }
+        is_vert_ = vert;
+        requestLayout();
+        requestDraw();
     }
 
     void SeekBar::setMaximum(float maximum) {
@@ -88,43 +97,54 @@ namespace ukive {
     }
 
     bool SeekBar::isPointerInThumb(int x, int y) {
+        int tx = x - getPadding().start();
+        int ty = y - getPadding().top();
         float thumb_radius = thumb_max_diameter_ / 2.f;
-        int track_width = getWidth() - thumb_max_diameter_ - getPadding().hori();
+        float thumb_center_x_in_track;
+        float thumb_center_y_in_track;
 
-        float thumb_center_x_in_track = track_width * seek_percent_ + thumb_radius;
-        float thumb_center_y_in_track = getPadding().top() + thumb_radius;
-
-        if (((x - getPadding().start()) >= (thumb_center_x_in_track - thumb_radius))
-            && ((x - getPadding().start()) <= (thumb_center_x_in_track + thumb_radius)))
-        {
-            if ((y - getPadding().top()) >= (thumb_center_y_in_track - thumb_radius)
-                && (y - getPadding().top()) <= (thumb_center_y_in_track + thumb_radius))
-                return true;
+        if (is_vert_) {
+            int track_height = getHeight() - thumb_max_diameter_ - getPadding().vert();
+            thumb_center_x_in_track = getPadding().start() + thumb_radius;
+            thumb_center_y_in_track = track_height * (1 - seek_percent_) + thumb_radius;
+        } else {
+            int track_width = getWidth() - thumb_max_diameter_ - getPadding().hori();
+            thumb_center_x_in_track = track_width * seek_percent_ + thumb_radius;
+            thumb_center_y_in_track = getPadding().top() + thumb_radius;
         }
 
-        return false;
+        return
+            tx >= thumb_center_x_in_track - thumb_radius &&
+            tx <= thumb_center_x_in_track + thumb_radius &&
+            ty >= thumb_center_y_in_track - thumb_radius &&
+            ty <= thumb_center_y_in_track + thumb_radius;
     }
 
     bool SeekBar::isPointerInTrack(int x, int y) {
-        int trackSpace = getWidth() - getPadding().hori();
+        int tx = x - getPadding().start();
+        int ty = y - getPadding().top();
 
-        if ((x - getPadding().start()) >= 0 &&
-            (x - getPadding().start()) <= trackSpace)
-        {
-            if ((y - getPadding().top()) >= 0 &&
-                (y - getPadding().top()) <= thumb_max_diameter_)
-            {
-                return true;
-            }
+        if (is_vert_) {
+            int content_height = getHeight() - getPadding().vert();
+            return tx >= 0 && tx <= thumb_max_diameter_ &&
+                ty >= 0 && ty <= content_height;
+        } else {
+            int content_width = getWidth() - getPadding().hori();
+            return tx >= 0 && tx <= content_width &&
+                ty >= 0 && ty <= thumb_max_diameter_;
         }
-
-        return false;
     }
 
     void SeekBar::computePercent(int x, int y) {
-        float mouse_in_track = x - getPadding().start() - thumb_max_diameter_ / 2.f;
-        int track_width = getWidth() - thumb_max_diameter_ - getPadding().hori();
-        seek_percent_ = (std::max)(0.f, mouse_in_track / track_width);
+        if (is_vert_) {
+            float y_in_track = y - getPadding().top() - thumb_max_diameter_ / 2.f;
+            int track_height = getHeight() - thumb_max_diameter_ - getPadding().vert();
+            seek_percent_ = (std::max)(0.f, 1 - y_in_track / track_height);
+        } else {
+            float x_in_track = x - getPadding().start() - thumb_max_diameter_ / 2.f;
+            int track_width = getWidth() - thumb_max_diameter_ - getPadding().hori();
+            seek_percent_ = (std::max)(0.f, x_in_track / track_width);
+        }
         seek_percent_ = (std::min)(1.f, seek_percent_);
 
         if (listener_) {
@@ -133,7 +153,7 @@ namespace ukive {
         }
     }
 
-    void SeekBar::startZoomInAnimation() {
+    void SeekBar::startZoomInAnim() {
         if (is_on_thumb_) {
             return;
         }
@@ -148,7 +168,7 @@ namespace ukive {
         requestDraw();
     }
 
-    void SeekBar::startZoomOutAnimation() {
+    void SeekBar::startZoomOutAnim() {
         if (!is_on_thumb_) {
             return;
         }
@@ -169,11 +189,19 @@ namespace ukive {
 
         switch (info.width().mode) {
         case SizeInfo::CONTENT:
-            final_width = info.width().val;
+            if (is_vert_) {
+                final_width = (std::min)(info.width().val, thumb_max_diameter_ + getPadding().hori());
+            } else {
+                final_width = info.width().val;
+            }
             break;
 
         case SizeInfo::FREEDOM:
-            final_width = 0;
+            if (is_vert_) {
+                final_width = thumb_max_diameter_ + getPadding().hori();
+            } else {
+                final_width = 0;
+            }
             break;
 
         case SizeInfo::DEFINED:
@@ -184,11 +212,19 @@ namespace ukive {
 
         switch (info.height().mode) {
         case SizeInfo::CONTENT:
-            final_height = (std::min)(info.height().val, thumb_max_diameter_ + getPadding().vert());
+            if (is_vert_) {
+                final_height = info.height().val;
+            } else {
+                final_height = (std::min)(info.height().val, thumb_max_diameter_ + getPadding().vert());
+            }
             break;
 
         case SizeInfo::FREEDOM:
-            final_height = thumb_max_diameter_ + getPadding().vert();
+            if (is_vert_) {
+                final_height = 0;
+            } else {
+                final_height = thumb_max_diameter_ + getPadding().vert();
+            }
             break;
 
         case SizeInfo::DEFINED:
@@ -203,23 +239,71 @@ namespace ukive {
     void SeekBar::onDraw(Canvas* canvas) {
         super::onDraw(canvas);
 
-        float left = thumb_max_diameter_ / 2.f;
-        float top = (thumb_max_diameter_ - track_height_) / 2.f;
-        int trackWidth = getContentBounds().width() - thumb_max_diameter_;
+        if (is_vert_) {
+            drawVert(canvas);
+        } else {
+            drawHori(canvas);
+        }
+    }
 
-        float cur_pos = trackWidth * seek_percent_;
-        float center_x = left + cur_pos;
+    void SeekBar::drawHori(Canvas* canvas) {
+        float track_x = thumb_max_diameter_ / 2.f;
+        float track_y = (thumb_max_diameter_ - track_thickness_) / 2.f;
+        int track_width = getContentBounds().width() - thumb_max_diameter_;
+
+        float cur_pos = track_width * seek_percent_;
+        float center_x = track_x + cur_pos;
         float center_y = thumb_max_diameter_ / 2.f;
 
         // 进度条
         if (center_x < thumb_min_diameter_) {
             canvas->fillRect(
-                RectF(left, top, float(trackWidth), float(track_height_)), Color::Grey300);
+                RectF(track_x, track_y, float(track_width), float(track_thickness_)), Color::Grey300);
         } else {
             canvas->fillRect(
-                RectF(left, top, cur_pos, float(track_height_)), Color::Blue400);
+                RectF(track_x, track_y, cur_pos, float(track_thickness_)), Color::Blue400);
             canvas->fillRect(
-                RectF(center_x, top, trackWidth - cur_pos, float(track_height_)), Color::Grey300);
+                RectF(center_x, track_y, track_width - cur_pos, float(track_thickness_)), Color::Grey300);
+        }
+
+        float thumb_cur_diameter;
+        if (is_on_thumb_) {
+            if (thumb_animator_.isFinished() || !thumb_animator_.isStarted()) {
+                thumb_cur_diameter = float(thumb_max_diameter_);
+            } else {
+                thumb_cur_diameter = thumb_min_diameter_
+                    + float((thumb_max_diameter_ - thumb_min_diameter_) * thumb_animator_.getCurValue());
+            }
+        } else {
+            if (thumb_animator_.isFinished() || !thumb_animator_.isStarted()) {
+                thumb_cur_diameter = float(thumb_min_diameter_);
+            } else {
+                thumb_cur_diameter = thumb_min_diameter_
+                    + float((thumb_max_diameter_ - thumb_min_diameter_) * (1 - thumb_animator_.getCurValue()));
+            }
+        }
+        canvas->fillCircle(
+            { center_x, center_y }, thumb_cur_diameter / 2.f, Color::Blue400);
+    }
+
+    void SeekBar::drawVert(Canvas* canvas) {
+        float track_x = (thumb_max_diameter_ - track_thickness_) / 2.f;
+        float track_y = thumb_max_diameter_ / 2.f;
+        int track_height = getContentBounds().height() - thumb_max_diameter_;
+
+        float cur_pos = track_height * (1 - seek_percent_);
+        float center_x = thumb_max_diameter_ / 2.f;
+        float center_y = track_y + cur_pos;
+
+        // 进度条
+        if (track_height - cur_pos < thumb_min_diameter_ / 2.f) {
+            canvas->fillRect(
+                RectF(track_x, track_y, float(track_thickness_), cur_pos), Color::Grey300);
+        } else {
+            canvas->fillRect(
+                RectF(track_x, track_y, float(track_thickness_), cur_pos), Color::Grey300);
+            canvas->fillRect(
+                RectF(track_x, center_y, float(track_thickness_), track_height - cur_pos), Color::Blue400);
         }
 
         float thumb_cur_diameter;
@@ -256,7 +340,7 @@ namespace ukive {
                 } else if (isPointerInTrack(e->getX(), e->getY())) {
                     result = true;
                     computePercent(e->getX(), e->getY());
-                    startZoomInAnimation();
+                    startZoomInAnim();
                 }
             }
             break;
@@ -282,9 +366,9 @@ namespace ukive {
                 requestDraw();
             } else {
                 if (isPointerInThumb(e->getX(), e->getY())) {
-                    startZoomInAnimation();
+                    startZoomInAnim();
                 } else {
-                    startZoomOutAnimation();
+                    startZoomOutAnim();
                 }
             }
             result = true;
@@ -295,10 +379,11 @@ namespace ukive {
         {
             if (isPressed()) {
                 if (!capture_touch_) {
-                    int distance = e->getX() - start_touch_x_;
+                    int distance = is_vert_ ?
+                        (e->getY() - start_touch_y_) : (e->getX() - start_touch_x_);
                     if (std::abs(distance) > getContext().dp2pxi(8)) {
                         capture_touch_ = true;
-                        startZoomInAnimation();
+                        startZoomInAnim();
                     }
                 }
 
@@ -320,13 +405,13 @@ namespace ukive {
         case InputEvent::EVT_UP:
         {
             result = true;
-            startZoomOutAnimation();
+            startZoomOutAnim();
             break;
         }
 
         case InputEvent::EV_LEAVE:
         {
-            startZoomOutAnimation();
+            startZoomOutAnim();
             break;
         }
 

@@ -21,6 +21,7 @@ namespace ukive {
         SeekBar(Context c, AttrsRef attrs);
         ~SeekBar();
 
+        void setVertical(bool vert);
         void setMaximum(float maximum);
         void setProgress(float progress, bool notify = false);
         float getProgress();
@@ -40,14 +41,17 @@ namespace ukive {
 
         void initSeekBar();
 
+        void drawHori(Canvas* canvas);
+        void drawVert(Canvas* canvas);
+
         bool isPointerInThumb(int x, int y);
         bool isPointerInTrack(int x, int y);
         void computePercent(int x, int y);
 
-        void startZoomInAnimation();
-        void startZoomOutAnimation();
+        void startZoomInAnim();
+        void startZoomOutAnim();
 
-        int track_height_;
+        int track_thickness_;
         int thumb_min_diameter_;
         int thumb_max_diameter_;
 
@@ -59,6 +63,7 @@ namespace ukive {
         int start_touch_y_ = 0;
         bool capture_touch_ = false;
 
+        bool is_vert_ = false;
         Animator thumb_animator_;
         OnSeekValueChangedListener* listener_;
     };
