@@ -247,6 +247,7 @@ namespace shell {
         auto rm = ukive::Application::getResourceManager();
         auto img_path = rm->getResRootPath() / u"freshpaint.png";
         auto img = ukive::ImageFrame::decodeFile(getWindow()->getCanvas(), img_path.u16string());
+        img->setDpi(122, 122);
         image_view_->setImage(img);
         image_view_->setImageOpacity(0.5f);
         image_view_->animeParams().setOrder(ukive::ViewAnimatorParams::RST);

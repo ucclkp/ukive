@@ -48,6 +48,31 @@ namespace win {
         dpi_y_ = kDefaultDpi;
     }
 
+    bool ImageFrameWin::recreate(ID2D1RenderTarget* rt, ID2D1Bitmap** out) {
+        if (wic_src_) {
+            D2D1_BITMAP_PROPERTIES props =
+                D2D1::BitmapProperties(D2D1::PixelFormat(), dpi_x_, dpi_y_);
+
+            HRESULT hr = rt->CreateBitmapFromWicBitmap(wic_src_.get(), &props, out);
+            if (FAILED(hr)) {
+                return false;
+            }
+        } else if (raw_params_.raw_data) {
+            auto prop = mapBitmapProps(getOptions());
+
+            HRESULT hr = rt->CreateBitmap(
+                D2D1::SizeU(raw_params_.width, raw_params_.height),
+                raw_params_.raw_data->getConstData(),
+                utl::num_cast<UINT32>(raw_params_.stride), prop, out);
+            if (FAILED(hr)) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
+
     void ImageFrameWin::setDpi(float dpi_x, float dpi_y) {
         if (dpi_x > 0 && dpi_y > 0) {
             dpi_x_ = dpi_x;
@@ -80,32 +105,7 @@ namespace win {
 
     bool ImageFrameWin::prepareForRender(ID2D1RenderTarget* rt) {
         if (!d2d_bmp_) {
-            if (wic_src_) {
-                D2D1_BITMAP_PROPERTIES props =
-                    D2D1::BitmapProperties(D2D1::PixelFormat(), dpi_x_, dpi_y_);
-
-                utl::win::ComPtr<ID2D1Bitmap> d2d_bmp;
-                HRESULT hr = rt->CreateBitmapFromWicBitmap(wic_src_.get(), &props, &d2d_bmp);
-                if (FAILED(hr)) {
-                    return false;
-                }
-                d2d_bmp_ = d2d_bmp;
-            } else if (raw_params_.raw_data) {
-                auto prop = mapBitmapProps(getOptions());
-
-                utl::win::ComPtr<ID2D1Bitmap> d2d_bmp;
-                HRESULT hr = rt->CreateBitmap(
-                    D2D1::SizeU(raw_params_.width, raw_params_.height),
-                    raw_params_.raw_data->getConstData(),
-                    utl::num_cast<UINT32>(raw_params_.stride), prop, &d2d_bmp);
-                if (FAILED(hr)) {
-                    return false;
-                }
-                d2d_bmp_ = d2d_bmp;
-            } else {
-                return false;
-            }
-            return true;
+            return recreate(rt, &d2d_bmp_);
         }
 
         float dpi_x, dpi_y;
@@ -117,7 +117,13 @@ namespace win {
             utl::win::ComPtr<ID2D1Bitmap> new_bmp;
             HRESULT hr = rt->CreateSharedBitmap(
                 IID_PPV_ARGS(&d2d_bmp_), &bmp_prop, &new_bmp);
-            if (FAILED(hr)) {
+            if (hr == D2DERR_WRONG_FACTORY) {
+                // rt 和 d2d_bmp_ 的工厂实例明明是一样的，仍会出现这个错误。
+                // 只能重新创建了。
+                if (!recreate(rt, &new_bmp)) {
+                    return false;
+                }
+            } else if (FAILED(hr)) {
                 return false;
             }
             d2d_bmp_ = new_bmp;

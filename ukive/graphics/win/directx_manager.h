@@ -67,6 +67,7 @@ namespace win {
         bool initPersistance();
         void shutdownPersistance();
 
+        bool chooseAdapter(UINT idx, IDXGIAdapter1** adapter);
         bool initDevice();
         void shutdownDevice();
 

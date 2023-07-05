@@ -77,15 +77,8 @@ namespace win {
     }
 
     void LcImageFrameWin::getDpi(float* dpi_x, float* dpi_y) const {
-        double dx, dy;
-        HRESULT hr = native_src_->GetResolution(&dx, &dy);
-        if (FAILED(hr)) {
-            ubassert(false);
-            dx = kDefaultDpi;
-            dy = kDefaultDpi;
-        }
-        *dpi_x = float(dx);
-        *dpi_y = float(dy);
+        if (dpi_x) *dpi_x = dpi_x_;
+        if (dpi_y) *dpi_y = dpi_y_;
     }
 
     SizeF LcImageFrameWin::getSize() const {

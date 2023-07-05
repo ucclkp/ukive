@@ -197,15 +197,29 @@ namespace win {
         dwrite_factory_.reset();
     }
 
-    bool DirectXManager::initDevice() {
+    bool DirectXManager::chooseAdapter(UINT idx, IDXGIAdapter1** adapter) {
         HRESULT hr;
-        dxgi_factory_.reset();
-        hr = ::CreateDXGIFactory1(IID_PPV_ARGS(&dxgi_factory_));
+        utl::win::ComPtr<IDXGIFactory1> dxgi_factory;
+        hr = ::CreateDXGIFactory1(IID_PPV_ARGS(&dxgi_factory));
         if (FAILED(hr)) {
             LOG(Log::ERR) << "Failed to create dxgi factory.";
             return false;
         }
 
+        hr = dxgi_factory->EnumAdapters1(0, adapter);
+        if (SUCCEEDED(hr)) {
+            DXGI_ADAPTER_DESC1 ada_desc;
+            hr = (*adapter)->GetDesc1(&ada_desc);
+            if (SUCCEEDED(hr)) {
+            }
+        } else {
+            LOG(Log::WARNING) << "Failed to get adapter.";
+        }
+
+        return true;
+    }
+
+    bool DirectXManager::initDevice() {
         D3D_FEATURE_LEVEL feature_levels[] = {
             D3D_FEATURE_LEVEL_11_1,
             D3D_FEATURE_LEVEL_11_0,
@@ -220,15 +234,9 @@ namespace win {
         UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
         utl::win::ComPtr<IDXGIAdapter1> adapter;
         if (true) {
-            hr = dxgi_factory_->EnumAdapters1(0, &adapter);
-            if (SUCCEEDED(hr)) {
-                DXGI_ADAPTER_DESC1 ada_desc;
-                hr = adapter->GetDesc1(&ada_desc);
-                if (SUCCEEDED(hr)) {
-                }
+            if (chooseAdapter(0, &adapter)) {
                 driver_type = D3D_DRIVER_TYPE_UNKNOWN;
             } else {
-                LOG(Log::WARNING) << "Failed to get adapter.";
                 driver_type = D3D_DRIVER_TYPE_HARDWARE;
             }
         } else {
@@ -236,7 +244,7 @@ namespace win {
             flags |= D3D11_CREATE_DEVICE_DEBUGGABLE;
         }
 
-        hr = ::D3D11CreateDevice(
+        HRESULT hr = ::D3D11CreateDevice(
             adapter.get(), driver_type, nullptr, flags,
             feature_levels, ARRAYSIZE(feature_levels), D3D11_SDK_VERSION,
             &d3d_device_, nullptr, &d3d_devicecontext_);
@@ -253,9 +261,24 @@ namespace win {
 
         hr = d3d_device_->QueryInterface(&dxgi_device_);
         if (FAILED(hr)) {
-            LOG(Log::ERR) << "Failed to create dxgi device.";
+            LOG(Log::ERR) << "Failed to create DXGI device.";
             return false;
         }
+
+        utl::win::ComPtr<IDXGIAdapter1> _adapter;
+        hr = dxgi_device_->GetParent(IID_PPV_ARGS(&_adapter));
+        if (FAILED(hr)) {
+            LOG(Log::ERR) << "Failed to get DXGI adapter from DXGI device.";
+            return false;
+        }
+
+        utl::win::ComPtr<IDXGIFactory1> _dxgi_factory;
+        hr = _adapter->GetParent(IID_PPV_ARGS(&_dxgi_factory));
+        if (FAILED(hr)) {
+            LOG(Log::ERR) << "Failed to get DXGI factory from DXGI adapter.";
+            return false;
+        }
+        dxgi_factory_ = _dxgi_factory;
 
         gpu_device_ = new GPUDeviceD3D11(d3d_device_);
         gpu_context_ = new GPUContextD3D11(d3d_devicecontext_);

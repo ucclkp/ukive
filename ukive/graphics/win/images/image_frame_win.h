@@ -61,6 +61,7 @@ namespace win {
 
     private:
         void initDpiValues();
+        bool recreate(ID2D1RenderTarget* rt, ID2D1Bitmap** out);
 
         float dpi_x_ = 0;
         float dpi_y_ = 0;

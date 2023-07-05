@@ -177,7 +177,6 @@ namespace win {
             desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
         }
 
-        desc.Scaling = DXGI_SCALING_STRETCH;
         desc.SampleDesc.Count = 1;
         desc.SampleDesc.Quality = 0;
         desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
@@ -187,9 +186,11 @@ namespace win {
             if (img_options_.pixel_format == ImagePixelFormat::HDR) {
                 desc.BufferCount = 2;
                 desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
+                desc.Scaling = DXGI_SCALING_NONE;
             } else {
                 desc.BufferCount = 1;
                 desc.SwapEffect = DXGI_SWAP_EFFECT_SEQUENTIAL;
+                desc.Scaling = DXGI_SCALING_STRETCH;
             }
             desc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
 
@@ -203,6 +204,7 @@ namespace win {
         } else {
             desc.BufferCount = 2;
             desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
+            desc.Scaling = DXGI_SCALING_STRETCH;
             desc.AlphaMode = DXGI_ALPHA_MODE_PREMULTIPLIED;
             desc.Width = window_->getTextureWidth();
             desc.Height = window_->getTextureHeight();
