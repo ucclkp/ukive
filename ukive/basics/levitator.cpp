@@ -263,13 +263,20 @@ namespace ukive {
         return is_showing_;
     }
 
-    void Levitator::show(Window* w, int x, int y, const PosInfo& info) {
-        if (!content_view_) {
-            return;
+    bool Levitator::isDismissing() const {
+        return is_dismissing_;
+    }
+
+    bool Levitator::show(Window* w, int x, int y, const PosInfo& info) {
+        if (!content_view_ || !w) {
+            return false;
         }
         if (is_showing_) {
-            update(x, y);
-            return;
+            if (!update(x, y)) {
+                return false;
+            }
+            is_dismissing_ = false;
+            return true;
         }
 
         if (frame_view_) {
@@ -296,16 +303,21 @@ namespace ukive {
         if (!outside_touchable_) {
             leaveFromOutside();
         }
+
+        return true;
     }
 
-    void Levitator::show(View* anchor, int gravity, const SnapInfo& info) {
+    bool Levitator::show(View* anchor, int gravity, const SnapInfo& info) {
         if (!content_view_ || !anchor) {
-            return;
+            return false;
         }
 
         if (is_showing_) {
-            update(anchor, gravity);
-            return;
+            if (!update(anchor, gravity)) {
+                return false;
+            }
+            is_dismissing_ = false;
+            return true;
         }
 
         if (frame_view_) {
@@ -315,7 +327,7 @@ namespace ukive {
 
         auto w = anchor->getWindow();
         if (!w) {
-            return;
+            return false;
         }
 
         auto c = w->getContext();
@@ -338,11 +350,13 @@ namespace ukive {
         if (!outside_touchable_) {
             leaveFromOutside();
         }
+
+        return true;
     }
 
-    void Levitator::update(int x, int y) {
-        if (!frame_view_ || !is_showing_) {
-            return;
+    bool Levitator::update(int x, int y) {
+        if (!frame_view_ || !is_showing_ || !window_) {
+            return false;
         }
         auto c = frame_view_->getContext();
 
@@ -354,12 +368,12 @@ namespace ukive {
         }
 
         params.pos = { x, y };
-        window_->getRootLayout()->updateShade(frame_view_, params);
+        return window_->getRootLayout()->updateShade(frame_view_, params);
     }
 
-    void Levitator::update(int x, int y, const PosInfo& info) {
-        if (!frame_view_ || !is_showing_) {
-            return;
+    bool Levitator::update(int x, int y, const PosInfo& info) {
+        if (!frame_view_ || !is_showing_ || !window_) {
+            return false;
         }
         auto c = frame_view_->getContext();
 
@@ -368,17 +382,17 @@ namespace ukive {
         params.type = ShadeParams::LT_POS;
         params.pos = { x, y };
         translatePosInfo(params, info);
-        window_->getRootLayout()->updateShade(frame_view_, params);
+        return window_->getRootLayout()->updateShade(frame_view_, params);
     }
 
-    void Levitator::update(View* anchor, int gravity) {
+    bool Levitator::update(View* anchor, int gravity) {
         if (!frame_view_ || !is_showing_ || !anchor) {
-            return;
+            return false;
         }
 
         auto w = anchor->getWindow();
         if (!w) {
-            return;
+            return false;
         }
 
         ShadeParams params;
@@ -390,17 +404,17 @@ namespace ukive {
         params.gravity = gravity;
         params.anchor.set(anchor->getBoundsInRoot());
         params.anchor.set(anchor);
-        w->getRootLayout()->updateShade(frame_view_, params);
+        return w->getRootLayout()->updateShade(frame_view_, params);
     }
 
-    void Levitator::update(View* anchor, int gravity, const SnapInfo& info) {
+    bool Levitator::update(View* anchor, int gravity, const SnapInfo& info) {
         if (!frame_view_ || !is_showing_ || !anchor) {
-            return;
+            return false;
         }
 
         auto w = anchor->getWindow();
         if (!w) {
-            return;
+            return false;
         }
 
         ShadeParams params;
@@ -410,7 +424,7 @@ namespace ukive {
         params.anchor.set(anchor->getBoundsInRoot());
         params.anchor.set(anchor);
         translateSnapInfo(params, info);
-        w->getRootLayout()->updateShade(frame_view_, params);
+        return w->getRootLayout()->updateShade(frame_view_, params);
     }
 
     void Levitator::dismissing() {

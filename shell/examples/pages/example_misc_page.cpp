@@ -257,7 +257,7 @@ namespace shell {
         test_button_->setDoubleClickable(true);
         test_button_->setTripleClickable(true);
         test_button_->setTooltipEnabled(true);
-        test_button_->setTooltipText(u"test");
+        test_button_->setTooltipText(u"这是一行 tooltip 文字。这是一行 tooltip 文字。这是一行 tooltip 文字。");
         {
             haul_src_ = std::make_unique<ukive::HaulSource>(0, this);
             test_button_->setHaulSource(haul_src_.get());

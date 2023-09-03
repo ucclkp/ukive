@@ -10,9 +10,12 @@
 #include "utils/time_utils.h"
 
 #include "ukive/basics/levitator.h"
+#include "ukive/animation/timer.h"
 
 
 namespace ukive {
+
+    class TextView;
 
     class Tooltip {
     public:
@@ -23,9 +26,12 @@ namespace ukive {
         void close();
 
         void setText(const std::u16string_view& text);
+        void setTextSize(int size);
         void setTimeout(utl::TimeUtils::nsp timeout);
 
     private:
+        Timer timer_;
+        TextView* tv_ = nullptr;
         Levitator levitator_;
     };
 

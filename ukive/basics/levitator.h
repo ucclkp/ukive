@@ -113,13 +113,14 @@ namespace ukive {
         View* getFrameView() const;
 
         bool isShowing() const;
+        bool isDismissing() const;
 
-        void show(Window* w, int x, int y, const PosInfo& info = {});
-        void show(View* anchor, int gravity, const SnapInfo& info = {});
-        void update(int x, int y);
-        void update(int x, int y, const PosInfo& info);
-        void update(View* anchor, int gravity);
-        void update(View* anchor, int gravity, const SnapInfo& info);
+        bool show(Window* w, int x, int y, const PosInfo& info = {});
+        bool show(View* anchor, int gravity, const SnapInfo& info = {});
+        bool update(int x, int y);
+        bool update(int x, int y, const PosInfo& info);
+        bool update(View* anchor, int gravity);
+        bool update(View* anchor, int gravity, const SnapInfo& info);
         void dismissing();
         void dismiss();
 
