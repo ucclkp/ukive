@@ -31,6 +31,8 @@ namespace ukive {
         menu_ = new MenuImpl(c);
         menu_->setCallback(this);
         menu_->setMenuItemHeight(menu_item_height_);
+        menu_->setLayoutSize(View::LS_FILL, View::LS_AUTO);
+        menu_->setMinimumWidth(menu_width_);
 
         levitator_ = std::make_shared<Levitator>();
         levitator_->setShadowRadius(c.dp2pxi(1.5f));
@@ -38,7 +40,7 @@ namespace ukive {
         levitator_->setOutsideTouchable(false);
         levitator_->setDismissByTouchOutside(true);
         levitator_->setBackground(new Element(Color::White));
-        levitator_->setLayoutWidth(menu_width_);
+        levitator_->setLayoutSize(View::LS_AUTO, View::LS_FREE);
         levitator_->setEventListener(this);
         levitator_->setLayoutMargin(
             { c.dp2pxi(8), c.dp2pxi(8), c.dp2pxi(8), c.dp2pxi(8) });

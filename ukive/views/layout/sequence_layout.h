@@ -40,6 +40,8 @@ namespace ukive {
         void determineWeightedChildrenSize(
             int total_weight, const SizeInfo& parent_info);
 
+        int getVerticalFinalHeight(const SizeInfo& info);
+
         Size getVerticalSize(const SizeInfo& info);
         Size getHorizontalSize(const SizeInfo& info);
 

@@ -85,6 +85,7 @@ namespace ukive {
         void setLayoutWidth(int width);
         void setLayoutHeight(int height);
         void setLayoutSize(int width, int height);
+        void setMinimumSize(int min_w, int min_h);
         void setLayoutMargin(const Margin& margin);
         void setShadowRadius(int radius);
         void setBackground(Element* element);
@@ -104,6 +105,8 @@ namespace ukive {
 
         int getLayoutWidth() const;
         int getLayoutHeight() const;
+        int getMinimumWidth() const;
+        int getMinimumHeight() const;
         int getShadowRadius() const;
         Element* getBackground() const;
         bool isOutsideTouchable() const;
@@ -132,6 +135,8 @@ namespace ukive {
 
         int width_;
         int height_;
+        int min_width_ = 0;
+        int min_height_ = 0;
         int shadow_radius_;
         bool outside_touchable_;
         bool dismiss_by_touch_outside_;

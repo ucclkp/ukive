@@ -505,10 +505,12 @@ namespace ukive {
         auto child_width = SizeInfo::getChildSizeInfo(
             SizeInfo::Value(max_width, is_sec_dim_unknown_ ? SizeInfo::FREEDOM : SizeInfo::DEFINED),
             width_margin,
+            getMinimumSize().width(),
             child_size.width());
 
         auto child_height = SizeInfo::getChildSizeInfo(
             SizeInfo::Value(0, SizeInfo::FREEDOM), 0,
+            getMinimumSize().height(),
             child_size.height());
 
         item->item_view->determineSize(SizeInfo(child_width, child_height));

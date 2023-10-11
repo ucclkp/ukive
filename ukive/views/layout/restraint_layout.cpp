@@ -474,6 +474,7 @@ namespace ukive {
                 child_width = SizeInfo::getChildSizeInfo(
                     new_parent_width,
                     hori_margins + getPadding().hori(),
+                    getMinimumSize().width(),
                     layout_size.width());
             } else {
                 child_width = SizeInfo::Value(0, SizeInfo::DEFINED);
@@ -752,7 +753,10 @@ namespace ukive {
                 auto new_parent_height = parent_height;
                 new_parent_height.mode = SizeInfo::FREEDOM;
                 child_height = SizeInfo::getChildSizeInfo(
-                    new_parent_height, vert_margins + getPadding().vert(), layout_size.height());
+                    new_parent_height,
+                    vert_margins + getPadding().vert(),
+                    getMinimumSize().height(),
+                    layout_size.height());
             } else {
                 child_height.val = 0;
                 child_height.mode = SizeInfo::DEFINED;

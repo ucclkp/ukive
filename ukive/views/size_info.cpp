@@ -38,13 +38,16 @@ namespace ukive {
 
 
     SizeInfo::Value SizeInfo::getChildSizeInfo(
-        const Value& parent_val, int inset, int child_layout_size)
+        const Value& parent_val,
+        int inset,
+        int parent_min_size,
+        int child_layout_size)
     {
         if (child_layout_size >= 0) {
             return Value(child_layout_size, DEFINED);
         }
 
-        int size = (std::max)(0, parent_val.val - inset);
+        int size = (std::max)(parent_min_size, parent_val.val - inset);
         Value result(size, CONTENT);
 
         switch (parent_val.mode) {

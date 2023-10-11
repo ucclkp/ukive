@@ -204,10 +204,18 @@ namespace ukive {
         auto& db_margin = button_->getLayoutMargin();
 
         int db_margin_w = db_margin.hori();
-        auto db_width = SizeInfo::getChildSizeInfo(info.width(), padding_w + db_margin_w, LS_AUTO);
+        auto db_width = SizeInfo::getChildSizeInfo(
+            info.width(),
+            padding_w + db_margin_w,
+            getMinimumSize().width(),
+            LS_AUTO);
 
         int db_margin_h = db_margin.vert();
-        auto db_height = SizeInfo::getChildSizeInfo(info.height(), padding_h + db_margin_h, LS_AUTO);
+        auto db_height = SizeInfo::getChildSizeInfo(
+            info.height(),
+            padding_h + db_margin_h,
+            getMinimumSize().height(),
+            LS_AUTO);
 
         button_->determineSize(SizeInfo(db_width, db_height));
 
@@ -218,10 +226,16 @@ namespace ukive {
         auto tv_width = SizeInfo::getChildSizeInfo(
             SizeInfo::Value(
                 info.width().val - button_->getDeterminedSize().width() - db_margin_w, info.width().mode),
-            padding_w + tv_margin_w, LS_FILL);
+            padding_w + tv_margin_w,
+            getMinimumSize().width(),
+            LS_FILL);
 
         int tv_margin_h = tv_margin.vert();
-        auto tv_height = SizeInfo::getChildSizeInfo(info.height(), padding_h + tv_margin_h, LS_AUTO);
+        auto tv_height = SizeInfo::getChildSizeInfo(
+            info.height(),
+            padding_h + tv_margin_h,
+            getMinimumSize().height(),
+            LS_AUTO);
 
         text_view_->determineSize(SizeInfo(tv_width, tv_height));
     }

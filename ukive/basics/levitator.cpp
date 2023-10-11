@@ -153,6 +153,15 @@ namespace ukive {
         }
     }
 
+    void Levitator::setMinimumSize(int min_w, int min_h) {
+        min_width_ = min_w;
+        min_height_ = min_h;
+        if (frame_view_) {
+            frame_view_->setMinimumWidth(width_);
+            frame_view_->setMinimumHeight(height_);
+        }
+    }
+
     void Levitator::setLayoutMargin(const Margin& margin) {
         margin_ = margin;
         if (frame_view_) {
@@ -231,6 +240,14 @@ namespace ukive {
         return height_;
     }
 
+    int Levitator::getMinimumWidth() const {
+        return min_width_;
+    }
+
+    int Levitator::getMinimumHeight() const {
+        return min_height_;
+    }
+
     int Levitator::getShadowRadius() const {
         return shadow_radius_;
     }
@@ -291,6 +308,8 @@ namespace ukive {
         is_dismissing_ = false;
 
         frame_view_->setLayoutSize(width_, height_);
+        frame_view_->setMinimumWidth(min_width_);
+        frame_view_->setMinimumHeight(min_height_);
 
         ShadeParams params;
         params.type = ShadeParams::LT_POS;
@@ -336,6 +355,8 @@ namespace ukive {
         is_dismissing_ = false;
 
         frame_view_->setLayoutSize(width_, height_);
+        frame_view_->setMinimumWidth(min_width_);
+        frame_view_->setMinimumHeight(min_height_);
 
         ShadeParams params;
         params.type = ShadeParams::LT_SNAP;

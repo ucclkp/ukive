@@ -635,6 +635,7 @@ namespace ukive {
         return SizeInfo::getChildSizeInfo(
             parent_w_val,
             hori_margin + getPadding().hori() + ex_margin_w,
+            getMinimumSize().width(),
             ls.width());
     }
 
@@ -649,6 +650,7 @@ namespace ukive {
         return SizeInfo::getChildSizeInfo(
             parent_h_val,
             vert_margin + getPadding().vert() + ex_margin_h,
+            getMinimumSize().height(),
             ls.height());
     }
 
@@ -664,11 +666,13 @@ namespace ukive {
         auto child_w = SizeInfo::getChildSizeInfo(
             parent_info.width(),
             hori_margin + getPadding().hori() + ex_margin.width(),
+            getMinimumSize().width(),
             ls.width());
 
         auto child_h = SizeInfo::getChildSizeInfo(
             parent_info.height(),
             vert_margin + getPadding().vert() + ex_margin.height(),
+            getMinimumSize().height(),
             ls.height());
 
         child->determineSize(SizeInfo(child_w, child_h));

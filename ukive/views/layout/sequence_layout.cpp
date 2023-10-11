@@ -110,11 +110,13 @@ namespace ukive {
             auto child_width = SizeInfo::getChildSizeInfo(
                 parent_info.width(),
                 hori_margin + getPadding().hori(),
+                getMinimumSize().width(),
                 child_ls.width());
 
             auto child_height = SizeInfo::getChildSizeInfo(
                 parent_info.height(),
                 vert_margin + getPadding().vert(),
+                getMinimumSize().height(),
                 child_ls.height());
 
 
@@ -135,8 +137,7 @@ namespace ukive {
         }
     }
 
-    Size SequenceLayout::getVerticalSize(const SizeInfo& info) {
-        int final_width;
+    int SequenceLayout::getVerticalFinalHeight(const SizeInfo& info) {
         int final_height;
 
         switch (info.height().mode) {
@@ -285,11 +286,24 @@ namespace ukive {
         }
         }
 
+        return final_height;
+    }
+
+    Size SequenceLayout::getVerticalSize(const SizeInfo& info) {
+        int final_width;
+        int final_height = getVerticalFinalHeight(info);
+
         switch (info.width().mode) {
         case SizeInfo::CONTENT:
         {
             final_width = getWrappedWidth();
             final_width = (std::min)(final_width + getPadding().hori(), info.width().val);
+            final_width = (std::max)(final_width, getMinimumSize().width());
+
+            // 确定了 layout 的宽度之后，需要再看一下那些宽度为 FILL 的子 View
+            SizeInfo::Value wv(final_width, SizeInfo::DEFINED);
+            SizeInfo::Value hv = info.height();
+            final_height = getVerticalFinalHeight(SizeInfo(wv, hv));
             break;
         }
 
@@ -484,7 +498,7 @@ namespace ukive {
                 auto& margin = child->getLayoutMargin();
                 auto li = static_cast<SequenceLayoutInfo*>(child->getExtraLayoutInfo());
 
-                auto& size = child->getDeterminedSize();
+                auto size = child->getDeterminedSize();
 
                 cur_top += margin.top();
 

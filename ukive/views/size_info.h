@@ -48,7 +48,10 @@ namespace ukive {
         void setHeight(const Value& h);
 
         static Value getChildSizeInfo(
-            const Value& parent_val, int inset, int child_layout_size);
+            const Value& parent_val,
+            int inset,
+            int parent_min_size,
+            int child_layout_size);
 
         const Value& width() const { return width_; }
         Value& width() { return width_; }
