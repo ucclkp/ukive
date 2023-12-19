@@ -6,7 +6,7 @@
 
 #include "text_breaker.h"
 
-#include "utils/strings/unicode_conv.h"
+#include "utils/strings/utfcc.h"
 
 
 namespace ukive {
@@ -36,14 +36,14 @@ namespace ukive {
 
         prev_ = cur_;
         char16_t ch = text_->at(cur_);
-        if (IS_HIGH_SURROGATES(ch)) {
+        if (IS_START_SURROGATES(ch)) {
             ++cur_;
             if (cur_ >= text_->length()) {
                 return true;
             }
 
             ch = text_->at(cur_);
-            if (IS_LOW_SURROGATES(ch)) {
+            if (IS_END_SURROGATES(ch)) {
                 ++cur_;
                 return true;
             }
@@ -77,13 +77,13 @@ namespace ukive {
         --cur_;
 
         char16_t ch = text_->at(cur_);
-        if (IS_LOW_SURROGATES(ch)) {
+        if (IS_END_SURROGATES(ch)) {
             if (cur_ == 0) {
                 return true;
             }
 
             ch = text_->at(cur_ - 1);
-            if (IS_HIGH_SURROGATES(ch)) {
+            if (IS_START_SURROGATES(ch)) {
                 --cur_;
                 return true;
             }
@@ -119,14 +119,14 @@ namespace ukive {
 
         prev_ = cur_;
         char16_t ch = text_->at(cur_);
-        if (IS_HIGH_SURROGATES(ch)) {
+        if (IS_START_SURROGATES(ch)) {
             ++cur_;
             if (cur_ >= text_->length()) {
                 return true;
             }
 
             ch = text_->at(cur_);
-            if (IS_LOW_SURROGATES(ch)) {
+            if (IS_END_SURROGATES(ch)) {
                 ++cur_;
                 return true;
             }
@@ -160,13 +160,13 @@ namespace ukive {
         --cur_;
 
         char16_t ch = text_->at(cur_);
-        if (IS_LOW_SURROGATES(ch)) {
+        if (IS_END_SURROGATES(ch)) {
             if (cur_ == 0) {
                 return true;
             }
 
             ch = text_->at(cur_ - 1);
-            if (IS_HIGH_SURROGATES(ch)) {
+            if (IS_START_SURROGATES(ch)) {
                 --cur_;
                 return true;
             }
@@ -202,14 +202,14 @@ namespace ukive {
 
         prev_ = cur_;
         char16_t ch = text_->at(cur_);
-        if (IS_HIGH_SURROGATES(ch)) {
+        if (IS_START_SURROGATES(ch)) {
             ++cur_;
             if (cur_ >= text_->length()) {
                 return true;
             }
 
             ch = text_->at(cur_);
-            if (IS_LOW_SURROGATES(ch)) {
+            if (IS_END_SURROGATES(ch)) {
                 ++cur_;
                 return true;
             }
@@ -243,13 +243,13 @@ namespace ukive {
         --cur_;
 
         char16_t ch = text_->at(cur_);
-        if (IS_LOW_SURROGATES(ch)) {
+        if (IS_END_SURROGATES(ch)) {
             if (cur_ == 0) {
                 return true;
             }
 
             ch = text_->at(cur_ - 1);
-            if (IS_HIGH_SURROGATES(ch)) {
+            if (IS_START_SURROGATES(ch)) {
                 --cur_;
                 return true;
             }

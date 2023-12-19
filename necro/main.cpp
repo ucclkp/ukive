@@ -99,10 +99,10 @@ int processGeneratorMode() {
         app_name = utl::CommandLine::getValue("n");
     }
 
-    utl::trim(&res_path_param, u"\"");
-    utl::trim(&build_path_param, u"\"");
-    utl::trim(&app_name, u"\"");
-    utl::trim(&app_name);
+    utl::trim_self(&res_path_param, u"\"");
+    utl::trim_self(&build_path_param, u"\"");
+    utl::trim_self(&app_name, u"\"");
+    utl::trim_self(&app_name);
 
     std::error_code ec;
     auto resource_path = std::filesystem::absolute(res_path_param, ec);
@@ -136,8 +136,8 @@ int processCopyMode() {
         return 1;
     }
 
-    utl::trim(&src_path_param, u"\"");
-    utl::trim(&dst_path_param, u"\"");
+    utl::trim_self(&src_path_param, u"\"");
+    utl::trim_self(&dst_path_param, u"\"");
 
     std::error_code ec;
     auto src_path = std::filesystem::absolute(src_path_param, ec);

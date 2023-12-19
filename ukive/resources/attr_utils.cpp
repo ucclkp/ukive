@@ -216,7 +216,7 @@ namespace ukive {
             if (paddings.size() > 0) {
                 int val;
                 auto padding_start = paddings[0];
-                utl::trim(&padding_start);
+                utl::trim_self(&padding_start);
                 if (resolveDimension(c, padding_start, &val)) {
                     padding->start(val);
                     if (paddings.size() == 1) {
@@ -229,7 +229,7 @@ namespace ukive {
             if (paddings.size() > 1) {
                 int val;
                 auto padding_top = paddings[1];
-                utl::trim(&padding_top);
+                utl::trim_self(&padding_top);
                 if (resolveDimension(c, padding_top, &val)) {
                     padding->top(val);
                 }
@@ -237,7 +237,7 @@ namespace ukive {
             if (paddings.size() > 2) {
                 int val;
                 auto padding_end = paddings[2];
-                utl::trim(&padding_end);
+                utl::trim_self(&padding_end);
                 if (resolveDimension(c, padding_end, &val)) {
                     padding->end(val);
                 }
@@ -245,7 +245,7 @@ namespace ukive {
             if (paddings.size() > 3) {
                 int val;
                 auto padding_bottom = paddings[3];
-                utl::trim(&padding_bottom);
+                utl::trim_self(&padding_bottom);
                 if (resolveDimension(c, padding_bottom, &val)) {
                     padding->bottom(val);
                 }
@@ -264,7 +264,7 @@ namespace ukive {
             if (margins.size() > 0) {
                 int val;
                 auto margin_start = margins[0];
-                utl::trim(&margin_start);
+                utl::trim_self(&margin_start);
                 if (resolveDimension(c, margin_start, &val)) {
                     margin->start(val);
                     if (margins.size() == 1) {
@@ -277,7 +277,7 @@ namespace ukive {
             if (margins.size() > 1) {
                 int val;
                 auto margin_top = margins[1];
-                utl::trim(&margin_top);
+                utl::trim_self(&margin_top);
                 if (resolveDimension(c, margin_top, &val)) {
                     margin->top(val);
                 }
@@ -285,7 +285,7 @@ namespace ukive {
             if (margins.size() > 2) {
                 int val;
                 auto margin_end = margins[2];
-                utl::trim(&margin_end);
+                utl::trim_self(&margin_end);
                 if (resolveDimension(c, margin_end, &val)) {
                     margin->end(val);
                 }
@@ -293,7 +293,7 @@ namespace ukive {
             if (margins.size() > 3) {
                 int val;
                 auto margin_bottom = margins[3];
-                utl::trim(&margin_bottom);
+                utl::trim_self(&margin_bottom);
                 if (resolveDimension(c, margin_bottom, &val)) {
                     margin->bottom(val);
                 }

@@ -43,7 +43,7 @@ namespace necro {
             return false;
         }
         auto name_macro = path.filename().u16string();
-        utl::tolatu(&name_macro);
+        utl::tolatu_self(&name_macro);
         if (name_macro.empty()) {
             jour_e("Invalid out file name: %s", path);
             return false;

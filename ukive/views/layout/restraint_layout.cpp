@@ -24,7 +24,7 @@ namespace ukive {
 
     bool resolveEdge(const std::string& sh_edge_str, RestraintLayoutInfo::Edge* edge) {
         auto edge_str = sh_edge_str;
-        utl::tolatl(&edge_str);
+        utl::tolatl_self(&edge_str);
         if (edge_str == necro::kAttrValRestraintLayoutHEStart) {
             *edge = RestraintLayoutInfo::Edge::START;
         } else if (edge_str == necro::kAttrValRestraintLayoutHEEnd) {
@@ -63,13 +63,13 @@ namespace ukive {
             if (params.size() > 0) {
                 int id = -1;
                 auto param = params[0];
-                utl::trim(&param);
+                utl::trim_self(&param);
                 utl::stoi(param, &id);
                 if (id != -1) {
                     auto edge = RestraintLayoutInfo::Edge::START;
                     if (params.size() > 1) {
                         param = params[1];
-                        utl::trim(&param);
+                        utl::trim_self(&param);
                         resolveEdge(param, &edge);
                     }
                     lp->startHandle(id, edge);
@@ -84,13 +84,13 @@ namespace ukive {
             if (params.size() > 0) {
                 int id = -1;
                 auto param = params[0];
-                utl::trim(&param);
+                utl::trim_self(&param);
                 utl::stoi(param, &id);
                 if (id != -1) {
                     auto edge = RestraintLayoutInfo::Edge::END;
                     if (params.size() > 1) {
                         param = params[1];
-                        utl::trim(&param);
+                        utl::trim_self(&param);
                         resolveEdge(param, &edge);
                     }
                     lp->endHandle(id, edge);
@@ -105,13 +105,13 @@ namespace ukive {
             if (params.size() > 0) {
                 int id = -1;
                 auto param = params[0];
-                utl::trim(&param);
+                utl::trim_self(&param);
                 utl::stoi(param, &id);
                 if (id != -1) {
                     auto edge = RestraintLayoutInfo::Edge::TOP;
                     if (params.size() > 1) {
                         param = params[1];
-                        utl::trim(&param);
+                        utl::trim_self(&param);
                         resolveEdge(param, &edge);
                     }
                     lp->topHandle(id, edge);
@@ -126,13 +126,13 @@ namespace ukive {
             if (params.size() > 0) {
                 int id = -1;
                 auto param = params[0];
-                utl::trim(&param);
+                utl::trim_self(&param);
                 utl::stoi(param, &id);
                 if (id != -1) {
                     auto edge = RestraintLayoutInfo::Edge::BOTTOM;
                     if (params.size() > 1) {
                         param = params[1];
-                        utl::trim(&param);
+                        utl::trim_self(&param);
                         resolveEdge(param, &edge);
                     }
                     lp->bottomHandle(id, edge);
