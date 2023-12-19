@@ -37,7 +37,7 @@ namespace ukive {
 
         ThemeConfig def_theme_config;
         ThemeConfig cur_theme_config;
-        TranslucentType trans_type = TRANS_OPAQUE;
+        TranslucentType trans_type = TRANS_DEFAULT;
 
         std::vector<ContextChangedListener*> ccl;
     };

@@ -66,7 +66,7 @@ GUI_MAIN() {
     example_window->setTitle(u"Examples");
     example_window->setWidth(ukive::Application::dp2pxi(600));
     example_window->setHeight(ukive::Application::dp2pxi(600));
-    example_window->setTranslucentType(ukive::TRANS_BLURBEHIND_SYSTEM);
+    example_window->setTranslucentType(ukive::TRANS_TRANSPARENT);
     example_window->center();
     example_window->show();
     //example_window->maximize();

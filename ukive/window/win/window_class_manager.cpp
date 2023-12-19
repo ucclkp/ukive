@@ -72,7 +72,7 @@ namespace win {
         wcex.hIcon = info.icon;
         wcex.hIconSm = info.icon_small;
         wcex.hCursor = info.cursor;
-        wcex.hbrBackground = static_cast<HBRUSH>(::GetStockObject(BLACK_BRUSH));
+        wcex.hbrBackground = nullptr;
         wcex.lpszMenuName = nullptr;
         wcex.lpszClassName = className.c_str();
         wcex.cbSize = sizeof(WNDCLASSEXW);

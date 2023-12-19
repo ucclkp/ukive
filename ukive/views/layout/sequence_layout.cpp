@@ -289,40 +289,8 @@ namespace ukive {
         return final_height;
     }
 
-    Size SequenceLayout::getVerticalSize(const SizeInfo& info) {
+    int SequenceLayout::getHorizontalFinalWidth(const SizeInfo& info) {
         int final_width;
-        int final_height = getVerticalFinalHeight(info);
-
-        switch (info.width().mode) {
-        case SizeInfo::CONTENT:
-        {
-            final_width = getWrappedWidth();
-            final_width = (std::min)(final_width + getPadding().hori(), info.width().val);
-            final_width = (std::max)(final_width, getMinimumSize().width());
-
-            // 确定了 layout 的宽度之后，需要再看一下那些宽度为 FILL 的子 View
-            SizeInfo::Value wv(final_width, SizeInfo::DEFINED);
-            SizeInfo::Value hv = info.height();
-            final_height = getVerticalFinalHeight(SizeInfo(wv, hv));
-            break;
-        }
-
-        case SizeInfo::FREEDOM:
-            final_width = getWrappedWidth() + getPadding().hori();
-            break;
-
-        case SizeInfo::DEFINED:
-        default:
-            final_width = info.width().val;
-            break;
-        }
-
-        return Size(final_width, final_height);
-    }
-
-    Size SequenceLayout::getHorizontalSize(const SizeInfo& info) {
-        int final_width;
-        int final_height;
 
         switch (info.width().mode) {
         case SizeInfo::CONTENT:
@@ -470,11 +438,58 @@ namespace ukive {
         }
         }
 
+        return final_width;
+    }
+
+    Size SequenceLayout::getVerticalSize(const SizeInfo& info) {
+        int final_width;
+        int final_height = getVerticalFinalHeight(info);
+
+        switch (info.width().mode) {
+        case SizeInfo::CONTENT:
+        {
+            // 先确定内容的宽度
+            final_width = getWrappedWidth();
+            final_width = (std::min)(final_width + getPadding().hori(), info.width().val);
+            final_width = (std::max)(final_width, getMinimumSize().width());
+
+            // 确定了 layout 的宽度之后，需要再看一下那些宽度为 FILL 的子 View
+            SizeInfo::Value wv(final_width, SizeInfo::DEFINED);
+            SizeInfo::Value hv = info.height();
+            final_height = getVerticalFinalHeight(SizeInfo(wv, hv));
+            break;
+        }
+
+        case SizeInfo::FREEDOM:
+            final_width = getWrappedWidth() + getPadding().hori();
+            break;
+
+        case SizeInfo::DEFINED:
+        default:
+            final_width = info.width().val;
+            break;
+        }
+
+        return Size(final_width, final_height);
+    }
+
+    Size SequenceLayout::getHorizontalSize(const SizeInfo& info) {
+        int final_width = getHorizontalFinalWidth(info);
+        int final_height;
+
         switch (info.height().mode) {
         case SizeInfo::CONTENT:
+        {
             final_height = getWrappedHeight();
             final_height = (std::min)(final_height + getPadding().vert(), info.height().val);
+            final_height = (std::max)(final_height, getMinimumSize().height());
+
+            // 确定了 layout 的高度之后，需要再看一下那些高度为 FILL 的子 View
+            SizeInfo::Value wv = info.width();
+            SizeInfo::Value hv(final_height, SizeInfo::DEFINED);
+            final_width = getHorizontalFinalWidth(SizeInfo(wv, hv));
             break;
+        }
 
         case SizeInfo::FREEDOM:
             final_height = getWrappedHeight() + getPadding().vert();

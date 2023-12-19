@@ -182,6 +182,7 @@ namespace win {
 
         is_created_ = true;
         delegate_->onCreated();
+
         return true;
     }
 
@@ -398,7 +399,7 @@ namespace win {
         }
 
         if (!win::isActivated()) {
-            type = TRANS_OPAQUE;
+            type = TRANS_DEFAULT;
         }
 
         if ((type & TRANS_LAYERED) && IsWindows8OrGreater()) {
@@ -1490,16 +1491,14 @@ namespace win {
     }
 
     LRESULT WindowImplWin::onPaint(WPARAM wParam, LPARAM lParam, bool* handled) {
-        if (::GetUpdateRect(hWnd_, nullptr, FALSE) == 0) {
+        RECT ur;
+        if (::GetUpdateRect(hWnd_, &ur, FALSE) == 0) {
             return 0;
         }
 
-        PAINTSTRUCT ps;
-        ::BeginPaint(hWnd_, &ps);
-
         Rect rect(
-            ps.rcPaint.left, ps.rcPaint.top,
-            ps.rcPaint.right - ps.rcPaint.left, ps.rcPaint.bottom - ps.rcPaint.top);
+            ur.left, ur.top,
+            ur.right - ur.left, ur.bottom - ur.top);
 
         ukive::scaleFromNative(this, &rect);
 
@@ -1507,7 +1506,7 @@ namespace win {
         region.setOne(rect);
         delegate_->onDraw(region);
 
-        ::EndPaint(hWnd_, &ps);
+        ::ValidateRect(hWnd_, nullptr);
         *handled = true;
         return 0;
     }
@@ -2259,6 +2258,7 @@ namespace win {
             auto pump = static_cast<utl::win::MessagePumpUIWin*>(mp_ptr.get());
 
             pump->setInMoveModalLoop(true);
+
             /**
              * 鼠标左键在标题栏上按下时，在 DefWindowProc 中进入嵌套消息循环前会先阻塞一段时间。
              * 为消除这段时间，给窗口发个 WM_MOUSEMOVE 消息，可以立刻进入嵌套消息循环。
