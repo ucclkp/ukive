@@ -343,7 +343,7 @@
     <ClCompile Include="window\window_dpi_utils.cpp">
       <Filter>window</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\win\images\image_options_d2d_utils.cpp">
+    <ClCompile Include="graphics\win\images\image_options_win_utils.cpp">
       <Filter>graphics\win\images</Filter>
     </ClCompile>
     <ClCompile Include="graphics\win\window_buffer_win.cpp">
@@ -1185,7 +1185,7 @@
     <ClInclude Include="window\window_dpi_utils.h">
       <Filter>window</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\win\images\image_options_d2d_utils.h">
+    <ClInclude Include="graphics\win\images\image_options_win_utils.h">
       <Filter>graphics\win\images</Filter>
     </ClInclude>
     <ClInclude Include="window\window_native_delegate.h">

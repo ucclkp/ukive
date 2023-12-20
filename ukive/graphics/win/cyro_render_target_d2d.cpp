@@ -15,7 +15,7 @@
 #include "ukive/graphics/paint.h"
 #include "ukive/graphics/win/gpu/d3d11/gpu_texture_d3d11.h"
 #include "ukive/graphics/win/images/image_frame_win.h"
-#include "ukive/graphics/win/images/image_options_d2d_utils.h"
+#include "ukive/graphics/win/images/image_options_win_utils.h"
 #include "ukive/graphics/win/images/lc_image_frame_win.h"
 #include "ukive/graphics/win/native_rt_d2d.h"
 #include "ukive/graphics/win/path_win.h"

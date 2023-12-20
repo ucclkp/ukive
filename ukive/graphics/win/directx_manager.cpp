@@ -13,6 +13,7 @@
 #include "ukive/graphics/images/image_options.h"
 #include "ukive/graphics/win/gpu/d3d11/gpu_context_d3d11.h"
 #include "ukive/graphics/win/gpu/d3d11/gpu_device_d3d11.h"
+#include "ukive/graphics/win/images/image_options_win_utils.h"
 #include "ukive/window/window.h"
 
 
@@ -21,37 +22,8 @@ namespace ukive {
     void configD2DRTProps(
         D2D1_RENDER_TARGET_PROPERTIES* props, const ImageOptions& options)
     {
-        DXGI_FORMAT format;
-        switch (options.pixel_format) {
-        case ImagePixelFormat::HDR:
-            format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-            break;
-        case ImagePixelFormat::RAW:
-            format = DXGI_FORMAT_UNKNOWN;
-            break;
-        case ImagePixelFormat::B8G8R8A8_UNORM:
-        default:
-            format = DXGI_FORMAT_B8G8R8A8_UNORM;
-            break;
-        }
-
-        D2D1_ALPHA_MODE alpha_mode;
-        switch (options.alpha_mode) {
-        case ImageAlphaMode::STRAIGHT:
-            alpha_mode = D2D1_ALPHA_MODE_STRAIGHT;
-            break;
-        case ImageAlphaMode::IGNORED:
-            alpha_mode = D2D1_ALPHA_MODE_IGNORE;
-            break;
-
-        case ImageAlphaMode::PREMULTIPLIED:
-        default:
-            alpha_mode = D2D1_ALPHA_MODE_PREMULTIPLIED;
-            break;
-        }
-
-        props->pixelFormat.format = format;
-        props->pixelFormat.alphaMode = alpha_mode;
+        props->pixelFormat.format = win::mapDXGIFormat(options.pixel_format);
+        props->pixelFormat.alphaMode = win::mapD2D1AlphaMode(options.alpha_mode);
 
         switch (options.dpi_type) {
         case ImageDPIType::SPECIFIED:

@@ -23,6 +23,10 @@ namespace ukive {
 
     enum class ImagePixelFormat {
         B8G8R8A8_UNORM,
+        R8_UNORM,
+        I8_UNORM,      // 仅限图片
+        R8G8B8_UNORM,  // 仅限图片
+        R8G8B8A8_UNORM,
         RAW,
         HDR,
     };

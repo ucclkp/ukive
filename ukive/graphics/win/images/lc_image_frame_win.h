@@ -45,6 +45,9 @@ namespace win {
         void setDpi(float dpi_x, float dpi_y) override;
         void getDpi(float* dpi_x, float* dpi_y) const override;
 
+        GPtr<LcImageFrame> scaleTo(const SizeU& frame_size) const override;
+        GPtr<LcImageFrame> convertTo(const ImageOptions& options) const override;
+
         SizeF getSize() const override;
         SizeU getPixelSize() const override;
 

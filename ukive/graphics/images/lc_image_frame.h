@@ -48,6 +48,9 @@ namespace ukive {
         virtual void setDpi(float dpi_x, float dpi_y) = 0;
         virtual void getDpi(float* dpi_x, float* dpi_y) const = 0;
 
+        virtual GPtr<LcImageFrame> scaleTo(const SizeU& frame_size) const = 0;
+        virtual GPtr<LcImageFrame> convertTo(const ImageOptions& options) const = 0;
+
         virtual SizeF getSize() const = 0;
         virtual SizeU getPixelSize() const = 0;
 

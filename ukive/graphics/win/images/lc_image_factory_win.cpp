@@ -18,50 +18,12 @@
 #include "ukive/graphics/images/lc_image.h"
 #include "ukive/graphics/win/colors/color_manager_win.h"
 #include "ukive/graphics/win/display_win.h"
+#include "ukive/graphics/win/images/image_options_win_utils.h"
 #include "ukive/graphics/win/images/lc_image_frame_win.h"
 #include "ukive/window/window_dpi_utils.h"
 
 
 namespace ukive {
-
-    WICPixelFormatGUID mapPixelFormat(const ImageOptions& options) {
-        WICPixelFormatGUID format;
-        switch (options.pixel_format) {
-        case ImagePixelFormat::HDR:
-            switch (options.alpha_mode) {
-            case ImageAlphaMode::STRAIGHT:
-                format = GUID_WICPixelFormat64bppRGBAHalf;
-                break;
-            case ImageAlphaMode::IGNORED:
-                format = GUID_WICPixelFormat64bppRGBHalf;
-                break;
-            case ImageAlphaMode::PREMULTIPLIED:
-            default:
-                format = GUID_WICPixelFormat64bppPRGBAHalf;
-                break;
-            }
-            break;
-
-        case ImagePixelFormat::RAW:
-        case ImagePixelFormat::B8G8R8A8_UNORM:
-        default:
-            switch (options.alpha_mode) {
-            case ImageAlphaMode::STRAIGHT:
-                format = GUID_WICPixelFormat32bppBGRA;
-                break;
-            case ImageAlphaMode::IGNORED:
-                format = GUID_WICPixelFormat32bppBGR;
-                break;
-            case ImageAlphaMode::PREMULTIPLIED:
-            default:
-                format = GUID_WICPixelFormat32bppPBGRA;
-                break;
-            }
-            break;
-        }
-
-        return format;
-    }
 
     GUID mapImageContainer(ImageContainer container) {
         switch (container) {
@@ -112,7 +74,7 @@ namespace win {
             return {};
         }
 
-        auto format = mapPixelFormat(options);
+        auto format = mapWICFormat(options);
 
         utl::win::ComPtr<IWICBitmap> bmp;
         HRESULT hr = wic_factory_->CreateBitmap(
@@ -148,7 +110,7 @@ namespace win {
             return {};
         }
 
-        auto format = mapPixelFormat(options);
+        auto format = mapWICFormat(options);
 
         auto owned_data = pixel_data->substantiate();
 
@@ -307,7 +269,7 @@ namespace win {
             return false;
         }
 
-        auto target_format = mapPixelFormat(options);
+        auto target_format = mapWICFormat(options);
         auto cur_format = target_format;
 
         hr = frame->SetPixelFormat(&cur_format);
@@ -549,7 +511,6 @@ namespace win {
     utl::win::ComPtr<IWICBitmapSource> LcImageFactoryWin::convertPixelFormat(
         IWICBitmapSource* frame, const ImageOptions& options)
     {
-        // Format convert the frame to 32bppPBGRA
         utl::win::ComPtr<IWICFormatConverter> converter;
         HRESULT hr = wic_factory_->CreateFormatConverter(&converter);
         if (FAILED(hr)) {
@@ -557,7 +518,7 @@ namespace win {
             return {};
         }
 
-        auto format = mapPixelFormat(options);
+        auto format = mapWICFormat(options);
 
         hr = converter->Initialize(
             frame,                          // Input bitmap to convert
@@ -621,6 +582,9 @@ namespace win {
                 ubassert(false);
                 return {};
             }
+
+            WICPixelFormatGUID sf;
+            frame_decoder->GetPixelFormat(&sf);
 
             //exploreColorProfile(frame_decoder.get());
 

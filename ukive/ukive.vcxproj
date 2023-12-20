@@ -334,7 +334,7 @@
     <ClInclude Include="graphics\win\gpu\d3d11\gpu_shader_resource_d3d11.h" />
     <ClInclude Include="graphics\win\gpu\d3d11\gpu_texture_d3d11.h" />
     <ClInclude Include="graphics\win\images\image_frame_win.h" />
-    <ClInclude Include="graphics\win\images\image_options_d2d_utils.h" />
+    <ClInclude Include="graphics\win\images\image_options_win_utils.h" />
     <ClInclude Include="graphics\win\images\lc_image_factory_win.h" />
     <ClInclude Include="graphics\win\images\lc_image_frame_win.h" />
     <ClInclude Include="graphics\win\offscreen_buffer_win.h" />
@@ -609,7 +609,7 @@
     <ClCompile Include="graphics\win\gpu\d3d11\gpu_shader_resource_d3d11.cpp" />
     <ClCompile Include="graphics\win\gpu\d3d11\gpu_texture_d3d11.cpp" />
     <ClCompile Include="graphics\win\images\image_frame_win.cpp" />
-    <ClCompile Include="graphics\win\images\image_options_d2d_utils.cpp" />
+    <ClCompile Include="graphics\win\images\image_options_win_utils.cpp" />
     <ClCompile Include="graphics\win\images\lc_image_factory_win.cpp" />
     <ClCompile Include="graphics\win\images\lc_image_frame_win.cpp" />
     <ClCompile Include="graphics\win\offscreen_buffer_win.cpp" />

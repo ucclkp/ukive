@@ -9,7 +9,7 @@
 #include "utils/log.h"
 #include "utils/numbers.hpp"
 
-#include "ukive/graphics/win/images/image_options_d2d_utils.h"
+#include "ukive/graphics/win/images/image_options_win_utils.h"
 #include "ukive/window/window_dpi_utils.h"
 
 

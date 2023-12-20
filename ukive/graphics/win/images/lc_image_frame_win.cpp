@@ -9,6 +9,7 @@
 #include "utils/log.h"
 #include "utils/numbers.hpp"
 
+#include "ukive/graphics/win/images/image_options_win_utils.h"
 #include "ukive/window/window_dpi_utils.h"
 
 
@@ -79,6 +80,100 @@ namespace win {
     void LcImageFrameWin::getDpi(float* dpi_x, float* dpi_y) const {
         if (dpi_x) *dpi_x = dpi_x_;
         if (dpi_y) *dpi_y = dpi_y_;
+    }
+
+    GPtr<LcImageFrame> LcImageFrameWin::scaleTo(const SizeU& frame_size) const {
+        if (!wic_factory_) {
+            return {};
+        }
+
+        utl::win::ComPtr<IWICBitmapScaler> scaler;
+        HRESULT hr = wic_factory_->CreateBitmapScaler(&scaler);
+        if (FAILED(hr)) {
+            return {};
+        }
+
+        auto img_size = getPixelSize();
+        if (img_size.empty()) {
+            return {};
+        }
+
+        UINT dst_width, dst_height;
+        float sw = (float)frame_size.width() / img_size.width();
+        float sh = (float)frame_size.height() / img_size.height();
+        if (sw <= sh) {
+            dst_width = frame_size.width();
+            dst_height = img_size.height() * sw;
+        } else {
+            dst_width = img_size.width() * sh;
+            dst_height = frame_size.height();
+        }
+
+        hr = scaler->Initialize(
+            native_src_.get(),
+            dst_width,
+            dst_height,
+            WICBitmapInterpolationModeCubic);
+        if (FAILED(hr)) {
+            return {};
+        }
+
+        auto dst = scaler.cast<IWICBitmapSource>();
+        auto lc_img_win = new LcImageFrameWin(getOptions(), {}, wic_factory_, dst);
+        lc_img_win->createIfNecessary();
+
+        return GPtr<LcImageFrame>(lc_img_win);
+    }
+
+    GPtr<LcImageFrame> LcImageFrameWin::convertTo(const ImageOptions& options) const {
+        if (!wic_factory_) {
+            return {};
+        }
+
+        utl::win::ComPtr<IWICFormatConverter> converter;
+        HRESULT hr = wic_factory_->CreateFormatConverter(&converter);
+        if (FAILED(hr)) {
+            return {};
+        }
+
+        // 创建调色板
+        utl::win::ComPtr<IWICPalette> palette;
+        /*if (getOptions().pixel_format == ImagePixelFormat::I8_UNORM) {
+            hr = wic_factory_->CreatePalette(&palette);
+            if (FAILED(hr)) {
+                return {};
+            }
+
+            hr = native_src_->CopyPalette(palette.get());
+            if (hr == WINCODEC_ERR_PALETTEUNAVAILABLE) {
+                hr = palette->InitializeFromBitmap(native_src_.get(), 2, FALSE);
+                if (FAILED(hr)) {
+                    return {};
+                }
+            } else if (FAILED(hr)) {
+                return {};
+            }
+        }*/
+
+        auto format = mapWICFormat(options);
+        hr = converter->Initialize(
+            native_src_.get(),              // Input bitmap to convert
+            format,                         // Destination pixel format
+            WICBitmapDitherTypeNone,        // Specified dither pattern
+            palette.get(),                  // Specify a particular palette
+            0.f,                            // Alpha threshold
+            WICBitmapPaletteTypeCustom);    // Palette translation type
+        if (FAILED(hr)) {
+            return {};
+        }
+
+        auto dst = converter.cast<IWICBitmapSource>();
+        auto new_options = getOptions();
+        new_options.alpha_mode = options.alpha_mode;
+        new_options.pixel_format = options.pixel_format;
+        auto lc_img_win = new LcImageFrameWin(new_options, {}, wic_factory_, dst);
+        lc_img_win->createIfNecessary();
+        return GPtr<LcImageFrame>(lc_img_win);
     }
 
     SizeF LcImageFrameWin::getSize() const {
