@@ -461,8 +461,16 @@ namespace ukive {
         }
 
         case SizeInfo::FREEDOM:
+        {
             final_width = getWrappedWidth() + getPadding().hori();
+            final_width = (std::max)(final_width, getMinimumSize().width());
+
+            // 确定了 layout 的宽度之后，需要再看一下那些宽度为 FILL 的子 View
+            SizeInfo::Value wv(final_width, SizeInfo::DEFINED);
+            SizeInfo::Value hv = info.height();
+            final_height = getVerticalFinalHeight(SizeInfo(wv, hv));
             break;
+        }
 
         case SizeInfo::DEFINED:
         default:
@@ -492,8 +500,16 @@ namespace ukive {
         }
 
         case SizeInfo::FREEDOM:
+        {
             final_height = getWrappedHeight() + getPadding().vert();
+            final_height = (std::max)(final_height, getMinimumSize().height());
+
+            // 确定了 layout 的高度之后，需要再看一下那些高度为 FILL 的子 View
+            SizeInfo::Value wv = info.width();
+            SizeInfo::Value hv(final_height, SizeInfo::DEFINED);
+            final_width = getHorizontalFinalWidth(SizeInfo(wv, hv));
             break;
+        }
 
         case SizeInfo::DEFINED:
         default:
