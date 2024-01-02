@@ -29,8 +29,6 @@
 #include "ukive/graphics/colors/ucmm.h"
 #include "ukive/graphics/colors/color_manager.h"
 
-
-#define RADIUS 4
 #define BACKGROUND_SIZE 100
 
 
@@ -39,7 +37,7 @@ namespace shell {
     ukive::Color color_;
 
     EffectWindow::EffectWindow()
-        : ce_button_(nullptr) {}
+        {}
 
     EffectWindow::~EffectWindow() {}
 
@@ -48,35 +46,12 @@ namespace shell {
 
         setBackgroundColor(ukive::Color::Green500);
 
-        createShadowImages();
-
         image_effect_.reset(new ukive::win::ImageEffectGPU(getContext()));
         image_effect_->initialize();
         image_effect_->setSize(400, 400, false);
 
-        /*using Rlp = ukive::RestraintLayoutInfo;
-
-        auto layout = new ukive::RestraintLayout(getContext());
-        layout->setLayoutSize(ukive::View::LS_FILL, ukive::View::LS_FILL);
-        setContentView(layout);
-
-        ce_button_ = new ukive::Button(getContext());
-        ce_button_->setText(u"Shadow Effect");
-        ce_button_->setTextAlignment(ukive::TextLayout::Alignment::CENTER);
-        ce_button_->setParagraphAlignment(ukive::TextLayout::Alignment::CENTER);
-        ce_button_->setTextSize(getContext().dp2pxi(12));
-        ce_button_->setTextWeight(ukive::TextLayout::FontWeight::BOLD);
-        ce_button_->setShadowRadius(18);
-        ce_button_->setLayoutSize(getContext().dp2pxi(100), getContext().dp2pxi(50));
-
-        auto ce_button_lp = Rlp::Builder()
-            .start(layout->getId()).top(layout->getId())
-            .end(layout->getId()).bottom(layout->getId()).build();
-        ce_button_->setExtraLayoutInfo(ce_button_lp);
-        layout->addView(ce_button_);*/
-
         using namespace std::chrono_literals;
-        animator_.setValueRange(RADIUS, 256);
+        animator_.setValueRange(0, 256);
         animator_.setListener(this);
         animator_.setDuration(4000ms);
         animator_.setInterpolator(new ukive::LinearInterpolator());
@@ -127,10 +102,8 @@ namespace shell {
         Window::onPreDrawCanvas(canvas);
 
         canvas->save();
-        canvas->translate(RADIUS, RADIUS);
 
         //image_effect_->draw(canvas);
-        //canvas->drawImage(100, 10, shadow_img_);
 
         /*canvas->drawLine({ 10, 10.5f }, { 10.5f, 20.5f }, 1, ukive::Color::Black);
 
@@ -142,7 +115,6 @@ namespace shell {
 
         canvas->restore();
 
-        //canvas->drawImage(100, 10, content_img_.get());
         canvas->drawImage(100, 10, image_img_.get());
 
         //canvas->fillRect(ukive::RectF(0, 0, 1000, 1000), color_);
@@ -164,16 +136,11 @@ namespace shell {
         switch (type) {
         case ukive::Context::DEV_LOST:
         {
-            shadow_img_ = nullptr;
-            content_img_.reset();
-            shadow_effect_->destroy();
-            shadow_effect_.reset();
             break;
         }
 
         case ukive::Context::DEV_RESTORE:
         {
-            createShadowImages();
             break;
         }
 
@@ -183,10 +150,6 @@ namespace shell {
     }
 
     void EffectWindow::onAnimationProgress(ukive::Animator* animator) {
-        shadow_effect_->setRadius(int(animator->getCurValue()));
-        shadow_effect_->generate(getCanvas());
-
-        shadow_img_ = shadow_effect_->getOutput();
         requestDraw();
     }
 
@@ -196,27 +159,6 @@ namespace shell {
         if (!animator_.update(start_time, display_freq)) {
             stopVSync();
         }
-    }
-
-    void EffectWindow::createShadowImages() {
-        ukive::Canvas canvas(
-            BACKGROUND_SIZE, BACKGROUND_SIZE,
-            getCanvas()->getBuffer()->getImageOptions());
-        canvas.beginDraw();
-        canvas.clear();
-        canvas.fillRect(ukive::RectF(0, 0, BACKGROUND_SIZE, BACKGROUND_SIZE), ukive::Color::Green400);
-        //canvas.fillCircle(BACKGROUND_SIZE / 2.f, BACKGROUND_SIZE / 2.f, BACKGROUND_SIZE / 4.f, ukive::Color::Blue200);
-        canvas.endDraw();
-        content_img_ = canvas.extractImage();
-
-        shadow_effect_.reset(ukive::ShadowEffect::create(getContext()));
-        shadow_effect_->initialize();
-        shadow_effect_->setRadius(RADIUS);
-        shadow_effect_->setContent(static_cast<ukive::OffscreenBuffer*>(canvas.getBuffer()));
-
-        shadow_effect_->generate(getCanvas());
-
-        shadow_img_ = shadow_effect_->getOutput();
     }
 
 }

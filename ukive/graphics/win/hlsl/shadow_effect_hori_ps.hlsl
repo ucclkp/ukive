@@ -1,4 +1,4 @@
-Texture2D shader_texture_ : register(t0);
+Texture2D st_init_ : register(t0);
 Texture2D<float> kernel_texture_ : register(t1);
 
 
@@ -13,7 +13,7 @@ float4 main(PixelInputType input) : SV_TARGET {
     kernel_texture_.GetDimensions(width, height);
 
     int sw = 0, sh = 0;
-    shader_texture_.GetDimensions(sw, sh);
+    st_init_.GetDimensions(sw, sh);
 
     int radius = width - 1;
     int diameter = width * 2 - 1;
@@ -27,7 +27,7 @@ float4 main(PixelInputType input) : SV_TARGET {
     for (int i = 0; i < diameter; ++i) {
         int x = rx + i - 2 * radius;
         int y = ry - radius;
-        float4 color = shader_texture_.Load(int3(x, y, 0));
+        float4 color = st_init_.Load(int3(x, y, 0));
 
         int index_x = min(i, radius) * 2 - i;
         float weight = kernel_texture_.Load(int3(index_x, 0, 0));

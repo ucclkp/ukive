@@ -9,6 +9,7 @@
 #include "utils/log.h"
 #include "utils/files/file_utils.h"
 #include "utils/math/algebra/special_matrix.hpp"
+#include "utils/strings/float_conv.h"
 
 #include "ukive/app/application.h"
 #include "ukive/graphics/win/offscreen_buffer_win.h"
@@ -21,9 +22,19 @@
 
 namespace {
 
-    float getWeight(float x, float sigma) {
+    float gaussian_dist_w0(float x, float sigma) {
         float exponent = -std::pow(x, 2) / (2 * std::pow(sigma, 2));
         return std::exp(exponent) / (std::sqrt(2 * 3.1416f) * sigma);
+    }
+
+    double std_normal_dist_w(int x) {
+        double exponent = -std::pow(x, 2) / 2.0;
+        return std::exp(exponent) / std::sqrt(2 * 3.1415926536);
+    }
+
+    double gaussian_dist_w(int x, double sigma) {
+        double exponent = -std::pow(x, 2) / (2 * std::pow(sigma, 2));
+        return std::exp(exponent) / (std::sqrt(2 * 3.1415926536) * sigma);
     }
 
 }
@@ -495,11 +506,33 @@ namespace win {
     }
 
     bool ShadowEffectGPU::createKernelTexture() {
+        constexpr int kCount = 13;
+
+        double snd_w[kCount];
+        double total_snd_w = 0;
+        for (int i = 0; i < kCount; ++i) {
+            snd_w[i] = gaussian_dist_w(i - kCount / 2, 1);
+            if (i > 1 && i < kCount - 2) {
+                total_snd_w += snd_w[i];
+            }
+        }
+
+        std::string result;
+        for (int i = 0; i < kCount; ++i) {
+            snd_w[i] /= total_snd_w;
+            if (i > 1 && i <= kCount / 2) {
+                result += utl::ftos8(snd_w[i], 10);
+                if (i != kCount / 2) {
+                    result += ", ";
+                }
+            }
+        }
+
         int radius = int(std::ceil(radius_ * context_.getAutoScale()));
         float total_weight = 0;
         std::unique_ptr<float[]> weight_matrix(new float[radius + 1]());
         for (int i = 0; i < radius + 1; ++i) {
-            float w = getWeight(float(radius - i), semi_radius_ * context_.getAutoScale());
+            float w = gaussian_dist_w0(float(radius - i), semi_radius_ * context_.getAutoScale());
             weight_matrix[i] = w;
             if (i != radius) {
                 total_weight += w;

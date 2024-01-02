@@ -223,6 +223,7 @@ $(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro\$(ProjectName)" -d "$(O
   <ItemGroup>
     <ClCompile Include="app\shell.cpp" />
     <ClCompile Include="effects\effect_window.cpp" />
+    <ClCompile Include="effects\shadow_window.cpp" />
     <ClCompile Include="examples\pages\example_list_page.cpp" />
     <ClCompile Include="examples\pages\example_misc_page.cpp" />
     <ClCompile Include="examples\pages\example_tree_page.cpp" />
@@ -240,6 +241,7 @@ $(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro\$(ProjectName)" -d "$(O
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="effects\effect_window.h" />
+    <ClInclude Include="effects\shadow_window.h" />
     <ClInclude Include="examples\pages\example_list_page.h" />
     <ClInclude Include="examples\pages\example_misc_page.h" />
     <ClInclude Include="examples\pages\example_tree_page.h" />

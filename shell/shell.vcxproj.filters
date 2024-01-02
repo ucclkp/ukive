@@ -88,6 +88,9 @@
     <ClCompile Include="effects\effect_window.cpp">
       <Filter>effects</Filter>
     </ClCompile>
+    <ClCompile Include="effects\shadow_window.cpp">
+      <Filter>effects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resources\resource.h">
@@ -136,6 +139,9 @@
       <Filter>examples</Filter>
     </ClInclude>
     <ClInclude Include="effects\effect_window.h">
+      <Filter>effects</Filter>
+    </ClInclude>
+    <ClInclude Include="effects\shadow_window.h">
       <Filter>effects</Filter>
     </ClInclude>
   </ItemGroup>

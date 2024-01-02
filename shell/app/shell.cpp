@@ -16,6 +16,7 @@
 #include "shell/examples/example_window.h"
 #include "shell/text/text_window.h"
 #include "shell/effects/effect_window.h"
+#include "shell/effects/shadow_window.h"
 #include "shell/grid/grid_window.h"
 #include "shell/visualize/visualization_window.h"
 
@@ -53,22 +54,30 @@ GUI_MAIN() {
     lod_window->center();
     lod_window->show();*/
 
-    /*auto shadow_window = std::make_shared<shell::EffectWindow>();
+    /*auto effect_window = std::make_shared<shell::EffectWindow>();
+    effect_window->init(native_params);
+    effect_window->setTitle(u"Effects");
+    effect_window->setWidth(ukive::Application::dp2pxi(800));
+    effect_window->setHeight(ukive::Application::dp2pxi(800));
+    effect_window->center();
+    effect_window->show();*/
+
+    auto shadow_window = std::make_shared<shell::ShadowWindow>();
     shadow_window->init(native_params);
-    shadow_window->setTitle(u"Effects");
+    shadow_window->setTitle(u"Shadow");
     shadow_window->setWidth(ukive::Application::dp2pxi(800));
     shadow_window->setHeight(ukive::Application::dp2pxi(800));
     shadow_window->center();
-    shadow_window->show();*/
+    shadow_window->show();
 
-    auto example_window = std::make_shared<shell::ExampleWindow>();
+    /*auto example_window = std::make_shared<shell::ExampleWindow>();
     example_window->init(ukive::Window::InitParams());
     example_window->setTitle(u"Examples");
     example_window->setWidth(ukive::Application::dp2pxi(600));
     example_window->setHeight(ukive::Application::dp2pxi(600));
     example_window->setTranslucentType(ukive::TRANS_TRANSPARENT);
     example_window->center();
-    example_window->show();
+    example_window->show();*/
     //example_window->maximize();
 
     /*auto grid_window = std::make_shared<shell::GridWindow>();
