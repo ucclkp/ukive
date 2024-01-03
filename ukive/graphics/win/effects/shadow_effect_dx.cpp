@@ -401,7 +401,7 @@ namespace win {
             context->setPixelShader(vert_ps_.get());
             {
                 context->setRenderTargets(1, &shadow2_rtv_, nullptr);
-                GPUShaderResource* srvs[] = { shadow1_srv_.get(), kernel_srv_.get() };
+                GPUShaderResource* srvs[] = { shadow1_srv_.get(), bg_srv_.get(), kernel_srv_.get()};
                 context->setPShaderResources(0, ARRAYSIZE(srvs), srvs);
             }
             context->clearRenderTarget(shadow2_rtv_.get(), transparent);

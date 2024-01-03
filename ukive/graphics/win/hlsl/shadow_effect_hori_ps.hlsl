@@ -8,9 +8,6 @@ cbuffer cbData {
 
 struct PixelInputType {
     float4 position : SV_POSITION;
-    // 渲染目标的坐标位置（未进行坐标变换），
-    // 其位置遍历传入的顶点坐标围成的范围。该坐标为半像素坐标。
-    float3 raw_position : POSITION;
 };
 
 float4 main(PixelInputType input) : SV_TARGET {
@@ -21,8 +18,8 @@ float4 main(PixelInputType input) : SV_TARGET {
     img_.GetDimensions(sw, sh);
     
     int radius = kw - 1;
-    int x = (int)input.raw_position.x - (rt_size.x - sw) / 2;
-    int y = (int)input.raw_position.y - (rt_size.y - sh) / 2;
+    int x = (int)(input.position.x) - (rt_size.x - sw) / 2;
+    int y = (int)(input.position.y) - (rt_size.y - sh) / 2;
 
     float4 color = img_.Load(int3(x, y, 0)) * kernel_.Load(int3(radius, 0, 0));
     for (int i = 0; i < radius; ++i)
