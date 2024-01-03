@@ -721,6 +721,9 @@
     <ClCompile Include="resources\element_parser.cpp">
       <Filter>resources</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\win\effects\gaussian_blur_effect_dx.cpp">
+      <Filter>graphics\win\effects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">
@@ -1629,6 +1632,9 @@
     <ClInclude Include="resources\element_parser.h">
       <Filter>resources</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\win\effects\gaussian_blur_effect_dx.h">
+      <Filter>graphics\win\effects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="window">
@@ -1822,5 +1828,16 @@
     <FxCompile Include="graphics\win\hlsl\shadow_effect_vs.hlsl">
       <Filter>graphics\win\hlsl</Filter>
     </FxCompile>
+    <FxCompile Include="graphics\win\hlsl\gaussian_blur_effect_hori_ps.hlsl">
+      <Filter>graphics\win\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="graphics\win\hlsl\gaussian_blur_effect_vert_ps.hlsl">
+      <Filter>graphics\win\hlsl</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graphics\win\hlsl\gaussian_blur.hlsli">
+      <Filter>graphics\win\hlsl</Filter>
+    </None>
   </ItemGroup>
 </Project>

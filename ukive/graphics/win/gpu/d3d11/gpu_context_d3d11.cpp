@@ -158,6 +158,22 @@ namespace win {
         d3d_context_->PSSetShaderResources(start_slot, num, ptr);
     }
 
+    void GPUContextD3D11::setPConstantBuffers(
+        uint32_t start_slot, uint32_t num, GPUBuffer* const* buffers)
+    {
+        ARRAY_OR_VECTOR(ID3D11Buffer*, 8, num);
+        for (uint32_t i = 0; i < num; ++i) {
+            auto nat = static_cast<const GPUBufferD3D11*>(buffers[i])->getNative();
+            if (num > 8) {
+                vec[i] = nat;
+            } else {
+                arr[i] = nat;
+            }
+        }
+
+        d3d_context_->PSSetConstantBuffers(start_slot, num, ptr);
+    }
+
     void GPUContextD3D11::setViewports(uint32_t num, const Viewport* vps) {
         ARRAY_OR_VECTOR(D3D11_VIEWPORT, 8, num);
         for (uint32_t i = 0; i < num; ++i) {

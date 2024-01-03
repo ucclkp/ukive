@@ -1,38 +1,35 @@
-Texture2D st_init_ : register(t0);
-Texture2D<float> kernel_texture_ : register(t1);
+Texture2D img_ : register(t0);
+Texture2D<float> kernel_ : register(t1);
 
+cbuffer cbData {
+    uint2 rt_size;
+    uint2 unused;
+};
 
 struct PixelInputType {
     float4 position : SV_POSITION;
+    // 渲染目标的坐标位置（未进行坐标变换），
+    // 其位置遍历传入的顶点坐标围成的范围。该坐标为半像素坐标。
     float3 raw_position : POSITION;
 };
 
-
 float4 main(PixelInputType input) : SV_TARGET {
-    int width = 0, height = 0;
-    kernel_texture_.GetDimensions(width, height);
+    uint kw = 0, kh = 0;
+    kernel_.GetDimensions(kw, kh);
+    
+    uint sw = 0, sh = 0;
+    img_.GetDimensions(sw, sh);
+    
+    int radius = kw - 1;
+    int x = (int)input.raw_position.x - (rt_size.x - sw) / 2;
+    int y = (int)input.raw_position.y - (rt_size.y - sh) / 2;
 
-    int sw = 0, sh = 0;
-    st_init_.GetDimensions(sw, sh);
-
-    int radius = width - 1;
-    int diameter = width * 2 - 1;
-
-    // 渲染目标的坐标位置（未进行坐标变换），
-    // 其位置遍历传入的顶点坐标围成的范围。该坐标为半像素坐标。
-    int rx = (int)floor(input.raw_position.x);
-    int ry = sh + radius * 2 - (int)ceil(input.raw_position.y);
-
-    float acc_alpha = 0;
-    for (int i = 0; i < diameter; ++i) {
-        int x = rx + i - 2 * radius;
-        int y = ry - radius;
-        float4 color = st_init_.Load(int3(x, y, 0));
-
-        int index_x = min(i, radius) * 2 - i;
-        float weight = kernel_texture_.Load(int3(index_x, 0, 0));
-        acc_alpha += color.w * weight;
+    float4 color = img_.Load(int3(x, y, 0)) * kernel_.Load(int3(radius, 0, 0));
+    for (int i = 0; i < radius; ++i)
+    {
+        float w = kernel_.Load(int3(i, 0, 0));
+        color += img_.Load(int3(x - (radius - i), y, 0)) * w;
+        color += img_.Load(int3(x + (radius - i), y, 0)) * w;
     }
-
-    return float4(0, 0, 0, acc_alpha * 0.6f);
+    return color;
 }

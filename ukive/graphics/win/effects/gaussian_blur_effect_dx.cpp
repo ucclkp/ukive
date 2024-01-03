@@ -4,7 +4,7 @@
 // This program is licensed under GPLv3 license that can be
 // found in the LICENSE file.
 
-#include "shadow_effect_dx.h"
+#include "gaussian_blur_effect_dx.h"
 
 #include "utils/log.h"
 #include "utils/files/file_utils.h"
@@ -22,9 +22,36 @@
 
 namespace {
 
-    float gaussian_dist_w(float x, float sigma) {
-        float exponent = -std::pow(x, 2) / (2 * std::pow(sigma, 2));
-        return std::exp(exponent) / (std::sqrt(2 * 3.1416f) * sigma);
+    double gaussian_dist_w(int x, double sigma) {
+        double exponent = -std::pow(x, 2) / (2 * std::pow(sigma, 2));
+        return std::exp(exponent) / (std::sqrt(2 * 3.1415926536) * sigma);
+    }
+
+    std::string calculate_kernel() {
+        constexpr int kCount = 13;
+        constexpr int kIgnore = 0;
+
+        double snd_w[kCount];
+        double total_snd_w = 0;
+        for (int i = 0; i < kCount; ++i) {
+            snd_w[i] = gaussian_dist_w(i - kCount / 2, 16);
+            if (i >= kIgnore && i < kCount - kIgnore) {
+                total_snd_w += snd_w[i];
+            }
+        }
+
+        std::string result;
+        for (int i = 0; i < kCount; ++i) {
+            snd_w[i] /= total_snd_w;
+            if (i >= kIgnore && i <= kCount / 2) {
+                result += utl::ftos8(snd_w[i], 10);
+                if (i != kCount / 2) {
+                    result += ", ";
+                }
+            }
+        }
+
+        return result;
     }
 
 }
@@ -32,7 +59,7 @@ namespace {
 namespace ukive {
 namespace win {
 
-    ShadowEffectGPU::ShadowEffectGPU(Context context)
+    GaussianBlurEffectGPU::GaussianBlurEffectGPU(Context context)
         : width_(0),
           height_(0),
           view_width_(0),
@@ -43,9 +70,11 @@ namespace win {
     {
     }
 
-    ShadowEffectGPU::~ShadowEffectGPU() {}
+    GaussianBlurEffectGPU::~GaussianBlurEffectGPU() {}
 
-    bool ShadowEffectGPU::initialize() {
+    bool GaussianBlurEffectGPU::initialize() {
+        //calculate_kernel();
+
         // 顶点着色器
         auto device =
             Application::getGraphicDeviceManager()->getGPUDevice();
@@ -74,7 +103,7 @@ namespace win {
 
         // 像素着色器
         std::string ps_bc;
-        res_mgr->getFileData(shader_dir / u"shadow_effect_vert_ps.cso", &ps_bc);
+        res_mgr->getFileData(shader_dir / u"gaussian_blur_effect_vert_ps.cso", &ps_bc);
         auto vert_ps_ret = device->createPixelShader(ps_bc.data(), ps_bc.size());
         if (!vert_ps_ret) {
             LOG(Log::WARNING) << "Failed to create pixel shader: " << vert_ps_ret.code.raw_code();
@@ -83,7 +112,7 @@ namespace win {
         vert_ps_ = vert_ps_ret;
 
         ps_bc.clear();
-        res_mgr->getFileData(shader_dir / u"shadow_effect_hori_ps.cso", &ps_bc);
+        res_mgr->getFileData(shader_dir / u"gaussian_blur_effect_hori_ps.cso", &ps_bc);
         auto hori_ps_ret = device->createPixelShader(ps_bc.data(), ps_bc.size());
         if (!hori_ps_ret) {
             LOG(Log::WARNING) << "Failed to create pixel shader: " << hori_ps_ret.code.raw_code();
@@ -136,7 +165,7 @@ namespace win {
         return true;
     }
 
-    void ShadowEffectGPU::destroy() {
+    void GaussianBlurEffectGPU::destroy() {
         vs_.reset();
         input_layout_.reset();
         vert_ps_.reset();
@@ -145,9 +174,8 @@ namespace win {
         pconst_buffer_.reset();
         rasterizer_state_.reset();
 
+        bg_rtv_.reset();
         bg_srv_.reset();
-        kernel_tex2d_.reset();
-        kernel_srv_.reset();
         shadow1_tex2d_.reset();
         shadow1_rtv_.reset();
         shadow1_srv_.reset();
@@ -165,7 +193,7 @@ namespace win {
         is_initialized_ = false;
     }
 
-    void ShadowEffectGPU::onDemolish() {
+    void GaussianBlurEffectGPU::onDemolish() {
         vs_.reset();
         input_layout_.reset();
         vert_ps_.reset();
@@ -174,9 +202,8 @@ namespace win {
         pconst_buffer_.reset();
         rasterizer_state_.reset();
 
+        bg_rtv_.reset();
         bg_srv_.reset();
-        kernel_tex2d_.reset();
-        kernel_srv_.reset();
         shadow1_tex2d_.reset();
         shadow1_rtv_.reset();
         shadow1_srv_.reset();
@@ -191,7 +218,7 @@ namespace win {
         is_initialized_ = false;
     }
 
-    void ShadowEffectGPU::onRebuild(bool succeeded) {
+    void GaussianBlurEffectGPU::onRebuild(bool succeeded) {
         if (!initialize()) {
             return;
         }
@@ -199,7 +226,7 @@ namespace win {
         setRadius(radius_);
     }
 
-    bool ShadowEffectGPU::generate(Canvas* c) {
+    bool GaussianBlurEffectGPU::generate(Canvas* c) {
         if (!is_initialized_) {
             return false;
         }
@@ -224,7 +251,7 @@ namespace win {
         return true;
     }
 
-    bool ShadowEffectGPU::draw(Canvas* c) {
+    bool GaussianBlurEffectGPU::draw(Canvas* c) {
         if (!is_initialized_) {
             return false;
         }
@@ -241,7 +268,7 @@ namespace win {
         return true;
     }
 
-    bool ShadowEffectGPU::setSize(int width, int height, bool hdr) {
+    bool GaussianBlurEffectGPU::setSize(int width, int height, bool hdr) {
         if (width_ == width &&
             height_ == height &&
             is_hdr_enabled_ == hdr)
@@ -342,7 +369,7 @@ namespace win {
         return true;
     }
 
-    void ShadowEffectGPU::render() {
+    void GaussianBlurEffectGPU::render() {
         if (!is_initialized_) {
             return;
         }
@@ -385,13 +412,15 @@ namespace win {
         context->setIndexBuffer(index_buffer_.get(), GPUDataFormat::R32_UINT, 0);
 
         GPUShaderResource* first_img = bg_srv_.get();
+        int count = std::round(std::sqrtf(radius_ * context_.getAutoScale() / (13 / 2.f)));
+        if (count < 1) count = 1;
 
-        for (int i = 0; i < 1; ++i) {
+        for (int i = 0; i < count; ++i) {
             // Render hori
             context->setPixelShader(hori_ps_.get());
             {
                 context->setRenderTargets(1, &shadow1_rtv_, nullptr);
-                GPUShaderResource* srvs[] = { first_img, kernel_srv_.get() };
+                GPUShaderResource* srvs[] = { first_img };
                 context->setPShaderResources(0, ARRAYSIZE(srvs), srvs);
             }
             context->clearRenderTarget(shadow1_rtv_.get(), transparent);
@@ -401,7 +430,7 @@ namespace win {
             context->setPixelShader(vert_ps_.get());
             {
                 context->setRenderTargets(1, &shadow2_rtv_, nullptr);
-                GPUShaderResource* srvs[] = { shadow1_srv_.get(), kernel_srv_.get() };
+                GPUShaderResource* srvs[] = { shadow1_srv_.get() };
                 context->setPShaderResources(0, ARRAYSIZE(srvs), srvs);
             }
             context->clearRenderTarget(shadow2_rtv_.get(), transparent);
@@ -411,32 +440,29 @@ namespace win {
         }
     }
 
-    void ShadowEffectGPU::resetCache() {
+    void GaussianBlurEffectGPU::resetCache() {
         cache_.reset();
     }
 
-    bool ShadowEffectGPU::hasCache() const {
+    bool GaussianBlurEffectGPU::hasCache() const {
         return cache_ != nullptr;
     }
 
-    bool ShadowEffectGPU::setRadius(int radius) {
+    bool GaussianBlurEffectGPU::setRadius(int radius) {
         if (!is_initialized_) {
             return false;
         }
-        if ((radius == radius_ && kernel_tex2d_ && kernel_srv_) ||
-            radius <= 0)
-        {
+        if (radius == radius_ || radius <= 0) {
             return true;
         }
 
         radius_ = radius;
         semi_radius_ = radius_ / 2.f;
         cache_.reset();
-
-        return createKernelTexture();
+        return true;
     }
 
-    bool ShadowEffectGPU::setContent(OffscreenBuffer* content) {
+    bool GaussianBlurEffectGPU::setContent(OffscreenBuffer* content) {
         if (!is_initialized_ || !content) {
             return false;
         }
@@ -462,20 +488,27 @@ namespace win {
         }
         bg_srv_ = texture->srv();
 
+        auto bg_rtv = device->createRenderTarget(texture.get());
+        if (!bg_rtv) {
+            LOG(Log::WARNING) << "Failed to create RTV: " << bg_rtv.code.raw_code();
+            return false;
+        }
+        bg_rtv_ = bg_rtv;
+
         return setSize(
             width, height,
             content->getImageOptions().pixel_format == ImagePixelFormat::HDR);
     }
 
-    int ShadowEffectGPU::getRadius() const {
+    int GaussianBlurEffectGPU::getRadius() const {
         return radius_;
     }
 
-    GPtr<ImageFrame> ShadowEffectGPU::getOutput() const {
+    GPtr<ImageFrame> GaussianBlurEffectGPU::getOutput() const {
         return cache_;
     }
 
-    bool ShadowEffectGPU::createTexture(
+    bool GaussianBlurEffectGPU::createTexture(
         GPtr<GPUTexture>& tex,
         GPtr<GPURenderTarget>& rtv,
         GPtr<GPUShaderResource>& srv)
@@ -510,40 +543,5 @@ namespace win {
         return true;
     }
 
-    bool ShadowEffectGPU::createKernelTexture() {
-        int radius = (int)std::ceil(radius_ * context_.getAutoScale());
-
-        float total_weight = 0;
-        std::unique_ptr<float[]> weight_matrix(new float[radius + 1]());
-        for (int i = 0; i < radius + 1; ++i) {
-            float w = gaussian_dist_w(float(radius - i), semi_radius_ * context_.getAutoScale());
-            weight_matrix[i] = w;
-            if (i != radius) {
-                total_weight += w;
-            }
-        }
-
-        total_weight *= 2;
-        total_weight += weight_matrix[radius];
-        for (int i = 0; i < radius + 1; ++i) {
-            weight_matrix[i] /= total_weight;
-        }
-
-        kernel_tex2d_ = GPUTexture::createShaderTex2D(
-            radius + 1, 1, GPUDataFormat::R32_FLOAT, false,
-            sizeof(float) * (radius + 1), weight_matrix.get());
-        if (!kernel_tex2d_) {
-            LOG(Log::WARNING) << "Failed to create 2d texture!";
-            return false;
-        }
-
-        auto ret = kernel_tex2d_->createSRV();
-        if (!ret) {
-            LOG(Log::WARNING) << "Failed to create SRV: " << ret.raw_code();
-            return false;
-        }
-        kernel_srv_ = kernel_tex2d_->srv();
-        return true;
-    }
 }
 }

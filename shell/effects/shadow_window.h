@@ -55,6 +55,9 @@ namespace shell {
         ukive::GPtr<ukive::ImageFrame> shadow_img_;
         ukive::GPtr<ukive::ImageFrame> content_img_;
         std::unique_ptr<ukive::ShadowEffect> shadow_effect_;
+
+        ukive::GPtr<ukive::ImageFrame> gaussblur_img_;
+        std::unique_ptr<ukive::ShadowEffect> gaussblur_effect_;
     };
 
 }

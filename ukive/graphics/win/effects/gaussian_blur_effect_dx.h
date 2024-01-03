@@ -4,8 +4,8 @@
 // This program is licensed under GPLv3 license that can be
 // found in the LICENSE file.
 
-#ifndef UKIVE_GRAPHICS_WIN_EFFECTS_SHADOW_EFFECT_DX_H_
-#define UKIVE_GRAPHICS_WIN_EFFECTS_SHADOW_EFFECT_DX_H_
+#ifndef UKIVE_GRAPHICS_WIN_EFFECTS_GAUSSIAN_BLUR_EFFECT_DX_H_
+#define UKIVE_GRAPHICS_WIN_EFFECTS_GAUSSIAN_BLUR_EFFECT_DX_H_
 
 #include <memory>
 
@@ -31,13 +31,13 @@ namespace ukive {
 
 namespace win {
 
-    class ShadowEffectGPU :
+    class GaussianBlurEffectGPU :
         public ShadowEffect,
         public Rebuildable
     {
     public:
-        explicit ShadowEffectGPU(Context context);
-        ~ShadowEffectGPU();
+        explicit GaussianBlurEffectGPU(Context context);
+        ~GaussianBlurEffectGPU();
 
         bool initialize() override;
         void destroy() override;
@@ -74,7 +74,6 @@ namespace win {
             GPtr<GPUTexture>& tex,
             GPtr<GPURenderTarget>& rtv,
             GPtr<GPUShaderResource>& srv);
-        bool createKernelTexture();
         bool setSize(int width, int height, bool hdr);
         void render();
 
@@ -92,10 +91,8 @@ namespace win {
         utl::mat4f view_matrix_;
         utl::mat4f ortho_matrix_;
 
+        GPtr<GPURenderTarget> bg_rtv_;
         GPtr<GPUShaderResource> bg_srv_;
-
-        GPtr<GPUTexture> kernel_tex2d_;
-        GPtr<GPUShaderResource> kernel_srv_;
 
         GPtr<GPUTexture> shadow1_tex2d_;
         GPtr<GPURenderTarget> shadow1_rtv_;
@@ -124,4 +121,4 @@ namespace win {
 }
 }
 
-#endif  // UKIVE_GRAPHICS_WIN_EFFECTS_SHADOW_EFFECT_DX_H_
+#endif  // UKIVE_GRAPHICS_WIN_EFFECTS_GAUSSIAN_BLUR_EFFECT_DX_H_

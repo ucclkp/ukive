@@ -48,6 +48,8 @@ namespace win {
             uint32_t start_slot, uint32_t num, GPUSamplerState* const* states) override;
         void setPShaderResources(
             uint32_t start_slot, uint32_t num, GPUShaderResource* const* res) override;
+        void setPConstantBuffers(
+            uint32_t start_slot, uint32_t num, GPUBuffer* const* buffers) override;
 
         void setViewports(uint32_t num, const Viewport* vps) override;
         void setRasterizerState(GPURasterizerState* state) override;

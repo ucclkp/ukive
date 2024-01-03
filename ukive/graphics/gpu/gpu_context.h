@@ -80,6 +80,8 @@ namespace ukive {
             uint32_t start_slot, uint32_t num, GPUSamplerState* const* states) = 0;
         virtual void setPShaderResources(
             uint32_t start_slot, uint32_t num, GPUShaderResource* const* res) = 0;
+        virtual void setPConstantBuffers(
+            uint32_t start_slot, uint32_t num, GPUBuffer* const* buffers) = 0;
 
         // RS
         virtual void setViewports(uint32_t num, const Viewport* vps) = 0;

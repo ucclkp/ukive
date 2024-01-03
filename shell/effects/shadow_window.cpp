@@ -26,10 +26,9 @@
 #include "ukive/graphics/images/lc_image.h"
 #include "ukive/resources/resource_manager.h"
 
-#include "ukive/graphics/colors/ucmm.h"
-#include "ukive/graphics/colors/color_manager.h"
+#include "ukive/graphics/win/effects/gaussian_blur_effect_dx.h"
 
-#define RADIUS 48
+#define RADIUS 24
 #define BACKGROUND_SIZE 100
 
 
@@ -57,7 +56,7 @@ namespace shell {
         ce_button_->setVertAlignment(ukive::TextLayout::Alignment::CENTER);
         ce_button_->setTextSize(getContext().dp2pxi(12));
         ce_button_->setTextWeight(ukive::TextLayout::FontWeight::BOLD);
-        ce_button_->setShadowRadius(1800);
+        ce_button_->setShadowRadius(64);
         ce_button_->setLayoutSize(getContext().dp2pxi(100), getContext().dp2pxi(50));
 
         auto ce_button_lp = Rlp::Builder()
@@ -78,14 +77,21 @@ namespace shell {
     void ShadowWindow::onPreDrawCanvas(ukive::Canvas* canvas) {
         Window::onPreDrawCanvas(canvas);
 
-        canvas->save();
-        canvas->translate(-RADIUS, -RADIUS);
+        if (shadow_img_) {
+            canvas->save();
+            canvas->translate(-RADIUS, -RADIUS);
+            canvas->drawImage(100, 100, shadow_img_.get());
+            canvas->restore();
+            canvas->drawImage(100, 100, content_img_.get());
+        }
 
-        canvas->drawImage(100, 100, shadow_img_.get());
-
-        canvas->restore();
-
-        canvas->drawImage(100, 100, content_img_.get());
+        if (gaussblur_img_) {
+            canvas->save();
+            canvas->translate(-RADIUS, -RADIUS);
+            canvas->drawImage(300, 100, gaussblur_img_.get());
+            canvas->restore();
+            canvas->drawImage(300, 100, content_img_.get());
+        }
     }
 
     void ShadowWindow::onDestroy() {
@@ -108,6 +114,9 @@ namespace shell {
             content_img_.reset();
             shadow_effect_->destroy();
             shadow_effect_.reset();
+
+            gaussblur_effect_->destroy();
+            gaussblur_effect_.reset();
             break;
         }
 
@@ -123,11 +132,10 @@ namespace shell {
     }
 
     void ShadowWindow::onAnimationProgress(ukive::Animator* animator) {
-        shadow_effect_->setRadius(int(animator->getCurValue()));
+        /*shadow_effect_->setRadius(int(animator->getCurValue()));
         shadow_effect_->generate(getCanvas());
-
         shadow_img_ = shadow_effect_->getOutput();
-        requestDraw();
+        requestDraw();*/
     }
 
     void ShadowWindow::onVSync(
@@ -144,19 +152,26 @@ namespace shell {
             getCanvas()->getBuffer()->getImageOptions());
         canvas.beginDraw();
         canvas.clear();
-        canvas.fillRect(ukive::RectF(0, 0, BACKGROUND_SIZE, BACKGROUND_SIZE), ukive::Color::Green400);
+        canvas.fillRect(ukive::RectF(0, 0, BACKGROUND_SIZE, BACKGROUND_SIZE / 2), ukive::Color::Green400);
+        canvas.fillRect(ukive::RectF(0, BACKGROUND_SIZE / 2, BACKGROUND_SIZE, BACKGROUND_SIZE / 2), ukive::Color::Red500);
         //canvas.fillCircle(BACKGROUND_SIZE / 2.f, BACKGROUND_SIZE / 2.f, BACKGROUND_SIZE / 4.f, ukive::Color::Blue200);
         canvas.endDraw();
         content_img_ = canvas.extractImage();
 
+        bool ret;
         shadow_effect_.reset(ukive::ShadowEffect::create(getContext()));
-        shadow_effect_->initialize();
-        shadow_effect_->setRadius(RADIUS);
-        shadow_effect_->setContent(static_cast<ukive::OffscreenBuffer*>(canvas.getBuffer()));
+        ret = shadow_effect_->initialize(); ubassert(ret);
+        ret = shadow_effect_->setRadius(RADIUS); ubassert(ret);
+        ret = shadow_effect_->setContent(static_cast<ukive::OffscreenBuffer*>(canvas.getBuffer())); ubassert(ret);
+        ret = shadow_effect_->generate(getCanvas()); ubassert(ret);
+        shadow_img_ = shadow_effect_->getOutput(); ubassert(!!shadow_img_);
 
-        shadow_effect_->generate(getCanvas());
-
-        shadow_img_ = shadow_effect_->getOutput();
+        /*gaussblur_effect_.reset(new ukive::win::GaussianBlurEffectGPU(getContext()));
+        ret = gaussblur_effect_->initialize(); ubassert(ret);
+        ret = gaussblur_effect_->setRadius(RADIUS); ubassert(ret);
+        ret = gaussblur_effect_->setContent(static_cast<ukive::OffscreenBuffer*>(canvas.getBuffer())); ubassert(ret);
+        ret = gaussblur_effect_->generate(getCanvas()); ubassert(ret);
+        gaussblur_img_ = gaussblur_effect_->getOutput(); ubassert(!!gaussblur_img_);*/
     }
 
 }
