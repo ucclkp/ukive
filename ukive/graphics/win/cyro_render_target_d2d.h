@@ -7,6 +7,7 @@
 #ifndef UKIVE_GRAPHICS_WIN_CYRO_RENDER_TARGET_D2D_H_
 #define UKIVE_GRAPHICS_WIN_CYRO_RENDER_TARGET_D2D_H_
 
+#include <shared_mutex>
 #include <stack>
 
 #include "utils/memory/win/com_ptr.hpp"
@@ -112,7 +113,7 @@ namespace win {
         utl::win::ComPtr<ID2D1SolidColorBrush> solid_brush_;
         utl::win::ComPtr<ID2D1BitmapBrush> bitmap_brush_;
 
-        std::mutex rt_sync_;
+        std::shared_mutex rt_sync_;
         CanvasStack<StackData> save_stack_;
 
         CyroBuffer* buffer_ = nullptr;

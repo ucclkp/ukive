@@ -162,6 +162,7 @@ namespace win {
         float dpi_x, dpi_y;
         frame->getDpi(&dpi_x, &dpi_y);
 
+        HRESULT hr;
         D2D1_BITMAP_PROPERTIES props =
             D2D1::BitmapProperties(D2D1::PixelFormat(), dpi_x, dpi_y);
 
@@ -173,8 +174,9 @@ namespace win {
 
         utl::win::ComPtr<ID2D1Bitmap> d2d_bmp;
         {
-            std::lock_guard<std::mutex> lg(rt_sync_);
-            HRESULT hr = rt_->CreateBitmapFromWicBitmap(native_src.get(), &props, &d2d_bmp);
+            std::shared_lock<std::shared_mutex> lg(rt_sync_);
+            hr = rt_->CreateBitmapFromWicBitmap(native_src.get(), &props, &d2d_bmp);
+            lg.unlock();
             if (FAILED(hr)) {
                 ubassert(false);
                 return {};
@@ -188,12 +190,14 @@ namespace win {
     GPtr<ImageFrame> CyroRenderTargetD2D::createImage(
         int width, int height, const ImageOptions& options)
     {
+        HRESULT hr;
         auto prop = mapBitmapProps(options);
 
         utl::win::ComPtr<ID2D1Bitmap> d2d_bmp;
         {
-            std::lock_guard<std::mutex> lg(rt_sync_);
-            HRESULT hr = rt_->CreateBitmap(D2D1::SizeU(width, height), prop, &d2d_bmp);
+            std::shared_lock<std::shared_mutex> lg(rt_sync_);
+            hr = rt_->CreateBitmap(D2D1::SizeU(width, height), prop, &d2d_bmp);
+            lg.unlock();
             if (FAILED(hr)) {
                 ubassert(false);
                 return {};
@@ -208,15 +212,17 @@ namespace win {
         int width, int height,
         const GPtr<ByteData>& pixel_data, size_t stride, const ImageOptions& options)
     {
+        HRESULT hr;
         auto prop = mapBitmapProps(options);
 
         utl::win::ComPtr<ID2D1Bitmap> d2d_bmp;
         {
-            std::lock_guard<std::mutex> lg(rt_sync_);
-            HRESULT hr = rt_->CreateBitmap(
+            std::shared_lock<std::shared_mutex> lg(rt_sync_);
+            hr = rt_->CreateBitmap(
                 D2D1::SizeU(width, height),
                 pixel_data->getConstData(),
                 utl::num_cast<UINT32>(stride), prop, &d2d_bmp);
+            lg.unlock();
             if (FAILED(hr)) {
                 ubassert(false);
                 return {};
@@ -243,6 +249,7 @@ namespace win {
     GPtr<ImageFrame> CyroRenderTargetD2D::createImage(
         const GPtr<GPUTexture>& tex2d, const ImageOptions& options)
     {
+        HRESULT hr;
         auto& desc = tex2d->getDesc();
         if (desc.dim != GPUTexture::Dimension::_2D) {
             return {};
@@ -254,7 +261,7 @@ namespace win {
         }
 
         utl::win::ComPtr<IDXGISurface> dxgi_surface;
-        HRESULT hr = res->QueryInterface(&dxgi_surface);
+        hr = res->QueryInterface(&dxgi_surface);
         if (FAILED(hr)) {
             LOG(Log::WARNING) << "Failed to query DXGI surface: " << hr;
             return {};
@@ -264,9 +271,10 @@ namespace win {
 
         utl::win::ComPtr<ID2D1Bitmap> d2d_bmp;
         {
-            std::lock_guard<std::mutex> lg(rt_sync_);
+            std::shared_lock<std::shared_mutex> lg(rt_sync_);
             hr = rt_->CreateSharedBitmap(
                 __uuidof(IDXGISurface), dxgi_surface.get(), &bmp_prop, &d2d_bmp);
+            lg.unlock();
             if (FAILED(hr)) {
                 LOG(Log::WARNING) << "Failed to create shared bitmap: " << hr;
                 return {};
@@ -324,7 +332,7 @@ namespace win {
 
         auto ret = buffer_->onEndDraw();
         if (ret == GRet::Retry) {
-            std::lock_guard<std::mutex> lg(rt_sync_);
+            std::unique_lock<std::shared_mutex> lg(rt_sync_);
 
             uninitialize();
             rt_.reset();
@@ -345,7 +353,7 @@ namespace win {
             return GRet::Failed;
         }
 
-        std::lock_guard<std::mutex> lg(rt_sync_);
+        std::unique_lock<std::shared_mutex> lg(rt_sync_);
 
         uninitialize();
         rt_.reset();
