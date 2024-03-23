@@ -33,6 +33,6 @@ float4 main(PixelInputType input) : SV_TARGET {
     }
 
     color.rgb = 0;
-    color.a *= 0.6f;
+    color.a *= 0.4f;
     return init_color + color * (1 - init_color.w);
 }
