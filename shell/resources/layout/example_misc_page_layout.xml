@@ -22,7 +22,8 @@
             height="auto"
             margin="12"
             text="测试页面"
-            vert_align="center" />
+            vert_align="center"
+            tooltip="测试页面" />
 
     </SequenceLayout>
 

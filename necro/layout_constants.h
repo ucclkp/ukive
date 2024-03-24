@@ -29,6 +29,7 @@ namespace necro {
     const char kAttrViewMinHeight[] = "min_height";
     const char kAttrViewBackground[] = "background";
     const char kAttrViewForeground[] = "foreground";
+    const char kAttrViewTooltipText[] = "tooltip";
 
     const char kAttrValViewShow[] = "show";
     const char kAttrValViewHide[] = "hide";

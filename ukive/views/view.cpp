@@ -11,6 +11,7 @@
 #include "utils/log.h"
 #include "utils/multi_callbacks.hpp"
 #include "utils/strings/int_conv.hpp"
+#include "utils/strings/string_utils.hpp"
 #include "utils/time_utils.h"
 #include "utils/weak_bind.hpp"
 
@@ -102,6 +103,12 @@ namespace ukive {
             if (ElementParser::parse(bg_it->second, &ele)) {
                 setBackground(ele);
             }
+        }
+
+        auto tooltip_text = resolveAttrString(attrs, necro::kAttrViewTooltipText, {});
+        setTooltipText(utl::u8to16(tooltip_text));
+        if (!tooltip_text.empty()) {
+            setTooltipEnabled(true);
         }
     }
 

@@ -28,7 +28,7 @@ namespace ukive {
         levitator_.setOutsideTouchable(true);
         levitator_.setShadowRadius(c.dp2pxi(2));
         levitator_.setContentView(tv_);
-        levitator_.setLayoutWidth(c.dp2pxi(210));
+        levitator_.setMaximumSize(c.dp2pxi(210), 0);
 
         timer_.setDuration(ukive::Timer::ns(0));
         timer_.setRunner([this]() {

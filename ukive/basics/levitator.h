@@ -86,6 +86,7 @@ namespace ukive {
         void setLayoutHeight(int height);
         void setLayoutSize(int width, int height);
         void setMinimumSize(int min_w, int min_h);
+        void setMaximumSize(int max_w, int max_h);
         void setLayoutMargin(const Margin& margin);
         void setShadowRadius(int radius);
         void setBackground(Element* element);
@@ -137,6 +138,8 @@ namespace ukive {
         int height_;
         int min_width_ = 0;
         int min_height_ = 0;
+        int max_width_ = 0;
+        int max_height_ = 0;
         int shadow_radius_;
         bool outside_touchable_;
         bool dismiss_by_touch_outside_;

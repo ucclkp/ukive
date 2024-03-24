@@ -162,6 +162,14 @@ namespace ukive {
         }
     }
 
+    void Levitator::setMaximumSize(int max_w, int max_h) {
+        max_width_ = max_w;
+        max_height_ = max_h;
+        if (frame_view_) {
+            frame_view_->requestLayout();
+        }
+    }
+
     void Levitator::setLayoutMargin(const Margin& margin) {
         margin_ = margin;
         if (frame_view_) {
@@ -471,7 +479,19 @@ namespace ukive {
     }
 
     Size Levitator::LevFrameView::onDetermineSize(const SizeInfo& info) {
-        return super::onDetermineSize(info);
+        SizeInfo new_info = info;
+        if (levitator_->max_width_ > 0 &&
+            new_info.width().mode != SizeInfo::FREEDOM)
+        {
+            new_info.width().val = (std::min)(new_info.width().val, levitator_->max_width_);
+        }
+        if (levitator_->max_height_ > 0 &&
+            new_info.height().mode != SizeInfo::FREEDOM)
+        {
+            new_info.height().val = (std::min)(new_info.height().val, levitator_->max_height_);
+        }
+
+        return super::onDetermineSize(new_info);
     }
 
     void Levitator::LevFrameView::onBeforeLayout(Rect* new_bounds, const Rect& old_bounds) {
