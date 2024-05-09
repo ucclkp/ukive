@@ -122,7 +122,11 @@ namespace ukive {
         canvas->save();
         canvas->translate(float(x), float(y + 1));
 
-        canvas->fillPath(tri_path_.get(), Color::Grey500);
+        if (isEnabled()) {
+            canvas->fillPath(tri_path_.get(), Color::Grey500);
+        } else {
+            canvas->fillPath(tri_path_.get(), Color::Grey400);
+        }
 
         canvas->restore();
     }

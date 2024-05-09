@@ -121,6 +121,7 @@ namespace ukive {
         // LayoutView
         Size onDetermineSize(const SizeInfo& info) override;
         void onLayout(const Rect& new_bounds, const Rect& old_bounds) override;
+        void onEnableChanged(bool enabled) override;
 
         // OnClickListener
         void onClick(View* v) override;

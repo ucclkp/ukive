@@ -51,6 +51,8 @@ namespace ukive {
         text_view_ = new TextView(c);
         text_view_->setText(default_item_.title);
         text_view_->setLayoutSize(LS_AUTO, LS_AUTO);
+        text_view_->setOnClickListener(this);
+        text_view_->setClickable(true);
         addView(text_view_);
 
         // DropdownButton
@@ -346,6 +348,11 @@ namespace ukive {
         }
     }
 
+    void ComboBox::onEnableChanged(bool enabled) {
+        text_view_->setEnabled(enabled);
+        button_->setEnabled(enabled);
+    }
+
     void ComboBox::show(int width) {
         auto w = getWindow();
         if (!is_finished_ || !w) {
@@ -394,7 +401,7 @@ namespace ukive {
     }
 
     void ComboBox::onClick(View* v) {
-        if (v == button_) {
+        if (v == button_ || v == text_view_) {
             if (is_finished_) {
                 if (!items_.empty()) {
                     auto bounds = getBoundsInRoot();
@@ -429,7 +436,7 @@ namespace ukive {
         auto c = parent->getContext();
 
         auto title_tv = new TextView(c);
-        title_tv->setPadding(c.dp2pxi(16), c.dp2pxi(8), c.dp2pxi(16), c.dp2pxi(8));
+        title_tv->setPadding(c.dp2pxi(12), c.dp2pxi(6), c.dp2pxi(12), c.dp2pxi(6));
         title_tv->setClickable(true);
         title_tv->setOnClickListener(router);
         title_tv->setBackground(new RippleElement());

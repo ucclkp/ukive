@@ -77,7 +77,7 @@ namespace ukive {
         void setSolidColor(const Color& c);
         void setStrokeEnable(bool enable);
         void setStrokeWidth(float width);
-        void setStrokeColor(const Color& color);
+        void setStrokeColor(const Color& c);
 
         void add(Element* element);
         void remove(Element* element);
@@ -88,7 +88,15 @@ namespace ukive {
         bool hasStroke() const;
 
     protected:
+        enum ColorIndex {
+            COLOR_NORMAL = 0,
+            COLOR_DISABLED = 1,
+        };
+
         void requestDraw();
+
+        Color calculateDisabledColor(const Color& c);
+        void calculateIndexedColors(Color* cls, const Color& org);
 
         virtual bool onFocusChanged(bool focus);
         virtual void onBoundChanged(const Rect& new_bound);
@@ -108,11 +116,13 @@ namespace ukive {
 
         Shape shape_;
         bool has_solid_;
-        Color solid_color_;
+        Color solid_color_[2];
+        size_t solid_color_idx_ = COLOR_NORMAL;
 
         bool has_stroke_ = false;
         float stroke_width_ = 1.f;
-        Color stroke_color_;
+        Color stroke_color_[2];
+        size_t stroke_color_idx_ = COLOR_NORMAL;
 
         float round_radius_ = 0;
 

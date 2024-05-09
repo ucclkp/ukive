@@ -21,8 +21,10 @@ namespace ukive {
 
     Element::Element(Shape shape, const Color& color)
         : shape_(shape),
-          has_solid_(true),
-          solid_color_(color) {}
+          has_solid_(true)
+    {
+        calculateIndexedColors(solid_color_, color);
+    }
 
     void Element::setBounds(const Rect &rect) {
         if (bounds_ == rect) {
@@ -117,19 +119,30 @@ namespace ukive {
         switch (shape_) {
         case SHAPE_RECT: {
             if (has_solid_) {
-                canvas->fillRect(RectF(bound), solid_color_);
+                canvas->fillRect(
+                    (RectF)bound,
+                    solid_color_[solid_color_idx_]);
             }
             if (has_stroke_) {
-                canvas->drawRect(RectF(bound), stroke_width_, stroke_color_);
+                canvas->drawRect(
+                    (RectF)bound,
+                    stroke_width_,
+                    stroke_color_[stroke_color_idx_]);
             }
             break;
         }
         case SHAPE_RRECT: {
             if (has_solid_) {
-                canvas->fillRoundRect(RectF(bound), round_radius_, solid_color_);
+                canvas->fillRoundRect(
+                    (RectF)bound,
+                    round_radius_,
+                    solid_color_[solid_color_idx_]);
             }
             if (has_stroke_) {
-                canvas->drawRoundRect(RectF(bound), stroke_width_, round_radius_, stroke_color_);
+                canvas->drawRoundRect(
+                    (RectF)bound,
+                    stroke_width_,
+                    round_radius_, stroke_color_[stroke_color_idx_]);
             }
             break;
         }
@@ -138,10 +151,10 @@ namespace ukive {
             float cy = bound.height() / 2.f;
 
             if (has_solid_) {
-                canvas->fillOval(PointF{ cx, cy }, cx, cy, solid_color_);
+                canvas->fillOval(PointF{ cx, cy }, cx, cy, solid_color_[solid_color_idx_]);
             }
             if (has_stroke_) {
-                canvas->drawOval(PointF{ cx, cy }, cx, cy, stroke_width_, stroke_color_);
+                canvas->drawOval(PointF{ cx, cy }, cx, cy, stroke_width_, stroke_color_[stroke_color_idx_]);
             }
             break;
         }
@@ -154,7 +167,7 @@ namespace ukive {
 
     bool Element::isTransparent() const {
         if (has_solid_) {
-            return solid_color_.a == 0.0f;
+            return solid_color_[COLOR_NORMAL].a == 0.0f;
         }
 
         if (has_stroke_) {
@@ -176,6 +189,19 @@ namespace ukive {
         }
     }
 
+    Color Element::calculateDisabledColor(const Color& c) {
+        Color dc(c);
+        dc.r *= 0.9f;
+        dc.g *= 0.9f;
+        dc.b *= 0.9f;
+        return dc;
+    }
+
+    void Element::calculateIndexedColors(Color* cls, const Color& org) {
+        cls[COLOR_NORMAL] = org;
+        cls[COLOR_DISABLED] = calculateDisabledColor(org);
+    }
+
     bool Element::onFocusChanged(bool focus) {
         return false;
     }
@@ -191,28 +217,20 @@ namespace ukive {
 
         if (new_state == STATE_DISABLED) {
             if (has_solid_) {
-                solid_color_.r *= 0.9f;
-                solid_color_.g *= 0.9f;
-                solid_color_.b *= 0.9f;
+                solid_color_idx_ = COLOR_DISABLED;
                 need_redraw = true;
             }
             if (has_stroke_) {
-                stroke_color_.r *= 0.9f;
-                stroke_color_.g *= 0.9f;
-                stroke_color_.b *= 0.9f;
+                stroke_color_idx_ = COLOR_DISABLED;
                 need_redraw = true;
             }
         } else if (prev_state == STATE_DISABLED) {
             if (has_solid_) {
-                solid_color_.r /= 0.9f;
-                solid_color_.g /= 0.9f;
-                solid_color_.b /= 0.9f;
+                solid_color_idx_ = COLOR_NORMAL;
                 need_redraw = true;
             }
             if (has_stroke_) {
-                stroke_color_.r /= 0.9f;
-                stroke_color_.g /= 0.9f;
-                stroke_color_.b /= 0.9f;
+                stroke_color_idx_ = COLOR_NORMAL;
                 need_redraw = true;
             }
         }
@@ -268,7 +286,7 @@ namespace ukive {
     }
 
     void Element::setSolidColor(const Color& c) {
-        solid_color_ = c;
+        calculateIndexedColors(solid_color_, c);
         requestDraw();
     }
 
@@ -280,8 +298,8 @@ namespace ukive {
         stroke_width_ = width;
     }
 
-    void Element::setStrokeColor(const Color& color) {
-        stroke_color_ = color;
+    void Element::setStrokeColor(const Color& c) {
+        calculateIndexedColors(stroke_color_, c);
     }
 
     void Element::add(Element* element) {
@@ -312,7 +330,7 @@ namespace ukive {
     }
 
     const Color& Element::getSolidColor() const {
-        return solid_color_;
+        return solid_color_[COLOR_NORMAL];
     }
 
     bool Element::hasSolid() const {
