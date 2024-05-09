@@ -53,9 +53,9 @@ namespace ukive {
 
         // 鼠标按键定义
         enum {
-            MK_LEFT = 0,
+            MK_PRIMARY = 0,
             MK_MIDDLE,
-            MK_RIGHT,
+            MK_SECONDARY,
             MK_XBUTTON_1,
             MK_XBUTTON_2,
         };
@@ -128,6 +128,11 @@ namespace ukive {
         int getWheelValue() const;
         WheelGranularity getWheelGranularity() const;
         int getMouseKey() const;
+        bool isMousePriKey() const;
+        bool isMouseSecKey() const;
+        bool isMouseMidKey() const;
+        bool isMouseXB1Key() const;
+        bool isMouseXB2Key() const;
         const std::u16string& getKeyboardChars() const;
         int getKeyboardKey() const;
         int getCurTouchId() const;

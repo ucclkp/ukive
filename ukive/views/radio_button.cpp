@@ -129,7 +129,7 @@ namespace ukive {
         case InputEvent::EVM_UP:
         case InputEvent::EVT_UP:
             if (isLocalPointerInThisVisible(e) &&
-                e->getMouseKey() == InputEvent::MK_LEFT &&
+                e->getMouseKey() == InputEvent::MK_PRIMARY &&
                 isPressed() && !selected_)
             {
                 setChecked(true);

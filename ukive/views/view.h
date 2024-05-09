@@ -76,9 +76,6 @@ namespace ukive {
         void setPadding(const Padding& p);
         void setPressed(bool pressed);
         void setCursor(Cursor cursor);
-        void setClickable(bool clickable);
-        void setDoubleClickable(bool dclkable);
-        void setTripleClickable(bool tclkable);
         void setFocusable(bool focusable);
         void setTouchCapturable(bool capturable);
         void setShadowRadius(int radius);
@@ -91,6 +88,18 @@ namespace ukive {
         void setOutline(Outline outline);
         void setTooltipEnabled(bool enabled);
         void setTooltipText(const std::u16string_view& text);
+
+        void setClickable(bool clickable);
+        void setDoubleClickable(bool dclkable);
+        void setTripleClickable(bool tclkable);
+        void setSecClickable(bool clickable);
+        void setSecDoubleClickable(bool dclkable);
+        void setSecTripleClickable(bool tclkable);
+        void setMidClickable(bool clickable);
+        void setMidDoubleClickable(bool dclkable);
+        void setMidTripleClickable(bool tclkable);
+        void setXB1Clickable(bool clickable);
+        void setXB2Clickable(bool clickable);
 
         void setLayoutSize(int width, int height);
         void setLayoutMargin(int start, int top, int end, int bottom);
@@ -179,9 +188,6 @@ namespace ukive {
         bool isAttachedToWindow() const;
         bool isPressed() const;
         bool hasFocus() const;
-        bool isClickable() const;
-        bool isDoubleClickable() const;
-        bool isTripleClickable() const;
         bool isFocusable() const;
         bool isTouchCapturable() const;
         bool isLayouted() const;
@@ -190,6 +196,17 @@ namespace ukive {
         bool isParentPointerInThis(InputEvent* e) const;
         bool isReceiveOutsideInputEvent() const;
         bool isTooltipEnabled() const;
+        bool isClickable() const;
+        bool isDoubleClickable() const;
+        bool isTripleClickable() const;
+        bool isSecClickable() const;
+        bool isSecDoubleClickable() const;
+        bool isSecTripleClickable() const;
+        bool isMidClickable() const;
+        bool isMidDoubleClickable() const;
+        bool isMidTripleClickable() const;
+        bool isXB1Clickable() const;
+        bool isXB2Clickable() const;
 
         bool canGetFocus() const;
         bool canInteract() const;
@@ -236,9 +253,9 @@ namespace ukive {
         Size getPreferredSize(
             const SizeInfo& info, int pref_width, int pref_height);
 
-        virtual void performClick();
-        virtual void performDoubleClick();
-        virtual void performTripleClick();
+        virtual void performClick(int pointer_key);
+        virtual void performDoubleClick(int pointer_key);
+        virtual void performTripleClick(int pointer_key);
 
         bool needDrawBackground();
         bool needDrawForeground();
@@ -307,6 +324,21 @@ namespace ukive {
         ViewDelegate* delegate_ = nullptr;
 
     private:
+        struct PointerKeyData {
+            int key = 0;
+            bool is_clkable = false;
+            bool is_dclkable = false;
+            bool is_tclkable = false;
+            bool is_pressed = false;
+            bool wait_for_dclk = false; // 双击判定
+            bool wait_for_tclk = false; // 三击判定
+            uint64_t prev_clk_ts = 0;
+        };
+
+        void setPtSingleClickable(PointerKeyData& p, bool enabled);
+        void setPtDoubleClickable(PointerKeyData& p, bool enabled);
+        void setPtTripleClickable(PointerKeyData& p, bool enabled);
+
         void drawNormal(Canvas* c, bool has_bg, bool has_shadow);
         void drawWithReveal(Canvas* c, bool has_bg, bool has_shadow);
         void drawContent(Canvas* c);
@@ -322,7 +354,7 @@ namespace ukive {
 
         void cleanInteracted();
 
-        bool processPointerUp();
+        bool processPointerUp(PointerKeyData& p);
         bool processInputEvent(InputEvent* e);
 
         long long id_;
@@ -351,10 +383,6 @@ namespace ukive {
         bool has_focus_requesting_ = false;
         bool is_enabled_;
         bool is_attached_to_window_;
-        bool is_pressed_;
-        bool is_clkable_ = false;
-        bool is_dclkable_ = false;
-        bool is_tclkable_ = false;
         bool is_focusable_;
         bool is_touch_capturable_ = false;
         bool is_receive_outside_input_event_;
@@ -362,7 +390,6 @@ namespace ukive {
         bool is_touch_down_;
         bool is_tooltip_enabled_ = false;
         bool is_tracking_hover_ = false;
-
         bool is_measured_ = false;
         bool is_layouted_ = false;
         bool need_layout_ = false;
@@ -376,11 +403,11 @@ namespace ukive {
         Element* fg_element_ = nullptr;
         std::u16string tooltip_text_;
 
-        // 双击判定
-        bool wait_for_dclk_ = false;
-        // 三击判定
-        bool wait_for_tclk_ = false;
-        uint64_t prev_clk_ts_ = 0;
+        PointerKeyData pri_pt_data_;
+        PointerKeyData sec_mk_data_;
+        PointerKeyData mid_mk_data_;
+        PointerKeyData xb1_mk_data_;
+        PointerKeyData xb2_mk_data_;
 
         Cursor cursor_ = Cursor::ARROW;
 

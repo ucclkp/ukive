@@ -55,7 +55,6 @@ namespace ukive {
           has_focus_(false),
           is_enabled_(true),
           is_attached_to_window_(false),
-          is_pressed_(false),
           is_focusable_(false),
           is_receive_outside_input_event_(false),
           is_mouse_down_(false),
@@ -64,6 +63,12 @@ namespace ukive {
           parent_(nullptr),
           input_conn_(nullptr)
     {
+        pri_pt_data_.key = InputEvent::MK_PRIMARY;
+        sec_mk_data_.key = InputEvent::MK_SECONDARY;
+        mid_mk_data_.key = InputEvent::MK_MIDDLE;
+        xb1_mk_data_.key = InputEvent::MK_XBUTTON_1;
+        xb2_mk_data_.key = InputEvent::MK_XBUTTON_2;
+
         bool has_id = false;
         auto it = attrs.find(necro::kAttrViewId);
         if (it != attrs.end()) {
@@ -85,8 +90,8 @@ namespace ukive {
         setShadowRadius(
             (int)resolveAttrDimension(
                 c, attrs, necro::kAttrViewShadowRadius, 0));
-        is_clkable_ = resolveAttrBool(attrs, necro::kAttrViewClickable, false);
-        is_dclkable_ = resolveAttrBool(attrs, necro::kAttrViewDoubleClickable, false);
+        pri_pt_data_.is_clkable = resolveAttrBool(attrs, necro::kAttrViewClickable, false);
+        pri_pt_data_.is_dclkable = resolveAttrBool(attrs, necro::kAttrViewDoubleClickable, false);
         is_focusable_ = resolveAttrBool(attrs, necro::kAttrViewFocusable, false);
         is_touch_capturable_ = resolveAttrBool(attrs, necro::kAttrViewTouchCapturable, false);
         is_enabled_ = resolveAttrBool(attrs, necro::kAttrViewEnabled, true);
@@ -266,40 +271,16 @@ namespace ukive {
     }
 
     void View::setPressed(bool pressed) {
-        if (is_pressed_ == pressed) {
+        if (pri_pt_data_.is_pressed == pressed) {
             return;
         }
 
-        is_pressed_ = pressed;
+        pri_pt_data_.is_pressed = pressed;
         requestDraw();
     }
 
     void View::setCursor(Cursor cursor) {
         cursor_ = cursor;
-    }
-
-    void View::setClickable(bool clickable) {
-        if (is_clkable_ != clickable) {
-            is_clkable_ = clickable;
-        }
-    }
-
-    void View::setDoubleClickable(bool dclkable) {
-        if (is_dclkable_ != dclkable) {
-            is_dclkable_ = dclkable;
-            if (!dclkable) {
-                wait_for_dclk_ = false;
-            }
-        }
-    }
-
-    void View::setTripleClickable(bool tclkable) {
-        if (is_tclkable_ != tclkable) {
-            is_tclkable_ = tclkable;
-            if (!tclkable) {
-                wait_for_tclk_ = false;
-            }
-        }
     }
 
     void View::setFocusable(bool focusable) {
@@ -459,6 +440,50 @@ namespace ukive {
         if (tooltip_) {
             tooltip_->setText(text);
         }
+    }
+
+    void View::setClickable(bool clickable) {
+        setPtSingleClickable(pri_pt_data_, clickable);
+    }
+
+    void View::setDoubleClickable(bool dclkable) {
+        setPtDoubleClickable(pri_pt_data_, dclkable);
+    }
+
+    void View::setTripleClickable(bool tclkable) {
+        setPtTripleClickable(pri_pt_data_, tclkable);
+    }
+
+    void View::setSecClickable(bool clickable) {
+        setPtSingleClickable(sec_mk_data_, clickable);
+    }
+
+    void View::setSecDoubleClickable(bool dclkable) {
+        setPtDoubleClickable(sec_mk_data_, dclkable);
+    }
+
+    void View::setSecTripleClickable(bool tclkable) {
+        setPtTripleClickable(sec_mk_data_, tclkable);
+    }
+
+    void View::setMidClickable(bool clickable) {
+        setPtSingleClickable(mid_mk_data_, clickable);
+    }
+
+    void View::setMidDoubleClickable(bool dclkable) {
+        setPtDoubleClickable(mid_mk_data_, dclkable);
+    }
+
+    void View::setMidTripleClickable(bool tclkable) {
+        setPtTripleClickable(mid_mk_data_, tclkable);
+    }
+
+    void View::setXB1Clickable(bool clickable) {
+        setPtSingleClickable(xb1_mk_data_, clickable);
+    }
+
+    void View::setXB2Clickable(bool clickable) {
+        setPtSingleClickable(xb2_mk_data_, clickable);
     }
 
     void View::setLayoutSize(int width, int height) {
@@ -755,23 +780,11 @@ namespace ukive {
     }
 
     bool View::isPressed() const {
-        return is_pressed_;
+        return pri_pt_data_.is_pressed;
     }
 
     bool View::hasFocus() const {
         return has_focus_;
-    }
-
-    bool View::isClickable() const {
-        return is_clkable_;
-    }
-
-    bool View::isDoubleClickable() const {
-        return is_dclkable_;
-    }
-
-    bool View::isTripleClickable() const {
-        return is_tclkable_;
     }
 
     bool View::isFocusable() const {
@@ -844,6 +857,21 @@ namespace ukive {
         return is_tooltip_enabled_;
     }
 
+    bool View::isClickable() const { return pri_pt_data_.is_clkable; }
+    bool View::isDoubleClickable() const { return pri_pt_data_.is_dclkable; }
+    bool View::isTripleClickable() const { return pri_pt_data_.is_tclkable; }
+
+    bool View::isSecClickable() const { return sec_mk_data_.is_clkable; }
+    bool View::isSecDoubleClickable() const { return sec_mk_data_.is_dclkable; }
+    bool View::isSecTripleClickable() const { return sec_mk_data_.is_tclkable; }
+
+    bool View::isMidClickable() const { return mid_mk_data_.is_clkable; }
+    bool View::isMidDoubleClickable() const { return mid_mk_data_.is_dclkable; }
+    bool View::isMidTripleClickable() const { return mid_mk_data_.is_tclkable; }
+
+    bool View::isXB1Clickable() const { return xb1_mk_data_.is_clkable; }
+    bool View::isXB2Clickable() const { return xb2_mk_data_.is_clkable; }
+
     bool View::canGetFocus() const {
         return is_focusable_ && canInteract();
     }
@@ -873,21 +901,57 @@ namespace ukive {
         requestDraw();
     }
 
-    void View::performClick() {
-        if (click_listener_) {
+    void View::performClick(int pointer_key) {
+        switch (pointer_key) {
+        case InputEvent::MK_PRIMARY:
             click_listener_->onClick(this);
+            break;
+        case InputEvent::MK_SECONDARY:
+            click_listener_->onSecClick(this);
+            break;
+        case InputEvent::MK_MIDDLE:
+            click_listener_->onMidClick(this);
+            break;
+        case InputEvent::MK_XBUTTON_1:
+            click_listener_->onXB1Click(this);
+            break;
+        case InputEvent::MK_XBUTTON_2:
+            click_listener_->onXB2Click(this);
+            break;
+        default:
+            break;
         }
     }
 
-    void View::performDoubleClick() {
-        if (click_listener_) {
+    void View::performDoubleClick(int pointer_key) {
+        switch (pointer_key) {
+        case InputEvent::MK_PRIMARY:
             click_listener_->onDoubleClick(this);
+            break;
+        case InputEvent::MK_SECONDARY:
+            click_listener_->onSecDoubleClick(this);
+            break;
+        case InputEvent::MK_MIDDLE:
+            click_listener_->onMidDoubleClick(this);
+            break;
+        default:
+            break;
         }
     }
 
-    void View::performTripleClick() {
-        if (click_listener_) {
+    void View::performTripleClick(int pointer_key) {
+        switch (pointer_key) {
+        case InputEvent::MK_PRIMARY:
             click_listener_->onTripleClick(this);
+            break;
+        case InputEvent::MK_SECONDARY:
+            click_listener_->onSecTripleClick(this);
+            break;
+        case InputEvent::MK_MIDDLE:
+            click_listener_->onMidTripleClick(this);
+            break;
+        default:
+            break;
         }
     }
 
@@ -1298,6 +1362,30 @@ namespace ukive {
         }
     }
 
+    void View::setPtSingleClickable(PointerKeyData& p, bool enabled) {
+        if (p.is_clkable != enabled) {
+            p.is_clkable = enabled;
+        }
+    }
+
+    void View::setPtDoubleClickable(PointerKeyData& p, bool enabled) {
+        if (p.is_dclkable != enabled) {
+            p.is_dclkable = enabled;
+            if (!enabled) {
+                p.wait_for_dclk = false;
+            }
+        }
+    }
+
+    void View::setPtTripleClickable(PointerKeyData& p, bool enabled) {
+        if (p.is_tclkable != enabled) {
+            p.is_tclkable = enabled;
+            if (!enabled) {
+                p.wait_for_tclk = false;
+            }
+        }
+    }
+
     void View::updateBackgroundState() {
         bool need_redraw = false;
         if (isEnabled()) {
@@ -1392,8 +1480,11 @@ namespace ukive {
         resetLastInputView();
     }
 
-    bool View::processPointerUp() {
+    bool View::processPointerUp(PointerKeyData& p) {
         if (!click_listener_) {
+            return true;
+        }
+        if (!p.is_clkable && !p.is_dclkable && !p.is_tclkable) {
             return true;
         }
 
@@ -1404,54 +1495,58 @@ namespace ukive {
         };
 
         int perform_type = CLK_SINGLE;
-        auto cur_millis = utl::TimeUtils::upTimeMillis();
         std::weak_ptr<void> wptr = cur_ev_;
 
-        if (wait_for_tclk_) {
-            wait_for_tclk_ = false;
-            if (cur_millis - prev_clk_ts_ <= getTripleClickTime()) {
-                perform_type = CLK_TRIPLE;
-            }
-        } else if (wait_for_dclk_) {
-            wait_for_dclk_ = false;
-            if (cur_millis - prev_clk_ts_ <= getDoubleClickTime()) {
-                perform_type = CLK_DOUBLE;
-            }
-        }
+        // 不能双击或者三击的话就没必要走这里的逻辑了
+        if (p.is_dclkable || p.is_tclkable) {
+            auto cur_millis = utl::TimeUtils::upTimeMillis();
 
-        if ((is_dclkable_ || is_tclkable_) && perform_type == CLK_SINGLE) {
-            if (!wait_for_dclk_) {
-                wait_for_dclk_ = true;
-                prev_clk_ts_ = cur_millis;
+            if (p.wait_for_tclk) {
+                p.wait_for_tclk = false;
+                if (cur_millis - p.prev_clk_ts <= getTripleClickTime()) {
+                    perform_type = CLK_TRIPLE;
+                }
+            } else if (p.wait_for_dclk) {
+                p.wait_for_dclk = false;
+                if (cur_millis - p.prev_clk_ts <= getDoubleClickTime()) {
+                    perform_type = CLK_DOUBLE;
+                }
             }
-        }
-        if (is_tclkable_ && perform_type == CLK_DOUBLE) {
-            if (!wait_for_tclk_) {
-                wait_for_tclk_ = true;
-                prev_clk_ts_ = cur_millis;
+
+            if ((p.is_dclkable || p.is_tclkable) && perform_type == CLK_SINGLE) {
+                if (!p.wait_for_dclk) {
+                    p.wait_for_dclk = true;
+                    p.prev_clk_ts = cur_millis;
+                }
+            }
+            if (p.is_tclkable && perform_type == CLK_DOUBLE) {
+                if (!p.wait_for_tclk) {
+                    p.wait_for_tclk = true;
+                    p.prev_clk_ts = cur_millis;
+                }
             }
         }
 
         switch (perform_type) {
         case CLK_SINGLE:
-            if (is_clkable_) {
-                performClick();
+            if (p.is_clkable) {
+                performClick(p.key);
                 if (wptr.expired() || !isAttachedToWindow()) {
                     return false;
                 }
             }
             break;
         case CLK_DOUBLE:
-            if (is_dclkable_) {
-                performDoubleClick();
+            if (p.is_dclkable) {
+                performDoubleClick(p.key);
                 if (wptr.expired() || !isAttachedToWindow()) {
                     return false;
                 }
             }
             break;
         case CLK_TRIPLE:
-            if (is_tclkable_) {
-                performTripleClick();
+            if (p.is_tclkable) {
+                performTripleClick(p.key);
                 if (wptr.expired() || !isAttachedToWindow()) {
                     return false;
                 }
@@ -1508,7 +1603,7 @@ namespace ukive {
                     requestFocus();
                 }
 
-                if (e->getMouseKey() == InputEvent::MK_LEFT) {
+                if (e->getMouseKey() == InputEvent::MK_PRIMARY) {
                     setPressed(true);
                     if (fg_element_) {
                         fg_element_->setHotspot(e->getX(), e->getY());
@@ -1521,6 +1616,14 @@ namespace ukive {
                     if (should_refresh) {
                         requestDraw();
                     }
+                } else if (e->getMouseKey() == InputEvent::MK_SECONDARY) {
+                    sec_mk_data_.is_pressed = true;
+                } else if (e->getMouseKey() == InputEvent::MK_MIDDLE) {
+                    mid_mk_data_.is_pressed = true;
+                } else if (e->getMouseKey() == InputEvent::MK_XBUTTON_1) {
+                    xb1_mk_data_.is_pressed = true;
+                } else if (e->getMouseKey() == InputEvent::MK_XBUTTON_2) {
+                    xb2_mk_data_.is_pressed = true;
                 }
             }
             break;
@@ -1592,7 +1695,7 @@ namespace ukive {
             if (window_->getMouseHolderRef() == 0) {
                 is_mouse_down_ = false;
             }
-            if (e->getMouseKey() == InputEvent::MK_LEFT) {
+            if (e->getMouseKey() == InputEvent::MK_PRIMARY) {
                 bool pressed = isPressed();
                 setPressed(false);
 
@@ -1607,7 +1710,7 @@ namespace ukive {
                             should_refresh = bg_element_->setState(Element::STATE_HOVERED);
                         }
 
-                        if (!processPointerUp()) {
+                        if (!processPointerUp(pri_pt_data_)) {
                             return consumed;
                         }
                     } else {
@@ -1619,7 +1722,48 @@ namespace ukive {
                         }
                     }
                 }
+            } else if (e->getMouseKey() == InputEvent::MK_SECONDARY) {
+                bool pressed = sec_mk_data_.is_pressed;
+                sec_mk_data_.is_pressed = false;
+                if (pressed) {
+                    if (isLocalPointerInThisVisible(e)) {
+                        if (!processPointerUp(sec_mk_data_)) {
+                            return consumed;
+                        }
+                    }
+                }
+            } else if (e->getMouseKey() == InputEvent::MK_MIDDLE) {
+                bool pressed = mid_mk_data_.is_pressed;
+                mid_mk_data_.is_pressed = false;
+                if (pressed) {
+                    if (isLocalPointerInThisVisible(e)) {
+                        if (!processPointerUp(mid_mk_data_)) {
+                            return consumed;
+                        }
+                    }
+                }
+            } else if (e->getMouseKey() == InputEvent::MK_XBUTTON_1) {
+                bool pressed = xb1_mk_data_.is_pressed;
+                xb1_mk_data_.is_pressed = false;
+                if (pressed) {
+                    if (isLocalPointerInThisVisible(e)) {
+                        if (!processPointerUp(xb1_mk_data_)) {
+                            return consumed;
+                        }
+                    }
+                }
+            } else if (e->getMouseKey() == InputEvent::MK_XBUTTON_2) {
+                bool pressed = xb2_mk_data_.is_pressed;
+                xb2_mk_data_.is_pressed = false;
+                if (pressed) {
+                    if (isLocalPointerInThisVisible(e)) {
+                        if (!processPointerUp(xb2_mk_data_)) {
+                            return consumed;
+                        }
+                    }
+                }
             }
+
             if (should_refresh) {
                 requestDraw();
             }
@@ -1651,7 +1795,7 @@ namespace ukive {
             }
 
             if (isLocalPointerInThisVisible(e) && pressed) {
-                if (!processPointerUp()) {
+                if (!processPointerUp(pri_pt_data_)) {
                     return consumed;
                 }
             }
@@ -1673,6 +1817,10 @@ namespace ukive {
                 is_touch_down_ = false;
             }
             setPressed(false);
+            sec_mk_data_.is_pressed = false;
+            mid_mk_data_.is_pressed = false;
+            xb1_mk_data_.is_pressed = false;
+            xb2_mk_data_.is_pressed = false;
             if (fg_element_) {
                 should_refresh = fg_element_->setState(Element::STATE_NONE);
             }
@@ -2007,7 +2155,14 @@ namespace ukive {
             break;
         }
 
-        return is_clkable_ || is_dclkable_ || is_tclkable_;
+        bool is_pri_op = pri_pt_data_.is_clkable ||
+            pri_pt_data_.is_dclkable ||
+            pri_pt_data_.is_tclkable;
+        bool is_sec_op = sec_mk_data_.is_clkable ||
+            sec_mk_data_.is_dclkable ||
+            sec_mk_data_.is_tclkable;
+
+        return is_pri_op || is_sec_op;
     }
 
     Size View::onDetermineSize(const SizeInfo& info) {

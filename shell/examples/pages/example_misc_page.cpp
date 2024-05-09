@@ -257,6 +257,14 @@ namespace shell {
         test_button_->setDoubleClickable(true);
         test_button_->setTripleClickable(true);
         test_button_->setTooltipEnabled(true);
+        test_button_->setSecClickable(true);
+        test_button_->setSecDoubleClickable(true);
+        test_button_->setSecTripleClickable(true);
+        test_button_->setMidClickable(true);
+        test_button_->setMidDoubleClickable(true);
+        test_button_->setMidTripleClickable(true);
+        test_button_->setXB1Clickable(true);
+        test_button_->setXB2Clickable(true);
         test_button_->setTooltipText(u"这是一行 tooltip 文字。这是一行 tooltip 文字。这是一行 tooltip 文字。");
         {
             haul_src_ = std::make_unique<ukive::HaulSource>(0, this);
@@ -314,6 +322,54 @@ namespace shell {
     void ExampleMiscPage::onTripleClick(ukive::View* v) {
         if (test_button_ == v) {
             test_button_->setText(u"三击");
+        }
+    }
+
+    void ExampleMiscPage::onSecClick(ukive::View* v) {
+        if (test_button_ == v) {
+            test_button_->setText(u"右单击");
+        }
+    }
+
+    void ExampleMiscPage::onSecDoubleClick(ukive::View* v) {
+        if (test_button_ == v) {
+            test_button_->setText(u"右双击");
+        }
+    }
+
+    void ExampleMiscPage::onSecTripleClick(ukive::View* v) {
+        if (test_button_ == v) {
+            test_button_->setText(u"右三击");
+        }
+    }
+
+    void ExampleMiscPage::onMidClick(ukive::View* v) {
+        if (test_button_ == v) {
+            test_button_->setText(u"中单击");
+        }
+    }
+
+    void ExampleMiscPage::onMidDoubleClick(ukive::View* v) {
+        if (test_button_ == v) {
+            test_button_->setText(u"中双击");
+        }
+    }
+
+    void ExampleMiscPage::onMidTripleClick(ukive::View* v) {
+        if (test_button_ == v) {
+            test_button_->setText(u"中三击");
+        }
+    }
+
+    void ExampleMiscPage::onXB1Click(ukive::View* v) {
+        if (test_button_ == v) {
+            test_button_->setText(u"XB1单击");
+        }
+    }
+
+    void ExampleMiscPage::onXB2Click(ukive::View* v) {
+        if (test_button_ == v) {
+            test_button_->setText(u"XB2单击");
         }
     }
 

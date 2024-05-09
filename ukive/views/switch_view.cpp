@@ -116,7 +116,7 @@ namespace ukive {
     bool SwitchView::onInputEvent(InputEvent* e) {
         switch (e->getEvent()) {
         case InputEvent::EVM_DOWN:
-            if (e->getMouseKey() == InputEvent::MK_LEFT) {
+            if (e->getMouseKey() == InputEvent::MK_PRIMARY) {
                 start_x_ = e->getX();
                 start_pos_ = cur_pos_;
                 anim_.stop();
@@ -152,7 +152,7 @@ namespace ukive {
             break;
 
         case InputEvent::EVM_UP:
-            if (e->getMouseKey() == InputEvent::MK_LEFT &&
+            if (e->getMouseKey() == InputEvent::MK_PRIMARY &&
                 isPressed())
             {
                 doUpAction();

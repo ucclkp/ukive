@@ -48,6 +48,14 @@ namespace shell {
         void onClick(ukive::View* v) override;
         void onDoubleClick(ukive::View* v) override;
         void onTripleClick(ukive::View* v) override;
+        void onSecClick(ukive::View* v) override;
+        void onSecDoubleClick(ukive::View* v) override;
+        void onSecTripleClick(ukive::View* v) override;
+        void onMidClick(ukive::View* v) override;
+        void onMidDoubleClick(ukive::View* v) override;
+        void onMidTripleClick(ukive::View* v) override;
+        void onXB1Click(ukive::View* v) override;
+        void onXB2Click(ukive::View* v) override;
 
         // ukive::VSyncable
         void onVSync(

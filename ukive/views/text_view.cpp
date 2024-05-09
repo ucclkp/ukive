@@ -904,8 +904,8 @@ namespace ukive {
 
         case InputEvent::EVM_DOWN:
         {
-            if (e->getMouseKey() == InputEvent::MK_LEFT ||
-                e->getMouseKey() == InputEvent::MK_RIGHT)
+            if (e->getMouseKey() == InputEvent::MK_PRIMARY ||
+                e->getMouseKey() == InputEvent::MK_SECONDARY)
             {
                 if (text_action_mode_ != nullptr) {
                     text_action_mode_->close();
@@ -920,15 +920,15 @@ namespace ukive {
                     setCursor(Cursor::IBEAM);
                 }
 
-                if (e->getMouseKey() == InputEvent::MK_LEFT) {
+                if (e->getMouseKey() == InputEvent::MK_PRIMARY) {
                     is_plkey_down_ = is_down;
                     is_plkey_down_on_text_ = is_down_on_text;
-                } else if (e->getMouseKey() == InputEvent::MK_RIGHT) {
+                } else if (e->getMouseKey() == InputEvent::MK_SECONDARY) {
                     is_prkey_down_ = is_down;
                     //mIsMouseRightKeyDownOnText = isMouseKeyDownOnText;
                 }
 
-                if (e->getMouseKey() != InputEvent::MK_RIGHT || !hasSelection()) {
+                if (e->getMouseKey() != InputEvent::MK_SECONDARY || !hasSelection()) {
                     first_sel_ = getTextPositionAtPoint(
                         e->getX() - getPadding().start() - space_.start() + getScrollX(),
                         e->getY() - getPadding().top() - space_.top() + getScrollY());
@@ -954,7 +954,7 @@ namespace ukive {
 
         case InputEvent::EVM_UP:
         {
-            if (e->getMouseKey() == InputEvent::MK_LEFT) {
+            if (e->getMouseKey() == InputEvent::MK_PRIMARY) {
                 is_plkey_down_ = false;
                 is_plkey_down_on_text_ = false;
 
@@ -967,7 +967,7 @@ namespace ukive {
                 } else {
                     setCursor(Cursor::ARROW);
                 }
-            } else if (e->getMouseKey() == InputEvent::MK_RIGHT) {
+            } else if (e->getMouseKey() == InputEvent::MK_SECONDARY) {
                 prev_x_ = e->getX();
                 prev_y_ = e->getY();
                 is_prkey_down_ = false;

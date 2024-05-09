@@ -72,7 +72,7 @@ namespace ukive {
 
         switch (e->getEvent()) {
         case InputEvent::EVM_UP:
-            if (e->getMouseKey() == InputEvent::MK_LEFT) {
+            if (e->getMouseKey() == InputEvent::MK_PRIMARY) {
                 stop();
                 return true;
             }

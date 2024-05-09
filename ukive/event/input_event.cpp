@@ -394,9 +394,13 @@ namespace ukive {
         return granularity_;
     }
 
-    int InputEvent::getMouseKey() const {
-        return mouse_key_;
-    }
+    int InputEvent::getMouseKey() const { return mouse_key_; }
+
+    bool InputEvent::isMousePriKey() const { return mouse_key_ == MK_PRIMARY;   }
+    bool InputEvent::isMouseSecKey() const { return mouse_key_ == MK_SECONDARY; }
+    bool InputEvent::isMouseMidKey() const { return mouse_key_ == MK_MIDDLE;    }
+    bool InputEvent::isMouseXB1Key() const { return mouse_key_ == MK_XBUTTON_1; }
+    bool InputEvent::isMouseXB2Key() const { return mouse_key_ == MK_XBUTTON_2; }
 
     const std::u16string& InputEvent::getKeyboardChars() const {
         return chars_;
@@ -628,11 +632,11 @@ namespace ukive {
 
     std::string InputEvent::mktos() const {
         switch (mouse_key_) {
-        case MK_LEFT:      return "MK_LEFT";
+        case MK_PRIMARY:   return "MK_PRIMARY";
         case MK_MIDDLE:    return "MK_MIDDLE";
-        case MK_RIGHT:     return "MK_RIGHT";
-        case MK_XBUTTON_1: return "MK_XB1";
-        case MK_XBUTTON_2: return "MK_XB2";
+        case MK_SECONDARY: return "MK_SECONDARY";
+        case MK_XBUTTON_1: return "MK_XBUTTON_1";
+        case MK_XBUTTON_2: return "MK_XBUTTON_2";
 
         default: return "MK_UNKNOWN";
         }

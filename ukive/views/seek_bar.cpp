@@ -332,7 +332,7 @@ namespace ukive {
         switch (e->getEvent()) {
         case InputEvent::EVM_DOWN:
         {
-            if (e->getMouseKey() == InputEvent::MK_LEFT) {
+            if (e->getMouseKey() == InputEvent::MK_PRIMARY) {
                 if (isPointerInThumb(e->getX(), e->getY())) {
                     result = true;
                     computePercent(e->getX(), e->getY());

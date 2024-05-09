@@ -1649,7 +1649,7 @@ namespace win {
             InputEvent ev;
             ev.setEvent(InputEvent::EVM_DOWN);
             ev.setPointerType(InputEvent::PT_MOUSE);
-            ev.setMouseKey(InputEvent::MK_LEFT);
+            ev.setMouseKey(InputEvent::MK_PRIMARY);
             ev.setX(GET_X_LPARAM(lParam));
             ev.setY(GET_Y_LPARAM(lParam));
             ev.setRawX(GET_X_LPARAM(lParam));
@@ -1680,7 +1680,7 @@ namespace win {
             InputEvent ev;
             ev.setEvent(InputEvent::EVM_UP);
             ev.setPointerType(InputEvent::PT_MOUSE);
-            ev.setMouseKey(InputEvent::MK_LEFT);
+            ev.setMouseKey(InputEvent::MK_PRIMARY);
             ev.setX(GET_X_LPARAM(lParam));
             ev.setY(GET_Y_LPARAM(lParam));
             ev.setRawX(GET_X_LPARAM(lParam));
@@ -1704,7 +1704,7 @@ namespace win {
             InputEvent ev;
             ev.setEvent(InputEvent::EVM_DOWN);
             ev.setPointerType(InputEvent::PT_MOUSE);
-            ev.setMouseKey(InputEvent::MK_RIGHT);
+            ev.setMouseKey(InputEvent::MK_SECONDARY);
             ev.setX(GET_X_LPARAM(lParam));
             ev.setY(GET_Y_LPARAM(lParam));
             ev.setRawX(GET_X_LPARAM(lParam));
@@ -1728,7 +1728,7 @@ namespace win {
             InputEvent ev;
             ev.setEvent(InputEvent::EVM_UP);
             ev.setPointerType(InputEvent::PT_MOUSE);
-            ev.setMouseKey(InputEvent::MK_RIGHT);
+            ev.setMouseKey(InputEvent::MK_SECONDARY);
             ev.setX(GET_X_LPARAM(lParam));
             ev.setY(GET_Y_LPARAM(lParam));
             ev.setRawX(GET_X_LPARAM(lParam));

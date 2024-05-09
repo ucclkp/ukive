@@ -266,7 +266,7 @@ namespace ukive {
 
         case InputEvent::EVM_UP:
         {
-            if (e->getMouseKey() == InputEvent::MK_LEFT) {
+            if (e->getMouseKey() == InputEvent::MK_PRIMARY) {
                 result = true;
                 if (!is_moving_) {
                     makeGridTextLayout(

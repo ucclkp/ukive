@@ -64,7 +64,7 @@ namespace vsul {
 
         switch (e->getEvent()) {
         case ukive::InputEvent::EVM_DOWN:
-            if (e->getMouseKey() == ukive::InputEvent::MK_LEFT) {
+            if (e->getMouseKey() == ukive::InputEvent::MK_PRIMARY) {
                 is_mouse_left_key_pressed_ = true;
                 prev_x_ = e->getX();
                 prev_y_ = e->getY();
@@ -95,7 +95,7 @@ namespace vsul {
             break;
 
         case ukive::InputEvent::EVM_UP:
-            if (e->getMouseKey() == ukive::InputEvent::MK_LEFT) {
+            if (e->getMouseKey() == ukive::InputEvent::MK_PRIMARY) {
                 if (mouse_action_mode_ != MOUSE_ACTION_MOVED) {
                 }
 
