@@ -770,5 +770,58 @@ namespace win {
         return transform.cast<IWICBitmapSource>();
     }
 
+    bool LcImageFactoryWin::isSRGBFrame(IWICBitmapFrameDecode* frame) {
+        utl::win::ComPtr<IWICMetadataQueryReader> reader;
+        HRESULT hr = frame->GetMetadataQueryReader(&reader);
+        if (FAILED(hr)) {
+            return false;
+        }
+
+        GUID format;
+        hr = reader->GetContainerFormat(&format);
+        if (FAILED(hr)) {
+            return false;
+        }
+
+        PROPVARIANT prop;
+        PropVariantInit(&prop);
+
+        if (format == GUID_ContainerFormatPng) {
+            hr = reader->GetMetadataByName(L"/sRGB/RenderingIntent", &prop);
+            if (SUCCEEDED(hr) && prop.vt == VT_UI1) {
+                PropVariantClear(&prop);
+                return true;
+            }
+
+            hr = reader->GetMetadataByName(L"/gAMA/ImageGamma", &prop);
+            if (SUCCEEDED(hr) && prop.vt == VT_UI4 && prop.uintVal == 45455) {
+                PropVariantClear(&prop);
+                return true;
+            }
+        } else if (format == GUID_ContainerFormatJpeg) {
+            hr = reader->GetMetadataByName(L"/app1/ifd/exif/{ushort=40961}", &prop);
+            if (SUCCEEDED(hr) && prop.vt == VT_UI2 && prop.uiVal == 1) {
+                PropVariantClear(&prop);
+                return true;
+            }
+        } else if (format == GUID_ContainerFormatTiff) {
+            hr = reader->GetMetadataByName(L"/ifd/exif/{ushort=40961}", &prop);
+            if (SUCCEEDED(hr) && prop.vt == VT_UI2 && prop.uiVal == 1) {
+                PropVariantClear(&prop);
+                return true;
+            }
+        } else {
+            hr = reader->GetMetadataByName(L"System.Image.ColorSpace", &prop);
+            if (SUCCEEDED(hr) && prop.vt == VT_UI2 && prop.uiVal == 1) {
+                PropVariantClear(&prop);
+                return true;
+            }
+        }
+
+        PropVariantClear(&prop);
+        return false;
+
+    }
+
 }
 }

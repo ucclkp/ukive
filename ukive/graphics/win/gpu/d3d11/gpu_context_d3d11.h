@@ -68,6 +68,8 @@ namespace win {
             uint32_t idx_count_pre_inst, uint32_t inst_count,
             uint32_t start_idx_loc, int32_t base_ver_loc, uint32_t start_inst_loc) override;
 
+        void copyResource(GPUResource* dst, GPUResource* src) override;
+
         void* lock(
             GPUResource* resource,
             unsigned int type, size_t* row_stride) override;

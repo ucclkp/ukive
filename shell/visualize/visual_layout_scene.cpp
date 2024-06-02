@@ -274,7 +274,6 @@ namespace vsul {
         tex_desc.depth = 1;
         tex_desc.mip_levels = 1;
         tex_desc.res_type = ukive::GPUResource::RES_DEPTH_STENCIL;
-        tex_desc.is_dynamic = false;
         tex_desc.dim = ukive::GPUTexture::Dimension::_2D;
         depth_stencil_buffer_ = device->createTexture(tex_desc, nullptr);
         if (!depth_stencil_buffer_) {

@@ -131,7 +131,12 @@ namespace ukive {
     template <class Ty>
     class GEcPtr : public GPtr<Ty> {
     public:
+        using GPtr<Ty>::GPtr;
         using GPtr<Ty>::operator=;
+
+        explicit operator bool() const {
+            return code.operator bool() && GPtr<Ty>::operator bool();
+        }
 
         gerc code;
     };

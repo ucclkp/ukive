@@ -59,6 +59,7 @@ namespace win {
         return alpha_mode;
     }
 
+    // https://learn.microsoft.com/en-us/windows/win32/direct3d11/overviews-direct3d-11-resources-textures-how-to
     WICPixelFormatGUID mapWICFormat(const ImageOptions& options) {
         WICPixelFormatGUID format;
         switch (options.pixel_format) {
@@ -73,6 +74,36 @@ namespace win {
             case ImageAlphaMode::PREMULTIPLIED:
             default:
                 format = GUID_WICPixelFormat64bppPRGBAHalf;
+                break;
+            }
+            break;
+
+        case ImagePixelFormat::R16G16B16A16_FLOAT:
+            switch (options.alpha_mode) {
+            case ImageAlphaMode::STRAIGHT:
+                format = GUID_WICPixelFormat64bppRGBAHalf;
+                break;
+            case ImageAlphaMode::IGNORED:
+                format = GUID_WICPixelFormat64bppRGBHalf;
+                break;
+            case ImageAlphaMode::PREMULTIPLIED:
+            default:
+                format = GUID_WICPixelFormat64bppPRGBAHalf;
+                break;
+            }
+            break;
+
+        case ImagePixelFormat::R16G16B16A16_UNORM:
+            switch (options.alpha_mode) {
+            case ImageAlphaMode::STRAIGHT:
+                format = GUID_WICPixelFormat64bppRGBA;
+                break;
+            case ImageAlphaMode::IGNORED:
+                format = GUID_WICPixelFormat64bppRGB;
+                break;
+            case ImageAlphaMode::PREMULTIPLIED:
+            default:
+                format = GUID_WICPixelFormat64bppPRGBA;
                 break;
             }
             break;

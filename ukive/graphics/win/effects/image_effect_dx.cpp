@@ -115,7 +115,6 @@ namespace win {
         rasterizer_state_.reset();
 
         org_srv_.reset();
-        kernel_tex2d_.reset();
         target_tex2d_.reset();
         target_rtv_.reset();
         target_srv_.reset();
@@ -165,12 +164,6 @@ namespace win {
 
         c->drawImage(c->getOpacity(), cache_.get());
         return true;
-    }
-
-    bool ImageEffectGPU::createKernelTexture(const uint8_t* kernel, size_t len) {
-        kernel_tex2d_ = GPUTexture::createShaderTex2D(
-            len, 1, GPUDataFormat::R8_UINT, false, sizeof(uint8_t) * len, kernel);
-        return !!kernel_tex2d_;
     }
 
     bool ImageEffectGPU::setSize(int width, int height, bool hdr) {
@@ -285,8 +278,8 @@ namespace win {
         context->setViewports(1, &viewport_);
         context->setRenderTargets(1, &target_rtv_, nullptr);
 
-        if (org_srv_ && kernel_tex2d_) {
-            GPUShaderResource* srvs[] = { org_srv_.get(), kernel_tex2d_->srv().get() };
+        if (org_srv_) {
+            GPUShaderResource* srvs[] = { org_srv_.get() };
             context->setPShaderResources(0, ARRAYSIZE(srvs), srvs);
         }
 
@@ -376,7 +369,7 @@ namespace win {
         if (is_hdr_enabled_) {
             format = GPUDataFormat::R16G16B16A16_FLOAT;
         } else {
-            format = GPUDataFormat::B8G8B8R8_UNORM;
+            format = GPUDataFormat::B8G8R8A8_UNORM;
         }
 
         tex = GPUTexture::createShaderTex2D(width_, height_, format, true);

@@ -117,13 +117,12 @@ namespace ukive {
 
         // RTT
         GPUTexture::Desc tex_desc;
-        tex_desc.format = GPUDataFormat::B8G8B8R8_UNORM;
+        tex_desc.format = GPUDataFormat::B8G8R8A8_UNORM;
         tex_desc.width = width;
         tex_desc.height = height;
         tex_desc.depth = 1;
         tex_desc.mip_levels = 1;
         tex_desc.res_type = GPUResource::RES_RENDER_TARGET | GPUResource::RES_SHADER_RES;
-        tex_desc.is_dynamic = false;
         tex_desc.dim = GPUTexture::Dimension::_2D;
         content_surface_ = gpu_device->createTexture(tex_desc, nullptr);
         if (!content_surface_) {

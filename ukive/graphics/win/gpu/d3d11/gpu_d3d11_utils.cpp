@@ -14,7 +14,7 @@
 namespace ukive {
 namespace win {
 
-    DXGI_FORMAT mapFormat(GPUDataFormat format) {
+    DXGI_FORMAT mapDXGIFormat(GPUDataFormat format) {
         switch (format) {
         case GPUDataFormat::R32G32B32A32_FLOAT:
             return DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -32,13 +32,15 @@ namespace win {
             return DXGI_FORMAT_R16G16B16A16_UINT;
         case GPUDataFormat::R8G8B8A8_UINT:
             return DXGI_FORMAT_R8G8B8A8_UINT;
+        case GPUDataFormat::R8G8B8A8_UNORM:
+            return DXGI_FORMAT_R8G8B8A8_UNORM;
         case GPUDataFormat::R32_UINT:
             return DXGI_FORMAT_R32_UINT;
         case GPUDataFormat::R32_FLOAT:
             return DXGI_FORMAT_R32_FLOAT;
         case GPUDataFormat::R8_UINT:
             return DXGI_FORMAT_R8_UINT;
-        case GPUDataFormat::B8G8B8R8_UNORM:
+        case GPUDataFormat::B8G8R8A8_UNORM:
             return DXGI_FORMAT_B8G8R8A8_UNORM;
         case GPUDataFormat::D24_UNORM_S8_UINT:
             return DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -50,7 +52,7 @@ namespace win {
         }
     }
 
-    GPUDataFormat unmapFormat(DXGI_FORMAT format) {
+    GPUDataFormat unmapDXGIFormat(DXGI_FORMAT format) {
         switch (format) {
         case DXGI_FORMAT_R32G32B32A32_FLOAT:
             return GPUDataFormat::R32G32B32A32_FLOAT;
@@ -68,6 +70,8 @@ namespace win {
             return GPUDataFormat::R16G16B16A16_UINT;
         case DXGI_FORMAT_R8G8B8A8_UINT:
             return GPUDataFormat::R8G8B8A8_UINT;
+        case DXGI_FORMAT_R8G8B8A8_UNORM:
+            return GPUDataFormat::R8G8B8A8_UNORM;
         case DXGI_FORMAT_R32_UINT:
             return GPUDataFormat::R32_UINT;
         case DXGI_FORMAT_R32_FLOAT:
@@ -75,7 +79,7 @@ namespace win {
         case DXGI_FORMAT_R8_UINT:
             return GPUDataFormat::R8_UINT;
         case DXGI_FORMAT_B8G8R8A8_UNORM:
-            return GPUDataFormat::B8G8B8R8_UNORM;
+            return GPUDataFormat::B8G8R8A8_UNORM;
         case DXGI_FORMAT_D24_UNORM_S8_UINT:
             return GPUDataFormat::D24_UNORM_S8_UINT;
         case DXGI_FORMAT_UNKNOWN:
@@ -86,7 +90,95 @@ namespace win {
         }
     }
 
-    D3D_PRIMITIVE_TOPOLOGY mapTopology(GPUContext::Topology t) {
+    D3D11_USAGE mapD3DUsage(GPUDataUsage usage) {
+        switch (usage) {
+        case GPUDataUsage::Default:
+            return D3D11_USAGE_DEFAULT;
+        case GPUDataUsage::Immutable:
+            return D3D11_USAGE_IMMUTABLE;
+        case GPUDataUsage::Dynamic:
+            return D3D11_USAGE_DYNAMIC;
+        case GPUDataUsage::Staging:
+            return D3D11_USAGE_STAGING;
+        default:
+            ubassert(false);
+            return D3D11_USAGE_DEFAULT;
+        }
+    }
+
+    GPUDataUsage unmapD3DUsage(D3D11_USAGE usage) {
+        switch (usage) {
+        case D3D11_USAGE_DEFAULT:
+            return GPUDataUsage::Default;
+        case D3D11_USAGE_IMMUTABLE:
+            return GPUDataUsage::Immutable;
+        case D3D11_USAGE_DYNAMIC:
+            return GPUDataUsage::Dynamic;
+        case D3D11_USAGE_STAGING:
+            return GPUDataUsage::Staging;
+        default:
+            ubassert(false);
+            return GPUDataUsage::Default;
+        }
+    }
+
+    uint32_t mapD3DCPUAccessFlags(uint32_t flags) {
+        uint32_t raw_flags = 0;
+        if (flags & GPUResource::CPU_ACCESS_READ) {
+            raw_flags |= D3D11_CPU_ACCESS_READ;
+        }
+        if (flags & GPUResource::CPU_ACCESS_WRITE) {
+            raw_flags |= D3D11_CPU_ACCESS_WRITE;
+        }
+        return raw_flags;
+    }
+
+    uint32_t unmapD3DCPUAccessFlags(uint32_t d3d_flags) {
+        uint32_t flags = 0;
+        if (d3d_flags & D3D11_CPU_ACCESS_READ) {
+            flags |= GPUResource::CPU_ACCESS_READ;
+        }
+        if (d3d_flags & D3D11_CPU_ACCESS_WRITE) {
+            flags |= GPUResource::CPU_ACCESS_WRITE;
+        }
+        return flags;
+    }
+
+    uint32_t mapD3DResMiscFlags(uint32_t flags) {
+        uint32_t raw_flags = 0;
+        if (flags & GPUResource::RES_MISC_GEN_MIPS) {
+            raw_flags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
+        }
+        if (flags & GPUResource::RES_MISC_SHARED) {
+            raw_flags |= D3D11_RESOURCE_MISC_SHARED;
+        }
+        if (flags & GPUResource::RES_MISC_TEXCUBE) {
+            raw_flags |= D3D11_RESOURCE_MISC_TEXTURECUBE;
+        }
+        if (flags & GPUResource::RES_MISC_GDI_COMPAT) {
+            raw_flags |= D3D11_RESOURCE_MISC_GDI_COMPATIBLE;
+        }
+        return raw_flags;
+    }
+
+    uint32_t unmapD3DResMiscFlags(uint32_t d3d_flags) {
+        uint32_t flags = 0;
+        if (d3d_flags & D3D11_RESOURCE_MISC_GENERATE_MIPS) {
+            flags |= GPUResource::RES_MISC_GEN_MIPS;
+        }
+        if (d3d_flags & D3D11_RESOURCE_MISC_SHARED) {
+            flags |= GPUResource::RES_MISC_SHARED;
+        }
+        if (d3d_flags & D3D11_RESOURCE_MISC_TEXTURECUBE) {
+            flags |= GPUResource::RES_MISC_TEXCUBE;
+        }
+        if (d3d_flags & D3D11_RESOURCE_MISC_GDI_COMPATIBLE) {
+            flags |= GPUResource::RES_MISC_GDI_COMPAT;
+        }
+        return flags;
+    }
+
+    D3D_PRIMITIVE_TOPOLOGY mapD3DTopology(GPUContext::Topology t) {
         switch (t) {
         case GPUContext::Topology::PointList:
             return D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
@@ -104,7 +196,7 @@ namespace win {
         }
     }
 
-    uint32_t mapBindType(uint32_t res_type) {
+    uint32_t mapD3DBindType(uint32_t res_type) {
         uint32_t bind_flags = 0;
         if (res_type & GPUResource::RES_VERTEX_BUFFER) {
             bind_flags |= D3D11_BIND_VERTEX_BUFFER;
@@ -127,7 +219,7 @@ namespace win {
         return bind_flags;
     }
 
-    uint32_t unmapBindType(uint32_t bind_flags) {
+    uint32_t unmapD3DBindType(uint32_t bind_flags) {
         uint32_t res_type = 0;
         if (bind_flags & D3D11_BIND_VERTEX_BUFFER) {
             res_type |= GPUResource::RES_VERTEX_BUFFER;
@@ -150,18 +242,7 @@ namespace win {
         return res_type;
     }
 
-    uint32_t mapCPUAccessFlags(uint32_t flags) {
-        uint32_t result = 0;
-        if (flags & GPUResource::CPU_ACCESS_READ) {
-            result |= D3D11_CPU_ACCESS_READ;
-        }
-        if (flags & GPUResource::CPU_ACCESS_WRITE) {
-            result |= D3D11_CPU_ACCESS_WRITE;
-        }
-        return result;
-    }
-
-    D3D11_DEPTH_WRITE_MASK mapWriteMask(GPUDepthStencilState::WriteMask mask) {
+    D3D11_DEPTH_WRITE_MASK mapD3DWriteMask(GPUDepthStencilState::WriteMask mask) {
         switch (mask) {
         case GPUDepthStencilState::WriteMask::All:
             return D3D11_DEPTH_WRITE_MASK_ALL;
@@ -172,7 +253,7 @@ namespace win {
         return D3D11_DEPTH_WRITE_MASK_ZERO;
     }
 
-    D3D11_COMPARISON_FUNC mapComparisonFunc(ComparisonFunc func) {
+    D3D11_COMPARISON_FUNC mapD3DComparisonFunc(ComparisonFunc func) {
         switch (func) {
         case ComparisonFunc::Never:
             return D3D11_COMPARISON_NEVER;
@@ -195,7 +276,7 @@ namespace win {
         return D3D11_COMPARISON_NEVER;
     }
 
-    D3D11_STENCIL_OP mapStencilOp(const GPUDepthStencilState::StencilOp& op) {
+    D3D11_STENCIL_OP mapD3DStencilOp(const GPUDepthStencilState::StencilOp& op) {
         switch (op) {
         case GPUDepthStencilState::StencilOp::Keep:
             return D3D11_STENCIL_OP_KEEP;
@@ -218,7 +299,7 @@ namespace win {
         return D3D11_STENCIL_OP_KEEP;
     }
 
-    D3D11_FILL_MODE mapFillMode(GPURasterizerState::FillMode mode) {
+    D3D11_FILL_MODE mapD3DFillMode(GPURasterizerState::FillMode mode) {
         switch (mode) {
         case GPURasterizerState::FillMode::Solid:
             return D3D11_FILL_SOLID;
@@ -229,7 +310,7 @@ namespace win {
         return D3D11_FILL_WIREFRAME;
     }
 
-    D3D11_CULL_MODE mapCullMode(GPURasterizerState::CullMode mode) {
+    D3D11_CULL_MODE mapD3DCullMode(GPURasterizerState::CullMode mode) {
         switch (mode) {
         case GPURasterizerState::CullMode::None:
             return D3D11_CULL_NONE;
@@ -242,7 +323,7 @@ namespace win {
         return D3D11_CULL_NONE;
     }
 
-    D3D11_FILTER mapFilter(GPUSamplerState::Filter filter) {
+    D3D11_FILTER mapD3DFilter(GPUSamplerState::Filter filter) {
         switch (filter) {
         case GPUSamplerState::Filter::MinMagMipPoint:
             return D3D11_FILTER_MIN_MAG_MIP_POINT;
@@ -253,7 +334,7 @@ namespace win {
         return D3D11_FILTER_MIN_MAG_MIP_POINT;
     }
 
-    D3D11_TEXTURE_ADDRESS_MODE mapAddrMode(GPUSamplerState::TextureAddrMode mode) {
+    D3D11_TEXTURE_ADDRESS_MODE mapD3DAddrMode(GPUSamplerState::TextureAddrMode mode) {
         switch (mode) {
         case GPUSamplerState::TextureAddrMode::Wrap:
             return D3D11_TEXTURE_ADDRESS_WRAP;
@@ -270,7 +351,7 @@ namespace win {
         return D3D11_TEXTURE_ADDRESS_CLAMP;
     }
 
-    D3D11_DSV_DIMENSION mapDSVDeminsion(GPUDepthStencil::DSVDimension dim) {
+    D3D11_DSV_DIMENSION mapD3DDSVDeminsion(GPUDepthStencil::DSVDimension dim) {
         switch (dim) {
         case GPUDepthStencil::DSV_DIMENSION_UNKNOWN:
             return D3D11_DSV_DIMENSION_UNKNOWN;
@@ -293,7 +374,7 @@ namespace win {
         return D3D11_DSV_DIMENSION_UNKNOWN;
     }
 
-    D3D11_SRV_DIMENSION mapSRVDeminsion(GPUShaderResource::SRVDimension dim) {
+    D3D11_SRV_DIMENSION mapD3DSRVDeminsion(GPUShaderResource::SRVDimension dim) {
         switch (dim) {
         case GPUShaderResource::SRV_DIMENSION_UNKNOWN:
             return D3D11_SRV_DIMENSION_UNKNOWN;

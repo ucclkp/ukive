@@ -34,8 +34,8 @@ namespace win {
         const GPUBuffer::Desc& desc, const GPUBuffer::ResourceData* data)
     {
         D3D11_BUFFER_DESC vb_desc;
-        vb_desc.BindFlags = mapBindType(desc.res_type);
-        vb_desc.CPUAccessFlags = mapCPUAccessFlags(desc.cpu_access_flag);
+        vb_desc.BindFlags = mapD3DBindType(desc.res_type);
+        vb_desc.CPUAccessFlags = mapD3DCPUAccessFlags(desc.cpu_access_flag);
         vb_desc.Usage = desc.is_dynamic ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT;
         vb_desc.ByteWidth = desc.byte_width;
         vb_desc.MiscFlags = 0;
@@ -75,7 +75,7 @@ namespace win {
             D3D11_INPUT_ELEMENT_DESC layout;
             layout.SemanticName = item.name;
             layout.SemanticIndex = item.index;
-            layout.Format = mapFormat(item.format);
+            layout.Format = mapDXGIFormat(item.format);
             layout.InputSlot = item.input_slot;
             layout.AlignedByteOffset = item.is_align_append ?
                 D3D11_APPEND_ALIGNED_ELEMENT : item.aligned_byte_offset;
@@ -114,13 +114,13 @@ namespace win {
         {
             D3D11_TEXTURE1D_DESC tex_desc;
             tex_desc.ArraySize = 1;
-            tex_desc.BindFlags = mapBindType(desc.res_type);
-            tex_desc.Format = mapFormat(desc.format);
+            tex_desc.BindFlags = mapD3DBindType(desc.res_type);
+            tex_desc.Format = mapDXGIFormat(desc.format);
             tex_desc.Width = desc.width;
             tex_desc.MipLevels = desc.mip_levels;
-            tex_desc.CPUAccessFlags = 0;
-            tex_desc.Usage = desc.is_dynamic ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT;
-            tex_desc.MiscFlags = 0;
+            tex_desc.CPUAccessFlags = mapD3DCPUAccessFlags(desc.cpu_access_flags);
+            tex_desc.Usage = mapD3DUsage(desc.usage);
+            tex_desc.MiscFlags = mapD3DResMiscFlags(desc.misc_flags);
 
             utl::win::ComPtr<ID3D11Texture1D> t;
             HRESULT hr = d3d_device_->CreateTexture1D(&tex_desc, data ? &res_data : nullptr, &t);
@@ -136,16 +136,16 @@ namespace win {
         {
             D3D11_TEXTURE2D_DESC tex_desc;
             tex_desc.ArraySize = 1;
-            tex_desc.BindFlags = mapBindType(desc.res_type);
-            tex_desc.Format = mapFormat(desc.format);
+            tex_desc.BindFlags = mapD3DBindType(desc.res_type);
+            tex_desc.Format = mapDXGIFormat(desc.format);
             tex_desc.Width = desc.width;
             tex_desc.Height = desc.height;
             tex_desc.MipLevels = desc.mip_levels;
             tex_desc.SampleDesc.Count = 1;
             tex_desc.SampleDesc.Quality = 0;
-            tex_desc.MiscFlags = 0;
-            tex_desc.CPUAccessFlags = 0;
-            tex_desc.Usage = desc.is_dynamic ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT;
+            tex_desc.CPUAccessFlags = mapD3DCPUAccessFlags(desc.cpu_access_flags);
+            tex_desc.Usage = mapD3DUsage(desc.usage);
+            tex_desc.MiscFlags = mapD3DResMiscFlags(desc.misc_flags);
 
             utl::win::ComPtr<ID3D11Texture2D> t;
             HRESULT hr = d3d_device_->CreateTexture2D(&tex_desc, data ? &res_data : nullptr, &t);
@@ -160,15 +160,15 @@ namespace win {
         case GPUTexture::Dimension::_3D:
         {
             D3D11_TEXTURE3D_DESC tex_desc;
-            tex_desc.BindFlags = mapBindType(desc.res_type);
-            tex_desc.Format = mapFormat(desc.format);
+            tex_desc.BindFlags = mapD3DBindType(desc.res_type);
+            tex_desc.Format = mapDXGIFormat(desc.format);
             tex_desc.Width = desc.width;
             tex_desc.Height = desc.height;
             tex_desc.Depth = desc.depth;
             tex_desc.MipLevels = desc.mip_levels;
-            tex_desc.MiscFlags = 0;
-            tex_desc.CPUAccessFlags = 0;
-            tex_desc.Usage = desc.is_dynamic ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT;
+            tex_desc.CPUAccessFlags = mapD3DCPUAccessFlags(desc.cpu_access_flags);
+            tex_desc.Usage = mapD3DUsage(desc.usage);
+            tex_desc.MiscFlags = mapD3DResMiscFlags(desc.misc_flags);
 
             utl::win::ComPtr<ID3D11Texture3D> t;
             HRESULT hr = d3d_device_->CreateTexture3D(&tex_desc, data ? &res_data : nullptr, &t);
@@ -213,8 +213,8 @@ namespace win {
         }
 
         D3D11_DEPTH_STENCIL_VIEW_DESC dsv_desc;
-        dsv_desc.Format = mapFormat(desc.format);
-        dsv_desc.ViewDimension = mapDSVDeminsion(desc.view_dim);
+        dsv_desc.Format = mapDXGIFormat(desc.format);
+        dsv_desc.ViewDimension = mapD3DDSVDeminsion(desc.view_dim);
         dsv_desc.Flags = desc.flags;
 
         switch (desc.view_dim) {
@@ -270,8 +270,8 @@ namespace win {
         D3D11_SHADER_RESOURCE_VIEW_DESC* desc_ptr;
         D3D11_SHADER_RESOURCE_VIEW_DESC srv_desc;
         if (desc) {
-            srv_desc.Format = mapFormat(desc->format);
-            srv_desc.ViewDimension = mapSRVDeminsion(desc->view_dim);
+            srv_desc.Format = mapDXGIFormat(desc->format);
+            srv_desc.ViewDimension = mapD3DSRVDeminsion(desc->view_dim);
 
             switch (desc->view_dim) {
             case GPUShaderResource::SRV_DIMENSION_BUFFER:
@@ -350,21 +350,21 @@ namespace win {
     GEcPtr<GPUDepthStencilState> GPUDeviceD3D11::createDepthStencilState(const GPUDepthStencilState::Desc& desc) {
         D3D11_DEPTH_STENCIL_DESC dds_desc;
         dds_desc.DepthEnable = desc.depth_enabled ? TRUE : FALSE;
-        dds_desc.DepthWriteMask = mapWriteMask(desc.depth_write_mask);
-        dds_desc.DepthFunc = mapComparisonFunc(desc.depth_func);
+        dds_desc.DepthWriteMask = mapD3DWriteMask(desc.depth_write_mask);
+        dds_desc.DepthFunc = mapD3DComparisonFunc(desc.depth_func);
         dds_desc.StencilEnable = desc.stencil_enabled ? TRUE : FALSE;
         dds_desc.StencilReadMask = desc.stencil_read_mask;
         dds_desc.StencilWriteMask = desc.stencil_write_mask;
 
-        dds_desc.FrontFace.StencilFailOp = mapStencilOp(desc.front_face.stencil_fail_op);
-        dds_desc.FrontFace.StencilDepthFailOp = mapStencilOp(desc.front_face.stencil_depth_fail_op);
-        dds_desc.FrontFace.StencilPassOp = mapStencilOp(desc.front_face.stencil_pass_op);
-        dds_desc.FrontFace.StencilFunc = mapComparisonFunc(desc.front_face.stencil_func);
+        dds_desc.FrontFace.StencilFailOp = mapD3DStencilOp(desc.front_face.stencil_fail_op);
+        dds_desc.FrontFace.StencilDepthFailOp = mapD3DStencilOp(desc.front_face.stencil_depth_fail_op);
+        dds_desc.FrontFace.StencilPassOp = mapD3DStencilOp(desc.front_face.stencil_pass_op);
+        dds_desc.FrontFace.StencilFunc = mapD3DComparisonFunc(desc.front_face.stencil_func);
 
-        dds_desc.BackFace.StencilFailOp = mapStencilOp(desc.back_face.stencil_fail_op);
-        dds_desc.BackFace.StencilDepthFailOp = mapStencilOp(desc.back_face.stencil_depth_fail_op);
-        dds_desc.BackFace.StencilPassOp = mapStencilOp(desc.back_face.stencil_pass_op);
-        dds_desc.BackFace.StencilFunc = mapComparisonFunc(desc.back_face.stencil_func);
+        dds_desc.BackFace.StencilFailOp = mapD3DStencilOp(desc.back_face.stencil_fail_op);
+        dds_desc.BackFace.StencilDepthFailOp = mapD3DStencilOp(desc.back_face.stencil_depth_fail_op);
+        dds_desc.BackFace.StencilPassOp = mapD3DStencilOp(desc.back_face.stencil_pass_op);
+        dds_desc.BackFace.StencilFunc = mapD3DComparisonFunc(desc.back_face.stencil_func);
 
         GEcPtr<GPUDepthStencilState> result;
         utl::win::ComPtr<ID3D11DepthStencilState> dds_state;
@@ -380,8 +380,8 @@ namespace win {
 
     GEcPtr<GPURasterizerState> GPUDeviceD3D11::createRasterizerState(const GPURasterizerState::Desc& desc) {
         D3D11_RASTERIZER_DESC r_desc;
-        r_desc.FillMode = mapFillMode(desc.fill_mode);
-        r_desc.CullMode = mapCullMode(desc.cull_mode);
+        r_desc.FillMode = mapD3DFillMode(desc.fill_mode);
+        r_desc.CullMode = mapD3DCullMode(desc.cull_mode);
         r_desc.FrontCounterClockwise = desc.front_counter_clockwise ? TRUE : FALSE;
         r_desc.DepthBias = 0;
         r_desc.DepthBiasClamp = 0;
@@ -405,13 +405,13 @@ namespace win {
 
     GEcPtr<GPUSamplerState> GPUDeviceD3D11::createSamplerState(const GPUSamplerState::Desc& desc) {
         D3D11_SAMPLER_DESC s_desc;
-        s_desc.Filter = mapFilter(desc.filter);
-        s_desc.AddressU = mapAddrMode(desc.addr_u);
-        s_desc.AddressV = mapAddrMode(desc.addr_v);
-        s_desc.AddressW = mapAddrMode(desc.addr_w);
+        s_desc.Filter = mapD3DFilter(desc.filter);
+        s_desc.AddressU = mapD3DAddrMode(desc.addr_u);
+        s_desc.AddressV = mapD3DAddrMode(desc.addr_v);
+        s_desc.AddressW = mapD3DAddrMode(desc.addr_w);
         s_desc.MipLODBias = desc.mip_lod_bias;
         s_desc.MaxAnisotropy = desc.max_anisotropy;
-        s_desc.ComparisonFunc = mapComparisonFunc(desc.comp_func);
+        s_desc.ComparisonFunc = mapD3DComparisonFunc(desc.comp_func);
         std::memcpy(s_desc.BorderColor, desc.border_color, sizeof(float) * 4);
         s_desc.MinLOD = desc.min_lod;
         s_desc.MaxLOD = desc.max_lod;

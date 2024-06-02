@@ -33,8 +33,6 @@ namespace ukive {
         desc.width = width;
         desc.height = height;
         desc.dim = Dimension::_2D;
-        desc.depth = 0u;
-        desc.is_dynamic = false;
         desc.mip_levels = 1u;
         desc.res_type = RES_SHADER_RES | (rt ? RES_RENDER_TARGET : 0);
 
@@ -52,6 +50,25 @@ namespace ukive {
 
         tex.code = tex->createSRV();
         return tex;
+    }
+
+    // static
+    GEcPtr<GPUTexture> GPUTexture::createStagingTex2D(
+        uint32_t width, uint32_t height,
+        GPUDataFormat format)
+    {
+        auto dev = Application::getGraphicDeviceManager()->getGPUDevice();
+
+        Desc desc;
+        desc.format = format;
+        desc.width = width;
+        desc.height = height;
+        desc.dim = Dimension::_2D;
+        desc.mip_levels = 1u;
+        desc.res_type = 0;
+        desc.cpu_access_flags = GPUResource::CPU_ACCESS_READ;
+        desc.usage = GPUDataUsage::Staging;
+        return dev->createTexture(desc, nullptr);
     }
 
     void GPUTexture::setSRV(const GPtr<GPUShaderResource>& res) {

@@ -34,13 +34,15 @@ namespace win {
         t2d_->GetDesc(&raw_desc);
 
         desc_.dim = Dimension::_2D;
-        desc_.format = unmapFormat(raw_desc.Format);
+        desc_.format = unmapDXGIFormat(raw_desc.Format);
         desc_.width = raw_desc.Width;
         desc_.height = raw_desc.Height;
         desc_.depth = 0;
         desc_.mip_levels = raw_desc.MipLevels;
-        desc_.res_type = unmapBindType(raw_desc.BindFlags);
-        desc_.is_dynamic = raw_desc.Usage == D3D11_USAGE_DYNAMIC;
+        desc_.res_type = unmapD3DBindType(raw_desc.BindFlags);
+        desc_.cpu_access_flags = unmapD3DCPUAccessFlags(raw_desc.CPUAccessFlags);
+        desc_.misc_flags = unmapD3DResMiscFlags(raw_desc.MiscFlags);
+        desc_.usage = unmapD3DUsage(raw_desc.Usage);
     }
 
     GPUTexture2DD3D11::GPUTexture2DD3D11(

@@ -27,6 +27,8 @@ namespace ukive {
         I8_UNORM,      // 仅限图片
         R8G8B8_UNORM,  // 仅限图片
         R8G8B8A8_UNORM,
+        R16G16B16A16_FLOAT,
+        R16G16B16A16_UNORM,
         RAW,
         HDR,
     };

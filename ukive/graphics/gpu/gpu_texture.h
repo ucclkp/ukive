@@ -35,16 +35,20 @@ namespace ukive {
                   depth(0),
                   mip_levels(0),
                   res_type(0),
-                  is_dynamic(false) {}
+                  cpu_access_flags(0),
+                  misc_flags(0),
+                  usage(GPUDataUsage::Default) {}
 
             Dimension dim;
             GPUDataFormat format;
             uint32_t width;
             uint32_t height;
-            uint32_t depth;
+            uint32_t depth;  // For 3D texture
             uint32_t mip_levels;
             uint32_t res_type;
-            bool is_dynamic;
+            uint32_t cpu_access_flags;
+            uint32_t misc_flags;
+            GPUDataUsage usage;
         };
 
         static GEcPtr<GPUTexture> createShaderTex2D(
@@ -54,6 +58,9 @@ namespace ukive {
             uint32_t width, uint32_t height,
             GPUDataFormat format, bool rt,
             uint32_t stride, const void* data);
+        static GEcPtr<GPUTexture> createStagingTex2D(
+            uint32_t width, uint32_t height,
+            GPUDataFormat format);
 
         GPtr<GPUShaderResource> srv() const;
 

@@ -66,6 +66,8 @@ namespace win {
         utl::win::ComPtr<IWICBitmapSource> convertGamut(
             IWICBitmapFrameDecode* src, IWICColorContext* dst_cc);
 
+        bool isSRGBFrame(IWICBitmapFrameDecode* frame);
+
         utl::win::ComPtr<IWICImagingFactory> wic_factory_;
     };
 

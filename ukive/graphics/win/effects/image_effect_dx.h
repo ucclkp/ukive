@@ -63,7 +63,6 @@ namespace win {
             GPtr<GPUTexture>& tex,
             GPtr<GPURenderTarget>& rtv,
             GPtr<GPUShaderResource>& srv);
-        bool createKernelTexture(const uint8_t* kernel, size_t len);
         void render();
 
         int width_;
@@ -79,7 +78,6 @@ namespace win {
         utl::mat4f ortho_matrix_;
 
         GPtr<GPUShaderResource> org_srv_;
-        GPtr<GPUTexture> kernel_tex2d_;
 
         GPtr<GPUTexture> target_tex2d_;
         GPtr<GPURenderTarget> target_rtv_;

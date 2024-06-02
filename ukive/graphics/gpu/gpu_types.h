@@ -20,11 +20,19 @@ namespace ukive {
         R16G16B16A16_FLOAT,
         R16G16B16A16_UINT,
         R8G8B8A8_UINT,
+        R8G8B8A8_UNORM,
         R32_UINT,
         R32_FLOAT,
         R8_UINT,
-        B8G8B8R8_UNORM,
+        B8G8R8A8_UNORM,
         D24_UNORM_S8_UINT,
+    };
+
+    enum class GPUDataUsage {
+        Default,
+        Immutable,
+        Dynamic,
+        Staging,
     };
 
     enum class ComparisonFunc {

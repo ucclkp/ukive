@@ -724,6 +724,9 @@
     <ClCompile Include="graphics\win\effects\gaussian_blur_effect_dx.cpp">
       <Filter>graphics\win\effects</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_texture_reader.cpp">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">
@@ -1635,6 +1638,9 @@
     <ClInclude Include="graphics\win\effects\gaussian_blur_effect_dx.h">
       <Filter>graphics\win\effects</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_texture_reader.h">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="window">
@@ -1832,6 +1838,9 @@
       <Filter>graphics\win\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="graphics\win\hlsl\gaussian_blur_effect_vert_ps.hlsl">
+      <Filter>graphics\win\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="graphics\win\hlsl\rasterizer_ps.hlsl">
       <Filter>graphics\win\hlsl</Filter>
     </FxCompile>
   </ItemGroup>

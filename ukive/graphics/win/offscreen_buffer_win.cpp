@@ -176,7 +176,7 @@ namespace win {
         if (img_options_.pixel_format == ImagePixelFormat::HDR) {
             format = GPUDataFormat::R16G16B16A16_FLOAT;
         } else {
-            format = GPUDataFormat::B8G8B8R8_UNORM;
+            format = GPUDataFormat::B8G8R8A8_UNORM;
         }
 
         d3d_tex2d_ = GPUTexture::createShaderTex2D(

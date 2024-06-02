@@ -31,6 +31,39 @@
         ptr = vec.data();       \
     } else { ptr = arr; }
 
+namespace {
+
+    ID3D11Resource* getD3DResource(ukive::GPUResource* resource) {
+        using namespace ukive;
+        ID3D11Resource* res = nullptr;
+
+        switch (resource->getType()) {
+        case GPUResource::Type::Buffer:
+            res = static_cast<win::GPUBufferD3D11*>(resource)->getNative();
+            break;
+
+        case GPUResource::Type::Texture:
+        {
+            auto tex = static_cast<GPUTexture*>(resource);
+            auto& desc = tex->getDesc();
+            switch (desc.dim) {
+            case GPUTexture::Dimension::_1D:
+                res = static_cast<win::GPUTexture1DD3D11*>(tex)->getNative().get();
+                break;
+            case GPUTexture::Dimension::_2D:
+                res = static_cast<win::GPUTexture2DD3D11*>(tex)->getNative().get();
+                break;
+            case GPUTexture::Dimension::_3D:
+                res = static_cast<win::GPUTexture3DD3D11*>(tex)->getNative().get();
+                break;
+            }
+            break;
+        }
+        }
+        return res;
+    }
+
+}
 
 namespace ukive {
 namespace win {
@@ -59,7 +92,7 @@ namespace win {
         const GPUBuffer* buffer, GPUDataFormat format, uint32_t offset)
     {
         auto buf = static_cast<const GPUBufferD3D11*>(buffer)->getNative();
-        d3d_context_->IASetIndexBuffer(buf, mapFormat(format), offset);
+        d3d_context_->IASetIndexBuffer(buf, mapDXGIFormat(format), offset);
     }
 
     void GPUContextD3D11::setInputLayout(GPUInputLayout* layout) {
@@ -68,7 +101,7 @@ namespace win {
     }
 
     void GPUContextD3D11::setPrimitiveTopology(Topology topology) {
-        d3d_context_->IASetPrimitiveTopology(mapTopology(topology));
+        d3d_context_->IASetPrimitiveTopology(mapD3DTopology(topology));
     }
 
     void GPUContextD3D11::setRenderTargets(
@@ -238,36 +271,15 @@ namespace win {
             idx_count_pre_inst, inst_count, start_idx_loc, base_ver_loc, start_inst_loc);
     }
 
+    void GPUContextD3D11::copyResource(GPUResource* dst, GPUResource* src) {
+        d3d_context_->CopyResource(getD3DResource(dst), getD3DResource(src));
+    }
+
     void* GPUContextD3D11::lock(
         GPUResource* resource,
         unsigned int type, size_t* row_stride)
     {
-        ID3D11Resource* res = nullptr;
-
-        switch (resource->getType()) {
-        case GPUResource::Type::Buffer:
-            res = static_cast<GPUBufferD3D11*>(resource)->getNative();
-            break;
-
-        case GPUResource::Type::Texture:
-        {
-            auto tex = static_cast<GPUTexture*>(resource);
-            auto& desc = tex->getDesc();
-            switch (desc.dim) {
-            case GPUTexture::Dimension::_1D:
-                res = static_cast<GPUTexture1DD3D11*>(tex)->getNative().get();
-                break;
-            case GPUTexture::Dimension::_2D:
-                res = static_cast<GPUTexture2DD3D11*>(tex)->getNative().get();
-                break;
-            case GPUTexture::Dimension::_3D:
-                res = static_cast<GPUTexture3DD3D11*>(tex)->getNative().get();
-                break;
-            }
-            break;
-        }
-        }
-
+        ID3D11Resource* res = getD3DResource(resource);
         if (!res) {
             return nullptr;
         }
