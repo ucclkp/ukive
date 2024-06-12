@@ -73,7 +73,7 @@ namespace ukive {
         int length = (std::min)(getContext().dp2pxi(20), bounds.height());
 
         float hp_offset = 0.f;
-        int stroke_width = getContext().dp2pxi(2.f);
+        int stroke_width = getContext().dp2pxi(1.5f);
         if (stroke_width % 2) {
             hp_offset = 0.5f;
         }
@@ -84,30 +84,32 @@ namespace ukive {
             float(length - stroke_width * 2), float(length - stroke_width * 2));
 
         canvas->drawRoundRect(
-            check_bounds, float(stroke_width), getContext().dp2px(1), Color::Blue400);
+            check_bounds, float(stroke_width), getContext().dp2px(2), Color::Blue800);
 
         if (checked_) {
             int inner_length = int(check_bounds.width());
             auto value = float(anim_.getCurValue());
 
+            int ckm = check_bounds.width() / 5;
+
             auto line1s = PointF{
-                check_bounds.x() + stroke_width, check_bounds.y() + inner_length / 2.f };
+                check_bounds.x() + ckm, check_bounds.y() + inner_length / 2.f };
             auto line1e = PointF{
-                check_bounds.x() + inner_length / 2.f, check_bounds.y() + inner_length - stroke_width };
+                check_bounds.x() + inner_length / 2.f, check_bounds.y() + inner_length - ckm };
             auto line2s = PointF{
-                check_bounds.x() + inner_length / 2.f, check_bounds.y() + inner_length - stroke_width };
+                check_bounds.x() + inner_length / 2.f, check_bounds.y() + inner_length - ckm };
             auto line2e = PointF{
-                check_bounds.x() + inner_length - stroke_width, check_bounds.y() + stroke_width };
+                check_bounds.x() + inner_length - ckm, check_bounds.y() + ckm };
 
             auto vec1 = line1e - line1s;
             auto vec2 = line2e - line2s;
 
             canvas->drawLine(
                 line1s, line1s + vec1 * ((std::min)(value, 0.5f) * 2),
-                std::floor(getContext().dp2px(2.5f)), Color::Blue800);
+                std::floor(getContext().dp2px(2.f)), Color::Blue800);
             canvas->drawLine(
                 line2s, line2s + vec2 * ((std::max)(value - 0.5f, 0.f) * 2),
-                std::floor(getContext().dp2px(2.5f)), Color::Blue800);
+                std::floor(getContext().dp2px(2.f)), Color::Blue800);
         }
     }
 

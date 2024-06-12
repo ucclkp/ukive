@@ -17,6 +17,7 @@
 #include "shell/examples/pages/example_tree_page.h"
 #include "shell/examples/pages/example_misc_page.h"
 #include "shell/examples/pages/example_list_page.h"
+#include "shell/examples/pages/operating_list_page.h"
 
 
 namespace shell {
@@ -60,6 +61,9 @@ namespace shell {
         tab_view->addPage(new ExampleMiscPage(), u"Misc");
         tab_view->addPage(new ExampleListPage(), u"ListView");
         tab_view->addPage(new ExampleTreePage(), u"TreeView");
+        tab_view->addPage(new OperatingListPage(), u"Op ListView");
+
+        //tab_view->setSelectedPage(3);
     }
 
 }

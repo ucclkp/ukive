@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RestraintLayout
+    id="@+id/rl_op_list_page_outer"
+    width="fill"
+    height="fill">
+
+    <TextView
+        id="@+id/tv_stats" width="auto" height="auto"
+        handle_top="@id/rl_op_list_page_outer"
+        handle_start="@id/rl_op_list_page_outer"
+        handle_end="@id/sl_op_list_panel, start"
+        text_size="12" />
+
+    <SequenceLayout
+        id="@+id/sl_op_list_panel"
+        width="180"
+        height="fill"
+        orientation="vertical"
+        handle_start="@id/rl_op_list_page_outer"
+        handle_end="@id/rl_op_list_page_outer"
+        handle_top="@id/rl_op_list_page_outer"
+        handle_bottom="@id/rl_op_list_page_outer">
+
+        <Button
+            id="@+id/bt_op_button"
+            width="auto"
+            height="auto"
+            margin="12, 12, 12, 12"
+            text="开始" />
+
+        <ListView
+            id="@+id/lv_op_list_page_list"
+            width="fill"
+            height="fill" />
+
+    </SequenceLayout>
+
+</RestraintLayout>

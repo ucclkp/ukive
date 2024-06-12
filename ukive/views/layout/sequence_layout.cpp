@@ -147,11 +147,20 @@ namespace ukive {
             int cur_height = 0;
             for (auto child : *this) {
                 if (child->getVisibility() != VANISHED) {
+                    int child_h_space;
                     auto w_val = getChildWidthValue(child, info.width(), 0);
                     auto h_val = getChildHeightValue(child, info.height(), cur_height);
-                    child->determineSize(SizeInfo(w_val, h_val));
 
-                    int child_h_space = child->getDeterminedSize().height() + child->getLayoutMargin().vert();
+                    if (child->getLayoutSize().height() == LS_FILL && false) {
+                        /**
+                         * 此时 h_val.mode 必定为 SizeInfo::FREEDOM。
+                         * 如果这个 View 高度声明为 LS_FILL，就意味着此时该 View 没有必要进行测量。
+                         */
+                        child_h_space = child->getLayoutMargin().vert();
+                    } else {
+                        child->determineSize(SizeInfo(w_val, h_val));
+                        child_h_space = child->getDeterminedSize().height() + child->getLayoutMargin().vert();
+                    }
                     cur_height += child_h_space;
                 }
             }

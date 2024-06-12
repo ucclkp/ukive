@@ -229,6 +229,7 @@ $(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro\$(ProjectName)" -d "$(O
     <ClCompile Include="examples\pages\example_tree_page.cpp" />
     <ClCompile Include="examples\example_list_source.cpp" />
     <ClCompile Include="examples\example_window.cpp" />
+    <ClCompile Include="examples\pages\operating_list_page.cpp" />
     <ClCompile Include="grid\grid_window.cpp" />
     <ClCompile Include="lod\lod_window.cpp" />
     <ClCompile Include="lod\qtree_node.cpp" />
@@ -247,6 +248,7 @@ $(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro\$(ProjectName)" -d "$(O
     <ClInclude Include="examples\pages\example_tree_page.h" />
     <ClInclude Include="examples\example_list_source.h" />
     <ClInclude Include="examples\example_window.h" />
+    <ClInclude Include="examples\pages\operating_list_page.h" />
     <ClInclude Include="grid\grid_window.h" />
     <ClInclude Include="lod\lod_window.h" />
     <ClInclude Include="lod\qtree_node.h" />
@@ -271,6 +273,7 @@ $(SolutionDir)necro.exe -c -s "$(SolutionDir)build\necro\$(ProjectName)" -d "$(O
     <Xml Include="resources\layout\example_window_layout.xml" />
     <Xml Include="resources\layout\example_tree_page_layout.xml" />
     <UpToDateCheckInput Include="@(Xml)" />
+    <Xml Include="resources\layout\operating_list_page_layout.xml" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="lod\direct3d\hlsl\terrain_pixel_shader.hlsl">

@@ -91,6 +91,9 @@
     <ClCompile Include="effects\shadow_window.cpp">
       <Filter>effects</Filter>
     </ClCompile>
+    <ClCompile Include="examples\pages\operating_list_page.cpp">
+      <Filter>examples\pages</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resources\resource.h">
@@ -144,6 +147,9 @@
     <ClInclude Include="effects\shadow_window.h">
       <Filter>effects</Filter>
     </ClInclude>
+    <ClInclude Include="examples\pages\operating_list_page.h">
+      <Filter>examples\pages</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\shell.ico">
@@ -169,6 +175,9 @@
       <Filter>resources\layout</Filter>
     </Xml>
     <Xml Include="resources\layout\example_misc_page_layout.xml">
+      <Filter>resources\layout</Filter>
+    </Xml>
+    <Xml Include="resources\layout\operating_list_page_layout.xml">
       <Filter>resources\layout</Filter>
     </Xml>
   </ItemGroup>
