@@ -165,11 +165,17 @@ namespace ukive {
             int cur_height = 0;
             for (auto child : *this) {
                 if (child->getVisibility() != VANISHED) {
+                    int child_h_space;
                     auto w_val = getChildWidthValue(child, info.width(), 0);
                     auto h_val = getChildHeightValue(child, info.height(), cur_height);
-                    child->determineSize(SizeInfo(w_val, h_val));
 
-                    int child_h_space = child->getDeterminedSize().height() + child->getLayoutMargin().vert();
+                    // TODO: 临时修正，解决列表测量、布局两次导致的问题
+                    if (child->getLayoutSize().height() == LS_FILL) {
+                        child_h_space = child->getLayoutMargin().vert();
+                    } else {
+                        child->determineSize(SizeInfo(w_val, h_val));
+                        child_h_space = child->getDeterminedSize().height() + child->getLayoutMargin().vert();
+                    }
                     cur_height += child_h_space;
                 }
             }
