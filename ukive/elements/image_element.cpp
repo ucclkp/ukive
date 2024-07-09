@@ -15,6 +15,9 @@ namespace ukive {
     ImageElement::ImageElement(const GPtr<ImageFrame>& img)
         : image_(img) {}
 
+    void ImageElement::setFilter(bool filter) {
+        need_filter_ = filter;
+    }
 
     void ImageElement::setOpacity(float opt) {
         opacity_ = opt;
@@ -33,7 +36,10 @@ namespace ukive {
             canvas->fillImageRepeat(RectF(getBounds()), image_.get());
         } else {
             canvas->drawImage(
-                RectF(getBounds()), opacity_ * canvas->getOpacity(), image_.get());
+                (RectF)getBounds(),
+                opacity_ * canvas->getOpacity(),
+                image_.get(),
+                need_filter_);
         }
     }
 

@@ -30,6 +30,12 @@ namespace win {
         case ImagePixelFormat::B8G8R8A8_UNORM:
             format = DXGI_FORMAT_B8G8R8A8_UNORM;
             break;
+        case ImagePixelFormat::R16G16B16A16_FLOAT:
+            format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+            break;
+        case ImagePixelFormat::R16G16B16A16_UNORM:
+            format = DXGI_FORMAT_R16G16B16A16_UNORM;
+            break;
         default:
             assert("Failed to map DXGI Format!" && false);
             format = DXGI_FORMAT_B8G8R8A8_UNORM;

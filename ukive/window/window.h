@@ -288,6 +288,7 @@ namespace ukive {
         int min_width_, min_height_;
         Purpose purpose_;
 
+        DirtyRegion prev_dirty_region_;
         DirtyRegion cur_dirty_region_;
         std::unique_ptr<Canvas> off_canvas_;
         std::unique_ptr<StatisticDrawer> debug_drawer_;

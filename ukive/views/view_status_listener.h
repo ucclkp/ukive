@@ -10,12 +10,15 @@
 
 namespace ukive {
 
+    class View;
+
     class OnViewStatusListener {
     public:
         virtual ~OnViewStatusListener() = default;
 
-        virtual void onViewEnableChanged(bool enabled) {}
-        virtual void onViewVisibilityChanged(int visibility) {}
+        virtual void onViewFocusChanged(View* v, bool focus) {}
+        virtual void onViewEnableChanged(View* v, bool enabled) {}
+        virtual void onViewVisibilityChanged(View* v, int visibility) {}
     };
 
 }

@@ -250,6 +250,7 @@
     <ClInclude Include="graphics\cursor.h" />
     <ClInclude Include="graphics\cyro_buffer.h" />
     <ClInclude Include="graphics\cyro_render_target.h" />
+    <ClInclude Include="graphics\gpu\gpu_texture_reader.h" />
     <ClInclude Include="graphics\matrix_2x3.hpp" />
     <ClInclude Include="graphics\native_rt.h" />
     <ClInclude Include="graphics\dirty_region.h" />
@@ -315,7 +316,6 @@
     <ClInclude Include="graphics\win\colors\color_manager_win.h" />
     <ClInclude Include="graphics\win\cyro_render_target_d2d.h" />
     <ClInclude Include="graphics\win\effects\gaussian_blur_effect_dx.h" />
-    <ClInclude Include="graphics\win\gpu\d3d11\gpu_texture_reader.h" />
     <ClInclude Include="graphics\win\native_rt_d2d.h" />
     <ClInclude Include="graphics\win\directx_manager.h" />
     <ClInclude Include="graphics\win\display_manager_win.h" />
@@ -592,7 +592,7 @@
     <ClCompile Include="graphics\win\colors\color_manager_win.cpp" />
     <ClCompile Include="graphics\win\cyro_render_target_d2d.cpp" />
     <ClCompile Include="graphics\win\effects\gaussian_blur_effect_dx.cpp" />
-    <ClCompile Include="graphics\win\gpu\d3d11\gpu_texture_reader.cpp" />
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_texture_reader_d3d11.cpp" />
     <ClCompile Include="graphics\win\native_rt_d2d.cpp" />
     <ClCompile Include="graphics\win\directx_manager.cpp" />
     <ClCompile Include="graphics\win\display_manager_win.cpp" />
@@ -757,7 +757,7 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="graphics\win\hlsl\image_effect_vs.hlsl">
+    <FxCompile Include="graphics\win\hlsl\image_effect_common_vs.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>

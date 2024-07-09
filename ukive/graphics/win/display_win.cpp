@@ -13,7 +13,6 @@
 #include "ukive/window/win/window_impl_win.h"
 #include "ukive/window/window_dpi_utils.h"
 #include "ukive/graphics/win/colors/color_manager_win.h"
-#include "ukive/graphics/win/display_manager_win.h"
 
 #include <VersionHelpers.h>
 #include <dxgi1_6.h>
@@ -232,6 +231,13 @@ namespace win {
         return monitor_mode_.dmDisplayFrequency;
     }
 
+    uint32_t DisplayWin::getSDRWhiteLevel() const {
+        if (ccd_info_.has_sdr_white_level_info) {
+            return ccd_info_.sdr_white_level.SDRWhiteLevel;
+        }
+        return 1000;
+    }
+
     bool DisplayWin::waitForVSync() {
         if (is_empty_ || !cur_output_) {
             return false;
@@ -348,6 +354,7 @@ namespace win {
             if (ccd.has_source_info &&
                 std::wcsncmp(monitor_info.szDevice, ccd.source_info.viewGdiDeviceName, CCHDEVICENAME) == 0)
             {
+                ccd_info_ = ccd;
                 return true;
             }
         }

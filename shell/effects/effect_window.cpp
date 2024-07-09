@@ -48,7 +48,7 @@ namespace shell {
 
         image_effect_.reset(new ukive::win::ImageEffectGPU(getContext()));
         image_effect_->initialize();
-        image_effect_->setSize(400, 400, false);
+        image_effect_->setSize(400, 400, ukive::GPUDataFormat::B8G8R8A8_UNORM);
 
         using namespace std::chrono_literals;
         animator_.setValueRange(0, 256);

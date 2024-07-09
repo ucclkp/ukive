@@ -25,6 +25,7 @@
 #include "ukive/event/input_event.h"
 #include "ukive/event/keyboard.h"
 #include "ukive/graphics/canvas.h"
+#include "ukive/graphics/display.h"
 #include "ukive/graphics/images/image_frame.h"
 #include "ukive/graphics/images/image_options.h"
 #include "ukive/graphics/graphic_device_manager.h"
@@ -718,9 +719,16 @@ namespace ukive {
 
         float dpi = context_.getDefaultDpi() * context_.getAutoScale();
 
+        auto display = Display::fromWindow(this);
+
         buffer_ = WindowBuffer::create(this);
         ImageOptions options(dpi, dpi);
-        //options.pixel_format = ImagePixelFormat::HDR;
+        if (display->isInHDRMode()) {
+            options.pixel_format = ImagePixelFormat::HDR;
+        } else {
+            options.pixel_format = ImagePixelFormat::B8G8R8A8_UNORM;
+            //options.pixel_format = ImagePixelFormat::R16G16B16A16_FLOAT;
+        }
         buffer_->onCreate(0, 0, options);
 
         rt_ = CyroRenderTarget::create();
@@ -1301,7 +1309,16 @@ namespace ukive {
             scaleToNative(impl_.get(), &dirty_rect.rect0);
             scaleToNative(impl_.get(), &dirty_rect.rect1);
 
-            impl_->doDraw(dirty_rect);
+            if (buffer_->getBackBufferCount() > 1) {
+                dirty_rect.add(prev_dirty_region_.rect0);
+                dirty_rect.add(prev_dirty_region_.rect1);
+
+                impl_->doDraw(dirty_rect);
+
+                prev_dirty_region_ = dirty_rect;
+            } else {
+                impl_->doDraw(dirty_rect);
+            }
         }, SCHEDULE_RENDER);
     }
 

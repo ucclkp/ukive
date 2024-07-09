@@ -39,37 +39,9 @@ namespace win {
         auto device =
             Application::getGraphicDeviceManager()->getGPUDevice();
 
-        auto res_mgr = Application::getResourceManager();
-        auto shader_dir = res_mgr->getResRootPath() / u"shaders";
-
-        std::string vs_bc;
-        res_mgr->getFileData(shader_dir / u"image_effect_vs.cso", &vs_bc);
-        auto vs_ret = device->createVertexShader(vs_bc.data(), vs_bc.size());
-        if (!vs_ret) {
-            LOG(Log::WARNING) << "Failed to create vertex shader: " << vs_ret.code.raw_code();
+        if (!setVertexShader(u"image_effect_common_vs.cso")) {
             return false;
         }
-        vs_ = vs_ret;
-
-        using GILD = GPUInputLayout::Desc;
-        GILD layout[1];
-        layout[0] = GILD("POSITION", GPUDataFormat::R32G32B32_FLOAT, 0, 0, false);
-        auto il_ret = device->createInputLayout(layout, ARRAYSIZE(layout), vs_bc.data(), vs_bc.size());
-        if (!il_ret) {
-            LOG(Log::WARNING) << "Failed to create input layout: " << il_ret.code.raw_code();
-            return false;
-        }
-        input_layout_ = il_ret;
-
-        // 像素着色器
-        std::string ps_bc;
-        res_mgr->getFileData(shader_dir / u"image_effect_ps.cso", &ps_bc);
-        auto ps_ret = device->createPixelShader(ps_bc.data(), ps_bc.size());
-        if (!ps_ret) {
-            LOG(Log::WARNING) << "Failed to create pixel shader: " << ps_ret.code.raw_code();
-            return false;
-        }
-        ps_ = ps_ret;
 
         // 常量缓存
         GPUBuffer::Desc cb_desc;
@@ -83,7 +55,7 @@ namespace win {
             LOG(Log::WARNING) << "Failed to create const buffer: " << cb_ret.code.raw_code();
             return false;
         }
-        const_buffer_ = cb_ret;
+        vconst_buffer_ = cb_ret;
 
         // 设置光栅化描述，指定多边形如何被渲染.
         GPURasterizerState::Desc ra_desc;
@@ -111,7 +83,8 @@ namespace win {
         vs_.reset();
         input_layout_.reset();
         ps_.reset();
-        const_buffer_.reset();
+        vconst_buffer_.reset();
+        pconst_buffer_.reset();
         rasterizer_state_.reset();
 
         org_srv_.reset();
@@ -166,19 +139,15 @@ namespace win {
         return true;
     }
 
-    bool ImageEffectGPU::setSize(int width, int height, bool hdr) {
-        if (width_ == width && height_ == height && is_hdr_enabled_ == hdr) {
+    bool ImageEffectGPU::setSize(int width, int height, GPUDataFormat format) {
+        if (width_ == width && height_ == height && format_ == format) {
             return true;
         }
 
         auto device = Application::getGraphicDeviceManager()->getGPUDevice();
 
-        width_ = width;
-        height_ = height;
-        is_hdr_enabled_ = hdr;
-
-        viewport_.width = float(width_);
-        viewport_.height = float(height_);
+        viewport_.width = float(width);
+        viewport_.height = float(height);
         viewport_.min_depth = 0.0f;
         viewport_.max_depth = 1.0f;
         viewport_.x = 0;
@@ -233,8 +202,8 @@ namespace win {
         }
         index_buffer_ = ib_ret;
 
-        float pos_x = width_ / 2.f;
-        float pos_y = height_ / 2.f;
+        float pos_x = width / 2.f;
+        float pos_y = height / 2.f;
 
         // 摄像机位置。
         auto pos = utl::pt3f{ pos_x, pos_y, -2 };
@@ -245,7 +214,7 @@ namespace win {
 
         world_matrix_.identity();
         view_matrix_ = utl::math::camera4x4(pos, pos - look_at, up);
-        ortho_matrix_ = utl::math::orthoProj4x4<float>(-width_ / 2.f, width_ / 2.f, -height_ / 2.f, height_ / 2.f, 1, 2);
+        ortho_matrix_ = utl::math::orthoProj4x4<float>(-width / 2.f, width / 2.f, -height / 2.f, height / 2.f, 1, 2);
         utl::mat4f adj{
             1, 0, 0, 0,
             0, 1, 0, 0,
@@ -255,9 +224,14 @@ namespace win {
 
         wvo_matrix_ = ortho_matrix_ * view_matrix_ * world_matrix_;
 
-        if (!createTexture(target_tex2d_, target_rtv_, target_srv_)) {
+        width_ = width;
+        height_ = height;
+        format_ = format;
+
+        if (!createTexture(format, target_tex2d_, target_rtv_, target_srv_)) {
             return false;
         }
+
         return true;
     }
 
@@ -286,14 +260,26 @@ namespace win {
         // VS ConstBuffer
         {
             auto data = context->lock(
-                const_buffer_.get(), GPUContext::LOCK_WRITE, nullptr);
+                vconst_buffer_.get(), GPUContext::LOCK_WRITE, nullptr);
             if (data) {
                 static_cast<ConstBuffer*>(data)->wvo = wvo_matrix_;
-                context->unlock(const_buffer_.get());
+                context->unlock(vconst_buffer_.get());
             }
+            context->setVConstantBuffers(0, 1, &vconst_buffer_);
         }
 
-        context->setVConstantBuffers(0, 1, &const_buffer_);
+        // PS ConstBuffer
+        if (pconst_buffer_ && param_update_handler_) {
+            auto data = context->lock(
+                pconst_buffer_.get(), GPUContext::LOCK_WRITE, nullptr);
+            if (data) {
+                if (param_update_handler_) {
+                    param_update_handler_(data);
+                }
+                context->unlock(pconst_buffer_.get());
+            }
+            context->setPConstantBuffers(0, 1, &pconst_buffer_);
+        }
 
         // Render
         FLOAT transparent[4] = { 0, 0, 0, 0 };
@@ -312,25 +298,7 @@ namespace win {
         }
 
         auto texture = static_cast<const OffscreenBufferWin*>(content)->getTexture();
-
-        auto& desc = texture->getDesc();
-        view_width_ = desc.width;
-        view_height_ = desc.height;
-
-        int width = view_width_;
-        int height = view_height_;
-        cache_.reset();
-
-        auto ret = texture->createSRV();
-        if (ret.raw_code() != 0) {
-            LOG(Log::WARNING) << "Failed to create SRV: " << ret.raw_code();
-            return false;
-        }
-        org_srv_ = texture->srv();
-
-        return setSize(
-            width, height,
-            content->getImageOptions().pixel_format == ImagePixelFormat::HDR);
+        return setContent(texture);
     }
 
     bool ImageEffectGPU::setContent(const GPtr<GPUTexture>& texture) {
@@ -353,25 +321,99 @@ namespace win {
         }
 
         org_srv_ = texture->srv();
-        return setSize(width, height, false);
+        return setSize(width, height, desc.format);
     }
 
     GPtr<ImageFrame> ImageEffectGPU::getOutput() const {
         return cache_;
     }
 
+    bool ImageEffectGPU::setVertexShader(const std::u16string& name) {
+        auto device =
+            Application::getGraphicDeviceManager()->getGPUDevice();
+
+        auto res_mgr = Application::getResourceManager();
+        auto shader_dir = res_mgr->getResRootPath() / u"shaders";
+
+        std::string vs_bc;
+        res_mgr->getFileData(shader_dir / name, &vs_bc);
+        auto vs_ret = device->createVertexShader(vs_bc.data(), vs_bc.size());
+        if (!vs_ret) {
+            LOG(Log::WARNING) << "Failed to create vertex shader: " << vs_ret.code.raw_code();
+            return false;
+        }
+        vs_ = vs_ret;
+
+        using GILD = GPUInputLayout::Desc;
+        GILD layout[1];
+        layout[0] = GILD("POSITION", GPUDataFormat::R32G32B32_FLOAT, 0, 0, false);
+        auto il_ret = device->createInputLayout(layout, ARRAYSIZE(layout), vs_bc.data(), vs_bc.size());
+        if (!il_ret) {
+            LOG(Log::WARNING) << "Failed to create input layout: " << il_ret.code.raw_code();
+            return false;
+        }
+        input_layout_ = il_ret;
+        return true;
+    }
+
+    bool ImageEffectGPU::setPixelShader(const std::u16string& name) {
+        auto device =
+            Application::getGraphicDeviceManager()->getGPUDevice();
+
+        auto res_mgr = Application::getResourceManager();
+        auto shader_dir = res_mgr->getResRootPath() / u"shaders";
+
+        std::string ps_bc;
+        res_mgr->getFileData(shader_dir / name, &ps_bc);
+        auto ps_ret = device->createPixelShader(ps_bc.data(), ps_bc.size());
+        if (!ps_ret) {
+            LOG(Log::WARNING) << "Failed to create pixel shader: " << ps_ret.code.raw_code();
+            return false;
+        }
+        ps_ = ps_ret;
+        return true;
+    }
+
+    bool ImageEffectGPU::setParameterSize(uint32_t size) {
+        if (pconst_buffer_ &&
+            pconst_buffer_->getDesc().byte_width == size)
+        {
+            return true;
+        }
+
+        auto device =
+            Application::getGraphicDeviceManager()->getGPUDevice();
+
+        GPUBuffer::Desc cb_desc;
+        cb_desc.is_dynamic = true;
+        cb_desc.byte_width = size;
+        cb_desc.res_type = GPUBuffer::RES_CONSTANT_BUFFER;
+        cb_desc.cpu_access_flag = GPUBuffer::CPU_ACCESS_WRITE;
+        cb_desc.struct_byte_stride = 0;
+        auto cb_ret = device->createBuffer(cb_desc, nullptr);
+        if (!cb_ret) {
+            LOG(Log::WARNING) << "Failed to create p const buffer: " << cb_ret.code.raw_code();
+            return false;
+        }
+        pconst_buffer_ = cb_ret;
+        return true;
+    }
+
+    void ImageEffectGPU::setParameterUpdateHandler(const ParameterUpdateHandler& h) {
+        param_update_handler_ = h;
+    }
+
+    bool ImageEffectGPU::updateParameters() {
+        cache_.reset();
+        return true;
+    }
+
     bool ImageEffectGPU::createTexture(
+        GPUDataFormat format,
         GPtr<GPUTexture>& tex,
         GPtr<GPURenderTarget>& rtv,
         GPtr<GPUShaderResource>& srv)
     {
-        GPUDataFormat format;
-        if (is_hdr_enabled_) {
-            format = GPUDataFormat::R16G16B16A16_FLOAT;
-        } else {
-            format = GPUDataFormat::B8G8R8A8_UNORM;
-        }
-
         tex = GPUTexture::createShaderTex2D(width_, height_, format, true);
         if (!tex) {
             return false;

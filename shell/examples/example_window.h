@@ -10,6 +10,10 @@
 #include "ukive/window/window.h"
 
 
+namespace ukive {
+    class TabView;
+}
+
 namespace shell {
 
     class ExampleListSource;
@@ -21,13 +25,17 @@ namespace shell {
         ExampleWindow();
         ~ExampleWindow();
 
+    protected:
         // ukive::Window
         void onCreated() override;
         void onDestroy() override;
         bool onGetWindowIconName(std::u16string* icon_name, std::u16string* small_icon_name) const override;
+        bool onInputEvent(ukive::InputEvent* e) override;
 
     private:
         void inflateTabView();
+
+        ukive::TabView* tab_view_ = nullptr;
     };
 
 }

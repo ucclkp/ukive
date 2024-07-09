@@ -34,6 +34,8 @@ namespace ukive {
         size_t addPage(size_t index, Page* p, std::u16string title);
         void removePage(size_t index);
         size_t getPageCount() const;
+        size_t getSelectedPageIndex() const;
+        Page* getSelectedPage() const;
 
     private:
         void addViewByPageId(View* v, size_t page_id);

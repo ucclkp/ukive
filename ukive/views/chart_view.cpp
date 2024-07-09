@@ -29,7 +29,7 @@ namespace ukive {
     void ChartView::onDraw(Canvas* canvas) {
         View::onDraw(canvas);
 
-        int node_radius = int(std::round(getContext().dp2px(3)));
+        int node_radius = (int)std::round(getContext().dp2px(3));
         auto bounds = getContentBounds();
         auto width = bounds.width() - node_radius * 2;
         auto height = bounds.height() - node_radius * 2;
@@ -73,7 +73,7 @@ namespace ukive {
             }
 
             if (!d.single_point) {
-                prev.set(vx, vy);
+                prev = { vx, vy };
                 has_prev = true;
             }
         }

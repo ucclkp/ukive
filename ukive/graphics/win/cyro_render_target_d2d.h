@@ -78,7 +78,8 @@ namespace win {
         void drawEllipse(const PointF& c, float rx, float ry, const Paint& paint) override;
         void drawPath(const Path* path, const Paint& paint) override;
         void drawImage(
-            const RectF& src, const RectF& dst, float opacity, ImageFrame* img) override;
+            const RectF& src, const RectF& dst,
+            float opacity, ImageFrame* img, bool filter) override;
 
         void fillOpacityMask(
             float width, float height, ImageFrame* mask, ImageFrame* content) override;

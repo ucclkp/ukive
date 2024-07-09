@@ -42,6 +42,8 @@ namespace win {
         const NativeRT* getNativeRT() const override;
         const ImageOptions& getImageOptions() const override;
 
+        uint32_t getBackBufferCount() const override;
+
     private:
         bool recreate();
         bool createSoftwareBRT();

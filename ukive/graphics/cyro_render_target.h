@@ -87,7 +87,8 @@ namespace ukive {
             const PointF& c, float rx, float ry, const Paint& paint) = 0;
         virtual void drawPath(const Path* path, const Paint& paint) = 0;
         virtual void drawImage(
-            const RectF& src, const RectF& dst, float opacity, ImageFrame* img) = 0;
+            const RectF& src, const RectF& dst,
+            float opacity, ImageFrame* img, bool filter) = 0;
 
         virtual void fillOpacityMask(
             float width, float height, ImageFrame* mask, ImageFrame* content) = 0;

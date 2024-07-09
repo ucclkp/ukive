@@ -48,10 +48,10 @@
 namespace {
 
     void fillChartView1(ukive::ChartView* v) {
-        /*chart_view->addData(50, 32);
-        chart_view->addData(60, 2);
-        chart_view->addData(70, -897);
-        chart_view->addData(80, 0);*/
+        v->addData(50, 32);
+        v->addData(60, 2);
+        v->addData(70, -897);
+        v->addData(80, 0);
     }
 
     void fillChartView2(ukive::ChartView* v) {
@@ -192,14 +192,15 @@ namespace shell {
 
         auto chart_view = findView<ukive::ChartView>(v, Res::Id::cv_data_chart);
         chart_view->setBackground(new ukive::Element(ukive::Color::Grey100));
-        chart_view->setVisibility(ukive::View::VANISHED);
+        //chart_view->setVisibility(ukive::View::VANISHED);
 
         //fillChartView1(chart_view);
         //fillChartView2(chart_view);
-        //fillChartView3(chart_view);
-        fillChartView4(chart_view);
+        fillChartView3(chart_view);
+        //fillChartView4(chart_view);
 
         seek_bar_ = findView<ukive::SeekBar>(Res::Id::sb_misc_anim_test);
+        seek_bar_->setRange(10, 100);
         //seek_bar_->setVertical(true);
         //seek_bar_->setLayoutSize(ukive::View::LS_AUTO, c.dp2pxi(200));
 
@@ -301,7 +302,11 @@ namespace shell {
 
     void ExampleMiscPage::onClick(ukive::View* v) {
         if (test_button_ == v) {
-            //ukive::SysMessageDialog::show(getWindow(), u"Title", u"Text", 0);
+            //ukive::SysMessageDialog::show(
+            //    getWindow(),
+            //    u"Title",
+            //    u"Text",
+            //    ukive::SMDF_BTN_YES_CANCEL | ukive::SMDF_ICO_ERRO);
             //test_button_->setEnabled(false);
             if (director_.isRunning()) {
                 director_.stop();

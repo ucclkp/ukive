@@ -40,7 +40,7 @@ namespace win {
             const utl::win::ComPtr<IWICImagingFactory>& factory,
             const utl::win::ComPtr<IWICBitmap>& bitmap);
 
-        bool createIfNecessary();
+        int createIfNecessary();
 
         void setDpi(float dpi_x, float dpi_y) override;
         void getDpi(float* dpi_x, float* dpi_y) const override;

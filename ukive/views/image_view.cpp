@@ -21,7 +21,7 @@ namespace ukive {
 
     ImageView::ImageView(Context c, AttrsRef attrs)
         : View(c, attrs),
-          scale_type_(FIT_ALWAYS) {}
+          scale_type_(ST_FIT_ALWAYS) {}
 
     ImageView::~ImageView() {}
 
@@ -87,7 +87,7 @@ namespace ukive {
     void ImageView::onDraw(Canvas* canvas) {
         View::onDraw(canvas);
 
-        if (scale_type_ == MATRIX) {
+        if (scale_type_ == ST_MATRIX) {
             canvas->save();
             canvas->concat(matrix_);
 
@@ -135,6 +135,7 @@ namespace ukive {
         if (img) {
             img_element_.reset(new ImageElement(img));
             img_element_->setOpacity(opacity_);
+            img_element_->setFilter(need_filter_);
             auto b = getContentBounds();
             setImageBounds(b.width(), b.height());
         } else {
@@ -158,25 +159,45 @@ namespace ukive {
         }
     }
 
+    void ImageView::setImageFilter(bool filter) {
+        need_filter_ = filter;
+        if (img_element_) {
+            img_element_->setFilter(need_filter_);
+        }
+    }
+
     void ImageView::setImageBounds(int width, int height) {
         if (!img_element_ || width <= 0 || height <= 0) {
             return;
         }
 
         switch (scale_type_) {
-        case FULL:
+        case ST_NONE:
+            img_element_->setBounds(
+                0, 0,
+                img_element_->getContentWidth(),
+                img_element_->getContentHeight());
+            break;
+
+        case ST_FULL:
             img_element_->setBounds(0, 0, width, height);
             break;
 
-        case FIT_ALWAYS:
-            fitImageBounds(width, height, true);
+        case ST_FIT_ALWAYS:
+        {
+            auto bounds = fitImageBounds(width, height, true);
+            img_element_->setBounds((Rect)bounds);
             break;
+        }
 
-        case FIT_WHEN_LARGE:
-            fitImageBounds(width, height, false);
+        case ST_FIT_WHEN_LARGE:
+        {
+            auto bounds = fitImageBounds(width, height, false);
+            img_element_->setBounds((Rect)bounds);
             break;
+        }
 
-        case MATRIX:
+        case ST_MATRIX:
         default:
             img_element_->setBounds(
                 0, 0,
@@ -186,11 +207,11 @@ namespace ukive {
         }
     }
 
-    void ImageView::fitImageBounds(int width, int height, bool always) {
-        int img_width = img_element_->getContentWidth();
-        int img_height = img_element_->getContentHeight();
+    RectF ImageView::fitImageBounds(int width, int height, bool always) const {
+        float img_width = img_element_->getContentWidth();
+        float img_height = img_element_->getContentHeight();
         if (img_width <= 0 || img_height <= 0) {
-            return;
+            return {};
         }
 
         if (always || (img_width > width || img_height > height)) {
@@ -198,14 +219,14 @@ namespace ukive {
                 float(width) / img_width,
                 float(height) / img_height);
 
-            img_width = int(img_width * scale);
-            img_height = int(img_height * scale);
+            img_width = img_width * scale;
+            img_height = img_height * scale;
         }
 
-        int img_x = (width - img_width) / 2;
-        int img_y = (height - img_height) / 2;
+        auto img_x = (width - img_width) / 2.f;
+        auto img_y = (height - img_height) / 2.f;
 
-        img_element_->setBounds(
+        return RectF(
             img_x, img_y,
             img_width, img_height);
     }
@@ -225,8 +246,56 @@ namespace ukive {
         return img_element_->getImage();
     }
 
+    Rect ImageView::getImageBounds() const {
+        if (!img_element_) {
+            return {};
+        }
+        return img_element_->getBounds();
+    }
+
     float ImageView::GetImageOpacity() const {
         return opacity_;
+    }
+
+    RectF ImageView::calculateImageBounds() const {
+        RectF r;
+        int width = getContentBounds().width();
+        int height = getContentBounds().height();
+
+        switch (scale_type_) {
+        case ST_NONE:
+            r.xywh(
+                0, 0,
+                img_element_->getContentWidth(),
+                img_element_->getContentHeight());
+            break;
+
+        case ST_FULL:
+            r.xywh(0, 0, width, height);
+            break;
+
+        case ST_FIT_ALWAYS:
+        {
+            r = fitImageBounds(width, height, true);
+            break;
+        }
+
+        case ST_FIT_WHEN_LARGE:
+        {
+            r = fitImageBounds(width, height, false);
+            break;
+        }
+
+        case ST_MATRIX:
+        default:
+            r.xywh(
+                0, 0,
+                img_element_->getContentWidth(),
+                img_element_->getContentHeight());
+            break;
+        }
+
+        return r;
     }
 
     void ImageView::onContextChanged(Context::Type type, const Context& context) {

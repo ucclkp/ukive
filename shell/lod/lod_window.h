@@ -36,8 +36,8 @@ namespace shell {
 
         void onClick(ukive::View* v) override;
 
-        void onSeekValueChanged(ukive::SeekBar* seekBar, float value) override;
-        void onSeekIntegerValueChanged(ukive::SeekBar* seekBar, int value) override;
+        void onSeekValueChanged(ukive::SeekBar* seek_bar, double value) override;
+        void onSeekIntegerValueChanged(ukive::SeekBar* seek_bar, int value) override;
 
         void onRender();
 

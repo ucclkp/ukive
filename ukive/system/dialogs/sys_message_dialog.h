@@ -14,13 +14,24 @@ namespace ukive {
 
     class Window;
 
+    enum SysMessageDialogFlags {
+        SMDF_BTN_YES = 0u,
+        SMDF_BTN_YES_CANCEL = 1u,
+        SMDF_BTN_YES_NO_CANCEL = 2u,
+        SMDF_BTN_RETRY_CANCEL = 3u,
+
+        SMDF_ICO_INFO = 1u << 8u,
+        SMDF_ICO_WARN = 2u << 8u,
+        SMDF_ICO_ERRO = 3u << 8u,
+    };
+
     class SysMessageDialog {
     public:
         static int show(
             Window* parent,
             const std::u16string_view& title,
             const std::u16string_view& text,
-            int flags);
+            unsigned int flags);
     };
 
 }

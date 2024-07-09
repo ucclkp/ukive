@@ -44,6 +44,7 @@ namespace ukive {
         virtual Rect getPixelWorkArea() const = 0;
         virtual void getUserScale(float* sx, float* sy) const = 0;
         virtual uint32_t getRefreshRate() const = 0;
+        virtual uint32_t getSDRWhiteLevel() const = 0;
     };
 
 }

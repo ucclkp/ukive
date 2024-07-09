@@ -586,6 +586,13 @@ namespace win {
             WICPixelFormatGUID sf;
             frame_decoder->GetPixelFormat(&sf);
 
+            //std::wstring dmp_md;
+            //utl::win::ComPtr<IWICMetadataQueryReader> reader;
+            //hr = decoder->GetMetadataQueryReader(&reader);
+            //if (SUCCEEDED(hr)) {
+            //    dumpMetadata(reader.get(), &dmp_md);
+            //}
+
             //exploreColorProfile(frame_decoder.get());
 
             utl::win::ComPtr<IWICBitmapSource> source;
@@ -821,6 +828,150 @@ namespace win {
         PropVariantClear(&prop);
         return false;
 
+    }
+
+    bool LcImageFactoryWin::dumpMetadata(
+        IWICMetadataQueryReader* reader, std::wstring* out)
+    {
+        utl::win::ComPtr<IEnumString> enumerator;
+        HRESULT hr = reader->GetEnumerator(&enumerator);
+        if (FAILED(hr)) {
+            return false;
+        }
+
+        std::wostringstream ss;
+
+        for (;;) {
+            LPOLESTR _name;
+            hr = enumerator->Next(1, &_name, nullptr);
+            if (FAILED(hr)) {
+                break;
+            } else if (hr == S_FALSE) {
+                break;
+            }
+
+            std::wstring name(_name);
+            ::CoTaskMemFree(_name);
+
+            PROPVARIANT prop;
+            ::PropVariantInit(&prop);
+
+            hr = reader->GetMetadataByName(name.c_str(), &prop);
+            if (FAILED(hr)) {
+                ss << name << ": [FAILED] " << hr << "\n";
+                continue;
+            }
+
+            switch (prop.vt) {
+            case VT_EMPTY: ss << name << ": [EMPTY]\n"; break;
+            case VT_NULL:  ss << name << ": [NULL]\n"; break;
+            case VT_I2:    ss << name << ": " << prop.iVal << "\n"; break;
+            case VT_I4:    ss << name << ": " << prop.lVal << "\n"; break;
+            case VT_R4:    ss << name << ": " << prop.fltVal << "\n"; break;
+            case VT_R8:    ss << name << ": " << prop.dblVal << "\n"; break;
+            case VT_CY:    ss << name << ": " << prop.cyVal.int64 << "\n"; break;
+            case VT_DATE:  ss << name << ": " << prop.date << "\n"; break;
+            case VT_BSTR:  ss << name << ": " << prop.bstrVal << "\n"; break;
+            case VT_DISPATCH: ss << name << ": [DISPATCH]\n"; break;
+            case VT_ERROR: ss << name << ": " << prop.scode << "\n"; break;
+            case VT_BOOL:  ss << name << ": " << (prop.boolVal ? "true" : "false") << "\n"; break;
+            case VT_VARIANT: ss << name << ": [VARIANT]\n"; break;
+            case VT_UNKNOWN: ss << name << ": [UNKNOWN]\n"; break;
+            case VT_DECIMAL: ss << name << ": [DECIMAL]\n"; break;
+            case VT_I1:    ss << name << ": " << prop.cVal << "\n"; break;
+            case VT_UI1:   ss << name << ": " << prop.bVal << "\n"; break;
+            case VT_UI2:   ss << name << ": " << prop.uiVal << "\n"; break;
+            case VT_UI4:   ss << name << ": " << prop.ulVal << "\n"; break;
+            case VT_I8:    ss << name << ": " << prop.hVal.QuadPart << "\n"; break;
+            case VT_UI8:   ss << name << ": " << prop.uhVal.QuadPart << "\n"; break;
+            case VT_INT:   ss << name << ": " << prop.intVal << "\n"; break;
+            case VT_UINT:  ss << name << ": " << prop.uintVal << "\n"; break;
+            case VT_VOID:  ss << name << ": [VOID]\n"; break;
+            case VT_HRESULT: ss << name << ": " << prop.lVal << "\n"; break;
+            case VT_PTR:   ss << name << ": [PTR]\n"; break;
+            case VT_SAFEARRAY: ss << name << ": [SAFEARRAY]\n"; break;
+            case VT_CARRAY: ss << name << ": [CARRAY]\n"; break;
+            case VT_USERDEFINED: ss << name << ": [USERDEFINED]\n"; break;
+            case VT_LPSTR:    ss << name << ": " << prop.pszVal << "\n"; break;
+            case VT_LPWSTR:   ss << name << ": " << prop.pwszVal << "\n"; break;
+            case VT_RECORD:   ss << name << ": [RECORD]\n"; break;
+            case VT_INT_PTR:  ss << name << ": p:" << prop.intVal << "\n"; break;
+            case VT_UINT_PTR: ss << name << ": p:" << prop.uintVal << "\n"; break;
+            case VT_FILETIME: ss << name << ": [FILETIME]\n"; break;
+            case VT_BLOB: ss << name << ": [BLOB]\n"; break;
+            case VT_STREAM: ss << name << ": [STREAM]\n"; break;
+            case VT_STORAGE: ss << name << ": [STORAGE]\n"; break;
+            case VT_STREAMED_OBJECT: ss << name << ": [STREAMED_OBJECT]\n"; break;
+            case VT_STORED_OBJECT: ss << name << ": [STORED_OBJECT]\n"; break;
+            case VT_BLOB_OBJECT: ss << name << ": [BLOB_OBJECT]\n"; break;
+            case VT_CF: ss << name << ": [CF]\n"; break;
+            case VT_CLSID: ss << name << ": [CLSID]\n"; break;
+            case VT_VERSIONED_STREAM: ss << name << ": [VERSIONED_STREAM]\n"; break;
+            case VT_BSTR_BLOB: ss << name << ": [BSTR_BLOB]\n"; break;
+            case VT_VECTOR | VT_I1: {
+                ss << name << ": ";
+                for (ULONG i = 0; i < prop.cac.cElems; ++i) {
+                    ss << prop.cac.pElems[i] << " ";
+                }
+                ss << "\n";
+            } break;
+            case VT_VECTOR | VT_I2: {
+                ss << name << ": ";
+                for (ULONG i = 0; i < prop.cai.cElems; ++i) {
+                    ss << prop.cai.pElems[i] << " ";
+                }
+                ss << "\n";
+            } break;
+            case VT_VECTOR | VT_UI1: {
+                ss << name << ": ";
+                for (ULONG i = 0; i < prop.caub.cElems; ++i) {
+                    ss << prop.caub.pElems[i] << " ";
+                }
+                ss << "\n";
+            } break;
+            case VT_VECTOR | VT_UI2: {
+                ss << name << ": ";
+                for (ULONG i = 0; i < prop.caui.cElems; ++i) {
+                    ss << prop.caui.pElems[i] << " ";
+                }
+                ss << "\n";
+            } break;
+            case VT_VECTOR | VT_UI4: {
+                ss << name << ": ";
+                for (ULONG i = 0; i < prop.caul.cElems; ++i) {
+                    ss << prop.caul.pElems[i] << " ";
+                }
+                ss << "\n";
+            } break;
+            case VT_VECTOR | VT_UI8: {
+                ss << name << ": ";
+                for (ULONG i = 0; i < prop.cauh.cElems; ++i) {
+                    ss << prop.cauh.pElems[i].QuadPart << " ";
+                }
+                ss << "\n";
+            } break;
+            case VT_VECTOR | VT_BOOL: {
+                ss << name << ": ";
+                for (ULONG i = 0; i < prop.cabool.cElems; ++i) {
+                    ss << (prop.cabool.pElems[i] ? "true" : "false") << " ";
+                }
+                ss << "\n";
+            } break;
+            case VT_VECTOR | VT_LPWSTR: {
+                ss << name << ": ";
+                for (ULONG i = 0; i < prop.calpwstr.cElems; ++i) {
+                    ss << prop.calpwstr.pElems[i] << " ";
+                }
+                ss << "\n";
+            } break;
+            default: ss << name << ": [?]\n"; break;
+            }
+
+            ::PropVariantClear(&prop);
+        }
+
+        *out = ss.str();
+        return true;
     }
 
 }

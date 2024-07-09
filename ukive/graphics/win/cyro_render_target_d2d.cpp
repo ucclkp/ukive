@@ -64,6 +64,9 @@ namespace ukive {
             color.b *= wp_scale;
 
             *c = color;
+        } else if (options.pixel_format == ImagePixelFormat::R16G16B16A16_FLOAT) {
+            *c = D2D1ConvertColorSpace(
+                D2D1_COLOR_SPACE_SRGB, D2D1_COLOR_SPACE_SCRGB, c);
         }
     }
 
@@ -531,6 +534,7 @@ namespace win {
             bitmap_brush_->SetBitmap(CIF_TO_D2D_BMP(paint.getImage()));
             bitmap_brush_->SetExtendModeX(convExtendMode(paint.getImageExtendModeX()));
             bitmap_brush_->SetExtendModeY(convExtendMode(paint.getImageExtendModeY()));
+            bitmap_brush_->SetInterpolationMode(D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
 
             rt_->FillRectangle(d2d_rect, bitmap_brush_.get());
             break;
@@ -673,7 +677,8 @@ namespace win {
     }
 
     void CyroRenderTargetD2D::drawImage(
-        const RectF& src, const RectF& dst, float opacity, ImageFrame* img)
+        const RectF& src, const RectF& dst,
+        float opacity, ImageFrame* img, bool filter)
     {
         if (!img) {
             return;
@@ -691,7 +696,7 @@ namespace win {
 
         rt_->DrawBitmap(
             CIF_TO_D2D_BMP(img), d2d_dst_rect, opacity,
-            D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+            filter ? D2D1_BITMAP_INTERPOLATION_MODE_LINEAR : D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR,
             d2d_src_rect);
     }
 

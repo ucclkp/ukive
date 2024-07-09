@@ -241,22 +241,18 @@ namespace win {
         return true;
     }
 
-    bool ShadowEffectGPU::setSize(int width, int height, bool hdr) {
+    bool ShadowEffectGPU::setSize(int width, int height, GPUDataFormat format) {
         if (width_ == width &&
             height_ == height &&
-            is_hdr_enabled_ == hdr)
+            format_ == format)
         {
             return true;
         }
 
         auto device = Application::getGraphicDeviceManager()->getGPUDevice();
 
-        width_ = width;
-        height_ = height;
-        is_hdr_enabled_ = hdr;
-
-        viewport_.width = float(width_);
-        viewport_.height = float(height_);
+        viewport_.width = float(width);
+        viewport_.height = float(height);
         viewport_.min_depth = 0.0f;
         viewport_.max_depth = 1.0f;
         viewport_.x = 0;
@@ -311,8 +307,8 @@ namespace win {
         }
         index_buffer_ = ib_ret;
 
-        float pos_x = width_ / 2.f;
-        float pos_y = height_ / 2.f;
+        float pos_x = width / 2.f;
+        float pos_y = height / 2.f;
 
         // 摄像机位置。
         auto pos = utl::pt3f{ pos_x, pos_y, -2 };
@@ -323,7 +319,7 @@ namespace win {
 
         world_matrix_.identity();
         view_matrix_ = utl::math::camera4x4(pos, pos - look_at, up);
-        ortho_matrix_ = utl::math::orthoProj4x4<float>(-width_ / 2.f, width_ / 2.f, -height_ / 2.f, height_ / 2.f, 1, 2);
+        ortho_matrix_ = utl::math::orthoProj4x4<float>(-width / 2.f, width / 2.f, -height / 2.f, height / 2.f, 1, 2);
         utl::mat4f adj{
             1, 0, 0, 0,
             0, 1, 0, 0,
@@ -333,10 +329,14 @@ namespace win {
 
         wvo_matrix_ = ortho_matrix_ * view_matrix_ * world_matrix_;
 
-        if (!createTexture(shadow1_tex2d_, shadow1_rtv_, shadow1_srv_)) {
+        width_ = width;
+        height_ = height;
+        format_ = format;
+
+        if (!createTexture(format, shadow1_tex2d_, shadow1_rtv_, shadow1_srv_)) {
             return false;
         }
-        if (!createTexture(shadow2_tex2d_, shadow2_rtv_, shadow2_srv_)) {
+        if (!createTexture(format, shadow2_tex2d_, shadow2_rtv_, shadow2_srv_)) {
             return false;
         }
         return true;
@@ -462,9 +462,7 @@ namespace win {
         }
         bg_srv_ = texture->srv();
 
-        return setSize(
-            width, height,
-            content->getImageOptions().pixel_format == ImagePixelFormat::HDR);
+        return setSize(width, height, desc.format);
     }
 
     int ShadowEffectGPU::getRadius() const {
@@ -476,17 +474,11 @@ namespace win {
     }
 
     bool ShadowEffectGPU::createTexture(
+        GPUDataFormat format,
         GPtr<GPUTexture>& tex,
         GPtr<GPURenderTarget>& rtv,
         GPtr<GPUShaderResource>& srv)
     {
-        GPUDataFormat format;
-        if (is_hdr_enabled_) {
-            format = GPUDataFormat::R16G16B16A16_FLOAT;
-        } else {
-            format = GPUDataFormat::B8G8R8A8_UNORM;
-        }
-
         tex = GPUTexture::createShaderTex2D(width_, height_, format, true);
         if (!tex) {
             return false;

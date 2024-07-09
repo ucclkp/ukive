@@ -120,11 +120,15 @@ namespace ukive {
         void fillPath(const Path* path, const Color& color);
         void fillPath(const Path* path, ImageFrame* img);
 
-        void drawImage(ImageFrame* img);
-        void drawImage(float x, float y, ImageFrame* img);
-        void drawImage(float opacity, ImageFrame* img);
-        void drawImage(const RectF& dst, float opacity, ImageFrame* img);
-        void drawImage(const RectF& src, const RectF& dst, float opacity, ImageFrame* img);
+        void drawImage(ImageFrame* img, bool filter = true);
+        void drawImage(float x, float y, ImageFrame* img, bool filter = true);
+        void drawImage(float opacity, ImageFrame* img, bool filter = true);
+        void drawImage(
+            const RectF& dst,
+            float opacity, ImageFrame* img, bool filter = true);
+        void drawImage(
+            const RectF& src, const RectF& dst,
+            float opacity, ImageFrame* img, bool filter = true);
 
         void drawText(
             const std::u16string& text,

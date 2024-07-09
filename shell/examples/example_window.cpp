@@ -47,6 +47,12 @@ namespace shell {
         return false;
     }
 
+    bool ExampleWindow::onInputEvent(ukive::InputEvent* e) {
+        bool ret = Window::onInputEvent(e);
+
+        return ret;
+    }
+
     void ExampleWindow::inflateTabView() {
         setContentView(Res::Layout::example_window_layout_xml);
         getContentView()->setBackground(new ukive::Element(ukive::Color::White));
@@ -55,13 +61,13 @@ namespace shell {
         strip_view->setBackground(new ukive::Element(ukive::Color::White));
         strip_view->setShadowRadius(getContext().dp2pxi(2));
 
-        auto tab_view = findView<ukive::TabView>(Res::Id::tv_example_table);
-        tab_view->setStripView(strip_view);
+        tab_view_ = findView<ukive::TabView>(Res::Id::tv_example_table);
+        tab_view_->setStripView(strip_view);
 
-        tab_view->addPage(new ExampleMiscPage(), u"Misc");
-        tab_view->addPage(new ExampleListPage(), u"ListView");
-        tab_view->addPage(new ExampleTreePage(), u"TreeView");
-        tab_view->addPage(new OperatingListPage(), u"Op ListView");
+        tab_view_->addPage(new ExampleMiscPage(), u"Misc");
+        tab_view_->addPage(new ExampleListPage(), u"ListView");
+        tab_view_->addPage(new ExampleTreePage(), u"TreeView");
+        tab_view_->addPage(new OperatingListPage(), u"Op ListView");
 
         //tab_view->setSelectedPage(3);
     }

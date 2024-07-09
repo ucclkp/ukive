@@ -56,6 +56,8 @@ namespace ukive {
         static WindowBuffer* create(Window* w);
 
         Type getType() const override { return WINDOW; }
+
+        virtual uint32_t getBackBufferCount() const { return 1u; }
     };
 
 

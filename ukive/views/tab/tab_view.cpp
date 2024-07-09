@@ -142,6 +142,17 @@ namespace ukive {
         return pages_.size();
     }
 
+    size_t TabView::getSelectedPageIndex() const {
+        return sel_index_;
+    }
+
+    Page* TabView::getSelectedPage() const {
+        if (sel_index_ >= getPageCount()) {
+            return nullptr;
+        }
+        return pages_[sel_index_];
+    }
+
     void TabView::addViewByPageId(View* v, size_t page_id) {
         for (size_t i = page_id + 1; i < pages_.size(); ++i) {
             auto page = pages_[i];

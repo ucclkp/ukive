@@ -17,14 +17,22 @@ namespace ukive {
 
     class SeekBar : public View, public VSyncable {
     public:
+        enum IncMethod {
+            INC_BY_NONE  = 0u,
+            INC_BY_KEY   = 1u << 0u,
+            INC_BY_WHEEL = 1u << 1u,
+        };
+
         explicit SeekBar(Context c);
         SeekBar(Context c, AttrsRef attrs);
         ~SeekBar();
 
         void setVertical(bool vert);
-        void setMaximum(float maximum);
-        void setProgress(float progress, bool notify = false);
-        float getProgress();
+        void setRange(double minimum, double maximum);
+        void setIncrement(double incre);
+        void setIncrementMethods(unsigned int m);
+        void setProgress(double progress, bool notify = false);
+        double getProgress() const;
 
         void setOnSeekValueChangedListener(OnSeekValueChangedListener* l);
 
@@ -55,7 +63,10 @@ namespace ukive {
         int thumb_min_diameter_;
         int thumb_max_diameter_;
 
-        float maximum_;
+        double minimum_;
+        double maximum_;
+        double increment_;
+        unsigned int inc_methods_;
         float seek_percent_;
         bool is_on_thumb_ = false;
 

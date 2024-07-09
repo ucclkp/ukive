@@ -21,10 +21,11 @@ namespace ukive {
     class ImageView : public View {
     public:
         enum ScaleType {
-            FULL,
-            FIT_ALWAYS,
-            FIT_WHEN_LARGE,
-            MATRIX,
+            ST_NONE,
+            ST_FULL,
+            ST_FIT_ALWAYS,
+            ST_FIT_WHEN_LARGE,
+            ST_MATRIX,
         };
 
         explicit ImageView(Context c);
@@ -41,20 +42,25 @@ namespace ukive {
         void setImage(const GPtr<ImageFrame>& img);
         void setImageName(const std::u16string_view& name);
         void setImageOpacity(float opacity);
+        void setImageFilter(bool filter);
 
         Matrix2x3F getMatrix() const;
         ScaleType getScaleType() const;
         GPtr<ImageFrame> getImage() const;
+        Rect getImageBounds() const;
         float GetImageOpacity() const;
+
+        RectF calculateImageBounds() const;
 
     protected:
         void onContextChanged(Context::Type type, const Context& context) override;
 
     private:
         void setImageBounds(int width, int height);
-        void fitImageBounds(int width, int height, bool always);
+        RectF fitImageBounds(int width, int height, bool always) const;
 
         float opacity_ = 1.f;
+        bool need_filter_ = true;
         Matrix2x3F matrix_;
         ScaleType scale_type_;
         std::unique_ptr<ImageElement> img_element_;

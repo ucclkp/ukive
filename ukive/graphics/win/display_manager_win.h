@@ -22,10 +22,10 @@ namespace win {
     class DisplayManagerWin : public DisplayManager {
     public:
         struct CCDisplayInfo {
-            bool has_source_info;
-            bool has_target_info;
-            bool has_advanced_color_info;
-            bool has_sdr_white_level_info;
+            bool has_source_info = false;
+            bool has_target_info = false;
+            bool has_advanced_color_info = false;
+            bool has_sdr_white_level_info = false;
             DISPLAYCONFIG_SOURCE_DEVICE_NAME source_info;
             DISPLAYCONFIG_TARGET_DEVICE_NAME target_info;
             DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO advanced_color_info;

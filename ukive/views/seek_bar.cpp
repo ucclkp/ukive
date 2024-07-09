@@ -9,6 +9,7 @@
 #include <algorithm>
 
 #include "ukive/event/input_event.h"
+#include "ukive/event/keyboard.h"
 #include "ukive/graphics/canvas.h"
 #include "ukive/window/window.h"
 #include "ukive/animation/interpolator.h"
@@ -30,7 +31,10 @@ namespace ukive {
 
     void SeekBar::initSeekBar()
     {
-        maximum_ = 100.f;
+        minimum_ = 0.0;
+        maximum_ = 100.0;
+        increment_ = 1.0;
+        inc_methods_ = INC_BY_KEY;
         seek_percent_ = 0.f;
         listener_ = nullptr;
 
@@ -67,15 +71,32 @@ namespace ukive {
         requestDraw();
     }
 
-    void SeekBar::setMaximum(float maximum) {
-        if (maximum_ > 0) {
-            maximum_ = maximum;
+    void SeekBar::setRange(double minimum, double maximum) {
+        if (minimum >= maximum) {
+            minimum = maximum;
+        }
+
+        bool changed = minimum_ != minimum || maximum_ != maximum;
+
+        minimum_ = minimum;
+        maximum_ = maximum;
+
+        if (changed) {
+            requestDraw();
         }
     }
 
-    void SeekBar::setProgress(float progress, bool notify) {
-        float prog = (std::min)(maximum_, progress);
-        float percent = prog / maximum_;
+    void SeekBar::setIncrement(double incre) {
+        increment_ = incre;
+    }
+
+    void SeekBar::setIncrementMethods(unsigned int m) {
+        inc_methods_ = m;
+    }
+
+    void SeekBar::setProgress(double progress, bool notify) {
+        auto prog = (std::max)((std::min)(maximum_, progress), minimum_);
+        auto percent = (prog - minimum_) / (maximum_ - minimum_);
         if (percent != seek_percent_) {
             seek_percent_ = percent;
 
@@ -88,8 +109,8 @@ namespace ukive {
         }
     }
 
-    float SeekBar::getProgress() {
-        return maximum_ * seek_percent_;
+    double SeekBar::getProgress() const {
+        return (maximum_ - minimum_) * seek_percent_ + minimum_;
     }
 
     void SeekBar::setOnSeekValueChangedListener(OnSeekValueChangedListener* l) {
@@ -148,8 +169,8 @@ namespace ukive {
         seek_percent_ = (std::min)(1.f, seek_percent_);
 
         if (listener_) {
-            listener_->onSeekValueChanged(this, seek_percent_*maximum_);
-            listener_->onSeekIntegerValueChanged(this, static_cast<int>(seek_percent_*maximum_));
+            listener_->onSeekValueChanged(this, getProgress());
+            listener_->onSeekIntegerValueChanged(this, static_cast<int>(getProgress()));
         }
     }
 
@@ -402,10 +423,39 @@ namespace ukive {
             break;
         }
 
+        case InputEvent::EVM_WHEEL:
+        {
+            if (inc_methods_ & INC_BY_WHEEL) {
+                auto inc = e->getWheelValue() > 0 ? increment_ : -increment_;
+                setProgress(getProgress() + inc, true);
+            }
+            break;
+        }
+
         case InputEvent::EVT_UP:
         {
             result = true;
             startZoomOutAnim();
+            break;
+        }
+
+        case InputEvent::EVK_DOWN:
+        {
+            if (inc_methods_ & INC_BY_KEY) {
+                if (is_vert_) {
+                    if (e->getKeyboardKey() == Keyboard::KEY_UP) {
+                        setProgress(getProgress() - increment_, true);
+                    } else if (e->getKeyboardKey() == Keyboard::KEY_DOWN) {
+                        setProgress(getProgress() + increment_, true);
+                    }
+                } else {
+                    if (e->getKeyboardKey() == Keyboard::KEY_LEFT) {
+                        setProgress(getProgress() - increment_, true);
+                    } else if (e->getKeyboardKey() == Keyboard::KEY_RIGHT) {
+                        setProgress(getProgress() + increment_, true);
+                    }
+                }
+            }
             break;
         }
 

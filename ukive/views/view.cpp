@@ -188,7 +188,7 @@ namespace ukive {
         requestDraw();
 
         for (auto l : status_listeners_) {
-            l->onViewVisibilityChanged(visibility);
+            l->onViewVisibilityChanged(this, visibility);
         }
 
         onVisibilityChanged(visibility);
@@ -211,7 +211,7 @@ namespace ukive {
         requestDraw();
 
         for (auto l : status_listeners_) {
-            l->onViewEnableChanged(enabled);
+            l->onViewEnableChanged(this, enabled);
         }
 
         onEnableChanged(enabled);
@@ -2217,12 +2217,21 @@ namespace ukive {
             should_refresh = fg_element_->setParentFocus(get_focus);
         }
 
+        for (auto l : status_listeners_) {
+            l->onViewFocusChanged(this, get_focus);
+        }
+
         if (should_refresh) {
             requestDraw();
         }
     }
 
     void View::onWindowFocusChanged(bool window_focus) {
+        if (!getWindow()) {
+            // onCreated 中如果出现了焦点切换事件，这里还拿不到窗口。
+            return;
+        }
+
         if (!hasFocus()) {
             ubassert(getWindow()->getKeyboardHolder() != this);
             return;

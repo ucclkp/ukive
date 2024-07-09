@@ -10,6 +10,7 @@
 #include "utils/memory/win/com_ptr.hpp"
 
 #include "ukive/graphics/display.h"
+#include "ukive/graphics/win/display_manager_win.h"
 
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
@@ -43,6 +44,7 @@ namespace win {
         Rect getPixelWorkArea() const override;
         void getUserScale(float* sx, float* sy) const override;
         uint32_t getRefreshRate() const override;
+        uint32_t getSDRWhiteLevel() const override;
 
         bool waitForVSync();
         bool getICMProfilePath(std::wstring* path) const;
@@ -57,6 +59,7 @@ namespace win {
         HMONITOR monitor_;
         DEVMODEW monitor_mode_;
         MONITORINFOEXW monitor_info_;
+        DisplayManagerWin::CCDisplayInfo ccd_info_;
         utl::win::ComPtr<IDXGIOutput> cur_output_;
         utl::win::ComPtr<IDXGIOutput6> cur_output6_;
         utl::win::ComPtr<IDXGIAdapter1> cur_adapter_;

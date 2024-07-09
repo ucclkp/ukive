@@ -68,6 +68,8 @@ namespace win {
 
         bool isSRGBFrame(IWICBitmapFrameDecode* frame);
 
+        bool dumpMetadata(IWICMetadataQueryReader* reader, std::wstring* out);
+
         utl::win::ComPtr<IWICImagingFactory> wic_factory_;
     };
 

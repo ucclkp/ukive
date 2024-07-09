@@ -71,11 +71,12 @@ namespace win {
         };
 
         bool createTexture(
+            GPUDataFormat format,
             GPtr<GPUTexture>& tex,
             GPtr<GPURenderTarget>& rtv,
             GPtr<GPUShaderResource>& srv);
         bool createKernelTexture();
-        bool setSize(int width, int height, bool hdr);
+        bool setSize(int width, int height, GPUDataFormat format);
         void render();
 
         int width_;
@@ -85,7 +86,7 @@ namespace win {
         int radius_;
         float semi_radius_;
         bool is_initialized_ = false;
-        bool is_hdr_enabled_ = false;
+        GPUDataFormat format_ = GPUDataFormat::UNKNOWN;
 
         utl::mat4f wvo_matrix_;
         utl::mat4f world_matrix_;

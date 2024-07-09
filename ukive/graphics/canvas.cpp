@@ -488,7 +488,7 @@ namespace ukive {
         rt_->drawPath(path, paint);
     }
 
-    void Canvas::drawImage(ImageFrame* img) {
+    void Canvas::drawImage(ImageFrame* img, bool filter) {
         if (!img) {
             return;
         }
@@ -496,10 +496,10 @@ namespace ukive {
         auto size = img->getSize();
         RectF src(0.f, 0.f, size.width(), size.height());
 
-        drawImage(src, src, 1.f, img);
+        drawImage(src, src, 1.f, img, filter);
     }
 
-    void Canvas::drawImage(float x, float y, ImageFrame* img) {
+    void Canvas::drawImage(float x, float y, ImageFrame* img, bool filter) {
         if (!img) {
             return;
         }
@@ -508,10 +508,10 @@ namespace ukive {
         RectF src(0.f, 0.f, size.width(), size.height());
         RectF dst(x, y, size.width(), size.height());
 
-        drawImage(src, dst, 1.f, img);
+        drawImage(src, dst, 1.f, img, filter);
     }
 
-    void Canvas::drawImage(float opacity, ImageFrame* img) {
+    void Canvas::drawImage(float opacity, ImageFrame* img, bool filter) {
         if (!img) {
             return;
         }
@@ -519,10 +519,13 @@ namespace ukive {
         auto size = img->getSize();
         RectF src(0.f, 0.f, size.width(), size.height());
 
-        drawImage(src, src, opacity, img);
+        drawImage(src, src, opacity, img, filter);
     }
 
-    void Canvas::drawImage(const RectF& dst, float opacity, ImageFrame* img) {
+    void Canvas::drawImage(
+        const RectF& dst,
+        float opacity, ImageFrame* img, bool filter)
+    {
         if (!img) {
             return;
         }
@@ -530,12 +533,15 @@ namespace ukive {
         auto size = img->getSize();
         RectF src(0.f, 0.f, size.width(), size.height());
 
-        drawImage(src, dst, opacity, img);
+        drawImage(src, dst, opacity, img, filter);
     }
 
-    void Canvas::drawImage(const RectF& src, const RectF& dst, float opacity, ImageFrame* img) {
+    void Canvas::drawImage(
+        const RectF& src, const RectF& dst,
+        float opacity, ImageFrame* img, bool filter)
+    {
         if (rt_ && img) {
-            rt_->drawImage(src, dst, opacity, img);
+            rt_->drawImage(src, dst, opacity, img, filter);
         }
     }
 

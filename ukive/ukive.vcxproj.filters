@@ -724,7 +724,7 @@
     <ClCompile Include="graphics\win\effects\gaussian_blur_effect_dx.cpp">
       <Filter>graphics\win\effects</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\win\gpu\d3d11\gpu_texture_reader.cpp">
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_texture_reader_d3d11.cpp">
       <Filter>graphics\win\gpu\d3d11</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1638,8 +1638,8 @@
     <ClInclude Include="graphics\win\effects\gaussian_blur_effect_dx.h">
       <Filter>graphics\win\effects</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\win\gpu\d3d11\gpu_texture_reader.h">
-      <Filter>graphics\win\gpu\d3d11</Filter>
+    <ClInclude Include="graphics\gpu\gpu_texture_reader.h">
+      <Filter>graphics\gpu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1816,7 +1816,7 @@
     <FxCompile Include="graphics\win\hlsl\image_effect_ps.hlsl">
       <Filter>graphics\win\hlsl</Filter>
     </FxCompile>
-    <FxCompile Include="graphics\win\hlsl\image_effect_vs.hlsl">
+    <FxCompile Include="graphics\win\hlsl\image_effect_common_vs.hlsl">
       <Filter>graphics\win\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="graphics\win\hlsl\model_pixel_shader.hlsl">

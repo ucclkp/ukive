@@ -47,22 +47,25 @@ namespace win {
         LcImageFrameWin::getDpi(&dpi_x_, &dpi_y_);
     }
 
-    bool LcImageFrameWin::createIfNecessary() {
+    int LcImageFrameWin::createIfNecessary() {
         if (native_bitmap_) {
-            return true;
+            return 0;
         }
 
         HRESULT hr = wic_factory_->CreateBitmapFromSource(
             native_src_.get(), WICBitmapCacheOnDemand, &native_bitmap_);
         if (FAILED(hr)) {
             ubassert(false);
-            return false;
+            return (int)hr;
         }
 
         hr = native_bitmap_->SetResolution(dpi_x_, dpi_y_);
-        ubassert(SUCCEEDED(hr));
+        if (FAILED(hr)) {
+            ubassert(false);
+            return (int)hr;
+        }
 
-        return true;
+        return 0;
     }
 
     void LcImageFrameWin::setDpi(float dpi_x, float dpi_y) {
@@ -209,7 +212,7 @@ namespace win {
     }
 
     void* LcImageFrameWin::lockPixels(unsigned int flags, size_t* stride) {
-        if (!createIfNecessary()) {
+        if (createIfNecessary() != 0) {
             return nullptr;
         }
 

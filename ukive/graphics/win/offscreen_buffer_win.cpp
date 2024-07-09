@@ -164,8 +164,8 @@ namespace win {
     bool OffscreenBufferWin::createHardwareBRT(int width, int height) {
         switch (img_options_.dpi_type) {
         case ImageDPIType::SPECIFIED:
-            width = int(std::ceil(width * img_options_.dpi_x / kDefaultDpi));
-            height = int(std::ceil(height * img_options_.dpi_y / kDefaultDpi));
+            width  = (int)std::ceil(width * img_options_.dpi_x / kDefaultDpi);
+            height = (int)std::ceil(height * img_options_.dpi_y / kDefaultDpi);
             break;
         case ImageDPIType::DEFAULT:
         default:
@@ -174,6 +174,8 @@ namespace win {
 
         GPUDataFormat format;
         if (img_options_.pixel_format == ImagePixelFormat::HDR) {
+            format = GPUDataFormat::R16G16B16A16_FLOAT;
+        } else if (img_options_.pixel_format == ImagePixelFormat::R16G16B16A16_FLOAT) {
             format = GPUDataFormat::R16G16B16A16_FLOAT;
         } else {
             format = GPUDataFormat::B8G8R8A8_UNORM;

@@ -127,6 +127,14 @@ namespace win {
         return img_options_;
     }
 
+    uint32_t WindowBufferWin::getBackBufferCount() const {
+        if (img_options_.pixel_format == ImagePixelFormat::HDR) {
+            return 2;
+        } else {
+            return 1;
+        }
+    }
+
     bool WindowBufferWin::recreate() {
         onDestroy();
         return createSwapchainBRT();
@@ -172,6 +180,8 @@ namespace win {
 
         // https://docs.microsoft.com/en-us/windows/win32/direct3darticles/high-dynamic-range
         if (img_options_.pixel_format == ImagePixelFormat::HDR) {
+            desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+        } else if (img_options_.pixel_format == ImagePixelFormat::R16G16B16A16_FLOAT) {
             desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
         } else {
             desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;

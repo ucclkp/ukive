@@ -23,6 +23,7 @@ namespace ukive {
         explicit ImageElement(const GPtr<ImageFrame>& img);
         ~ImageElement() = default;
 
+        void setFilter(bool filter);
         void setOpacity(float opt);
         void setExtendMode(ExtendMode mode);
 
@@ -40,6 +41,7 @@ namespace ukive {
 
     private:
         float opacity_ = 1.f;
+        bool need_filter_ = true;
         ExtendMode mode_ = Clamp;
         GPtr<ImageFrame> image_;
     };

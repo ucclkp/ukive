@@ -134,7 +134,7 @@ namespace shell {
         //c1 seekbar.
         c1_seekbar_ = new ukive::SeekBar(getContext());
         c1_seekbar_->setId(ID_C1_SEEKBAR);
-        c1_seekbar_->setMaximum(60.f);
+        c1_seekbar_->setRange(0, 60);
         c1_seekbar_->setProgress(2.f - 1.f);
         c1_seekbar_->setOnSeekValueChangedListener(this);
         c1_seekbar_->setLayoutSize(ukive::View::LS_FILL, ukive::View::LS_AUTO);
@@ -188,7 +188,7 @@ namespace shell {
         //c2 seekbar.
         c2_seekbar_ = new ukive::SeekBar(getContext());
         c2_seekbar_->setId(ID_C2_SEEKBAR);
-        c2_seekbar_->setMaximum(60.f);
+        c2_seekbar_->setRange(0, 60);
         c2_seekbar_->setProgress(30.f - 1.f);
         c2_seekbar_->setOnSeekValueChangedListener(this);
         c2_seekbar_->setLayoutSize(ukive::View::LS_FILL, ukive::View::LS_AUTO);
@@ -242,7 +242,7 @@ namespace shell {
         //split seekbar.
         split_seekbar_ = new ukive::SeekBar(getContext());
         split_seekbar_->setId(ID_SPLIT_SEEKBAR);
-        split_seekbar_->setMaximum(10.f);
+        split_seekbar_->setRange(0, 10);
         split_seekbar_->setProgress(5.f - 1.f);
         split_seekbar_->setOnSeekValueChangedListener(this);
         split_seekbar_->setLayoutSize(ukive::View::LS_FILL, ukive::View::LS_AUTO);
@@ -365,8 +365,8 @@ namespace shell {
         switch (v->getId()) {
         case ID_SUBMIT_BUTTON:
         {
-            float c1 = c1_seekbar_->getProgress() + 1.f;
-            float c2 = c2_seekbar_->getProgress() + 1.f;
+            float c1 = (float)c1_seekbar_->getProgress() + 1.f;
+            float c2 = (float)c2_seekbar_->getProgress() + 1.f;
             int splitCount = static_cast<int>(split_seekbar_->getProgress()) + 1;
 
             terrain_scene_->recreate(splitCount);
@@ -395,8 +395,8 @@ namespace shell {
         }
     }
 
-    void LodWindow::onSeekValueChanged(ukive::SeekBar *seekBar, float value) {
-        switch (seekBar->getId()) {
+    void LodWindow::onSeekValueChanged(ukive::SeekBar * seek_bar, double value) {
+        switch (seek_bar->getId()) {
         case ID_C1_SEEKBAR:
             c1_value_tv_->setText(utl::usprintf(u"%.2f", 1.f + value));
             break;
@@ -409,8 +409,8 @@ namespace shell {
         }
     }
 
-    void LodWindow::onSeekIntegerValueChanged(ukive::SeekBar *seekBar, int value) {
-        switch (seekBar->getId()) {
+    void LodWindow::onSeekIntegerValueChanged(ukive::SeekBar * seek_bar, int value) {
+        switch (seek_bar->getId()) {
         case ID_SPLIT_SEEKBAR:
             split_value_tv_->setText(utl::itos16(1 + value));
             break;
