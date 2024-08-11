@@ -11,11 +11,20 @@
 #include "ukive/app/application.h"
 #include "ukive/window/window_native.h"
 
+#ifdef OS_WINDOWS
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <Windows.h>
+#endif
+
 
 namespace ukive {
 
 #ifdef OS_WINDOWS
-#include <WinUser.h>
     const int kDefaultDpi = USER_DEFAULT_SCREEN_DPI;
 #elif defined OS_MAC
     const int kDefaultDpi = 72;
