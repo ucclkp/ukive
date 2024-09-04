@@ -29,16 +29,76 @@
 
 namespace ukive {
 
-    GLCanvas::GLCanvas(int width, int height) {
+    GLCanvas::GLCanvas(Window* w, bool hw_acc)
+        : GLCanvas(GET_HANDLE(w), hw_acc) {}
+
+    GLCanvas::GLCanvas(HWND w, bool hw_acc) {
+        HDC hdc = ::GetDC(w);
+        if (!hdc) {
+            LOG(Log::ERR) << "Failed to get dc.";
+            return;
+        }
+
+        bool ret = create(hdc);
+        if (!ret) {
+            ::ReleaseDC(w, hdc);
+            hdc_ = nullptr;
+        } else {
+            hdc_ = hdc;
+        }
+        window_ = w;
     }
 
-    GLCanvas::GLCanvas(Window* w, bool hw_acc) {
-        window_ = w;
+    GLCanvas::GLCanvas(HWND w, int width, int height) {
+        HDC hdc = GetDC(w);
+        if (!hdc) {
+            LOG(Log::ERR) << "Failed to get dc.";
+            return;
+        }
 
+        HDC offscreen_dc = CreateCompatibleDC(hdc);
+        ::ReleaseDC(w, hdc);
+        if (!offscreen_dc) {
+            return;
+        }
+
+        HBITMAP offscreen_bmp = CreateCompatibleBitmap(offscreen_dc, width, height);
+        if (!offscreen_bmp) {
+            return;
+        }
+
+        SelectObject(offscreen_dc, offscreen_bmp);
+
+        bool ret = create(offscreen_dc);
+        if (!ret) {
+            DeleteDC(offscreen_dc);
+            DeleteObject(offscreen_bmp);
+            hdc_ = nullptr;
+        } else {
+            hdc_ = offscreen_dc;
+            os_bitmap_ = offscreen_bmp;
+        }
+    }
+
+    GLCanvas::~GLCanvas() {
+        if (gl_rc_) {
+            wglDeleteContext(gl_rc_);
+        }
+        if (os_bitmap_) {
+            DeleteObject(os_bitmap_);
+            DeleteDC(hdc_);
+            hdc_ = nullptr;
+        }
+        if (hdc_) {
+            ::ReleaseDC(window_, hdc_);
+        }
+    }
+
+    bool GLCanvas::create(HDC hdc) {
         PIXELFORMATDESCRIPTOR pfd;
         pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
         pfd.nVersion = 1;
-        pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_SUPPORT_COMPOSITION | PFD_DOUBLEBUFFER;
+        pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_GENERIC_ACCELERATED | PFD_DOUBLEBUFFER | PFD_DRAW_TO_BITMAP;
         pfd.iPixelType = PFD_TYPE_RGBA;
         pfd.cColorBits = 32;
         pfd.cRedBits = 0;
@@ -63,55 +123,42 @@ namespace ukive {
         pfd.dwVisibleMask = 0;
         pfd.dwDamageMask = 0;
 
-        HDC hdc = ::GetDC(GET_HANDLE(w));
-        if (!hdc) {
-            LOG(Log::ERR) << "Failed to get dc.";
-            return;
-        }
-
         int format_index = ::ChoosePixelFormat(hdc, &pfd);
         if (format_index == 0) {
-            ::ReleaseDC(GET_HANDLE(w), hdc);
             LOG(Log::ERR) << "Failed to choose pf: " << ::GetLastError();
-            return;
+            return false;
         }
 
         if (!::SetPixelFormat(hdc, format_index, &pfd)) {
-            ::ReleaseDC(GET_HANDLE(w), hdc);
             LOG(Log::ERR) << "Failed to set pf: " << ::GetLastError();
-            return;
+            return false;
         }
 
         int active_pixel_format = ::GetPixelFormat(hdc);
         if (active_pixel_format == 0) {
-            ::ReleaseDC(GET_HANDLE(w), hdc);
             LOG(Log::ERR) << "Failed to get pf: " << ::GetLastError();
-            return;
+            return false;
         }
 
         if (!::DescribePixelFormat(hdc, active_pixel_format, sizeof(PIXELFORMATDESCRIPTOR), &pfd)) {
-            ::ReleaseDC(GET_HANDLE(w), hdc);
             LOG(Log::ERR) << "Failed to describe pf: " << ::GetLastError();
-            return;
+            return false;
         }
 
         if ((pfd.dwFlags & PFD_SUPPORT_OPENGL) != PFD_SUPPORT_OPENGL) {
-            ::ReleaseDC(GET_HANDLE(w), hdc);
             LOG(Log::ERR) << "Current pixel format cannot support OpenGL.";
-            return;
+            return false;
         }
 
-        hdc_ = hdc;
-
-        gl_rc_ = wglCreateContext(hdc_);
+        gl_rc_ = wglCreateContext(hdc);
         if (!gl_rc_) {
             LOG(Log::ERR) << "Failed to create RC: " << ::GetLastError();
-            return;
+            return false;
         }
 
-        if (wglMakeCurrent(hdc_, gl_rc_) == FALSE) {
+        if (wglMakeCurrent(hdc, gl_rc_) == FALSE) {
             LOG(Log::ERR) << "Failed to set current RC: " << ::GetLastError();
-            return;
+            return false;
         }
 
         auto exts = glGetString(GL_EXTENSIONS);
@@ -122,7 +169,7 @@ namespace ukive {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        glClearColor(1, 1, 1, 1);
+        glClearColor(1, 1, 1, 0.5);
         glDisable(GL_DEPTH_TEST);
 
         glDisable(GL_CULL_FACE);
@@ -144,21 +191,29 @@ namespace ukive {
             data_.assign((const char*)data, stride * height_);
             frame->unlockPixels();
         }
+
+        return true;
     }
 
-    GLCanvas::~GLCanvas() {
-        if (gl_rc_) {
-            wglDeleteContext(gl_rc_);
-        }
-        if (hdc_) {
-            ::ReleaseDC(GET_HANDLE(window_), hdc_);
-        }
-    }
+    void GLCanvas::resize(int width, int height) {
+        if (window_) {
+            RECT rect;
+            ::GetWindowRect(window_, &rect);
 
-    void GLCanvas::resize() {
-        auto bounds = window_->getContentBounds();
-        int width = bounds.width();
-        int height = bounds.height();
+            width = rect.right - rect.left;
+            height = rect.bottom - rect.top;
+        } else if (os_bitmap_) {
+            DeleteObject(os_bitmap_);
+
+            HBITMAP offscreen_bmp = CreateCompatibleBitmap(hdc_, width, height);
+            if (!offscreen_bmp) {
+                return;
+            }
+
+            SelectObject(hdc_, offscreen_bmp);
+
+        }
+        
         if (width < 1) {
             width = 1;
         }

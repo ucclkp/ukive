@@ -21,11 +21,12 @@ namespace ukive {
 
     class GLCanvas {
     public:
-        GLCanvas(int width, int height);
         GLCanvas(Window* w, bool hw_acc);
+        GLCanvas(HWND w, bool hw_acc);
+        GLCanvas(HWND w, int width, int height);
         ~GLCanvas();
 
-        void resize();
+        void resize(int width, int height);
         void render();
 
         void drawLine(const PointF& start, const PointF& end);
@@ -40,12 +41,16 @@ namespace ukive {
         void drawBitmap(const char* data, size_t width, size_t height);
 
     private:
+        bool create(HDC hdc);
+
         HDC hdc_ = nullptr;
+        HBITMAP os_bitmap_ = nullptr;
         HGLRC gl_rc_ = nullptr;
-        Window* window_ = nullptr;
+        HWND window_ = nullptr;
 
         std::string data_;
-        int width_, height_;
+        int width_ = 0;
+        int height_ = 0;
     };
 
 }

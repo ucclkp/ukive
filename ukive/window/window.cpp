@@ -37,6 +37,7 @@
 #include "ukive/window/window_listener.h"
 #include "ukive/graphics/gl_canvas.h"
 
+static bool gl_test = false;
 
 namespace ukive {
 
@@ -738,7 +739,9 @@ namespace ukive {
 
         canvas_ = new Canvas(rt_);
 
-        gl_canvas_ = new GLCanvas(this, true);
+        if (gl_test) {
+            gl_canvas_ = new GLCanvas(this, true);
+        }
         root_layout_->dispatchAttachedToWindow(this);
     }
 
@@ -944,8 +947,6 @@ namespace ukive {
     }
 
     void Window::draw(const DirtyRegion& region) {
-        bool gl_test = true;
-
         if (!gl_test) {
             canvas_->beginDraw();
 
@@ -1056,7 +1057,7 @@ namespace ukive {
         }
 		
 		if (gl_canvas_) {
-            gl_canvas_->resize();
+            gl_canvas_->resize(0, 0);
         }
 
         if (rt_) {

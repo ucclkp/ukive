@@ -38,6 +38,7 @@
 #include "ukive/window/haul_source.h"
 #include "ukive/window/window.h"
 #include "ukive/system/dialogs/sys_message_dialog.h"
+#include "ukive/views/native/native_view_win.h"
 
 #include "shell/resources/necro_resources_id.h"
 

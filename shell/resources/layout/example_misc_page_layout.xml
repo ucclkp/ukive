@@ -48,6 +48,12 @@
                 editable="false"
                 padding="6" />
 
+            <win::NativeViewWin
+                id="@+id/nvw_test"
+                width="fill"
+                height="400"
+                margin="12" />
+
             <MediaView
                 id="@+id/mv_media_view"
                 width="fill"

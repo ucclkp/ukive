@@ -9,32 +9,33 @@ namespace Res {
     namespace Id {
 
         const int bt_dwm_button = 101;
-        const int bt_misc_button = 118;
-        const int bt_op_button = 126;
+        const int bt_misc_button = 119;
+        const int bt_op_button = 127;
         const int bt_test = 104;
-        const int cb_misc_anim_test = 110;
-        const int cv_data_chart = 108;
-        const int iv_misc_img = 117;
+        const int cb_misc_anim_test = 111;
+        const int cv_data_chart = 109;
+        const int iv_misc_img = 118;
         const int lv_list_page_list = 102;
-        const int lv_op_list_page_list = 127;
-        const int lv_test_tree = 120;
-        const int mv_media_view = 107;
-        const int pb_misc_anim_test = 114;
-        const int rb_misc_anim_test1 = 111;
-        const int rb_misc_anim_test2 = 112;
+        const int lv_op_list_page_list = 128;
+        const int lv_test_tree = 121;
+        const int mv_media_view = 108;
+        const int nvw_test = 107;
+        const int pb_misc_anim_test = 115;
+        const int rb_misc_anim_test1 = 112;
+        const int rb_misc_anim_test2 = 113;
         const int rl_list_page_outer = 100;
-        const int rl_op_list_page_outer = 123;
-        const int rl_tree_root = 119;
-        const int sb_misc_anim_test = 109;
-        const int sl_op_list_panel = 125;
-        const int sv_misc_combobox = 115;
+        const int rl_op_list_page_outer = 124;
+        const int rl_tree_root = 120;
+        const int sb_misc_anim_test = 110;
+        const int sl_op_list_panel = 126;
+        const int sv_misc_combobox = 116;
         const int sv_misc_page = 105;
-        const int sw_misc_anim_test = 113;
-        const int tsv_example_strip = 122;
+        const int sw_misc_anim_test = 114;
+        const int tsv_example_strip = 123;
         const int tv_dev_text_params = 106;
-        const int tv_example_table = 121;
-        const int tv_misc_txt = 116;
-        const int tv_stats = 124;
+        const int tv_example_table = 122;
+        const int tv_misc_txt = 117;
+        const int tv_stats = 125;
         const int tv_test = 103;
 
     }  // namespace Id

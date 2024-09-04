@@ -55,7 +55,7 @@ namespace shell {
 
     void ExampleWindow::inflateTabView() {
         setContentView(Res::Layout::example_window_layout_xml);
-        getContentView()->setBackground(new ukive::Element(ukive::Color::White));
+        getContentView()->setBackground(new ukive::Element(ukive::Color::Blue100));
 
         auto strip_view = findView<ukive::TabStripView>(Res::Id::tsv_example_strip);
         strip_view->setBackground(new ukive::Element(ukive::Color::White));

@@ -38,6 +38,7 @@
 #include "ukive/views/tab/tab_strip_view.h"
 #include "ukive/views/tab/tab_view.h"
 #include "ukive/views/tree/tree_node_button.h"
+#include "ukive/views/native/native_view_win.h"
 
 #include "necro/layout_constants.h"
 
@@ -76,6 +77,7 @@ namespace ukive {
         VIEW_CONSTRUCTOR(GridView);
         VIEW_CONSTRUCTOR(MediaView);
         VIEW_CONSTRUCTOR(TreeNodeButton);
+        VIEW_CONSTRUCTOR(win::NativeViewWin);
 
         VIEW_CONSTRUCTOR(LayoutView);
         VIEW_CONSTRUCTOR(TitleBarLayout);

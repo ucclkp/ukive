@@ -730,6 +730,9 @@
     <ClCompile Include="graphics\win\gpu\d3d11\gpu_texture_reader_d3d11.cpp">
       <Filter>graphics\win\gpu\d3d11</Filter>
     </ClCompile>
+    <ClCompile Include="views\native\native_view_win.cpp">
+      <Filter>views\native</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">
@@ -1647,6 +1650,9 @@
     <ClInclude Include="graphics\gl_canvas.h">
       <Filter>graphics</Filter>
     </ClInclude>
+    <ClInclude Include="views\native\native_view_win.h">
+      <Filter>views\native</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="window">
@@ -1810,6 +1816,9 @@
     </Filter>
     <Filter Include="graphics\mac\gpu\metal">
       <UniqueIdentifier>{45f147dd-8ec6-443d-9afe-120a9f44ba9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="views\native">
+      <UniqueIdentifier>{d2eef8e0-3798-4391-950f-b51f5942551c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
