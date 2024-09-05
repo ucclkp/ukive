@@ -60,7 +60,7 @@ namespace win {
     const int kDefaultClassStyle = CS_HREDRAW | CS_VREDRAW;
     // WS_OVERLAPPEDWINDOW 中包含 WS_MAXIMIZEBOX，该标志会使窗口在最大化时
     // 为其上下左右添加额外的边框。因此如果要自绘整个窗口的话，这一点需要进行处理。
-    const int kDefaultWindowStyle = WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN;
+    const int kDefaultWindowStyle = WS_OVERLAPPEDWINDOW;
     const int kDefaultWindowExStyle = WS_EX_APPWINDOW;
 
 

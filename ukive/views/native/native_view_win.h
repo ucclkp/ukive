@@ -36,10 +36,28 @@ namespace win {
     private:
         using super = View;
 
+        struct DIBBitmap {
+            int width;
+            int height;
+            int stride;
+            HBITMAP bmp;
+            void* pixels;
+            BITMAPINFO Info;
+        };
+
+        bool createChildLayeredWindow(HWND parent);
+        static bool createDIBBitmap(
+            int width, int height, HDC mem_dc, DIBBitmap* out);
+        static void destroyDIBBitmap(DIBBitmap* bmp);
+
+        void onAfterDraw();
+
         static LRESULT CALLBACK WndProc(
             HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
         HWND hWnd_ = nullptr;
+        HDC mem_dc_ = nullptr;
+        DIBBitmap mem_bmp_;
         GLCanvas* gl_canvas_ = nullptr;
     };
 

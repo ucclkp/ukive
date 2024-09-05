@@ -959,6 +959,10 @@ namespace ukive {
                 gl_canvas_->render();
             }
         }
+
+        if (after_draw_handler_) {
+            after_draw_handler_();
+        }
     }
 
     void Window::drawWithDebug(const DirtyRegion& region) {
@@ -1009,6 +1013,10 @@ namespace ukive {
         }
 
         canvas_->endDraw();
+
+        if (after_draw_handler_) {
+            after_draw_handler_();
+        }
     }
 
     void Window::drawRootView(Canvas* canvas, const Rect& rect) {

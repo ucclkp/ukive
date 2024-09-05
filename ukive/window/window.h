@@ -55,6 +55,8 @@ namespace ukive {
             WindowFrameType frame_type = WINDOW_FRAME_CUSTOM;
         };
 
+        using AfterDrawHandler = std::function<void()>;
+
         Window();
         virtual ~Window();
 
@@ -196,6 +198,10 @@ namespace ukive {
         void startHaul(HaulSource* src);
         void stopHaul(HaulSource* src);
 
+        void setAfterDrawCallback(AfterDrawHandler h) {
+            after_draw_handler_ = h;
+        }
+
     protected:
         // WindowNativeDelegate
         void onCreate() override;
@@ -289,6 +295,7 @@ namespace ukive {
         bool is_own_by_myself_ = false;
         int min_width_, min_height_;
         Purpose purpose_;
+        AfterDrawHandler after_draw_handler_;
 
         DirtyRegion prev_dirty_region_;
         DirtyRegion cur_dirty_region_;

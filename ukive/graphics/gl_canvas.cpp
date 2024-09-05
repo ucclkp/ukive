@@ -27,6 +27,133 @@
 #define GL_FUNC(type, name) auto name = reinterpret_cast<type>(wglGetProcAddress(#name));
 
 
+typedef BOOL(WINAPI* PFNWGLDESTROYPBUFFERARBPROC) (HPBUFFERARB hPbuffer);
+typedef BOOL(WINAPI* PFNWGLQUERYPBUFFERARBPROC) (HPBUFFERARB hPbuffer, int iAttribute, int* piValue);
+typedef HDC(WINAPI* PFNWGLGETPBUFFERDCARBPROC) (HPBUFFERARB hPbuffer);
+typedef HPBUFFERARB(WINAPI* PFNWGLCREATEPBUFFERARBPROC) (HDC hDC, int iPixelFormat, int iWidth, int iHeight, const int* piAttribList);
+typedef int (WINAPI* PFNWGLRELEASEPBUFFERDCARBPROC) (HPBUFFERARB hPbuffer, HDC hDC);
+
+PFNWGLDESTROYPBUFFERARBPROC                       wglDestroyPbufferARB;
+PFNWGLQUERYPBUFFERARBPROC                         wglQueryPbufferARB;
+PFNWGLGETPBUFFERDCARBPROC                         wglGetPbufferDCARB;
+PFNWGLCREATEPBUFFERARBPROC                        wglCreatePbufferARB;
+PFNWGLRELEASEPBUFFERDCARBPROC                     wglReleasePbufferDCARB;
+
+typedef BOOL(WINAPI* PFNWGLCHOOSEPIXELFORMATARBPROC) (HDC hdc, const int* piAttribIList, const FLOAT* pfAttribFList, UINT nMaxFormats, int* piFormats, UINT* nNumFormats);
+typedef BOOL(WINAPI* PFNWGLGETPIXELFORMATATTRIBFVARBPROC) (HDC hdc, int iPixelFormat, int iLayerPlane, UINT nAttributes, const int* piAttributes, FLOAT* pfValues);
+typedef BOOL(WINAPI* PFNWGLGETPIXELFORMATATTRIBIVARBPROC) (HDC hdc, int iPixelFormat, int iLayerPlane, UINT nAttributes, const int* piAttributes, int* piValues);
+
+PFNWGLCHOOSEPIXELFORMATARBPROC                    wglChoosePixelFormatARB;
+PFNWGLGETPIXELFORMATATTRIBFVARBPROC               wglGetPixelFormatAttribfvARB;
+PFNWGLGETPIXELFORMATATTRIBIVARBPROC               wglGetPixelFormatAttribivARB;
+
+
+bool InitGLExtensions()
+{
+#define GPA(x) wglGetProcAddress(x)
+
+    // WGL_ARB_pbuffer.
+    wglDestroyPbufferARB = (PFNWGLDESTROYPBUFFERARBPROC)GPA("wglDestroyPbufferARB");
+    wglQueryPbufferARB = (PFNWGLQUERYPBUFFERARBPROC)GPA("wglQueryPbufferARB");
+    wglGetPbufferDCARB = (PFNWGLGETPBUFFERDCARBPROC)GPA("wglGetPbufferDCARB");
+    wglCreatePbufferARB = (PFNWGLCREATEPBUFFERARBPROC)GPA("wglCreatePbufferARB");
+    wglReleasePbufferDCARB = (PFNWGLRELEASEPBUFFERDCARBPROC)GPA("wglReleasePbufferDCARB");
+
+    // WGL_ARB_pixel_format.
+    wglChoosePixelFormatARB = (PFNWGLCHOOSEPIXELFORMATARBPROC)GPA("wglChoosePixelFormatARB");
+    wglGetPixelFormatAttribfvARB = (PFNWGLGETPIXELFORMATATTRIBFVARBPROC)GPA("wglGetPixelFormatAttribfvARB");
+    wglGetPixelFormatAttribivARB = (PFNWGLGETPIXELFORMATATTRIBIVARBPROC)GPA("wglGetPixelFormatAttribivARB");
+
+#undef GPA
+
+    if (!wglDestroyPbufferARB || !wglQueryPbufferARB || !wglGetPbufferDCARB || !wglCreatePbufferARB || !wglReleasePbufferDCARB)
+    {
+        return false;
+    }
+
+    if (!wglChoosePixelFormatARB || !wglGetPixelFormatAttribfvARB || !wglGetPixelFormatAttribivARB)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+HDC   g_hPBufferDC;
+HGLRC g_hPBufferRC;
+HPBUFFERARB g_hPBuffer;
+
+bool InitPBuffer(HDC hdc, int w, int h)
+{
+    // Create a pbuffer for off-screen rendering. Notice that since we aren't
+    // going to be using the pbuffer for dynamic texturing (i.e., using the
+    // pbuffer containing our rendered scene as a texture) we don't need to
+    // request for WGL_BIND_TO_TEXTURE_RGBA_ARB support in the attribute list.
+
+    int attribList[] =
+    {
+        WGL_DRAW_TO_PBUFFER_ARB, TRUE,      // allow rendering to the pbuffer
+        WGL_SUPPORT_OPENGL_ARB,  TRUE,      // associate with OpenGL
+        WGL_DOUBLE_BUFFER_ARB,   FALSE,     // single buffered
+        WGL_RED_BITS_ARB,   8,              // minimum 8-bits for red channel
+        WGL_GREEN_BITS_ARB, 8,              // minimum 8-bits for green channel
+        WGL_BLUE_BITS_ARB, 8,              // minimum 8-bits for blue channel
+        WGL_ALPHA_BITS_ARB, 8,              // minimum 8-bits for alpha channel
+        WGL_DEPTH_BITS_ARB, 16,             // minimum 16-bits for depth buffer
+        0
+    };
+
+    int format = 0;
+    UINT matchingFormats = 0;
+
+    if (!wglChoosePixelFormatARB(hdc, attribList, 0, 1, &format, &matchingFormats))
+    {
+        return false;
+    }
+
+    if (!(g_hPBuffer = wglCreatePbufferARB(hdc, format, w, h, 0)))
+    {
+        return false;
+    }
+
+    if (!(g_hPBufferDC = wglGetPbufferDCARB(g_hPBuffer)))
+    {
+        return false;
+    }
+
+    if (!(g_hPBufferRC = wglCreateContext(g_hPBufferDC)))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+void CopyPBufferToImage(BYTE* dst, int stride, int w, int h)
+{
+    // Copy the contents of the framebuffer - which in our case is our pbuffer -
+    // to our bitmap image in local system memory. Notice that we also need
+    // to invert the pbuffer's pixel data since OpenGL by default orients the
+    // bitmap image bottom up. Our Windows DIB wrapper expects images to be
+    // top down in orientation.
+
+    BYTE* pixels = new BYTE[w * h * 4];
+
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    glReadPixels(0, 0, w, h, GL_BGRA_EXT, GL_UNSIGNED_BYTE, pixels);
+
+    for (int i = 0; i < h; ++i)
+    {
+        memcpy(
+            &dst[stride * i],
+            &pixels[((h - 1) - i) * (w * 4)], w * 4);
+    }
+
+    delete[] pixels;
+}
+
+
+
 namespace ukive {
 
     GLCanvas::GLCanvas(Window* w, bool hw_acc)
@@ -39,7 +166,7 @@ namespace ukive {
             return;
         }
 
-        bool ret = create(hdc);
+        bool ret = createHWNDRenderTarget(hdc);
         if (!ret) {
             ::ReleaseDC(w, hdc);
             hdc_ = nullptr;
@@ -47,81 +174,45 @@ namespace ukive {
             hdc_ = hdc;
         }
         window_ = w;
+        prepareResources();
     }
 
     GLCanvas::GLCanvas(HWND w, int width, int height) {
-        HDC hdc = GetDC(w);
-        if (!hdc) {
-            LOG(Log::ERR) << "Failed to get dc.";
-            return;
-        }
-
-        HDC offscreen_dc = CreateCompatibleDC(hdc);
-        ::ReleaseDC(w, hdc);
-        if (!offscreen_dc) {
-            return;
-        }
-
-        HBITMAP offscreen_bmp = CreateCompatibleBitmap(offscreen_dc, width, height);
-        if (!offscreen_bmp) {
-            return;
-        }
-
-        SelectObject(offscreen_dc, offscreen_bmp);
-
-        bool ret = create(offscreen_dc);
-        if (!ret) {
-            DeleteDC(offscreen_dc);
-            DeleteObject(offscreen_bmp);
-            hdc_ = nullptr;
-        } else {
-            hdc_ = offscreen_dc;
-            os_bitmap_ = offscreen_bmp;
-        }
+        bool ret = createOffscreenRenderTarget(w, width, height);
+        window_ = w;
+        rt_width_ = width;
+        rt_height_ = height;
+        prepareResources();
     }
 
     GLCanvas::~GLCanvas() {
+        if (g_hPBuffer)
+        {
+            wglDeleteContext(g_hPBufferRC);
+            wglReleasePbufferDCARB(g_hPBuffer, g_hPBufferDC);
+            wglDestroyPbufferARB(g_hPBuffer);
+            g_hPBufferRC = 0;
+            g_hPBufferDC = 0;
+            g_hPBuffer = 0;
+        }
+
         if (gl_rc_) {
             wglDeleteContext(gl_rc_);
-        }
-        if (os_bitmap_) {
-            DeleteObject(os_bitmap_);
-            DeleteDC(hdc_);
-            hdc_ = nullptr;
         }
         if (hdc_) {
             ::ReleaseDC(window_, hdc_);
         }
     }
 
-    bool GLCanvas::create(HDC hdc) {
-        PIXELFORMATDESCRIPTOR pfd;
+    bool GLCanvas::createHWNDRenderTarget(HDC hdc) {
+        PIXELFORMATDESCRIPTOR pfd = { 0 };
         pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
         pfd.nVersion = 1;
-        pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_GENERIC_ACCELERATED | PFD_DOUBLEBUFFER | PFD_DRAW_TO_BITMAP;
+        pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_SUPPORT_COMPOSITION | PFD_DOUBLEBUFFER;
         pfd.iPixelType = PFD_TYPE_RGBA;
         pfd.cColorBits = 32;
-        pfd.cRedBits = 0;
-        pfd.cRedShift = 0;
-        pfd.cGreenBits = 0;
-        pfd.cGreenShift = 0;
-        pfd.cBlueBits = 0;
-        pfd.cBlueShift = 0;
         pfd.cAlphaBits = 8;
-        pfd.cAlphaShift = 0;
-        pfd.cAccumBits = 0;
-        pfd.cAccumRedBits = 0;
-        pfd.cAccumGreenBits = 0;
-        pfd.cAccumBlueBits = 0;
-        pfd.cAccumAlphaBits = 0;
-        pfd.cDepthBits = 0;
-        pfd.cStencilBits = 0;
-        pfd.cAuxBuffers = 0;
         pfd.iLayerType = PFD_MAIN_PLANE;
-        pfd.bReserved = 0;
-        pfd.dwLayerMask = 0;
-        pfd.dwVisibleMask = 0;
-        pfd.dwDamageMask = 0;
 
         int format_index = ::ChoosePixelFormat(hdc, &pfd);
         if (format_index == 0) {
@@ -180,46 +271,100 @@ namespace ukive {
             glGenFramebuffers(1, &fbo);
         }*/
 
-        auto image = Application::getImageLocFactory()->decodeFile(u"E:\\Test\\test.png", ImageOptions());
-        if (image.isValid()) {
-            auto frame = image.getFrames()[0];
-            width_ = frame->getPixelSize().width();
-            height_ = frame->getPixelSize().height();
+        return true;
+    }
 
-            size_t stride;
-            auto data = frame->lockPixels(IAF_READ, &stride);
-            data_.assign((const char*)data, stride * height_);
-            frame->unlockPixels();
-        }
+    bool GLCanvas::createOffscreenRenderTarget(HWND w, int width, int height) {
+        // Even though we aren't going to be rendering the scene to the window
+    // we still need to create a dummy rendering context in order to load the
+    // pbuffer extensions and to create our pbuffer.
+
+        PIXELFORMATDESCRIPTOR pfd = { 0 };
+
+        // Don't bother with anything fancy here. This is just a dummy rendering
+        // context so just ask for the bare minimum.
+        pfd.nSize = sizeof(pfd);
+        pfd.nVersion = 1;
+        pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL;
+        pfd.iPixelType = PFD_TYPE_RGBA;
+        pfd.cColorBits = 24;
+        pfd.cDepthBits = 16;
+        pfd.iLayerType = PFD_MAIN_PLANE;
+
+        HDC g_hDC;
+        if (!(g_hDC = GetDC(w)))
+            return false;
+
+        int pf = ChoosePixelFormat(g_hDC, &pfd);
+
+        if (!SetPixelFormat(g_hDC, pf, &pfd))
+            return false;
+
+        HGLRC g_hRC;
+        if (!(g_hRC = wglCreateContext(g_hDC)))
+            return false;
+
+        if (!wglMakeCurrent(g_hDC, g_hRC))
+            return false;
+
+        if (!InitGLExtensions())
+            return false;
+
+        if (!InitPBuffer(g_hDC, width, height))
+            return false;
+
+        // Deactivate the dummy rendering context now that the pbuffer is created.
+        wglMakeCurrent(g_hDC, 0);
+        ReleaseDC(w, g_hDC);
+        g_hDC = 0;
+
+        // We are only doing off-screen rendering. So activate our pbuffer once.
+        wglMakeCurrent(g_hPBufferDC, g_hPBufferRC);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        glClearColor(1, 1, 1, 0.5);
+        glDisable(GL_DEPTH_TEST);
+
+        glDisable(GL_CULL_FACE);
 
         return true;
     }
 
+    bool GLCanvas::prepareResources() {
+        auto image = Application::getImageLocFactory()->decodeFile(u"E:\\Test\\test.png", ImageOptions());
+        if (image.isValid()) {
+            auto frame = image.getFrames()[0];
+            img_.width = frame->getPixelSize().width();
+            img_.height = frame->getPixelSize().height();
+
+            size_t stride;
+            auto data = (const char*)frame->lockPixels(IAF_READ, &stride);
+            img_.data.assign(data, data + stride * img_.height);
+            frame->unlockPixels();
+        }
+        return true;
+    }
+
     void GLCanvas::resize(int width, int height) {
-        if (window_) {
+        /*if (window_) {
             RECT rect;
             ::GetWindowRect(window_, &rect);
 
             width = rect.right - rect.left;
             height = rect.bottom - rect.top;
-        } else if (os_bitmap_) {
-            DeleteObject(os_bitmap_);
+        }*/
 
-            HBITMAP offscreen_bmp = CreateCompatibleBitmap(hdc_, width, height);
-            if (!offscreen_bmp) {
-                return;
-            }
-
-            SelectObject(hdc_, offscreen_bmp);
-
-        }
-        
         if (width < 1) {
             width = 1;
         }
         if (height < 1) {
             height = 1;
         }
+
+        rt_width_ = width;
+        rt_height_ = height;
 
         glViewport(0, 0, width, height);
 
@@ -238,7 +383,7 @@ namespace ukive {
         glTranslatef(0.5f, 0.5f, 0);
 
         // Draw...
-        glColor4f(0, 0, 0, 1);
+        glColor4f(1, 0, 0, 1);
 
         //drawRect({ 100, 100, 4, 4 });
         //drawLine({ 100.5, 100 }, { 100.5, 1000 });
@@ -246,11 +391,13 @@ namespace ukive {
 
         drawBezier2({ 100, 100 }, { 300, 300 }, { 500, 100 });
 
-        drawBitmap(data_.data(), width_, height_);
+        drawBitmap(img_.data.data(), img_.width, img_.height);
 
         //glFlush();
 
-        ::SwapBuffers(hdc_);
+        if (hdc_) {
+            ::SwapBuffers(hdc_);
+        }
     }
 
     void GLCanvas::drawLine(const PointF& start, const PointF& end) {
@@ -374,6 +521,11 @@ namespace ukive {
 
         glDisable(GL_TEXTURE_2D);
         glTranslatef(0.5f, 0.5f, 0);
+    }
+
+    bool GLCanvas::copy(void* pixels) {
+        CopyPBufferToImage((BYTE*)pixels, rt_width_ * 4, rt_width_, rt_height_);
+        return true;
     }
 
 }

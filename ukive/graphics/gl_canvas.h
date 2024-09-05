@@ -8,6 +8,7 @@
 #define UKIVE_GRAPHICS_GL_CANVAS_H_
 
 #include <string>
+#include <vector>
 
 #include <Windows.h>
 
@@ -40,17 +41,28 @@ namespace ukive {
 
         void drawBitmap(const char* data, size_t width, size_t height);
 
+        bool copy(void* pixels);
+
+        HDC getHDC() const { return hdc_; }
+
     private:
-        bool create(HDC hdc);
+        struct Image {
+            int width = 0;
+            int height = 0;
+            std::vector<char> data;
+        };
+
+        bool createHWNDRenderTarget(HDC hdc);
+        bool createOffscreenRenderTarget(HWND w, int width, int height);
+        bool prepareResources();
 
         HDC hdc_ = nullptr;
-        HBITMAP os_bitmap_ = nullptr;
         HGLRC gl_rc_ = nullptr;
         HWND window_ = nullptr;
 
-        std::string data_;
-        int width_ = 0;
-        int height_ = 0;
+        Image img_;
+        int rt_width_ = 0;
+        int rt_height_ = 0;
     };
 
 }
