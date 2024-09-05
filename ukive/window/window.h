@@ -92,6 +92,7 @@ namespace ukive {
         void setIgnoreMouseEvents(bool ignore);
         void setTranslucentType(TranslucentType type);
         void setStartupWindow(bool enable);
+        void setUsingHDRWhenAvailable(bool using_hdr);
         void setOwnership(bool myself);
         void setPurpose(const Purpose& p);
 
@@ -284,6 +285,7 @@ namespace ukive {
         Color background_color_;
         bool is_startup_window_;
         bool is_hdr_enabled_ = false;
+        bool using_hdr_when_available = false;
         bool is_own_by_myself_ = false;
         int min_width_, min_height_;
         Purpose purpose_;

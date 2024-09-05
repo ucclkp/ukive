@@ -244,6 +244,10 @@ namespace ukive {
         is_startup_window_ = enable;
     }
 
+    void Window::setUsingHDRWhenAvailable(bool using_hdr) {
+        using_hdr_when_available = using_hdr;
+    }
+
     void Window::setLastHaulView(View* v) {
         last_haul_view_ = v;
     }
@@ -723,7 +727,7 @@ namespace ukive {
 
         buffer_ = WindowBuffer::create(this);
         ImageOptions options(dpi, dpi);
-        if (display->isInHDRMode()) {
+        if (display->isInHDRMode() && using_hdr_when_available) {
             options.pixel_format = ImagePixelFormat::HDR;
         } else {
             options.pixel_format = ImagePixelFormat::B8G8R8A8_UNORM;
