@@ -8,6 +8,7 @@
 #define UKIVE_GRAPHICS_EFFECTS_CYRO_EFFECT_H_
 
 #include "ukive/graphics/gptr.hpp"
+#include "ukive/graphics/gpu/gpu_types.h"
 
 
 namespace ukive {
@@ -16,6 +17,7 @@ namespace ukive {
     class Context;
     class ImageFrame;
     class OffscreenBuffer;
+    class GPUTexture;
 
     class CyroEffect {
     public:
@@ -34,9 +36,17 @@ namespace ukive {
          */
         virtual bool draw(Canvas* c) = 0;
 
-        virtual bool setContent(OffscreenBuffer* content) = 0;
+        virtual bool addInput(OffscreenBuffer* content) = 0;
+
+        virtual void clearInputs() = 0;
+
+        virtual bool setOutputSize(
+            unsigned int width,
+            unsigned int height,
+            GPUDataFormat format) = 0;
 
         virtual GPtr<ImageFrame> getOutput() const = 0;
+        virtual GPtr<GPUTexture> getOutputTexture() const = 0;
     };
 
 }

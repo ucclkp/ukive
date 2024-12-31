@@ -25,19 +25,26 @@ namespace {
 
 namespace ukive {
 
-    ImageOptions::ImageOptions(ImagePixelFormat pf, ImageAlphaMode am)
-        : pixel_format(pf), alpha_mode(am), dpi_type(ImageDPIType::DEFAULT) {}
+    ImageOptions::ImageOptions(ImagePixelFormat pf, ImageAlphaMode am, bool hdr_enabled)
+        : dpi_x(0), dpi_y(0),
+          pixel_format(pf),
+          alpha_mode(am),
+          dpi_type(ImageDPIType::DEFAULT),
+          hdr_enabled(hdr_enabled) {}
 
     ImageOptions::ImageOptions(
         float dpi_x, float dpi_y,
-        ImagePixelFormat pf, ImageAlphaMode am)
+        ImagePixelFormat pf, ImageAlphaMode am, bool hdr_enabled)
         : dpi_x(dpi_x), dpi_y(dpi_y),
-          pixel_format(pf), alpha_mode(am), dpi_type(ImageDPIType::SPECIFIED) {}
+          pixel_format(pf), alpha_mode(am),
+          dpi_type(ImageDPIType::SPECIFIED),
+          hdr_enabled(hdr_enabled) {}
 
     bool ImageOptions::operator==(const ImageOptions& rhs) const {
         if (pixel_format == rhs.pixel_format &&
             alpha_mode == rhs.alpha_mode &&
-            dpi_type == rhs.dpi_type)
+            dpi_type == rhs.dpi_type &&
+            hdr_enabled == rhs.hdr_enabled)
         {
             if (dpi_type == ImageDPIType::SPECIFIED) {
                 return isEqual(dpi_x, rhs.dpi_x) && isEqual(dpi_y, rhs.dpi_y);

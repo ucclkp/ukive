@@ -39,9 +39,15 @@ namespace win {
 
         bool generate(Canvas* c) override;
         bool draw(Canvas* c) override;
-        bool setContent(OffscreenBuffer* content) override;
-        bool setContent(const GPtr<GPUTexture>& texture) override;
+        bool addInput(OffscreenBuffer* content) override;
+        bool addInput(const GPtr<GPUTexture>& texture) override;
+        void clearInputs() override;
+        bool setOutputSize(
+            unsigned int width,
+            unsigned int height,
+            GPUDataFormat format) override;
         GPtr<ImageFrame> getOutput() const override;
+        GPtr<GPUTexture> getOutputTexture() const override;
         bool setPixelShader(const std::u16string& name) override;
         bool setParameterSize(uint32_t size) override;
         void setParameterUpdateHandler(const ParameterUpdateHandler& h) override;
@@ -72,8 +78,6 @@ namespace win {
 
         int width_;
         int height_;
-        int view_width_;
-        int view_height_;
         bool is_initialized_ = false;
         GPUDataFormat format_ = GPUDataFormat::UNKNOWN;
         ParameterUpdateHandler param_update_handler_;
@@ -83,7 +87,7 @@ namespace win {
         utl::mat4f view_matrix_;
         utl::mat4f ortho_matrix_;
 
-        GPtr<GPUShaderResource> org_srv_;
+        std::vector<GPtr<GPUShaderResource>> org_srvs_;
 
         GPtr<GPUTexture> target_tex2d_;
         GPtr<GPURenderTarget> target_rtv_;

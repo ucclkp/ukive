@@ -128,7 +128,7 @@ namespace win {
     }
 
     uint32_t WindowBufferWin::getBackBufferCount() const {
-        if (img_options_.pixel_format == ImagePixelFormat::HDR) {
+        if (img_options_.pixel_format == ImagePixelFormat::R16G16B16A16_FLOAT) {
             return 2;
         } else {
             return 1;
@@ -179,9 +179,7 @@ namespace win {
         ZeroMemory(&desc, sizeof(desc));
 
         // https://docs.microsoft.com/en-us/windows/win32/direct3darticles/high-dynamic-range
-        if (img_options_.pixel_format == ImagePixelFormat::HDR) {
-            desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-        } else if (img_options_.pixel_format == ImagePixelFormat::R16G16B16A16_FLOAT) {
+        if (img_options_.pixel_format == ImagePixelFormat::R16G16B16A16_FLOAT) {
             desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
         } else {
             desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
@@ -193,7 +191,7 @@ namespace win {
 
         HRESULT hr;
         if (!use_composition_) {
-            if (img_options_.pixel_format == ImagePixelFormat::HDR) {
+            if (img_options_.pixel_format == ImagePixelFormat::R16G16B16A16_FLOAT) {
                 desc.BufferCount = 2;
                 desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
                 desc.Scaling = DXGI_SCALING_NONE;

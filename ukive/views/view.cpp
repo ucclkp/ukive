@@ -1007,7 +1007,7 @@ namespace ukive {
             bg_off.endDraw();
             auto buffer = static_cast<OffscreenBuffer*>(bg_off.getBuffer());
 
-            if (!shadow_effect_->setContent(buffer) ||
+            if (!shadow_effect_->addInput(buffer) ||
                 !shadow_effect_->draw(c))
             {
                 drawBackground(c);
@@ -1048,7 +1048,7 @@ namespace ukive {
                 offscreen.endDraw();
                 auto buffer = static_cast<OffscreenBuffer*>(offscreen.getBuffer());
 
-                if (!shadow_effect_->setContent(buffer) ||
+                if (!shadow_effect_->addInput(buffer) ||
                     !shadow_effect_->draw(c))
                 {
                     c->drawImage(bg_img.get());

@@ -26,7 +26,7 @@ namespace ukive {
 
         static ImageEffect* create(Context context);
 
-        virtual bool setContent(const GPtr<GPUTexture>& texture) = 0;
+        virtual bool addInput(const GPtr<GPUTexture>& texture) = 0;
         virtual bool setPixelShader(const std::u16string& name) = 0;
         virtual bool setParameterSize(uint32_t size) = 0;
         virtual void setParameterUpdateHandler(const ParameterUpdateHandler& h) = 0;

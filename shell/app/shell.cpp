@@ -71,7 +71,7 @@ GUI_MAIN() {
     shadow_window->show();*/
 
     auto example_window = std::make_shared<shell::ExampleWindow>();
-    example_window->init(ukive::Window::InitParams());
+    example_window->init(ukive::Window::InitParams(true, true));
     example_window->setTitle(u"Examples");
     example_window->setWidth(ukive::Application::dp2pxi(600));
     example_window->setHeight(ukive::Application::dp2pxi(600));

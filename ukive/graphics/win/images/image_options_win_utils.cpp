@@ -15,9 +15,6 @@ namespace win {
     DXGI_FORMAT mapDXGIFormat(ImagePixelFormat f) {
         DXGI_FORMAT format;
         switch (f) {
-        case ImagePixelFormat::HDR:
-            format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-            break;
         case ImagePixelFormat::RAW:
             format = DXGI_FORMAT_UNKNOWN;
             break;
@@ -69,21 +66,6 @@ namespace win {
     WICPixelFormatGUID mapWICFormat(const ImageOptions& options) {
         WICPixelFormatGUID format;
         switch (options.pixel_format) {
-        case ImagePixelFormat::HDR:
-            switch (options.alpha_mode) {
-            case ImageAlphaMode::STRAIGHT:
-                format = GUID_WICPixelFormat64bppRGBAHalf;
-                break;
-            case ImageAlphaMode::IGNORED:
-                format = GUID_WICPixelFormat64bppRGBHalf;
-                break;
-            case ImageAlphaMode::PREMULTIPLIED:
-            default:
-                format = GUID_WICPixelFormat64bppPRGBAHalf;
-                break;
-            }
-            break;
-
         case ImagePixelFormat::R16G16B16A16_FLOAT:
             switch (options.alpha_mode) {
             case ImageAlphaMode::STRAIGHT:

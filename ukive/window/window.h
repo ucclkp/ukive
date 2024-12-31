@@ -52,6 +52,26 @@ namespace ukive {
         struct InitParams {
             Window* parent = nullptr;
             WindowFrameType frame_type = WINDOW_FRAME_CUSTOM;
+            bool use_hdr_when_available = false;
+            bool use_hp_render_target = false;
+
+            InitParams(
+                Window* parent = nullptr,
+                WindowFrameType frame_type = WINDOW_FRAME_CUSTOM,
+                bool use_hdr_when_available = false,
+                bool use_hp_render_target = false)
+                : parent(parent),
+                  frame_type(frame_type),
+                  use_hdr_when_available(use_hdr_when_available),
+                  use_hp_render_target(use_hp_render_target) {}
+            InitParams(
+                bool use_hdr_when_available,
+                bool use_hp_render_target)
+                : parent(nullptr),
+                  frame_type(WINDOW_FRAME_CUSTOM),
+                  use_hdr_when_available(use_hdr_when_available),
+                  use_hp_render_target(use_hp_render_target) {
+            }
         };
 
         Window();
@@ -93,6 +113,7 @@ namespace ukive {
         void setTranslucentType(TranslucentType type);
         void setStartupWindow(bool enable);
         void setUsingHDRWhenAvailable(bool using_hdr);
+        void setUsingHighPreciseRenderTarget(bool hprt);
         void setOwnership(bool myself);
         void setPurpose(const Purpose& p);
 
@@ -286,6 +307,7 @@ namespace ukive {
         bool is_startup_window_;
         bool is_hdr_enabled_ = false;
         bool using_hdr_when_available = false;
+        bool using_hp_rt_ = false;
         bool is_own_by_myself_ = false;
         int min_width_, min_height_;
         Purpose purpose_;

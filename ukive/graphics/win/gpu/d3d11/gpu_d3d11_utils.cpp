@@ -34,12 +34,16 @@ namespace win {
             return DXGI_FORMAT_R8G8B8A8_UINT;
         case GPUDataFormat::R8G8B8A8_UNORM:
             return DXGI_FORMAT_R8G8B8A8_UNORM;
+        case GPUDataFormat::R8_UINT:
+            return DXGI_FORMAT_R8_UINT;
+        case GPUDataFormat::R16_UINT:
+            return DXGI_FORMAT_R16_UINT;
+        case GPUDataFormat::R16G16_UINT:
+            return DXGI_FORMAT_R16G16_UINT;
         case GPUDataFormat::R32_UINT:
             return DXGI_FORMAT_R32_UINT;
         case GPUDataFormat::R32_FLOAT:
             return DXGI_FORMAT_R32_FLOAT;
-        case GPUDataFormat::R8_UINT:
-            return DXGI_FORMAT_R8_UINT;
         case GPUDataFormat::B8G8R8A8_UNORM:
             return DXGI_FORMAT_B8G8R8A8_UNORM;
         case GPUDataFormat::D24_UNORM_S8_UINT:
@@ -78,6 +82,10 @@ namespace win {
             return GPUDataFormat::R32_FLOAT;
         case DXGI_FORMAT_R8_UINT:
             return GPUDataFormat::R8_UINT;
+        case DXGI_FORMAT_R16_UINT:
+            return GPUDataFormat::R16_UINT;
+        case DXGI_FORMAT_R16G16_UINT:
+            return GPUDataFormat::R16G16_UINT;
         case DXGI_FORMAT_B8G8R8A8_UNORM:
             return GPUDataFormat::B8G8R8A8_UNORM;
         case DXGI_FORMAT_D24_UNORM_S8_UINT:

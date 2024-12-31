@@ -25,8 +25,6 @@ namespace win {
     ImageEffectGPU::ImageEffectGPU(Context context)
         : width_(0),
           height_(0),
-          view_width_(0),
-          view_height_(0),
           viewport_(),
           context_(context)
     {
@@ -87,7 +85,7 @@ namespace win {
         pconst_buffer_.reset();
         rasterizer_state_.reset();
 
-        org_srv_.reset();
+        org_srvs_.clear();
         target_tex2d_.reset();
         target_rtv_.reset();
         target_srv_.reset();
@@ -252,9 +250,13 @@ namespace win {
         context->setViewports(1, &viewport_);
         context->setRenderTargets(1, &target_rtv_, nullptr);
 
-        if (org_srv_) {
-            GPUShaderResource* srvs[] = { org_srv_.get() };
-            context->setPShaderResources(0, ARRAYSIZE(srvs), srvs);
+        if (!org_srvs_.empty()) {
+            GPUShaderResource* srvs[8];
+            size_t count = (std::min)(ARRAYSIZE(srvs), org_srvs_.size());
+            for (size_t i = 0; i < count; ++i) {
+                srvs[i] = org_srvs_[i].get();
+            }
+            context->setPShaderResources(0, count, srvs);
         }
 
         // VS ConstBuffer
@@ -292,26 +294,20 @@ namespace win {
         context->drawIndexed(6, 0, 0);
     }
 
-    bool ImageEffectGPU::setContent(OffscreenBuffer* content) {
+    bool ImageEffectGPU::addInput(OffscreenBuffer* content) {
         if (!is_initialized_ || !content) {
             return false;
         }
 
         auto texture = static_cast<const OffscreenBufferWin*>(content)->getTexture();
-        return setContent(texture);
+        return addInput(texture);
     }
 
-    bool ImageEffectGPU::setContent(const GPtr<GPUTexture>& texture) {
+    bool ImageEffectGPU::addInput(const GPtr<GPUTexture>& texture) {
         if (!is_initialized_ || !texture) {
             return false;
         }
 
-        auto desc = texture->getDesc();
-        view_width_ = desc.width;
-        view_height_ = desc.height;
-
-        int width = view_width_;
-        int height = view_height_;
         cache_.reset();
 
         auto ret = texture->createSRV();
@@ -320,12 +316,30 @@ namespace win {
             return false;
         }
 
-        org_srv_ = texture->srv();
-        return setSize(width, height, desc.format);
+        org_srvs_.push_back(texture->srv());
+        return true;
+    }
+
+    void ImageEffectGPU::clearInputs() {
+        cache_.reset();
+        org_srvs_.clear();
+    }
+
+    bool ImageEffectGPU::setOutputSize(
+        unsigned int width,
+        unsigned int height,
+        GPUDataFormat format)
+    {
+        cache_.reset();
+        return setSize(width, height, format);
     }
 
     GPtr<ImageFrame> ImageEffectGPU::getOutput() const {
         return cache_;
+    }
+
+    GPtr<GPUTexture> ImageEffectGPU::getOutputTexture() const {
+        return target_tex2d_;
     }
 
     bool ImageEffectGPU::setVertexShader(const std::u16string& name) {

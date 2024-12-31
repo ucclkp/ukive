@@ -208,6 +208,10 @@ namespace ukive {
     }
 
     RectF ImageView::fitImageBounds(int width, int height, bool always) const {
+        if (!img_element_) {
+            return {};
+        }
+
         float img_width = img_element_->getContentWidth();
         float img_height = img_element_->getContentHeight();
         if (img_width <= 0 || img_height <= 0) {
@@ -263,35 +267,29 @@ namespace ukive {
         int height = getContentBounds().height();
 
         switch (scale_type_) {
-        case ST_NONE:
-            r.xywh(
-                0, 0,
-                img_element_->getContentWidth(),
-                img_element_->getContentHeight());
-            break;
-
         case ST_FULL:
             r.xywh(0, 0, width, height);
             break;
 
         case ST_FIT_ALWAYS:
-        {
             r = fitImageBounds(width, height, true);
             break;
-        }
 
         case ST_FIT_WHEN_LARGE:
-        {
             r = fitImageBounds(width, height, false);
             break;
-        }
 
+        case ST_NONE:
         case ST_MATRIX:
         default:
-            r.xywh(
-                0, 0,
-                img_element_->getContentWidth(),
-                img_element_->getContentHeight());
+            if (img_element_) {
+                r.xywh(
+                    0, 0,
+                    img_element_->getContentWidth(),
+                    img_element_->getContentHeight());
+            } else {
+                r.xywh(0, 0, 0, 0);
+            }
             break;
         }
 

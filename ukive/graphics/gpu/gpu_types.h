@@ -21,9 +21,11 @@ namespace ukive {
         R16G16B16A16_UINT,
         R8G8B8A8_UINT,
         R8G8B8A8_UNORM,
+        R8_UINT,
+        R16_UINT,
+        R16G16_UINT,
         R32_UINT,
         R32_FLOAT,
-        R8_UINT,
         B8G8R8A8_UNORM,
         D24_UNORM_S8_UINT,
     };

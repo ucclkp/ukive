@@ -74,6 +74,9 @@ namespace ukive {
             return false;
         }
 
+        setUsingHDRWhenAvailable(params.use_hdr_when_available);
+        setUsingHighPreciseRenderTarget(params.use_hp_render_target);
+
         WindowNative::InitParams native_params;
         if (params.parent) {
             native_params.parent = params.parent->getImpl();
@@ -246,6 +249,10 @@ namespace ukive {
 
     void Window::setUsingHDRWhenAvailable(bool using_hdr) {
         using_hdr_when_available = using_hdr;
+    }
+
+    void Window::setUsingHighPreciseRenderTarget(bool hprt) {
+        using_hp_rt_ = hprt;
     }
 
     void Window::setLastHaulView(View* v) {
@@ -728,10 +735,14 @@ namespace ukive {
         buffer_ = WindowBuffer::create(this);
         ImageOptions options(dpi, dpi);
         if (display->isInHDRMode() && using_hdr_when_available) {
-            options.pixel_format = ImagePixelFormat::HDR;
+            options.hdr_enabled = true;
+            options.pixel_format = ImagePixelFormat::R16G16B16A16_FLOAT;
         } else {
-            options.pixel_format = ImagePixelFormat::B8G8R8A8_UNORM;
-            //options.pixel_format = ImagePixelFormat::R16G16B16A16_FLOAT;
+            if (using_hp_rt_) {
+                options.pixel_format = ImagePixelFormat::R16G16B16A16_FLOAT;
+            } else {
+                options.pixel_format = ImagePixelFormat::B8G8R8A8_UNORM;
+            }
         }
         buffer_->onCreate(0, 0, options);
 

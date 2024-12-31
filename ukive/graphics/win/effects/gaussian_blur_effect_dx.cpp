@@ -62,8 +62,6 @@ namespace win {
     GaussianBlurEffectGPU::GaussianBlurEffectGPU(Context context)
         : width_(0),
           height_(0),
-          view_width_(0),
-          view_height_(0),
           radius_(0),
           semi_radius_(0.f),
           context_(context)
@@ -462,20 +460,18 @@ namespace win {
         return true;
     }
 
-    bool GaussianBlurEffectGPU::setContent(OffscreenBuffer* content) {
+    bool GaussianBlurEffectGPU::addInput(OffscreenBuffer* content) {
         if (!is_initialized_ || !content) {
             return false;
         }
 
+        int radius = int(std::ceil(radius_ * context_.getAutoScale()));
         auto texture = static_cast<const OffscreenBufferWin*>(content)->getTexture();
 
         auto& desc = texture->getDesc();
-        view_width_ = desc.width;
-        view_height_ = desc.height;
 
-        int radius = int(std::ceil(radius_ * context_.getAutoScale()));
-        int width = view_width_ + radius * 2;
-        int height = view_height_ + radius * 2;
+        int width = desc.width + radius * 2;
+        int height = desc.height + radius * 2;
         cache_.reset();
 
         auto device =
@@ -497,7 +493,20 @@ namespace win {
 
         return setSize(
             width, height,
-            content->getImageOptions().pixel_format == ImagePixelFormat::HDR);
+            content->getImageOptions().pixel_format == ImagePixelFormat::R16G16B16A16_FLOAT);
+    }
+
+    void GaussianBlurEffectGPU::clearInputs() {
+        bg_rtv_.reset();
+        bg_srv_.reset();
+    }
+
+    bool GaussianBlurEffectGPU::setOutputSize(
+        unsigned int width,
+        unsigned int height,
+        GPUDataFormat format)
+    {
+        return setSize(width, height, false);
     }
 
     int GaussianBlurEffectGPU::getRadius() const {
@@ -506,6 +515,10 @@ namespace win {
 
     GPtr<ImageFrame> GaussianBlurEffectGPU::getOutput() const {
         return cache_;
+    }
+
+    GPtr<GPUTexture> GaussianBlurEffectGPU::getOutputTexture() const {
+        return shadow2_tex2d_;
     }
 
     bool GaussianBlurEffectGPU::createTexture(

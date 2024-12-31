@@ -44,8 +44,14 @@ namespace win {
 
         bool generate(Canvas* c) override;
         bool draw(Canvas* c) override;
-        bool setContent(OffscreenBuffer* content) override;
+        bool addInput(OffscreenBuffer* content) override;
+        void clearInputs() override;
+        bool setOutputSize(
+            unsigned int width,
+            unsigned int height,
+            GPUDataFormat format) override;
         GPtr<ImageFrame> getOutput() const override;
+        GPtr<GPUTexture> getOutputTexture() const override;
 
         void resetCache() override;
         bool hasCache() const override;
@@ -81,8 +87,6 @@ namespace win {
 
         int width_;
         int height_;
-        int view_width_;
-        int view_height_;
         int radius_;
         float semi_radius_;
         bool is_initialized_ = false;

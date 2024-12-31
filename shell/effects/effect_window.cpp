@@ -93,7 +93,9 @@ namespace shell {
             }
 
             image_img_ = ukive::ImageFrame::decodeFile(
-                getCanvas(), u"E:\\Test\\HDR.jxr", ukive::ImageOptions(ukive::ImagePixelFormat::HDR));
+                getCanvas(),
+                u"E:\\Test\\HDR.jxr",
+                ukive::ImageOptions(ukive::ImagePixelFormat::R16G16B16A16_FLOAT));
 
         }
     }

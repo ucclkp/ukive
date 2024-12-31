@@ -35,8 +35,6 @@ namespace win {
     ShadowEffectGPU::ShadowEffectGPU(Context context)
         : width_(0),
           height_(0),
-          view_width_(0),
-          view_height_(0),
           radius_(0),
           semi_radius_(0.f),
           context_(context)
@@ -436,20 +434,18 @@ namespace win {
         return createKernelTexture();
     }
 
-    bool ShadowEffectGPU::setContent(OffscreenBuffer* content) {
+    bool ShadowEffectGPU::addInput(OffscreenBuffer* content) {
         if (!is_initialized_ || !content) {
             return false;
         }
 
+        int radius = int(std::ceil(radius_ * context_.getAutoScale()));
         auto texture = static_cast<const OffscreenBufferWin*>(content)->getTexture();
 
         auto& desc = texture->getDesc();
-        view_width_ = desc.width;
-        view_height_ = desc.height;
 
-        int radius = int(std::ceil(radius_ * context_.getAutoScale()));
-        int width = view_width_ + radius * 2;
-        int height = view_height_ + radius * 2;
+        int width = desc.width + radius * 2;
+        int height = desc.height + radius * 2;
         cache_.reset();
 
         auto device =
@@ -465,12 +461,30 @@ namespace win {
         return setSize(width, height, desc.format);
     }
 
+    void ShadowEffectGPU::clearInputs() {
+        cache_.reset();
+        bg_srv_.reset();
+    }
+
+    bool ShadowEffectGPU::setOutputSize(
+        unsigned int width,
+        unsigned int height,
+        GPUDataFormat format)
+    {
+        cache_.reset();
+        return setSize(width, height, format);
+    }
+
     int ShadowEffectGPU::getRadius() const {
         return radius_;
     }
 
     GPtr<ImageFrame> ShadowEffectGPU::getOutput() const {
         return cache_;
+    }
+
+    GPtr<GPUTexture> ShadowEffectGPU::getOutputTexture() const {
+        return shadow2_tex2d_;
     }
 
     bool ShadowEffectGPU::createTexture(

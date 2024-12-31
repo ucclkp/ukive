@@ -30,7 +30,6 @@ namespace ukive {
         R16G16B16A16_FLOAT,
         R16G16B16A16_UNORM,
         RAW,
-        HDR,
     };
 
     enum class ImageAlphaMode {
@@ -48,11 +47,13 @@ namespace ukive {
     public:
         explicit ImageOptions(
             ImagePixelFormat pf = ImagePixelFormat::B8G8R8A8_UNORM,
-            ImageAlphaMode am = ImageAlphaMode::PREMULTIPLIED);
+            ImageAlphaMode am = ImageAlphaMode::PREMULTIPLIED,
+            bool hdr_enabled = false);
         ImageOptions(
             float dpi_x, float dpi_y,
             ImagePixelFormat pf = ImagePixelFormat::B8G8R8A8_UNORM,
-            ImageAlphaMode am = ImageAlphaMode::PREMULTIPLIED);
+            ImageAlphaMode am = ImageAlphaMode::PREMULTIPLIED,
+            bool hdr_enabled = false);
 
         bool operator==(const ImageOptions& rhs) const;
         bool operator!=(const ImageOptions& rhs) const;
@@ -62,6 +63,7 @@ namespace ukive {
         ImagePixelFormat pixel_format;
         ImageAlphaMode alpha_mode;
         ImageDPIType dpi_type;
+        bool hdr_enabled;
     };
 
 }

@@ -54,19 +54,18 @@ namespace ukive {
     }
 
     void convColorSpace(D2D1_COLOR_F* c, const ImageOptions& options) {
-        if (options.pixel_format == ImagePixelFormat::HDR) {
+        if (options.pixel_format == ImagePixelFormat::R16G16B16A16_FLOAT) {
             auto color = D2D1ConvertColorSpace(
                 D2D1_COLOR_SPACE_SRGB, D2D1_COLOR_SPACE_SCRGB, c);
 
-            float wp_scale = 320.f / D2D1_SCENE_REFERRED_SDR_WHITE_LEVEL;
-            color.r *= wp_scale;
-            color.g *= wp_scale;
-            color.b *= wp_scale;
-
+            if (options.hdr_enabled) {
+                // TODO:
+                float wp_scale = 200.f / D2D1_SCENE_REFERRED_SDR_WHITE_LEVEL;
+                color.r *= wp_scale;
+                color.g *= wp_scale;
+                color.b *= wp_scale;
+            }
             *c = color;
-        } else if (options.pixel_format == ImagePixelFormat::R16G16B16A16_FLOAT) {
-            *c = D2D1ConvertColorSpace(
-                D2D1_COLOR_SPACE_SRGB, D2D1_COLOR_SPACE_SCRGB, c);
         }
     }
 

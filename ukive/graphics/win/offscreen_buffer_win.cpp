@@ -173,9 +173,7 @@ namespace win {
         }
 
         GPUDataFormat format;
-        if (img_options_.pixel_format == ImagePixelFormat::HDR) {
-            format = GPUDataFormat::R16G16B16A16_FLOAT;
-        } else if (img_options_.pixel_format == ImagePixelFormat::R16G16B16A16_FLOAT) {
+        if (img_options_.pixel_format == ImagePixelFormat::R16G16B16A16_FLOAT) {
             format = GPUDataFormat::R16G16B16A16_FLOAT;
         } else {
             format = GPUDataFormat::B8G8R8A8_UNORM;

@@ -162,7 +162,8 @@ namespace shell {
         shadow_effect_.reset(ukive::ShadowEffect::create(getContext()));
         ret = shadow_effect_->initialize(); ubassert(ret);
         ret = shadow_effect_->setRadius(RADIUS); ubassert(ret);
-        ret = shadow_effect_->setContent(static_cast<ukive::OffscreenBuffer*>(canvas.getBuffer())); ubassert(ret);
+        shadow_effect_->clearInputs();
+        ret = shadow_effect_->addInput(static_cast<ukive::OffscreenBuffer*>(canvas.getBuffer())); ubassert(ret);
         ret = shadow_effect_->generate(getCanvas()); ubassert(ret);
         shadow_img_ = shadow_effect_->getOutput(); ubassert(!!shadow_img_);
 
