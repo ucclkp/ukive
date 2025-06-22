@@ -47,7 +47,6 @@ namespace ukive {
     private:
         int id_ = -1;
         int menu_width_;
-        int menu_item_height_;
         bool is_finished_;
 
         ContextMenuCallback* callback_;

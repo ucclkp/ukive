@@ -6,6 +6,8 @@
 
 #include "ukive/graphics/win/images/lc_image_factory_win.h"
 
+#include <fstream>
+
 #include <Icm.h>
 #include <ShlObj.h>
 #include <Shlwapi.h>
@@ -15,12 +17,14 @@
 #include "utils/numbers.hpp"
 #include "utils/strings/string_utils.hpp"
 
+#include "ukive/graphics/images/jpeg_appmarker_parser.h"
 #include "ukive/graphics/images/lc_image.h"
 #include "ukive/graphics/win/colors/color_manager_win.h"
 #include "ukive/graphics/win/display_win.h"
 #include "ukive/graphics/win/images/image_options_win_utils.h"
 #include "ukive/graphics/win/images/lc_image_frame_win.h"
 #include "ukive/window/window_dpi_utils.h"
+#include <ukive/graphics/win/images/mstream.hpp>
 
 
 namespace ukive {
@@ -203,7 +207,9 @@ namespace win {
         if (!decoder) {
             return {};
         }
-        return processDecoder(decoder.get(), options);
+
+        std::ifstream file_stream(utl::u16tow(file_name), std::ios::binary);
+        return processDecoder(file_stream, decoder.get(), options);
     }
 
     LcImage LcImageFactoryWin::decodeMemory(
@@ -213,7 +219,9 @@ namespace win {
         if (!decoder) {
             return {};
         }
-        return processDecoder(decoder.get(), options);
+
+        utl::imemorystream ims((const char*)buffer, size);
+        return processDecoder(ims, decoder.get(), options);
     }
 
     bool LcImageFactoryWin::saveToFile(
@@ -304,153 +312,199 @@ namespace win {
         return true;
     }
 
-    void LcImageFactoryWin::getGlobalMetadata(IWICBitmapDecoder* decoder, GifImageData* data) {
+    bool LcImageFactoryWin::getGifGlobalMetadata(IWICBitmapDecoder* decoder, GifImageData* data) {
         utl::win::ComPtr<IWICMetadataQueryReader> reader;
         HRESULT hr = decoder->GetMetadataQueryReader(&reader);
-        if (SUCCEEDED(hr)) {
-            PROPVARIANT prop_var;
-            PropVariantInit(&prop_var);
-            hr = reader->GetMetadataByName(L"/logscrdesc/Width", &prop_var);
-            if (SUCCEEDED(hr) && prop_var.vt == VT_UI2) {
-                data->width = prop_var.uiVal;
-            }
-
-            PropVariantClear(&prop_var);
-            hr = reader->GetMetadataByName(L"/logscrdesc/Height", &prop_var);
-            if (SUCCEEDED(hr) && prop_var.vt == VT_UI2) {
-                data->height = prop_var.uiVal;
-            }
-
-            PropVariantClear(&prop_var);
-            hr = reader->GetMetadataByName(L"/logscrdesc/GlobalColorTableFlag", &prop_var);
-            if (SUCCEEDED(hr) && prop_var.vt == VT_BOOL && prop_var.boolVal) {
-                PropVariantClear(&prop_var);
-                hr = reader->GetMetadataByName(L"/logscrdesc/BackgroundColorIndex", &prop_var);
-                if (SUCCEEDED(hr) && prop_var.vt == VT_UI1) {
-                    UINT bg_index = prop_var.bVal;
-                    utl::win::ComPtr<IWICPalette> palette;
-                    hr = wic_factory_->CreatePalette(&palette);
-                    if (SUCCEEDED(hr)) {
-                        hr = decoder->CopyPalette(palette.get());
-                    }
-
-                    if (SUCCEEDED(hr)) {
-                        UINT color_count = 0;
-                        hr = palette->GetColorCount(&color_count);
-                        if (SUCCEEDED(hr) && color_count > 0) {
-                            UINT actual_count = 0;
-                            WICColor* color_table = new WICColor[color_count];
-                            hr = palette->GetColors(color_count, color_table, &actual_count);
-                            if (SUCCEEDED(hr) && actual_count > 0 && bg_index < actual_count) {
-                                data->bg_color = Color::ofARGB(color_table[bg_index]);
-                            }
-                            delete[] color_table;
-                        }
-                    }
-                }
-            }
-
-            PropVariantClear(&prop_var);
-            hr = reader->GetMetadataByName(L"/logscrdesc/PixelAspectRatio", &prop_var);
-            if (SUCCEEDED(hr) && prop_var.vt == VT_UI1) {
-                UINT ratio = prop_var.bVal;
-                if (ratio != 0) {
-                    float pixel_ratio = (ratio + 15.f) / 64.f;
-                    if (pixel_ratio > 1.f) {
-                        data->height = static_cast<int>(data->height / pixel_ratio);
-                    } else {
-                        data->width = static_cast<int>(data->width * pixel_ratio);
-                    }
-                }
-            }
-
-            PropVariantClear(&prop_var);
-            hr = reader->GetMetadataByName(L"/appext/application", &prop_var);
-            if (SUCCEEDED(hr)
-                && prop_var.vt == (VT_UI1 | VT_VECTOR)
-                && prop_var.caub.cElems == 11
-                && (!memcmp(prop_var.caub.pElems, "NETSCAPE2.0", prop_var.caub.cElems) ||
-                    !memcmp(prop_var.caub.pElems, "ANIMEXTS1.0", prop_var.caub.cElems))) {
-
-                PropVariantClear(&prop_var);
-                hr = reader->GetMetadataByName(L"/appext/data", &prop_var);
-                if (SUCCEEDED(hr)
-                    && (prop_var.vt == (VT_UI1 | VT_VECTOR)
-                        && prop_var.caub.cElems >= 4
-                        && prop_var.caub.pElems[0] > 0
-                        && prop_var.caub.pElems[1] == 1)) {
-                    data->loop_count = MAKEWORD(prop_var.caub.pElems[2],
-                        prop_var.caub.pElems[3]);
-                }
-            }
-            PropVariantClear(&prop_var);
+        if (FAILED(hr)) {
+            return false;
         }
+
+        PROPVARIANT prop_var;
+        PropVariantInit(&prop_var);
+        hr = reader->GetMetadataByName(L"/logscrdesc/Width", &prop_var);
+        if (SUCCEEDED(hr) && prop_var.vt == VT_UI2) {
+            data->width = prop_var.uiVal;
+        }
+
+        PropVariantClear(&prop_var);
+        hr = reader->GetMetadataByName(L"/logscrdesc/Height", &prop_var);
+        if (SUCCEEDED(hr) && prop_var.vt == VT_UI2) {
+            data->height = prop_var.uiVal;
+        }
+
+        PropVariantClear(&prop_var);
+        hr = reader->GetMetadataByName(L"/logscrdesc/GlobalColorTableFlag", &prop_var);
+        if (SUCCEEDED(hr) && prop_var.vt == VT_BOOL && prop_var.boolVal) {
+            PropVariantClear(&prop_var);
+            hr = reader->GetMetadataByName(L"/logscrdesc/BackgroundColorIndex", &prop_var);
+            if (SUCCEEDED(hr) && prop_var.vt == VT_UI1) {
+                UINT bg_index = prop_var.bVal;
+                utl::win::ComPtr<IWICPalette> palette;
+                hr = wic_factory_->CreatePalette(&palette);
+                if (SUCCEEDED(hr)) {
+                    hr = decoder->CopyPalette(palette.get());
+                }
+
+                if (SUCCEEDED(hr)) {
+                    UINT color_count = 0;
+                    hr = palette->GetColorCount(&color_count);
+                    if (SUCCEEDED(hr) && color_count > 0) {
+                        UINT actual_count = 0;
+                        WICColor* color_table = new WICColor[color_count];
+                        hr = palette->GetColors(color_count, color_table, &actual_count);
+                        if (SUCCEEDED(hr) && actual_count > 0 && bg_index < actual_count) {
+                            data->bg_color = Color::ofARGB(color_table[bg_index]);
+                        }
+                        delete[] color_table;
+                    }
+                }
+            }
+        }
+
+        PropVariantClear(&prop_var);
+        hr = reader->GetMetadataByName(L"/logscrdesc/PixelAspectRatio", &prop_var);
+        if (SUCCEEDED(hr) && prop_var.vt == VT_UI1) {
+            UINT ratio = prop_var.bVal;
+            if (ratio != 0) {
+                float pixel_ratio = (ratio + 15.f) / 64.f;
+                if (pixel_ratio > 1.f) {
+                    data->height = static_cast<int>(data->height / pixel_ratio);
+                } else {
+                    data->width = static_cast<int>(data->width * pixel_ratio);
+                }
+            }
+        }
+
+        PropVariantClear(&prop_var);
+        hr = reader->GetMetadataByName(L"/appext/application", &prop_var);
+        if (SUCCEEDED(hr)
+            && prop_var.vt == (VT_UI1 | VT_VECTOR)
+            && prop_var.caub.cElems == 11
+            && (!memcmp(prop_var.caub.pElems, "NETSCAPE2.0", prop_var.caub.cElems) ||
+                !memcmp(prop_var.caub.pElems, "ANIMEXTS1.0", prop_var.caub.cElems))) {
+
+            PropVariantClear(&prop_var);
+            hr = reader->GetMetadataByName(L"/appext/data", &prop_var);
+            if (SUCCEEDED(hr)
+                && (prop_var.vt == (VT_UI1 | VT_VECTOR)
+                    && prop_var.caub.cElems >= 4
+                    && prop_var.caub.pElems[0] > 0
+                    && prop_var.caub.pElems[1] == 1)) {
+                data->loop_count = MAKEWORD(prop_var.caub.pElems[2],
+                    prop_var.caub.pElems[3]);
+            }
+        }
+        PropVariantClear(&prop_var);
+        return true;
     }
 
-    void LcImageFactoryWin::getFrameMetadata(IWICBitmapFrameDecode* decoder, GifImageFrData* data) {
+    bool LcImageFactoryWin::getGifFrameMetadata(IWICBitmapFrameDecode* decoder, GifImageFrData* data) {
         utl::win::ComPtr<IWICMetadataQueryReader> reader;
         HRESULT hr = decoder->GetMetadataQueryReader(&reader);
-        if (SUCCEEDED(hr)) {
-            PROPVARIANT prop_var;
-            PropVariantInit(&prop_var);
-            hr = reader->GetMetadataByName(L"/grctlext/Disposal", &prop_var);
-            if (SUCCEEDED(hr) && prop_var.vt == VT_UI1) {
-                data->disposal = prop_var.bVal;
-            }
-
-            PropVariantClear(&prop_var);
-            hr = reader->GetMetadataByName(L"/grctlext/Delay", &prop_var);
-            if (SUCCEEDED(hr) && prop_var.vt == VT_UI2) {
-                data->frame_interval = prop_var.uiVal * 10;
-            }
-
-            PropVariantClear(&prop_var);
-            hr = reader->GetMetadataByName(L"/imgdesc/Left", &prop_var);
-            if (SUCCEEDED(hr) && prop_var.vt == VT_UI2) {
-                data->left = prop_var.uiVal;
-            }
-
-            PropVariantClear(&prop_var);
-            hr = reader->GetMetadataByName(L"/imgdesc/Top", &prop_var);
-            if (SUCCEEDED(hr) && prop_var.vt == VT_UI2) {
-                data->top = prop_var.uiVal;
-            }
-
-            PropVariantClear(&prop_var);
-            hr = reader->GetMetadataByName(L"/imgdesc/Width", &prop_var);
-            if (SUCCEEDED(hr) && prop_var.vt == VT_UI2) {
-                data->width = prop_var.uiVal;
-            }
-
-            PropVariantClear(&prop_var);
-            hr = reader->GetMetadataByName(L"/imgdesc/Height", &prop_var);
-            if (SUCCEEDED(hr) && prop_var.vt == VT_UI2) {
-                data->height = prop_var.uiVal;
-            }
-
-            PropVariantClear(&prop_var);
-            hr = reader->GetMetadataByName(L"/imgdesc/InterlaceFlag", &prop_var);
-            if (SUCCEEDED(hr) && prop_var.vt == VT_BOOL) {
-                auto v_interlace = prop_var.boolVal;
-                if (v_interlace) {
-                    data->interlace = true;
-                } else {
-                    data->interlace = false;
-                }
-            }
-
-            PropVariantClear(&prop_var);
-            hr = reader->GetMetadataByName(L"/imgdesc/SortFlag", &prop_var);
-            if (SUCCEEDED(hr) && prop_var.vt == VT_BOOL) {
-                auto v_sort = prop_var.boolVal;
-                if (v_sort) {
-                    data->sort = true;
-                } else {
-                    data->sort = false;
-                }
-            }
-            PropVariantClear(&prop_var);
+        if (FAILED(hr)) {
+            return false;
         }
+
+        PROPVARIANT prop_var;
+        PropVariantInit(&prop_var);
+        hr = reader->GetMetadataByName(L"/grctlext/Disposal", &prop_var);
+        if (SUCCEEDED(hr) && prop_var.vt == VT_UI1) {
+            data->disposal = prop_var.bVal;
+        }
+
+        PropVariantClear(&prop_var);
+        hr = reader->GetMetadataByName(L"/grctlext/Delay", &prop_var);
+        if (SUCCEEDED(hr) && prop_var.vt == VT_UI2) {
+            data->frame_interval = prop_var.uiVal * 10;
+        }
+
+        PropVariantClear(&prop_var);
+        hr = reader->GetMetadataByName(L"/imgdesc/Left", &prop_var);
+        if (SUCCEEDED(hr) && prop_var.vt == VT_UI2) {
+            data->left = prop_var.uiVal;
+        }
+
+        PropVariantClear(&prop_var);
+        hr = reader->GetMetadataByName(L"/imgdesc/Top", &prop_var);
+        if (SUCCEEDED(hr) && prop_var.vt == VT_UI2) {
+            data->top = prop_var.uiVal;
+        }
+
+        PropVariantClear(&prop_var);
+        hr = reader->GetMetadataByName(L"/imgdesc/Width", &prop_var);
+        if (SUCCEEDED(hr) && prop_var.vt == VT_UI2) {
+            data->width = prop_var.uiVal;
+        }
+
+        PropVariantClear(&prop_var);
+        hr = reader->GetMetadataByName(L"/imgdesc/Height", &prop_var);
+        if (SUCCEEDED(hr) && prop_var.vt == VT_UI2) {
+            data->height = prop_var.uiVal;
+        }
+
+        PropVariantClear(&prop_var);
+        hr = reader->GetMetadataByName(L"/imgdesc/InterlaceFlag", &prop_var);
+        if (SUCCEEDED(hr) && prop_var.vt == VT_BOOL) {
+            auto v_interlace = prop_var.boolVal;
+            if (v_interlace) {
+                data->interlace = true;
+            } else {
+                data->interlace = false;
+            }
+        }
+
+        PropVariantClear(&prop_var);
+        hr = reader->GetMetadataByName(L"/imgdesc/SortFlag", &prop_var);
+        if (SUCCEEDED(hr) && prop_var.vt == VT_BOOL) {
+            auto v_sort = prop_var.boolVal;
+            if (v_sort) {
+                data->sort = true;
+            } else {
+                data->sort = false;
+            }
+        }
+        PropVariantClear(&prop_var);
+        return true;
+    }
+
+    bool LcImageFactoryWin::getJpegFrameMetadata(
+        IWICBitmapFrameDecode* decoder)
+    {
+        utl::win::ComPtr<IWICMetadataQueryReader> reader;
+        HRESULT hr = decoder->GetMetadataQueryReader(&reader);
+        if (FAILED(hr)) {
+            return false;
+        }
+
+        PROPVARIANT prop;
+        for (int i = 0;; ++i) {
+            auto name = L"/[" + std::to_wstring(i) + L"]unknown";
+
+            ::PropVariantInit(&prop);
+            hr = reader->GetMetadataByName(name.c_str(), &prop);
+            if (FAILED(hr)) {
+                break;
+            }
+            if (prop.vt != VT_UNKNOWN) {
+                ::PropVariantClear(&prop);
+            }
+
+            utl::win::ComPtr<IWICMetadataQueryReader> nr;
+            hr = prop.punkVal->QueryInterface(IID_PPV_ARGS(&nr));
+            if (SUCCEEDED(hr)) {
+                PROPVARIANT nr_prop;
+                ::PropVariantInit(&nr_prop);
+                hr = nr->GetMetadataByName(L"/", &nr_prop);
+                if (SUCCEEDED(hr) && nr_prop.vt == VT_BLOB) {
+                    // APP2
+                }
+                ::PropVariantClear(&nr_prop);
+            }
+
+            ::PropVariantClear(&prop);
+        }
+
+        return true;
     }
 
     utl::win::ComPtr<IWICBitmapDecoder> LcImageFactoryWin::createDecoder(
@@ -472,6 +526,7 @@ namespace win {
             DLOG(Log::WARNING) << "Failed to decode file: " << utl::u16to8(file_name) << " " << std::hex << hr;
             return {};
         }
+
         return decoder;
     }
 
@@ -538,6 +593,7 @@ namespace win {
     }
 
     LcImage LcImageFactoryWin::processDecoder(
+        std::istream& s,
         IWICBitmapDecoder* decoder, const ImageOptions& options)
     {
         UINT frame_count = 0;
@@ -557,23 +613,27 @@ namespace win {
         LcImage image;
         if (img_format == GUID_ContainerFormatGif) {
             auto data = std::make_shared<GifImageData>();
-            getGlobalMetadata(decoder, data.get());
+            getGifGlobalMetadata(decoder, data.get());
+            image.setData(data);
+        } else if (img_format == GUID_ContainerFormatJpeg) {
+            auto data = std::make_shared<JpegImageData>();
+            parse_jpeg_metadata(s, &data->metadata);
             image.setData(data);
         }
 
-        utl::win::ComPtr<IWICColorContext> dst_cc;
-        hr = wic_factory_->CreateColorContext(&dst_cc);
-        if (SUCCEEDED(hr)) {
-            std::wstring display_icm;
-
-            auto display = Display::fromPrimary();
-            static_cast<DisplayWin*>(display.get())->getICMProfilePath(&display_icm);
-
-            hr = dst_cc->InitializeFromFilename(display_icm.c_str());
-            if (FAILED(hr)) {
-                dst_cc.reset();
-            }
-        }
+        //utl::win::ComPtr<IWICColorContext> dst_cc;
+        //hr = wic_factory_->CreateColorContext(&dst_cc);
+        //if (SUCCEEDED(hr)) {
+        //    std::wstring display_icm;
+        //
+        //    auto display = Display::fromPrimary();
+        //    static_cast<DisplayWin*>(display.get())->getICMProfilePath(&display_icm);
+        //
+        //    hr = dst_cc->InitializeFromFilename(display_icm.c_str());
+        //    if (FAILED(hr)) {
+        //        dst_cc.reset();
+        //    }
+        //}
 
         for (UINT i = 0; i < frame_count; ++i) {
             utl::win::ComPtr<IWICBitmapFrameDecode> frame_decoder;
@@ -584,36 +644,43 @@ namespace win {
             }
 
             WICPixelFormatGUID sf;
-            frame_decoder->GetPixelFormat(&sf);
+            hr = frame_decoder->GetPixelFormat(&sf);
+            if (FAILED(hr)) {
+                ubassert(false);
+                return {};
+            }
 
-            //std::wstring dmp_md;
-            //utl::win::ComPtr<IWICMetadataQueryReader> reader;
-            //hr = decoder->GetMetadataQueryReader(&reader);
-            //if (SUCCEEDED(hr)) {
-            //    dumpMetadata(reader.get(), &dmp_md);
-            //}
+            std::wstring dmp_md;
+            utl::win::ComPtr<IWICMetadataQueryReader> reader;
+            hr = frame_decoder->GetMetadataQueryReader(&reader);
+            if (SUCCEEDED(hr)) {
+                dumpMetadata(reader.get(), 0, &dmp_md);
+            }
 
             //exploreColorProfile(frame_decoder.get());
 
             utl::win::ComPtr<IWICBitmapSource> source;
-            source = convertGamut(frame_decoder.get(), dst_cc.get());
+            //source = convertGamut(frame_decoder.get(), dst_cc.get());
             if (!source) {
                 source = frame_decoder.cast<IWICBitmapSource>();
             }
 
+            auto new_options = options;
             if (options.pixel_format != ImagePixelFormat::RAW) {
                 source = convertPixelFormat(source.get(), options);
+            } else {
+                new_options.pixel_format = mapImagePixelFormatFromWIC(sf);
             }
 
             if (!source) {
                 return {};
             }
 
-            LcImageFrame* frame = new LcImageFrameWin(options, {}, wic_factory_, source);
+            LcImageFrame* frame = new LcImageFrameWin(new_options, {}, wic_factory_, source);
 
-            switch (options.dpi_type) {
+            switch (new_options.dpi_type) {
             case ImageDPIType::SPECIFIED:
-                frame->setDpi(options.dpi_x, options.dpi_y);
+                frame->setDpi(new_options.dpi_x, new_options.dpi_y);
                 break;
 
             case ImageDPIType::DEFAULT:
@@ -624,8 +691,10 @@ namespace win {
 
             if (img_format == GUID_ContainerFormatGif) {
                 auto fr_data = std::make_shared<GifImageFrData>();
-                getFrameMetadata(frame_decoder.get(), fr_data.get());
+                getGifFrameMetadata(frame_decoder.get(), fr_data.get());
                 frame->setData(fr_data);
+            } else if (img_format == GUID_ContainerFormatJpeg) {
+                //getJpegFrameMetadata(frame_decoder.get());
             }
             image.addFrame(GPtr<LcImageFrame>(frame));
         }
@@ -831,7 +900,7 @@ namespace win {
     }
 
     bool LcImageFactoryWin::dumpMetadata(
-        IWICMetadataQueryReader* reader, std::wstring* out)
+        IWICMetadataQueryReader* reader, int depth, std::wstring* out)
     {
         utl::win::ComPtr<IEnumString> enumerator;
         HRESULT hr = reader->GetEnumerator(&enumerator);
@@ -856,6 +925,10 @@ namespace win {
             PROPVARIANT prop;
             ::PropVariantInit(&prop);
 
+            for (int i = 0; i < depth; ++i) {
+                ss << L"  ";
+            }
+
             hr = reader->GetMetadataByName(name.c_str(), &prop);
             if (FAILED(hr)) {
                 ss << name << ": [FAILED] " << hr << "\n";
@@ -876,7 +949,7 @@ namespace win {
             case VT_ERROR: ss << name << ": " << prop.scode << "\n"; break;
             case VT_BOOL:  ss << name << ": " << (prop.boolVal ? "true" : "false") << "\n"; break;
             case VT_VARIANT: ss << name << ": [VARIANT]\n"; break;
-            case VT_UNKNOWN: ss << name << ": [UNKNOWN]\n"; break;
+            case VT_UNKNOWN: ss << name << ": [obj]\n"; break;
             case VT_DECIMAL: ss << name << ": [DECIMAL]\n"; break;
             case VT_I1:    ss << name << ": " << prop.cVal << "\n"; break;
             case VT_UI1:   ss << name << ": " << prop.bVal << "\n"; break;
@@ -898,7 +971,34 @@ namespace win {
             case VT_INT_PTR:  ss << name << ": p:" << prop.intVal << "\n"; break;
             case VT_UINT_PTR: ss << name << ": p:" << prop.uintVal << "\n"; break;
             case VT_FILETIME: ss << name << ": [FILETIME]\n"; break;
-            case VT_BLOB: ss << name << ": [BLOB]\n"; break;
+            case VT_BLOB:
+            {
+                ss << name << ": [BLOB] ";
+                ss << "size:" << prop.blob.cbSize;
+                if (prop.blob.cbSize > 0) {
+                    ss << ", ";
+                }
+                ULONG i = 0;
+                for (; i < prop.blob.cbSize; ++i) {
+                    char ch = (char)prop.blob.pBlobData[i];
+                    if (ch >= 0x20 && ch <= 0x7E) {
+                        if (i == 0) ss << "'";
+                        ss << ch;
+                    } else {
+                        break;
+                    }
+                }
+                if (i > 0) ss << "'";
+                for (; i < prop.blob.cbSize && i < 16; ++i) {
+                    auto ch = prop.blob.pBlobData[i];
+                    ss << " " << std::hex << std::setfill(L'0') << std::setw(2) << (unsigned int)ch;
+                }
+                if (i < prop.blob.cbSize) {
+                    ss << "...";
+                }
+                ss << "\n";
+                break;
+            }
             case VT_STREAM: ss << name << ": [STREAM]\n"; break;
             case VT_STORAGE: ss << name << ": [STORAGE]\n"; break;
             case VT_STREAMED_OBJECT: ss << name << ": [STREAMED_OBJECT]\n"; break;
@@ -965,6 +1065,17 @@ namespace win {
                 ss << "\n";
             } break;
             default: ss << name << ": [?]\n"; break;
+            }
+
+            if (prop.vt == VT_UNKNOWN) {
+                utl::win::ComPtr<IWICMetadataQueryReader> nr;
+                hr = prop.punkVal->QueryInterface(IID_PPV_ARGS(&nr));
+                if (SUCCEEDED(hr)) {
+                    std::wstring ns;
+                    dumpMetadata(nr.get(), depth + 1, &ns);
+                    ss << ns;
+                    int asfd = 0;
+                }
             }
 
             ::PropVariantClear(&prop);

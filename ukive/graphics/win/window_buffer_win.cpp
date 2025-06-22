@@ -229,6 +229,11 @@ namespace win {
             }
         }
 
+        auto swapchain2 = swapchain_.cast<IDXGISwapChain2>();
+        if (swapchain2) {
+            swapchain2->SetMaximumFrameLatency(1);
+        }
+
         utl::win::ComPtr<IDXGIFactory2> parent;
         hr = swapchain_->GetParent(IID_PPV_ARGS(&parent));
         if (FAILED(hr)) {

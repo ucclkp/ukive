@@ -22,11 +22,10 @@
 namespace ukive {
 namespace win {
 
-    ImageEffectGPU::ImageEffectGPU(Context context)
+    ImageEffectGPU::ImageEffectGPU()
         : width_(0),
           height_(0),
-          viewport_(),
-          context_(context)
+          viewport_()
     {
     }
 
@@ -93,6 +92,7 @@ namespace win {
         index_buffer_.reset();
 
         cache_.reset();
+        cached_shaders_.clear();
 
         width_ = 0;
         height_ = 0;
@@ -114,6 +114,10 @@ namespace win {
         }
 
         render();
+
+        if (!c) {
+            return true;
+        }
 
         auto image = c->createImage(target_tex2d_);
         if (!image) {
@@ -153,10 +157,10 @@ namespace win {
 
         // 顶点缓存
         VertexData vertices[] {
-            { {0,            float(height), 0} },
-            { {float(width), float(height), 0} },
-            { {float(width), 0,             0} },
-            { {0,            0,             0} },
+            { {0,            float(height), 0}, {0, 1} },
+            { {float(width), float(height), 0}, {1, 1} },
+            { {float(width), 0,             0}, {1, 0} },
+            { {0,            0,             0}, {0, 0} },
         };
 
         GPUBuffer::Desc vb_desc;
@@ -251,7 +255,7 @@ namespace win {
         context->setRenderTargets(1, &target_rtv_, nullptr);
 
         if (!org_srvs_.empty()) {
-            GPUShaderResource* srvs[8];
+            GPUShaderResource* srvs[D3D10_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT];
             size_t count = (std::min)(ARRAYSIZE(srvs), org_srvs_.size());
             for (size_t i = 0; i < count; ++i) {
                 srvs[i] = org_srvs_[i].get();
@@ -304,19 +308,23 @@ namespace win {
     }
 
     bool ImageEffectGPU::addInput(const GPtr<GPUTexture>& texture) {
-        if (!is_initialized_ || !texture) {
+        if (!is_initialized_) {
             return false;
         }
 
         cache_.reset();
 
-        auto ret = texture->createSRV();
-        if (ret.raw_code() != 0) {
-            LOG(Log::WARNING) << "Failed to create SRV: " << ret.raw_code();
-            return false;
+        if (texture) {
+            auto ret = texture->createSRV();
+            if (ret.raw_code() != 0) {
+                LOG(Log::WARNING) << "Failed to create SRV: " << ret.raw_code();
+                return false;
+            }
+            org_srvs_.push_back(texture->srv());
+        } else {
+            org_srvs_.push_back({});
         }
 
-        org_srvs_.push_back(texture->srv());
         return true;
     }
 
@@ -325,7 +333,7 @@ namespace win {
         org_srvs_.clear();
     }
 
-    bool ImageEffectGPU::setOutputSize(
+    bool ImageEffectGPU::setOutputFormat(
         unsigned int width,
         unsigned int height,
         GPUDataFormat format)
@@ -359,8 +367,9 @@ namespace win {
         vs_ = vs_ret;
 
         using GILD = GPUInputLayout::Desc;
-        GILD layout[1];
+        GILD layout[2];
         layout[0] = GILD("POSITION", GPUDataFormat::R32G32B32_FLOAT, 0, 0, false);
+        layout[1] = GILD("TEXCOORD", GPUDataFormat::R32G32_FLOAT);
         auto il_ret = device->createInputLayout(layout, ARRAYSIZE(layout), vs_bc.data(), vs_bc.size());
         if (!il_ret) {
             LOG(Log::WARNING) << "Failed to create input layout: " << il_ret.code.raw_code();
@@ -371,6 +380,10 @@ namespace win {
     }
 
     bool ImageEffectGPU::setPixelShader(const std::u16string& name) {
+        if (cached_shaders_.find(name) != cached_shaders_.end()) {
+            ps_ = cached_shaders_[name];
+            return true;
+        }
         auto device =
             Application::getGraphicDeviceManager()->getGPUDevice();
 
@@ -385,6 +398,7 @@ namespace win {
             return false;
         }
         ps_ = ps_ret;
+        cached_shaders_[name] = ps_;
         return true;
     }
 

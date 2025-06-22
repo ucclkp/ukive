@@ -22,11 +22,17 @@ namespace ukive {
         virtual void setCallback(MenuCallback* callback) = 0;
         virtual MenuCallback* getCallback() const = 0;
 
-        virtual MenuItem* addItem(int id, int order, const std::u16string_view& title) = 0;
+        MenuItem* addItem(int id, int order, const std::u16string_view& title) {
+            return addItem(id, order, title, false);
+        }
+        virtual MenuItem* addItem(int id, int order, const std::u16string_view& title, bool checkable) = 0;
         virtual bool removeItem(int id) = 0;
         virtual bool hasItem(int id) const = 0;
         virtual MenuItem* findItem(int id) const = 0;
         virtual size_t getItemCount() const = 0;
+
+        virtual void notifyItemCheckable(int id, bool checkable) = 0;
+        virtual void notifyItemChecked(int id, bool checked) = 0;
     };
 
 }

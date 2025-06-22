@@ -79,12 +79,24 @@ namespace ukive {
         return shader_res_;
     }
 
+    GPtr<GPUOutputResource> GPUTexture::uav() const {
+        return output_res_;
+    }
+
     gerc GPUTexture::createSRV() {
         shader_res_.reset();
         auto dev = Application::getGraphicDeviceManager()->getGPUDevice();
         auto srv = dev->createShaderResource(nullptr, this);
         setSRV(srv);
         return srv.code;
+    }
+
+    gerc GPUTexture::createUAV() {
+        output_res_.reset();
+        auto dev = Application::getGraphicDeviceManager()->getGPUDevice();
+        auto uav = dev->createOutputResource(nullptr, this);
+        output_res_ = uav;
+        return uav.code;
     }
 
 }

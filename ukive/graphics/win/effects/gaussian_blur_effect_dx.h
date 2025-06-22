@@ -46,7 +46,7 @@ namespace win {
         bool draw(Canvas* c) override;
         bool addInput(OffscreenBuffer* content) override;
         void clearInputs() override;
-        bool setOutputSize(
+        bool setOutputFormat(
             unsigned int width,
             unsigned int height,
             GPUDataFormat format) override;

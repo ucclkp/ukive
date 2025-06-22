@@ -12,19 +12,28 @@
 
 namespace ukive {
 
+    class Menu;
+
     class MenuItem {
     public:
         virtual ~MenuItem() = default;
 
+        virtual void setParentMenu(Menu* menu) = 0;
+        virtual Menu* getParentMenu() const = 0;
+
         virtual void setItemTitle(const std::u16string_view& title) = 0;
         virtual void setItemVisible(bool visible) = 0;
         virtual void setItemEnabled(bool enable) = 0;
+        virtual void setItemCheckable(bool checkable) = 0;
+        virtual void setItemChecked(bool checked) = 0;
 
         virtual int getItemId() const = 0;
         virtual int32_t getItemOrder() const = 0;
         virtual const std::u16string& getItemTitle() const = 0;
         virtual bool isItemVisible() const = 0;
         virtual bool isItemEnabled() const = 0;
+        virtual bool isItemCheckable() const = 0;
+        virtual bool isItemChecked() const = 0;
     };
 
 }

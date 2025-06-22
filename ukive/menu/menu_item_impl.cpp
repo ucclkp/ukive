@@ -6,6 +6,7 @@
 
 #include "menu_item_impl.h"
 
+#include "ukive/menu/menu.h"
 #include "ukive/window/window.h"
 
 
@@ -14,12 +15,10 @@ namespace ukive {
     MenuItemImpl::MenuItemImpl(Context c, int menu_id, int32_t order)
         : TextView(c),
           menu_id_(menu_id),
-          is_visible_(true),
           order_(order)
     {
           initMenuItem();
     }
-
 
     void MenuItemImpl::initMenuItem() {
         setTextSize(getContext().dp2pxi(13));
@@ -31,6 +30,13 @@ namespace ukive {
         autoWrap(false);
     }
 
+    void MenuItemImpl::setParentMenu(Menu* menu) {
+        parent_menu_ = menu;
+    }
+
+    Menu* MenuItemImpl::getParentMenu() const {
+        return parent_menu_;
+    }
 
     void MenuItemImpl::setItemTitle(const std::u16string_view& title) {
         setText(title);
@@ -45,6 +51,27 @@ namespace ukive {
 
     void MenuItemImpl::setItemEnabled(bool enable) {
         setEnabled(enable);
+    }
+
+    void MenuItemImpl::setItemCheckable(bool checkable) {
+        if (is_checkable_ == checkable) return;
+
+        is_checkable_ = checkable;
+        if (!checkable) {
+            setItemChecked(false);
+        }
+        if (parent_menu_) {
+            parent_menu_->notifyItemCheckable(menu_id_, checkable);
+        }
+    }
+
+    void MenuItemImpl::setItemChecked(bool checked) {
+        if (!is_checkable_ || is_checked_ == checked) return;
+
+        is_checked_ = checked;
+        if (parent_menu_) {
+            parent_menu_->notifyItemChecked(menu_id_, checked);
+        }
     }
 
     int MenuItemImpl::getItemId() const {
@@ -65,6 +92,14 @@ namespace ukive {
 
     bool MenuItemImpl::isItemEnabled() const {
         return isEnabled();
+    }
+
+    bool MenuItemImpl::isItemCheckable() const {
+        return is_checkable_;
+    }
+
+    bool MenuItemImpl::isItemChecked() const {
+        return is_checked_;
     }
 
 }

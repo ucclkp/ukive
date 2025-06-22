@@ -23,6 +23,16 @@ namespace ukive {
     public:
         using DisplayPtr = std::shared_ptr<Display>;
 
+        struct ColorInfo {
+            PointF red_primary;
+            PointF green_primary;
+            PointF blue_primary;
+            PointF white_point;
+            float min_luminance;
+            float max_luminance;
+            float max_fullscreen_luminance;
+        };
+
         static DisplayPtr fromNull();
         static DisplayPtr fromPrimary();
         static DisplayPtr fromPoint(const Point& p);
@@ -45,6 +55,7 @@ namespace ukive {
         virtual void getUserScale(float* sx, float* sy) const = 0;
         virtual uint32_t getRefreshRate() const = 0;
         virtual uint32_t getSDRWhiteLevel() const = 0;
+        virtual bool getColorInfo(ColorInfo* ci) const = 0;
     };
 
 }

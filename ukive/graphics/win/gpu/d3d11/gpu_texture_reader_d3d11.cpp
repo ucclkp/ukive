@@ -47,7 +47,9 @@ namespace {
             return DXGI_FORMAT_R16G16B16A16_UNORM;
         } else if (wic_format == GUID_WICPixelFormat32bppRGBA1010102XR) {
             return DXGI_FORMAT_R10G10B10_XR_BIAS_A2_UNORM;
-        } else if (wic_format == GUID_WICPixelFormat32bppRGBA1010102) {
+        } else if (wic_format == GUID_WICPixelFormat32bppR10G10B10A2 ||
+            wic_format == GUID_WICPixelFormat32bppR10G10B10A2HDR10)
+        {
             return DXGI_FORMAT_R10G10B10A2_UNORM;
         } else if (wic_format == GUID_WICPixelFormat32bppRGBE) {
             return DXGI_FORMAT_R9G9B9E5_SHAREDEXP;
@@ -215,7 +217,7 @@ namespace win {
     {
         auto dev = device.cast<win::GPUDeviceD3D11>()->getNative();
         auto src = source.cast<win::LcImageFrameWin>();
-        
+
         int ret = src->createIfNecessary();
         if (ret != 0) {
             return {};
@@ -234,6 +236,9 @@ namespace win {
             &d2d_tex,
             // TODO:
             nullptr);
+        if (FAILED(hr)) {
+            return {};
+        }
 
         auto ptr = new win::GPUTexture2DD3D11(d2d_tex);
         return GPtr<GPUTexture>(ptr);

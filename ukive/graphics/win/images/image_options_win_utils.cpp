@@ -33,6 +33,9 @@ namespace win {
         case ImagePixelFormat::R16G16B16A16_UNORM:
             format = DXGI_FORMAT_R16G16B16A16_UNORM;
             break;
+        case ImagePixelFormat::R10G10B10A2_UNORM:
+            format = DXGI_FORMAT_R10G10B10A2_UNORM;
+            break;
         default:
             assert("Failed to map DXGI Format!" && false);
             format = DXGI_FORMAT_B8G8R8A8_UNORM;
@@ -120,6 +123,14 @@ namespace win {
                 break;
             }
             break;
+        case ImagePixelFormat::B8G8R8_UNORM:
+            format = GUID_WICPixelFormat24bppBGR;
+            break;
+
+        case ImagePixelFormat::R10G10B10A2_UNORM:
+            // https://learn.microsoft.com/en-us/windows/win32/wic/-wic-codec-native-pixel-formats
+            format = GUID_WICPixelFormat32bppR10G10B10A2;
+            break;
 
         case ImagePixelFormat::RAW:
         case ImagePixelFormat::B8G8R8A8_UNORM:
@@ -140,6 +151,36 @@ namespace win {
         }
 
         return format;
+    }
+
+    ImagePixelFormat mapImagePixelFormatFromWIC(WICPixelFormatGUID f) {
+        if (f == GUID_WICPixelFormat64bppRGBAHalf) {
+            return ImagePixelFormat::R16G16B16A16_FLOAT;
+        }
+        if (f == GUID_WICPixelFormat64bppRGBA) {
+            return ImagePixelFormat::R16G16B16A16_UNORM;
+        }
+        if (f == GUID_WICPixelFormat8bppGray) {
+            return ImagePixelFormat::R8_UNORM;
+        }
+        if (f == GUID_WICPixelFormat24bppRGB) {
+            return ImagePixelFormat::R8G8B8_UNORM;
+        }
+        if (f == GUID_WICPixelFormat32bppRGBA) {
+            return ImagePixelFormat::R8G8B8A8_UNORM;
+        }
+        if (f == GUID_WICPixelFormat24bppBGR) {
+            return ImagePixelFormat::B8G8R8_UNORM;
+        }
+        if (f == GUID_WICPixelFormat32bppBGRA) {
+            return ImagePixelFormat::B8G8R8A8_UNORM;
+        }
+        if (f == GUID_WICPixelFormat32bppR10G10B10A2) {
+            return ImagePixelFormat::R10G10B10A2_UNORM;
+        }
+
+        assert(false && "Unknown WIC pixel format!");
+        return ImagePixelFormat::B8G8R8A8_UNORM;
     }
 
     D2D1_BITMAP_PROPERTIES mapBitmapProps(const ImageOptions& options) {

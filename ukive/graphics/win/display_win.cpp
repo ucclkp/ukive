@@ -238,6 +238,31 @@ namespace win {
         return 1000;
     }
 
+    bool DisplayWin::getColorInfo(ColorInfo* ci) const {
+        if (is_empty_ || !cur_output6_) {
+            return false;
+        }
+
+        DXGI_OUTPUT_DESC1 desc1;
+        HRESULT hr = cur_output6_->GetDesc1(&desc1);
+        if (FAILED(hr)) {
+            return false;
+        }
+
+        ci->red_primary.x(desc1.RedPrimary[0]);
+        ci->red_primary.y(desc1.RedPrimary[1]);
+        ci->green_primary.x(desc1.GreenPrimary[0]);
+        ci->green_primary.y(desc1.GreenPrimary[1]);
+        ci->blue_primary.x(desc1.BluePrimary[0]);
+        ci->blue_primary.y(desc1.BluePrimary[1]);
+        ci->white_point.x(desc1.WhitePoint[0]);
+        ci->white_point.y(desc1.WhitePoint[1]);
+        ci->min_luminance = desc1.MinLuminance;
+        ci->max_luminance = desc1.MaxLuminance;
+        ci->max_fullscreen_luminance = desc1.MaxFullFrameLuminance;
+        return true;
+    }
+
     bool DisplayWin::waitForVSync() {
         if (is_empty_ || !cur_output_) {
             return false;

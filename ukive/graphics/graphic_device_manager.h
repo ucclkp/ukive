@@ -26,7 +26,7 @@ namespace ukive {
         GraphicDeviceManager();
         virtual ~GraphicDeviceManager() = default;
 
-        virtual bool initialize() = 0;
+        virtual bool initialize(unsigned int adapter_index, bool debug) = 0;
         virtual void destroy() = 0;
 
         virtual GPtr<GPUDevice> getGPUDevice() const = 0;

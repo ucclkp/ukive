@@ -7,14 +7,15 @@
 #ifndef UKIVE_GRAPHICS_WIN_EFFECTS_IMAGE_EFFECT_DX_H_
 #define UKIVE_GRAPHICS_WIN_EFFECTS_IMAGE_EFFECT_DX_H_
 
+#include <map>
 #include <memory>
+#include <string>
 
 #include "utils/math/algebra/point.hpp"
 
 #include "ukive/graphics/effects/image_effect.h"
 #include "ukive/graphics/gpu/gpu_shader.h"
 #include "ukive/graphics/gpu/gpu_types.h"
-#include "ukive/window/context.h"
 
 
 namespace ukive {
@@ -31,7 +32,7 @@ namespace win {
 
     class ImageEffectGPU : public ImageEffect {
     public:
-        explicit ImageEffectGPU(Context context);
+        ImageEffectGPU();
         ~ImageEffectGPU();
 
         bool initialize() override;
@@ -42,7 +43,7 @@ namespace win {
         bool addInput(OffscreenBuffer* content) override;
         bool addInput(const GPtr<GPUTexture>& texture) override;
         void clearInputs() override;
-        bool setOutputSize(
+        bool setOutputFormat(
             unsigned int width,
             unsigned int height,
             GPUDataFormat format) override;
@@ -63,10 +64,11 @@ namespace win {
 
         struct VertexData {
             utl::pt3f position;
+            utl::vec2f texcoord;
 
             VertexData() {}
-            VertexData(const utl::pt3f& pos)
-                : position(pos) {}
+            VertexData(const utl::pt3f& pos, const utl::vec2f& uv)
+                : position(pos), texcoord(uv) {}
         };
 
         bool createTexture(
@@ -100,11 +102,11 @@ namespace win {
         GPtr<GPUInputLayout> input_layout_;
         GPtr<GPUShader> ps_;
         GPtr<GPUShader> vs_;
+        std::map<std::u16string, GPtr<GPUShader>> cached_shaders_;
 
         Viewport viewport_;
         GPtr<GPURasterizerState> rasterizer_state_;
 
-        Context context_;
         GPtr<ImageFrame> cache_;
     };
 

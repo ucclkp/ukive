@@ -15,7 +15,7 @@ namespace ukive {
 
     MenuImpl::MenuImpl(Context c)
         : SequenceLayout(c),
-          item_height_(LS_AUTO),
+          item_vert_padding_(c.dp2pxi(6)),
           callback_(nullptr)
     {
           initMenu();
@@ -24,8 +24,8 @@ namespace ukive {
 
     void MenuImpl::initMenu() {}
 
-    void MenuImpl::setMenuItemHeight(int height) {
-        item_height_ = height;
+    void MenuImpl::setMenuItemVertPadding(int padding) {
+        item_vert_padding_ = padding;
     }
 
     void MenuImpl::setCallback(MenuCallback* callback) {
@@ -36,9 +36,19 @@ namespace ukive {
         return callback_;
     }
 
-    MenuItem* MenuImpl::addItem(int id, int order, const std::u16string_view& title) {
+    MenuItem* MenuImpl::addItem(
+        int id, int order,
+        const std::u16string_view& title,
+        bool checkable)
+    {
         auto item = new MenuItemImpl(getContext(), id, order);
+        item->setParentMenu(this);
+        item->setItemCheckable(checkable);
         item->setItemTitle(title);
+        auto padding = item->getPadding();
+        padding.top(item_vert_padding_);
+        padding.bottom(item_vert_padding_);
+        item->setPadding(padding);
 
         View* view = item;
         view->setBackground(new RippleElement());
@@ -54,7 +64,7 @@ namespace ukive {
             }
         }
 
-        view->setLayoutSize(LS_FILL, item_height_);
+        view->setLayoutSize(LS_FILL, LS_AUTO);
 
         addView(insertedIndex, view);
         return item;
@@ -101,6 +111,14 @@ namespace ukive {
 
     size_t MenuImpl::getItemCount() const {
         return getChildCount();
+    }
+
+    void MenuImpl::notifyItemCheckable(int id, bool checkable) {
+
+    }
+
+    void MenuImpl::notifyItemChecked(int id, bool checked) {
+
     }
 
     void MenuImpl::onClick(View* v) {

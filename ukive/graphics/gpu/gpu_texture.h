@@ -13,6 +13,7 @@
 #include "ukive/graphics/gptr.hpp"
 #include "ukive/graphics/gpu/gpu_resource.h"
 #include "ukive/graphics/gpu/gpu_types.h"
+#include "ukive/graphics/gpu/gpu_output_resource.h"
 #include "ukive/graphics/gpu/gpu_shader_resource.h"
 
 
@@ -63,8 +64,10 @@ namespace ukive {
             GPUDataFormat format);
 
         GPtr<GPUShaderResource> srv() const;
+        GPtr<GPUOutputResource> uav() const;
 
         gerc createSRV();
+        gerc createUAV();
 
         Type getType() const override { return Type::Texture; }
 
@@ -74,6 +77,7 @@ namespace ukive {
         void setSRV(const GPtr<GPUShaderResource>& res);
 
         GPtr<GPUShaderResource> shader_res_;
+        GPtr<GPUOutputResource> output_res_;
     };
 
 }

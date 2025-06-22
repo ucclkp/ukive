@@ -107,6 +107,7 @@ namespace ukive {
             GPUResource* resource,
             unsigned int type, size_t* row_stride) = 0;
         virtual void unlock(GPUResource* resource) = 0;
+        virtual void flush() = 0;
     };
 
 }

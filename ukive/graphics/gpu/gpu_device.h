@@ -18,6 +18,7 @@
 #include "ukive/graphics/gpu/gpu_sampler_state.h"
 #include "ukive/graphics/gpu/gpu_input_layout.h"
 #include "ukive/graphics/gpu/gpu_texture.h"
+#include "ukive/graphics/gpu/gpu_output_resource.h"
 #include "ukive/graphics/gpu/gpu_shader_resource.h"
 
 
@@ -48,6 +49,8 @@ namespace ukive {
             const GPUDepthStencil::Desc& desc, GPUResource* resource) = 0;
         virtual GEcPtr<GPUShaderResource> createShaderResource(
             const GPUShaderResource::Desc* desc, GPUResource* resource) = 0;
+        virtual GEcPtr<GPUOutputResource> createOutputResource(
+            const GPUOutputResource::Desc* desc, GPUResource* resource) = 0;
 
         virtual GEcPtr<GPUDepthStencilState> createDepthStencilState(const GPUDepthStencilState::Desc& desc) = 0;
         virtual GEcPtr<GPURasterizerState> createRasterizerState(const GPURasterizerState::Desc& desc) = 0;

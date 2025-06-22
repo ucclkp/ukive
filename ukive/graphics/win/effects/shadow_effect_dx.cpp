@@ -466,7 +466,7 @@ namespace win {
         bg_srv_.reset();
     }
 
-    bool ShadowEffectGPU::setOutputSize(
+    bool ShadowEffectGPU::setOutputFormat(
         unsigned int width,
         unsigned int height,
         GPUDataFormat format)

@@ -45,15 +45,17 @@ namespace win {
     DirectXManager::DirectXManager() {}
     DirectXManager::~DirectXManager() {}
 
-    bool DirectXManager::initialize() {
+    bool DirectXManager::initialize(unsigned int adapter_index, bool debug) {
         if (!initPersistance()) {
             return false;
         }
 
-        if (!initDevice()) {
+        if (!initDevice(adapter_index, debug)) {
             return false;
         }
 
+        adapter_index_ = adapter_index;
+        debug_ = debug;
         return true;
     }
 
@@ -79,7 +81,7 @@ namespace win {
          * 确保 demolish / rebuild 成对调用，
          * 即使创建设备失败。
          */
-        bool ret = initDevice();
+        bool ret = initDevice(adapter_index_, debug_);
 
         rebuild(ret);
         notifyDeviceRestored();
@@ -191,7 +193,7 @@ namespace win {
         return true;
     }
 
-    bool DirectXManager::initDevice() {
+    bool DirectXManager::initDevice(unsigned int adapter_index, bool debug) {
         D3D_FEATURE_LEVEL feature_levels[] = {
             D3D_FEATURE_LEVEL_11_1,
             D3D_FEATURE_LEVEL_11_0,
@@ -205,8 +207,8 @@ namespace win {
         D3D_DRIVER_TYPE driver_type;
         UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
         utl::win::ComPtr<IDXGIAdapter1> adapter;
-        if (true) {
-            if (chooseAdapter(0, &adapter)) {
+        if (!debug) {
+            if (chooseAdapter(adapter_index, &adapter)) {
                 driver_type = D3D_DRIVER_TYPE_UNKNOWN;
             } else {
                 driver_type = D3D_DRIVER_TYPE_HARDWARE;
@@ -229,6 +231,14 @@ namespace win {
                 LOG(Log::ERR) << "Failed to create d3d device.";
                 return false;
             }
+        }
+
+        utl::win::ComPtr<ID3D10Multithread> d3dmt;
+        hr = d3d_device_->QueryInterface(&d3dmt);
+        if (SUCCEEDED(hr)) {
+            d3dmt->SetMultithreadProtected(TRUE);
+        } else {
+            jour_w("Failed to set D3D11 multithread protection!");
         }
 
         hr = d3d_device_->QueryInterface(&dxgi_device_);

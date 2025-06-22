@@ -74,6 +74,7 @@ namespace win {
             GPUResource* resource,
             unsigned int type, size_t* row_stride) override;
         void unlock(GPUResource* resource) override;
+        void flush() override;
 
         utl::win::ComPtr<ID3D11DeviceContext> getNative() const;
 

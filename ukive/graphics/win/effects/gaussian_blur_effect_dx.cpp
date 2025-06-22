@@ -501,7 +501,7 @@ namespace win {
         bg_srv_.reset();
     }
 
-    bool GaussianBlurEffectGPU::setOutputSize(
+    bool GaussianBlurEffectGPU::setOutputFormat(
         unsigned int width,
         unsigned int height,
         GPUDataFormat format)

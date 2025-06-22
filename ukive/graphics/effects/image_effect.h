@@ -17,14 +17,13 @@
 
 namespace ukive {
 
-    class Context;
     class GPUTexture;
 
     class ImageEffect : public CyroEffect {
     public:
         using ParameterUpdateHandler = std::function<void(void*)>;
 
-        static ImageEffect* create(Context context);
+        static ImageEffect* create();
 
         virtual bool addInput(const GPtr<GPUTexture>& texture) = 0;
         virtual bool setPixelShader(const std::u16string& name) = 0;

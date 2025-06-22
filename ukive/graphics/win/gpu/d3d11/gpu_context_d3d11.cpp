@@ -75,17 +75,19 @@ namespace win {
         uint32_t start_slot, uint32_t num, GPUBuffer* const* buffers,
         const uint32_t* strides, const uint32_t* offset)
     {
-        ARRAY_OR_VECTOR(ID3D11Buffer*, 8, num);
+        ID3D11Buffer* arr[D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT];
+        if (num > D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT) {
+            num = D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT;
+        }
         for (uint32_t i = 0; i < num; ++i) {
-            auto nat = static_cast<const GPUBufferD3D11*>(buffers[i])->getNative();
-            if (num > 8) {
-                vec[i] = nat;
+            if (buffers[i]) {
+                arr[i] = static_cast<const GPUBufferD3D11*>(buffers[i])->getNative();
             } else {
-                arr[i] = nat;
+                arr[i] = nullptr;
             }
         }
 
-        d3d_context_->IASetVertexBuffers(start_slot, num, ptr, strides, offset);
+        d3d_context_->IASetVertexBuffers(start_slot, num, arr, strides, offset);
     }
 
     void GPUContextD3D11::setIndexBuffer(
@@ -107,13 +109,15 @@ namespace win {
     void GPUContextD3D11::setRenderTargets(
         uint32_t num, GPURenderTarget* const* rts, GPUDepthStencil* ds)
     {
-        ARRAY_OR_VECTOR(ID3D11RenderTargetView*, 8, num);
+        ID3D11RenderTargetView* arr[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
+        if (num > D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT) {
+            num = D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT;
+        }
         for (uint32_t i = 0; i < num; ++i) {
-            auto nat = static_cast<const GPURenderTargetD3D11*>(rts[i])->getNative();
-            if (num > 8) {
-                vec[i] = nat;
+            if (rts[i]) {
+                arr[i] = static_cast<const GPURenderTargetD3D11*>(rts[i])->getNative();
             } else {
-                arr[i] = nat;
+                arr[i] = nullptr;
             }
         }
 
@@ -123,7 +127,7 @@ namespace win {
         } else {
             n_ds = nullptr;
         }
-        d3d_context_->OMSetRenderTargets(num, ptr, n_ds);
+        d3d_context_->OMSetRenderTargets(num, arr, n_ds);
     }
 
     void GPUContextD3D11::setDepthStencilState(
@@ -141,17 +145,19 @@ namespace win {
     void GPUContextD3D11::setVConstantBuffers(
         uint32_t start_slot, uint32_t num, GPUBuffer* const* buffers)
     {
-        ARRAY_OR_VECTOR(ID3D11Buffer*, 8, num);
+        ID3D11Buffer* arr[D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT];
+        if (num > D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT) {
+            num = D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT;
+        }
         for (uint32_t i = 0; i < num; ++i) {
-            auto nat = static_cast<const GPUBufferD3D11*>(buffers[i])->getNative();
-            if (num > 8) {
-                vec[i] = nat;
+            if (buffers[i]) {
+                arr[i] = static_cast<const GPUBufferD3D11*>(buffers[i])->getNative();
             } else {
-                arr[i] = nat;
+                arr[i] = nullptr;
             }
         }
 
-        d3d_context_->VSSetConstantBuffers(start_slot, num, ptr);
+        d3d_context_->VSSetConstantBuffers(start_slot, num, arr);
     }
 
     void GPUContextD3D11::setPixelShader(GPUShader* shader) {
@@ -162,49 +168,55 @@ namespace win {
     void GPUContextD3D11::setPSamplerStates(
         uint32_t start_slot, uint32_t num, GPUSamplerState* const* states)
     {
-        ARRAY_OR_VECTOR(ID3D11SamplerState*, 8, num);
+        ID3D11SamplerState* arr[D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT];
+        if (num > D3D10_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT) {
+            num = D3D10_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT;
+        }
         for (uint32_t i = 0; i < num; ++i) {
-            auto nat = static_cast<const GPUSamplerStateD3D11*>(states[i])->getNative();
-            if (num > 8) {
-                vec[i] = nat;
+            if (states[i]) {
+                arr[i] = static_cast<const GPUSamplerStateD3D11*>(states[i])->getNative();
             } else {
-                arr[i] = nat;
+                arr[i] = nullptr;
             }
         }
 
-        d3d_context_->PSSetSamplers(start_slot, num, ptr);
+        d3d_context_->PSSetSamplers(start_slot, num, arr);
     }
 
     void GPUContextD3D11::setPShaderResources(
         uint32_t start_slot, uint32_t num, GPUShaderResource* const* res)
     {
-        ARRAY_OR_VECTOR(ID3D11ShaderResourceView*, 8, num);
+        ID3D11ShaderResourceView* arr[D3D10_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT];
+        if (num > D3D10_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT) {
+            num = D3D10_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT;
+        }
         for (uint32_t i = 0; i < num; ++i) {
-            auto nat = static_cast<const GPUShaderResourceD3D11*>(res[i])->getNative();
-            if (num > 8) {
-                vec[i] = nat;
+            if (res[i]) {
+                arr[i] = static_cast<const GPUShaderResourceD3D11*>(res[i])->getNative();
             } else {
-                arr[i] = nat;
+                arr[i] = nullptr;
             }
         }
 
-        d3d_context_->PSSetShaderResources(start_slot, num, ptr);
+        d3d_context_->PSSetShaderResources(start_slot, num, arr);
     }
 
     void GPUContextD3D11::setPConstantBuffers(
         uint32_t start_slot, uint32_t num, GPUBuffer* const* buffers)
     {
-        ARRAY_OR_VECTOR(ID3D11Buffer*, 8, num);
+        ID3D11Buffer* arr[D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT];
+        if (num > D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT) {
+            num = D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT;
+        }
         for (uint32_t i = 0; i < num; ++i) {
-            auto nat = static_cast<const GPUBufferD3D11*>(buffers[i])->getNative();
-            if (num > 8) {
-                vec[i] = nat;
+            if (buffers[i]) {
+                arr[i] = static_cast<const GPUBufferD3D11*>(buffers[i])->getNative();
             } else {
-                arr[i] = nat;
+                arr[i] = nullptr;
             }
         }
 
-        d3d_context_->PSSetConstantBuffers(start_slot, num, ptr);
+        d3d_context_->PSSetConstantBuffers(start_slot, num, arr);
     }
 
     void GPUContextD3D11::setViewports(uint32_t num, const Viewport* vps) {
@@ -335,6 +347,10 @@ namespace win {
         }
 
         d3d_context_->Unmap(res, 0);
+    }
+
+    void GPUContextD3D11::flush() {
+        d3d_context_->Flush();
     }
 
     utl::win::ComPtr<ID3D11DeviceContext> GPUContextD3D11::getNative() const {

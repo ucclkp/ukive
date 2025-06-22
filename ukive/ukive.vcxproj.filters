@@ -727,6 +727,15 @@
     <ClCompile Include="graphics\win\gpu\d3d11\gpu_texture_reader_d3d11.cpp">
       <Filter>graphics\win\gpu\d3d11</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\images\jpeg_appmarker_parser.cpp">
+      <Filter>graphics\images</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\win\gpu\d3d11\gpu_output_resource_d3d11.cpp">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\gpu\gpu_utils.cpp">
+      <Filter>graphics\gpu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">
@@ -1639,6 +1648,24 @@
       <Filter>graphics\win\effects</Filter>
     </ClInclude>
     <ClInclude Include="graphics\gpu\gpu_texture_reader.h">
+      <Filter>graphics\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\colors\rgb_system.h">
+      <Filter>graphics\colors</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\images\jpeg_appmarker_parser.h">
+      <Filter>graphics\images</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\images\mstream.hpp">
+      <Filter>graphics\win\images</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gpu\gpu_output_resource.h">
+      <Filter>graphics\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\win\gpu\d3d11\gpu_output_resource_d3d11.h">
+      <Filter>graphics\win\gpu\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gpu\gpu_utils.h">
       <Filter>graphics\gpu</Filter>
     </ClInclude>
   </ItemGroup>

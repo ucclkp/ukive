@@ -18,6 +18,7 @@
 #include "ukive/graphics/win/gpu/d3d11/gpu_render_target_d3d11.h"
 #include "ukive/graphics/win/gpu/d3d11/gpu_depth_stencil_d3d11.h"
 #include "ukive/graphics/win/gpu/d3d11/gpu_depth_stencil_state_d3d11.h"
+#include "ukive/graphics/win/gpu/d3d11/gpu_output_resource_d3d11.h"
 #include "ukive/graphics/win/gpu/d3d11/gpu_rasterizer_state_d3d11.h"
 #include "ukive/graphics/win/gpu/d3d11/gpu_sampler_state_d3d11.h"
 #include "ukive/graphics/win/gpu/d3d11/gpu_shader_d3d11.h"
@@ -344,6 +345,70 @@ namespace win {
         }
 
         result = new GPUShaderResourceD3D11(d3d_srv);
+        return result;
+    }
+
+    GEcPtr<GPUOutputResource> GPUDeviceD3D11::createOutputResource(
+        const GPUOutputResource::Desc* desc, GPUResource* resource)
+    {
+        GEcPtr<GPUOutputResource> result;
+        ID3D11Resource* d3d_res = convertResource(resource);
+        if (!d3d_res) {
+            result.code = ERROR_NOT_FOUND;
+            return result;
+        }
+
+        D3D11_UNORDERED_ACCESS_VIEW_DESC* desc_ptr;
+        D3D11_UNORDERED_ACCESS_VIEW_DESC uav_desc;
+        if (desc) {
+            uav_desc.Format = mapDXGIFormat(desc->format);
+            uav_desc.ViewDimension = mapD3DUAVDeminsion(desc->view_dim);
+
+            switch (desc->view_dim) {
+            case GPUOutputResource::UAV_DIMENSION_BUFFER:
+                uav_desc.Buffer.FirstElement = desc->buffer.first_element;
+                uav_desc.Buffer.NumElements = desc->buffer.element_num;
+                uav_desc.Buffer.Flags = desc->buffer.flags;
+                break;
+            case GPUOutputResource::UAV_DIMENSION_TEXTURE1D:
+                uav_desc.Texture1D.MipSlice = desc->tex1d.mip_slices;
+                break;
+            case GPUOutputResource::UAV_DIMENSION_TEXTURE1DARRAY:
+                uav_desc.Texture1DArray.MipSlice = desc->tex1d_array.mip_slices;
+                uav_desc.Texture1DArray.ArraySize = desc->tex1d_array.array_size;
+                uav_desc.Texture1DArray.FirstArraySlice = desc->tex1d_array.first_array_slice;
+                break;
+            case GPUOutputResource::UAV_DIMENSION_TEXTURE2D:
+                uav_desc.Texture2D.MipSlice = desc->tex2d.mip_slices;
+                break;
+            case GPUOutputResource::UAV_DIMENSION_TEXTURE2DARRAY:
+                uav_desc.Texture2DArray.MipSlice = desc->tex2d_array.mip_slices;
+                uav_desc.Texture2DArray.ArraySize = desc->tex2d_array.array_size;
+                uav_desc.Texture2DArray.FirstArraySlice = desc->tex2d_array.first_array_slice;
+                break;
+            case GPUOutputResource::UAV_DIMENSION_TEXTURE3D:
+                uav_desc.Texture3D.MipSlice = desc->tex3d.mip_slices;
+                uav_desc.Texture3D.FirstWSlice = desc->tex3d.first_w_slice;
+                uav_desc.Texture3D.WSize = desc->tex3d.w_size;
+                break;
+            default:
+                result.code = ERROR_NOT_FOUND;
+                return result;
+            }
+
+            desc_ptr = &uav_desc;
+        } else {
+            desc_ptr = nullptr;
+        }
+
+        utl::win::ComPtr<ID3D11UnorderedAccessView> d3d_uav;
+        HRESULT hr = d3d_device_->CreateUnorderedAccessView(d3d_res, desc_ptr, &d3d_uav);
+        if (FAILED(hr)) {
+            result.code = hr;
+            return result;
+        }
+
+        result = new GPUOutputResourceD3D11(d3d_uav);
         return result;
     }
 

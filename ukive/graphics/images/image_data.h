@@ -8,6 +8,7 @@
 #define UKIVE_GRAPHICS_IMAGES_IMAGE_DATA_H_
 
 #include "ukive/graphics/colors/color.h"
+#include "ukive/graphics/images/jpeg_appmarker_parser.h"
 
 
 namespace ukive {
@@ -17,6 +18,7 @@ namespace ukive {
         enum Type {
             GIF_IMAGE_DATA = 1,
             GIF_FRAME_DATA = 2,
+            JPEG_IMAGE_DATA = 3,
         };
 
         virtual ~ImageData() = default;
@@ -58,6 +60,15 @@ namespace ukive {
         int height = 0;
         int loop_count = 0;
         Color bg_color;
+    };
+
+    class JpegImageData : public ImageData {
+    public:
+        JpegImageData() = default;
+
+        int getType() const override { return JPEG_IMAGE_DATA; }
+
+        jpeg_metadata metadata;
     };
 
 }

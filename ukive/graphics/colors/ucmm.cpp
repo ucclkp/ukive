@@ -265,19 +265,38 @@ namespace ukive {
     bool UCMM::RGBToCIEXYZ(
         const Color& src, const RGBSystem& system, CIEXYZ* xyz)
     {
-        auto Xr = system.red.x / system.red.y;
-        auto Yr = 1.f;
-        auto Zr = (1.f - system.red.x - system.red.y) / system.red.y;
+        utl::mat3d M;
+        if (!RGBToCIEXYZMatrix(system, &M)) {
+            return false;
+        }
 
-        auto Xg = system.green.x / system.green.y;
-        auto Yg = 1.f;
-        auto Zg = (1.f - system.green.x - system.green.y) / system.green.y;
+        utl::vec3d SRC{
+            (double)src.r, (double)src.g, (double)src.b
+        };
 
-        auto Xb = system.blue.x / system.blue.y;
-        auto Yb = 1.f;
-        auto Zb = (1.f - system.blue.x - system.blue.y) / system.blue.y;
+        auto DST = M * SRC;
+        xyz->x = (float)DST(0);
+        xyz->y = (float)DST(1);
+        xyz->z = (float)DST(2);
 
-        utl::math::MatrixT<float, 3, 3> m{
+        return true;
+    }
+
+    // static
+    bool UCMM::RGBToCIEXYZMatrix(const RGBSystem& system, utl::mat3d* out) {
+        auto Xr = (double)system.red.x / system.red.y;
+        auto Yr = 1.;
+        auto Zr = (1. - system.red.x - system.red.y) / system.red.y;
+
+        auto Xg = (double)system.green.x / system.green.y;
+        auto Yg = 1.;
+        auto Zg = (1. - system.green.x - system.green.y) / system.green.y;
+
+        auto Xb = (double)system.blue.x / system.blue.y;
+        auto Yb = 1.;
+        auto Zb = (1. - system.blue.x - system.blue.y) / system.blue.y;
+
+        utl::mat3d m{
             Xr, Xg, Xb,
             Yr, Yg, Yb,
             Zr, Zg, Zb,
@@ -289,29 +308,21 @@ namespace ukive {
             return false;
         }
 
-        utl::math::MatrixT<float, 3, 1> W{
-            system.ref_white.x / system.ref_white.y,
-            1.f,
-            (1.f - system.ref_white.x - system.ref_white.y) / system.ref_white.y
+        utl::vec3d W{
+            (double)system.ref_white.x / system.ref_white.y,
+            1.,
+            (1. - system.ref_white.x - system.ref_white.y) / system.ref_white.y
         };
 
         auto S = m_inv * W;
 
-        utl::math::MatrixT<float, 3, 3> M{
+        utl::mat3d M{
             S(0) * Xr, S(1) * Xg, S(2) * Xb,
             S(0) * Yr, S(1) * Yg, S(2) * Yb,
             S(0) * Zr, S(1) * Zg, S(2) * Zb,
         };
 
-        utl::math::MatrixT<float, 3, 1> SRC{
-            src.r, src.g, src.b
-        };
-
-        auto DST = M * SRC;
-        xyz->x = DST(0);
-        xyz->y = DST(1);
-        xyz->z = DST(2);
-
+        *out = M;
         return true;
     }
 

@@ -10,7 +10,7 @@
 #include "ukive/window/window.h"
 #include "ukive/animation/animator.h"
 #include "ukive/graphics/vsyncable.h"
-#include "ukive/graphics/win/effects/image_effect_dx.h"
+#include "ukive/graphics/effects/image_effect.h"
 
 
 namespace ukive {
@@ -50,7 +50,7 @@ namespace shell {
         ukive::Animator animator_;
 
         ukive::GPtr<ukive::ImageFrame> image_img_;
-        std::unique_ptr<ukive::win::ImageEffectGPU> image_effect_;
+        std::unique_ptr<ukive::ImageEffect> image_effect_;
     };
 
 }

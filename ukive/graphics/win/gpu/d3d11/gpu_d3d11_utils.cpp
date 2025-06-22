@@ -36,6 +36,8 @@ namespace win {
             return DXGI_FORMAT_R8G8B8A8_UNORM;
         case GPUDataFormat::R8_UINT:
             return DXGI_FORMAT_R8_UINT;
+        case GPUDataFormat::R8G8_UINT:
+            return DXGI_FORMAT_R8G8_UINT;
         case GPUDataFormat::R16_UINT:
             return DXGI_FORMAT_R16_UINT;
         case GPUDataFormat::R16G16_UINT:
@@ -46,6 +48,8 @@ namespace win {
             return DXGI_FORMAT_R32_FLOAT;
         case GPUDataFormat::B8G8R8A8_UNORM:
             return DXGI_FORMAT_B8G8R8A8_UNORM;
+        case GPUDataFormat::B8G8R8X8_UNORM:
+            return DXGI_FORMAT_B8G8R8X8_UNORM;
         case GPUDataFormat::D24_UNORM_S8_UINT:
             return DXGI_FORMAT_D24_UNORM_S8_UINT;
         case GPUDataFormat::UNKNOWN:
@@ -76,18 +80,24 @@ namespace win {
             return GPUDataFormat::R8G8B8A8_UINT;
         case DXGI_FORMAT_R8G8B8A8_UNORM:
             return GPUDataFormat::R8G8B8A8_UNORM;
+        case DXGI_FORMAT_R10G10B10A2_UNORM:
+            return GPUDataFormat::R10G10B10A2_UNORM;
         case DXGI_FORMAT_R32_UINT:
             return GPUDataFormat::R32_UINT;
         case DXGI_FORMAT_R32_FLOAT:
             return GPUDataFormat::R32_FLOAT;
         case DXGI_FORMAT_R8_UINT:
             return GPUDataFormat::R8_UINT;
+        case DXGI_FORMAT_R8G8_UINT:
+            return GPUDataFormat::R8G8_UINT;
         case DXGI_FORMAT_R16_UINT:
             return GPUDataFormat::R16_UINT;
         case DXGI_FORMAT_R16G16_UINT:
             return GPUDataFormat::R16G16_UINT;
         case DXGI_FORMAT_B8G8R8A8_UNORM:
             return GPUDataFormat::B8G8R8A8_UNORM;
+        case DXGI_FORMAT_B8G8R8X8_UNORM:
+            return GPUDataFormat::B8G8R8X8_UNORM;
         case DXGI_FORMAT_D24_UNORM_S8_UINT:
             return GPUDataFormat::D24_UNORM_S8_UINT;
         case DXGI_FORMAT_UNKNOWN:
@@ -414,6 +424,30 @@ namespace win {
 
         ubassert(false);
         return D3D11_SRV_DIMENSION_UNKNOWN;
+    }
+
+    D3D11_UAV_DIMENSION mapD3DUAVDeminsion(GPUOutputResource::UAVDimension dim) {
+        switch (dim) {
+        case GPUOutputResource::UAV_DIMENSION_UNKNOWN:
+            return D3D11_UAV_DIMENSION_UNKNOWN;
+        case GPUOutputResource::UAV_DIMENSION_BUFFER:
+            return D3D11_UAV_DIMENSION_BUFFER;
+        case GPUOutputResource::UAV_DIMENSION_TEXTURE1D:
+            return D3D11_UAV_DIMENSION_TEXTURE1D;
+        case GPUOutputResource::UAV_DIMENSION_TEXTURE1DARRAY:
+            return D3D11_UAV_DIMENSION_TEXTURE1DARRAY;
+        case GPUOutputResource::UAV_DIMENSION_TEXTURE2D:
+            return D3D11_UAV_DIMENSION_TEXTURE2D;
+        case GPUOutputResource::UAV_DIMENSION_TEXTURE2DARRAY:
+            return D3D11_UAV_DIMENSION_TEXTURE2DARRAY;
+        case GPUOutputResource::UAV_DIMENSION_TEXTURE3D:
+            return D3D11_UAV_DIMENSION_TEXTURE3D;
+        default:
+            break;
+        }
+
+        assert(false);
+        return D3D11_UAV_DIMENSION_UNKNOWN;
     }
 
 }

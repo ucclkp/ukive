@@ -22,13 +22,15 @@ namespace ukive {
     };
 
     enum class ImagePixelFormat {
-        B8G8R8A8_UNORM,
         R8_UNORM,
         I8_UNORM,      // 仅限图片
         R8G8B8_UNORM,  // 仅限图片
         R8G8B8A8_UNORM,
+        B8G8R8_UNORM,  // 仅限图片
+        B8G8R8A8_UNORM,
         R16G16B16A16_FLOAT,
         R16G16B16A16_UNORM,
+        R10G10B10A2_UNORM,
         RAW,
     };
 

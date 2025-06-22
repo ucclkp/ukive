@@ -19,6 +19,7 @@ namespace win {
     DXGI_FORMAT mapDXGIFormat(ImagePixelFormat f);
     D2D1_ALPHA_MODE mapD2D1AlphaMode(ImageAlphaMode m);
     WICPixelFormatGUID mapWICFormat(const ImageOptions& options);
+    ImagePixelFormat mapImagePixelFormatFromWIC(WICPixelFormatGUID f);
 
     D2D1_BITMAP_PROPERTIES mapBitmapProps(const ImageOptions& options);
 

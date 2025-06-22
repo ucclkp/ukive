@@ -37,6 +37,8 @@ namespace win {
             const GPUDepthStencil::Desc& desc, GPUResource* resource) override;
         GEcPtr<GPUShaderResource> createShaderResource(
             const GPUShaderResource::Desc* desc, GPUResource* resource) override;
+        GEcPtr<GPUOutputResource> createOutputResource(
+            const GPUOutputResource::Desc* desc, GPUResource* resource) override;
 
         GEcPtr<GPUDepthStencilState> createDepthStencilState(const GPUDepthStencilState::Desc& desc) override;
         GEcPtr<GPURasterizerState> createRasterizerState(const GPURasterizerState::Desc& desc) override;

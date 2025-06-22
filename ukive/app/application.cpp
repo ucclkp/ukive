@@ -56,7 +56,7 @@ namespace ukive {
         utl::MessagePump::createForUI();
 
         gdm_.reset(GraphicDeviceManager::create());
-        if (!gdm_->initialize()) {
+        if (!gdm_->initialize(options_.graphic_adapter_index, options_.debug_graphic)) {
             LOG(Log::FATAL) << "Failed to initialize GraphicDeviceManager";
             return;
         }

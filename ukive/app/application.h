@@ -24,8 +24,10 @@ namespace ukive {
     class Application {
     public:
         struct Options {
-            bool is_auto_dpi_scale = false;
             std::u16string app_name;
+            bool is_auto_dpi_scale = false;
+            unsigned int graphic_adapter_index = 0;
+            bool debug_graphic = false;
         };
 
         explicit Application(const Options& options);

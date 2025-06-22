@@ -737,6 +737,7 @@ namespace ukive {
         if (display->isInHDRMode() && using_hdr_when_available) {
             options.hdr_enabled = true;
             options.pixel_format = ImagePixelFormat::R16G16B16A16_FLOAT;
+            is_hdr_enabled_ = true;
         } else {
             if (using_hp_rt_) {
                 options.pixel_format = ImagePixelFormat::R16G16B16A16_FLOAT;

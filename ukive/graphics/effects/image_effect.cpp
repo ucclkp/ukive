@@ -8,8 +8,6 @@
 
 #include "utils/platform_utils.h"
 
-#include "ukive/window/context.h"
-
 #ifdef OS_WINDOWS
 #include "ukive/graphics/win/effects/image_effect_dx.h"
 #elif defined OS_MAC
@@ -20,9 +18,9 @@
 namespace ukive {
 
     // static
-    ImageEffect* ImageEffect::create(Context context) {
+    ImageEffect* ImageEffect::create() {
 #ifdef OS_WINDOWS
-        return new win::ImageEffectGPU(context);
+        return new win::ImageEffectGPU();
 #elif defined OS_MAC
         return nullptr;
 #endif

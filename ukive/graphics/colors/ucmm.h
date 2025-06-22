@@ -11,6 +11,7 @@
 
 #include "ukive/graphics/colors/color.h"
 #include "ukive/graphics/colors/icc/icc_profile.h"
+#include "ukive/graphics/colors/rgb_system.h"
 
 
 namespace ukive {
@@ -29,20 +30,6 @@ namespace icc {
             RelColor,
         };
 
-        struct Pos {
-            float x, y;
-        };
-
-        struct RGBSystem {
-            Pos red;
-            Pos green;
-            Pos blue;
-            Pos ref_white;
-            float red_gamma;
-            float green_gamma;
-            float blue_gamma;
-        };
-
         static int RGBToTarget(
             Intent intent,
             const Color& rgb, const RGBSystem& system,
@@ -51,6 +38,9 @@ namespace icc {
             Intent intent,
             const Color& srgb,
             icc::ICCProfile& target, Color* dst);
+
+        static bool RGBToCIEXYZMatrix(
+            const RGBSystem& system, utl::mat3d* out);
 
     private:
         struct CIEXYZ {

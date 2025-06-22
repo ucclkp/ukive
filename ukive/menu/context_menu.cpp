@@ -26,11 +26,10 @@ namespace ukive {
     {
         auto c = w->getContext();
         menu_width_ = c.dp2pxi(92);
-        menu_item_height_ = c.dp2pxi(36);
 
         menu_ = new MenuImpl(c);
         menu_->setCallback(this);
-        menu_->setMenuItemHeight(menu_item_height_);
+        menu_->setMenuItemVertPadding(c.dp2pxi(6));
         menu_->setLayoutSize(View::LS_FILL, View::LS_AUTO);
         menu_->setMinimumWidth(menu_width_);
 

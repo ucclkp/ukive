@@ -48,10 +48,13 @@ namespace win {
             const std::u16string_view& file_name) override;
 
     private:
-        void getGlobalMetadata(
+        bool getGifGlobalMetadata(
             IWICBitmapDecoder* decoder, GifImageData* data);
-        void getFrameMetadata(
+
+        bool getGifFrameMetadata(
             IWICBitmapFrameDecode* decoder, GifImageFrData* data);
+        bool getJpegFrameMetadata(
+            IWICBitmapFrameDecode* decoder);
 
         utl::win::ComPtr<IWICBitmapDecoder> createDecoder(
             const std::u16string_view& file_name);
@@ -60,6 +63,7 @@ namespace win {
             IWICBitmapSource* frame, const ImageOptions& options);
 
         LcImage processDecoder(
+            std::istream& s,
             IWICBitmapDecoder* decoder, const ImageOptions& options);
 
         bool exploreColorProfile(IWICBitmapFrameDecode* frame);
@@ -68,7 +72,7 @@ namespace win {
 
         bool isSRGBFrame(IWICBitmapFrameDecode* frame);
 
-        bool dumpMetadata(IWICMetadataQueryReader* reader, std::wstring* out);
+        bool dumpMetadata(IWICMetadataQueryReader* reader, int depth, std::wstring* out);
 
         utl::win::ComPtr<IWICImagingFactory> wic_factory_;
     };

@@ -45,6 +45,7 @@ namespace win {
         void getUserScale(float* sx, float* sy) const override;
         uint32_t getRefreshRate() const override;
         uint32_t getSDRWhiteLevel() const override;
+        bool getColorInfo(ColorInfo* ci) const override;
 
         bool waitForVSync();
         bool getICMProfilePath(std::wstring* path) const;

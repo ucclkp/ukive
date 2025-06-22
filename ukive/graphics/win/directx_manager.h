@@ -36,7 +36,7 @@ namespace win {
         DirectXManager();
         ~DirectXManager();
 
-        bool initialize() override;
+        bool initialize(unsigned int adapter_index, bool debug) override;
         void destroy() override;
 
         GPtr<GPUDevice> getGPUDevice() const override;
@@ -68,7 +68,7 @@ namespace win {
         void shutdownPersistance();
 
         bool chooseAdapter(UINT idx, IDXGIAdapter1** adapter);
-        bool initDevice();
+        bool initDevice(unsigned int adapter_index, bool debug);
         void shutdownDevice();
 
         utl::win::ComPtr<ID2D1Factory> d2d_factory_;
@@ -79,6 +79,9 @@ namespace win {
         utl::win::ComPtr<ID3D11DeviceContext> d3d_devicecontext_;
 
         utl::win::ComPtr<IDXGIDevice> dxgi_device_;
+
+        unsigned int adapter_index_ = 0;
+        bool debug_ = false;
 
         std::mutex devc_sync_;
         GPtr<GPUDevice> gpu_device_;

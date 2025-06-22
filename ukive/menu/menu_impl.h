@@ -21,23 +21,30 @@ namespace ukive {
     public:
         explicit MenuImpl(Context c);
 
-        void setMenuItemHeight(int height);
+        void setMenuItemVertPadding(int padding);
 
         void setCallback(MenuCallback* callback) override;
         MenuCallback* getCallback() const override;
 
-        MenuItem* addItem(int id, int order, const std::u16string_view& title) override;
+        MenuItem* addItem(
+            int id, int order,
+            const std::u16string_view& title,
+            bool checkable) override;
+
         bool removeItem(int id) override;
         bool hasItem(int id) const override;
         MenuItem* findItem(int id) const override;
         size_t getItemCount() const override;
+
+        void notifyItemCheckable(int id, bool checkable) override;
+        void notifyItemChecked(int id, bool checked) override;
 
         void onClick(View* v) override;
 
     private:
         void initMenu();
 
-        int item_height_;
+        int item_vert_padding_;
         MenuCallback* callback_;
     };
 

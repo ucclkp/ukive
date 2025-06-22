@@ -40,7 +40,7 @@ namespace ukive {
 
         virtual void clearInputs() = 0;
 
-        virtual bool setOutputSize(
+        virtual bool setOutputFormat(
             unsigned int width,
             unsigned int height,
             GPUDataFormat format) = 0;

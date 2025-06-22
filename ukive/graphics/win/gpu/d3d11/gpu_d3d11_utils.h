@@ -14,6 +14,7 @@
 #include "ukive/graphics/gpu/gpu_context.h"
 #include "ukive/graphics/gpu/gpu_depth_stencil.h"
 #include "ukive/graphics/gpu/gpu_depth_stencil_state.h"
+#include "ukive/graphics/gpu/gpu_output_resource.h"
 #include "ukive/graphics/gpu/gpu_rasterizer_state.h"
 #include "ukive/graphics/gpu/gpu_types.h"
 
@@ -50,6 +51,7 @@ namespace win {
 
     D3D11_DSV_DIMENSION mapD3DDSVDeminsion(GPUDepthStencil::DSVDimension dim);
     D3D11_SRV_DIMENSION mapD3DSRVDeminsion(GPUShaderResource::SRVDimension dim);
+    D3D11_UAV_DIMENSION mapD3DUAVDeminsion(GPUOutputResource::UAVDimension dim);
 
 }
 }
