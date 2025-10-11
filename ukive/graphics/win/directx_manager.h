@@ -79,6 +79,7 @@ namespace win {
         utl::win::ComPtr<ID3D11DeviceContext> d3d_devicecontext_;
 
         utl::win::ComPtr<IDXGIDevice> dxgi_device_;
+        utl::win::ComPtr<ID3D11InfoQueue> info_queue_;
 
         unsigned int adapter_index_ = 0;
         bool debug_ = false;

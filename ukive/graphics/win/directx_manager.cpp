@@ -194,6 +194,8 @@ namespace win {
     }
 
     bool DirectXManager::initDevice(unsigned int adapter_index, bool debug) {
+        jour_i("Initializing D3D11 device on adapter %d%s...", adapter_index, debug ? " [DEBUG]" : "");
+
         D3D_FEATURE_LEVEL feature_levels[] = {
             D3D_FEATURE_LEVEL_11_1,
             D3D_FEATURE_LEVEL_11_0,
@@ -215,6 +217,7 @@ namespace win {
             }
         } else {
             driver_type = D3D_DRIVER_TYPE_WARP;
+            flags |= D3D11_CREATE_DEVICE_DEBUG;
             flags |= D3D11_CREATE_DEVICE_DEBUGGABLE;
         }
 
@@ -233,12 +236,25 @@ namespace win {
             }
         }
 
+        // Multithreaded
         utl::win::ComPtr<ID3D10Multithread> d3dmt;
         hr = d3d_device_->QueryInterface(&d3dmt);
         if (SUCCEEDED(hr)) {
             d3dmt->SetMultithreadProtected(TRUE);
         } else {
             jour_w("Failed to set D3D11 multithread protection!");
+        }
+
+        // Info queue
+        if (debug) {
+            hr = d3d_device_->QueryInterface(&info_queue_);
+            if (SUCCEEDED(hr)) {
+                info_queue_->SetMuteDebugOutput(FALSE);
+                info_queue_->PushEmptyStorageFilter();
+                info_queue_->PushEmptyRetrievalFilter();
+            } else {
+                jour_w("Failed to query D3D11 info queue interface!");
+            }
         }
 
         hr = d3d_device_->QueryInterface(&dxgi_device_);

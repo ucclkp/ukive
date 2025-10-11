@@ -30,6 +30,8 @@ namespace win {
             return DXGI_FORMAT_R16G16B16A16_FLOAT;
         case GPUDataFormat::R16G16B16A16_UINT:
             return DXGI_FORMAT_R16G16B16A16_UINT;
+        case GPUDataFormat::R10G10B10A2_UNORM:
+            return DXGI_FORMAT_R10G10B10A2_UNORM;
         case GPUDataFormat::R8G8B8A8_UINT:
             return DXGI_FORMAT_R8G8B8A8_UINT;
         case GPUDataFormat::R8G8B8A8_UNORM:

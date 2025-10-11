@@ -33,6 +33,7 @@ GUI_MAIN() {
     ukive::Application::Options options;
     options.is_auto_dpi_scale = false;
     options.app_name = u"shell";
+    options.debug_graphic = false;
     auto app = std::make_shared<ukive::Application>(options);
 
     ukive::Window::InitParams native_params;
