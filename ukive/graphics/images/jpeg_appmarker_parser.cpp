@@ -210,6 +210,8 @@ namespace ukive {
 
             out->type = 2;
             out->iso_21496_1 = iso_21496;
+        } else {
+            return false;
         }
 
         return true;
@@ -289,11 +291,23 @@ namespace ukive {
         for (;;) {
             uint8_t marker[4];
             READ_STREAM(marker, 4);
-            if (marker[0] != 0xFFu || (marker[1] & 0xE0u) != 0xE0u) {
+            if (marker[0] != 0xFFu) {
+                return false;
+            }
+            if (marker[1] == 0xD9u) { // End of Image (EOI) marker
                 break;
             }
-            if (!parse_jpeg_appmarker_wo_marker(s, marker, out)) {
-                return false;
+            if ((marker[1] & 0xE0u) == 0xE0u) { // JFIF marker
+                if (!parse_jpeg_appmarker_wo_marker(s, marker, out)) {
+                    return false;
+                }
+            } else {
+                // 跳过我们不关心的数据
+                size_t marker_length = (marker[2] << 8) | marker[3];
+                if (marker_length < 2) {
+                    return false;
+                }
+                SKIP_BYTES(marker_length - 2);
             }
         }
 
