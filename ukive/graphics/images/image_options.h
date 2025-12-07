@@ -31,6 +31,8 @@ namespace ukive {
         R16G16B16A16_FLOAT,
         R16G16B16A16_UNORM,
         R10G10B10A2_UNORM,
+        R16G16B16_UNORM,
+        B16G16R16_UNORM,
         RAW,
     };
 

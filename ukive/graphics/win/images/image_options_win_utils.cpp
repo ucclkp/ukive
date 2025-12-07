@@ -132,6 +132,14 @@ namespace win {
             format = GUID_WICPixelFormat32bppR10G10B10A2;
             break;
 
+        case ImagePixelFormat::R16G16B16_UNORM:
+            format = GUID_WICPixelFormat48bppRGB;
+            break;
+
+        case ImagePixelFormat::B16G16R16_UNORM:
+            format = GUID_WICPixelFormat48bppBGR;
+            break;
+
         case ImagePixelFormat::RAW:
         case ImagePixelFormat::B8G8R8A8_UNORM:
         default:
@@ -177,6 +185,12 @@ namespace win {
         }
         if (f == GUID_WICPixelFormat32bppR10G10B10A2) {
             return ImagePixelFormat::R10G10B10A2_UNORM;
+        }
+        if (f == GUID_WICPixelFormat48bppRGB) {
+            return ImagePixelFormat::R16G16B16_UNORM;
+        }
+        if (f == GUID_WICPixelFormat48bppBGR) {
+            return ImagePixelFormat::B16G16R16_UNORM;
         }
 
         assert(false && "Unknown WIC pixel format!");
