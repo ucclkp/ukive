@@ -26,29 +26,24 @@ namespace ukive {
     ImageView::~ImageView() {}
 
     Size ImageView::onDetermineSize(const SizeInfo& info) {
-        int final_width = 0;
-        int final_height = 0;
+        int bound_width = 0;
+        int bound_height = 0;
 
         switch (info.width().mode) {
         case SizeInfo::CONTENT:
             if (img_element_) {
-                final_width = img_element_->getContentWidth();
+                bound_width = img_element_->getContentWidth();
             }
-
-            final_width = final_width + getPadding().hori();
-            final_width = (std::min)(info.width().val, final_width);
             break;
 
         case SizeInfo::FREEDOM:
             if (img_element_) {
-                final_width = img_element_->getContentWidth();
+                bound_width = img_element_->getContentWidth();
             }
-
-            final_width = final_width + getPadding().hori();
             break;
 
         case SizeInfo::DEFINED:
-            final_width = info.width().val;
+            bound_width = info.width().val;
             break;
 
         default:
@@ -58,30 +53,42 @@ namespace ukive {
         switch (info.height().mode) {
         case SizeInfo::CONTENT:
             if (img_element_) {
-                final_height = img_element_->getContentHeight();
+                bound_height = img_element_->getContentHeight();
             }
-
-            final_height = final_height + getPadding().vert();
-            final_height = (std::min)(info.height().val, final_height);
             break;
 
         case SizeInfo::FREEDOM:
             if (img_element_) {
-                final_height = img_element_->getContentHeight();
+                bound_height = img_element_->getContentHeight();
             }
-
-            final_height = final_height + getPadding().vert();
             break;
 
         case SizeInfo::DEFINED:
-            final_height = info.height().val;
+            bound_height = info.height().val;
             break;
 
         default:
             break;
         }
 
-        return Size(final_width, final_height);
+        auto bounds = calImageBoundsByScaleType(bound_width, bound_height);
+
+        int final_width_fit_img  = (int)bounds.width()  + getPadding().hori();
+        int final_height_fit_img = (int)bounds.height() + getPadding().vert();
+
+        if (info.width().mode == SizeInfo::DEFINED) {
+            final_width_fit_img = bound_width;
+        } else if (info.width().mode == SizeInfo::CONTENT) {
+            final_width_fit_img = (std::min)(info.width().val, final_width_fit_img);
+        }
+
+        if (info.height().mode == SizeInfo::DEFINED) {
+            final_height_fit_img = bound_height;
+        } else if (info.height().mode == SizeInfo::CONTENT) {
+            final_height_fit_img = (std::min)(info.height().val, final_height_fit_img);
+        }
+
+        return Size(final_width_fit_img, final_height_fit_img);
     }
 
     void ImageView::onDraw(Canvas* canvas) {
@@ -171,39 +178,32 @@ namespace ukive {
             return;
         }
 
-        switch (scale_type_) {
-        case ST_NONE:
-            img_element_->setBounds(
-                0, 0,
-                img_element_->getContentWidth(),
-                img_element_->getContentHeight());
-            break;
+        img_element_->setBounds(
+            (Rect)calImageBoundsByScaleType(width, height));
+    }
 
+    RectF ImageView::calImageBoundsByScaleType(int width, int height) {
+        if (!img_element_) {
+            return {};
+        }
+
+        switch (scale_type_) {
         case ST_FULL:
-            img_element_->setBounds(0, 0, width, height);
-            break;
+            return RectF(0, 0, width, height);
 
         case ST_FIT_ALWAYS:
-        {
-            auto bounds = fitImageBounds(width, height, true);
-            img_element_->setBounds((Rect)bounds);
-            break;
-        }
+            return fitImageBounds(width, height, true);
 
         case ST_FIT_WHEN_LARGE:
-        {
-            auto bounds = fitImageBounds(width, height, false);
-            img_element_->setBounds((Rect)bounds);
-            break;
-        }
+            return fitImageBounds(width, height, false);
 
+        case ST_NONE:
         case ST_MATRIX:
         default:
-            img_element_->setBounds(
+            return RectF(
                 0, 0,
                 img_element_->getContentWidth(),
                 img_element_->getContentHeight());
-            break;
         }
     }
 

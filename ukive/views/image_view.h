@@ -57,6 +57,7 @@ namespace ukive {
 
     private:
         void setImageBounds(int width, int height);
+        RectF calImageBoundsByScaleType(int width, int height);
         RectF fitImageBounds(int width, int height, bool always) const;
 
         float opacity_ = 1.f;
