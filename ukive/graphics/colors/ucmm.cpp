@@ -251,9 +251,16 @@ namespace ukive {
 
     // static
     void UCMM::RGBToLinear(const RGBSystem& system, Color* rgb) {
-        rgb->r = std::pow(rgb->r, system.red_gamma);
-        rgb->g = std::pow(rgb->g, system.green_gamma);
-        rgb->b = std::pow(rgb->b, system.blue_gamma);
+        switch (system.trc) {
+        case RGBSystem::trc_custom:
+            rgb->r = std::pow(rgb->r, system.red_gamma);
+            rgb->g = std::pow(rgb->g, system.green_gamma);
+            rgb->b = std::pow(rgb->b, system.blue_gamma);
+            break;
+        default:
+            assert(false);
+            break;
+        }
     }
 
     // static
@@ -323,6 +330,28 @@ namespace ukive {
         };
 
         *out = M;
+        return true;
+    }
+
+    // static
+    bool UCMM::RGBToRGBMatrix(
+        const RGBSystem& src, const RGBSystem& dst, utl::mat3d* out)
+    {
+        utl::mat3d src_cie, dst_cie;
+        if (!ukive::UCMM::RGBToCIEXYZMatrix(src, &src_cie)) {
+            return false;
+        }
+        if (!ukive::UCMM::RGBToCIEXYZMatrix(dst, &dst_cie)) {
+            return false;
+        }
+
+        bool cm_ret;
+        auto cie_dst = dst_cie.inverse(&cm_ret);
+        if (!cm_ret) {
+            return false;
+        }
+
+        *out = cie_dst * src_cie;
         return true;
     }
 

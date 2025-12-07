@@ -40,6 +40,9 @@
 #include "ukive/system/dialogs/sys_message_dialog.h"
 
 #include "shell/resources/necro_resources_id.h"
+#include "ukive/graphics/colors/rgb_system.h"
+#include "ukive/graphics/colors/ucmm.h"
+#include "utils/strings/float_conv.h"
 
 #define BEZIER_BASE_VELOCITY  20000
 #define BEZIER_BASE_TIME      6
@@ -132,6 +135,18 @@ namespace {
         }
     }
 
+    template <typename Ty, size_t Row, size_t Col>
+    std::string mat2str(const utl::math::MatrixT<Ty, Row, Col>& m) {
+        std::string out;
+        for (size_t r = 0; r < Row; ++r) {
+            out.append("[ ");
+            for (size_t c = 0; c < Col; ++c) {
+                out.append(utl::ftos8(m(r, c), 0, utl::FCF_EXA, 0)).append(", ");
+            }
+            out.append("]\n");
+        }
+        return out;
+    }
 
     class TestInlineObjectSpan : public ukive::InlineObjectSpan {
     public:
@@ -164,6 +179,14 @@ namespace shell {
 
     void ExampleMiscPage::onCreated(ukive::View* v) {
         auto c = v->getContext();
+
+        bool cm_ret;
+        utl::mat3d m_p3_to_709;
+        cm_ret = ukive::UCMM::RGBToRGBMatrix(
+            ukive::RGBSystem::display_p3(),
+            ukive::RGBSystem::bt709(),
+            &m_p3_to_709);
+        auto sss2 = mat2str(m_p3_to_709);
 
         using namespace std::chrono_literals;
         director_.setListener(this);

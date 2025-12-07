@@ -41,6 +41,8 @@ namespace icc {
 
         static bool RGBToCIEXYZMatrix(
             const RGBSystem& system, utl::mat3d* out);
+        static bool RGBToRGBMatrix(
+            const RGBSystem& src, const RGBSystem& dst, utl::mat3d* out);
 
     private:
         struct CIEXYZ {
