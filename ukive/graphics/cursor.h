@@ -11,7 +11,7 @@
 namespace ukive {
 
     enum class Cursor {
-        NONE,
+        NONE = 0,
         ARROW,
         IBEAM,
         WAIT,
@@ -29,11 +29,11 @@ namespace ukive {
     };
 
     enum class HitPoint {
+        CLIENT = 0,
         TOP_LEFT,
         TOP,
         TOP_RIGHT,
         LEFT,
-        CLIENT,
         RIGHT,
         BOTTOM_LEFT,
         BOTTOM,

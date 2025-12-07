@@ -774,6 +774,11 @@ namespace ukive {
             focus_holder_backup_->dispatchInputEvent(&ev);
             focus_holder_->discardFocus();
             }*/
+            
+            cleanMouseTouchHolders();
+            cleanHaulStatus();
+            cleanLastInputView();
+            releasePointer(CAPR_HAUL);
         }
     }
 
@@ -790,51 +795,8 @@ namespace ukive {
             return;
         }
 
-        bool sent_leave = mouse_holder_ == touch_holder_;
-        if (mouse_holder_) {
-            InputEvent e;
-            e.setEvent(InputEvent::EV_LEAVE);
-            e.setIsNoDispatch(true);
-
-            std::weak_ptr<void> wptr = impl_;
-            mouse_holder_->dispatchInputEvent(&e);
-            if (wptr.expired()) {
-                return;
-            }
-        }
-
-        if (!sent_leave && touch_holder_) {
-            InputEvent e;
-            e.setEvent(InputEvent::EV_LEAVE);
-            e.setIsNoDispatch(true);
-
-            std::weak_ptr<void> wptr = impl_;
-            touch_holder_->dispatchInputEvent(&e);
-            if (wptr.expired()) {
-                return;
-            }
-        }
-
-        if (haul_src_) {
-            haul_src_->cancel();
-            haul_src_ = nullptr;
-
-            if (last_haul_view_) {
-                InputEvent e;
-                e.setEvent(InputEvent::EV_HAUL_LEAVE);
-                e.setIsNoDispatch(true);
-
-                std::weak_ptr<void> wptr = impl_;
-                last_haul_view_->dispatchInputEvent(&e);
-                if (wptr.expired()) {
-                    return;
-                }
-                last_haul_view_ = nullptr;
-            }
-        }
-
-        releaseMouse(true);
-        releaseTouch(true);
+        cleanMouseTouchHolders();
+        cleanHaulStatus();
         releasePointer(CAPR_HAUL);
 
         root_layout_->dispatchWindowFocusChanged(false);
@@ -952,6 +914,71 @@ namespace ukive {
             capture_role_ &= ~role;
             if (capture_role_ == CAPR_NONE) {
                 impl_->releaseMouseCapture();
+            }
+        }
+    }
+
+    void Window::cleanMouseTouchHolders() {
+        bool sent_leave = mouse_holder_ == touch_holder_;
+        if (mouse_holder_) {
+            InputEvent e;
+            e.setEvent(InputEvent::EV_LEAVE);
+            e.setIsNoDispatch(true);
+
+            std::weak_ptr<void> wptr = impl_;
+            mouse_holder_->dispatchInputEvent(&e);
+            if (wptr.expired()) {
+                return;
+            }
+        }
+
+        if (!sent_leave && touch_holder_) {
+            InputEvent e;
+            e.setEvent(InputEvent::EV_LEAVE);
+            e.setIsNoDispatch(true);
+
+            std::weak_ptr<void> wptr = impl_;
+            touch_holder_->dispatchInputEvent(&e);
+            if (wptr.expired()) {
+                return;
+            }
+        }
+
+        releaseMouse(true);
+        releaseTouch(true);
+    }
+
+    void Window::cleanLastInputView() {
+        if (last_input_view_) {
+            InputEvent e;
+            e.setIsNoDispatch(true);
+            e.setEvent(InputEvent::EV_LEAVE);
+
+            std::weak_ptr<void> wptr = impl_;
+            last_input_view_->dispatchInputEvent(&e);
+            if (wptr.expired()) {
+                return;
+            }
+            last_input_view_ = nullptr;
+        }
+    }
+
+    void Window::cleanHaulStatus() {
+        if (haul_src_) {
+            haul_src_->cancel();
+            haul_src_ = nullptr;
+
+            if (last_haul_view_) {
+                InputEvent e;
+                e.setEvent(InputEvent::EV_HAUL_LEAVE);
+                e.setIsNoDispatch(true);
+
+                std::weak_ptr<void> wptr = impl_;
+                last_haul_view_->dispatchInputEvent(&e);
+                if (wptr.expired()) {
+                    return;
+                }
+                last_haul_view_ = nullptr;
             }
         }
     }
@@ -1148,7 +1175,22 @@ namespace ukive {
                 return false;
             }
 
+            bool has_nc_leave_ev = getFrameType() == WINDOW_FRAME_CUSTOM ||
+                (getTranslucentType() & TRANS_LAYERED);
+
             if (valid_holder) {
+                if (has_nc_leave_ev) {
+                    if (holder->getNonClientType() != HitPoint::CLIENT) {
+                        if (!e->isNCMouseEvent()) {
+                            return false;
+                        }
+                    } else {
+                        if (e->isNCMouseEvent()) {
+                            return false;
+                        }
+                    }
+                }
+
                 e->setIsNoDispatch(true);
                 e->setEvent(InputEvent::EV_LEAVE);
                 holder->dispatchInputEvent(e);
@@ -1156,15 +1198,19 @@ namespace ukive {
             }
 
             if (last_input_view_) {
-                e->setIsNoDispatch(true);
-                e->setEvent(InputEvent::EV_LEAVE);
-
-                std::weak_ptr<void> wptr = impl_;
-                last_input_view_->dispatchInputEvent(e);
-                if (wptr.expired()) {
-                    return false;
+                if (has_nc_leave_ev) {
+                    if (last_input_view_->getNonClientType() != HitPoint::CLIENT) {
+                        if (!e->isNCMouseEvent()) {
+                            return false;
+                        }
+                    } else {
+                        if (e->isNCMouseEvent()) {
+                            return false;
+                        }
+                    }
                 }
-                last_input_view_ = nullptr;
+
+                cleanLastInputView();
                 return false;
             }
 

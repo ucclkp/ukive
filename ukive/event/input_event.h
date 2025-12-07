@@ -103,7 +103,20 @@ namespace ukive {
         void setKeyboardKey(int key, bool repeat);
         void setCurTouchId(int id);
         void setOutside(bool outside);
-        void setIsNoDispatch(bool captured);
+
+        /**
+         * 设置当前消息是否可分发至子 View。仅对鼠标/触摸事件有效。
+         * @param no_dispatch 为 true 表示不可分发给子 View，该消息将直接由目标 View 处理；
+         *        否则将正常分发。
+         */
+        void setIsNoDispatch(bool no_dispatch);
+
+        /**
+         * 设置当前鼠标事件是否为窗口非客户区事件。
+         * 这在某些平台上有用（例如 Windows），用于追踪不同区域的鼠标事件。
+         */
+        void setIsNCMouseEvent(bool nc_ev);
+
         void setCancelled(bool cancelled);
         void setPrimaryTouchDown(bool primary);
         void setHaulSource(HaulSource* src);
@@ -145,6 +158,7 @@ namespace ukive {
         bool isNoDispatch() const;
         bool isCancelled() const;
         bool isPrimaryTouchDown() const;
+        bool isNCMouseEvent() const;
 
         /**
          * 当鼠标事件发生于 View 外部时，该方法返回 true。
@@ -184,6 +198,7 @@ namespace ukive {
         bool is_no_dispatch_;
         bool is_cancelled_ = false;
         bool is_primary_touch_down_ = false;
+        bool is_nc_mouse_ev_ = false;
 
         HaulSource* haul_ = nullptr;
     };

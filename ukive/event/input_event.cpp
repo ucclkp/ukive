@@ -182,8 +182,12 @@ namespace ukive {
         is_outside_ = outside;
     }
 
-    void InputEvent::setIsNoDispatch(bool captured) {
-        is_no_dispatch_ = captured;
+    void InputEvent::setIsNoDispatch(bool no_dispatch) {
+        is_no_dispatch_ = no_dispatch;
+    }
+
+    void InputEvent::setIsNCMouseEvent(bool nc_ev) {
+        is_nc_mouse_ev_ = nc_ev;
     }
 
     void InputEvent::setCancelled(bool cancelled) {
@@ -458,6 +462,10 @@ namespace ukive {
         return is_primary_touch_down_;
     }
 
+    bool InputEvent::isNCMouseEvent() const {
+        return is_nc_mouse_ev_;
+    }
+
     bool InputEvent::isOutside() const {
         return is_outside_;
     }
@@ -611,8 +619,8 @@ namespace ukive {
         case EVM_UP:    return "EVM_UP";
         case EVM_MOVE:  return "EVM_MOVE";
         case EVM_WHEEL: return "EVM_WHEEL";
-        case EVM_LEAVE_WIN:  return "EVM_LEAVE_WIN";
-        case EVM_HOVER:      return "EVM_HOVER";
+        case EVM_LEAVE_WIN:    return "EVM_LEAVE_WIN";
+        case EVM_HOVER:        return "EVM_HOVER";
 
             // Touch
         case EVT_DOWN:  return "EVT_DOWN";

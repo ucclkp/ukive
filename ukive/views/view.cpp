@@ -332,6 +332,10 @@ namespace ukive {
         parent_ = parent;
     }
 
+    void View::setNonClientType(HitPoint hp) {
+        non_client_type_ = hp;
+    }
+
     void View::addStatusListener(OnViewStatusListener* l) {
         utl::addCallbackTo(status_listeners_, l);
     }
@@ -611,6 +615,10 @@ namespace ukive {
         return parent_;
     }
 
+    HitPoint View::getNonClientType() const {
+        return non_client_type_;
+    }
+
     const Size& View::getLayoutSize() const {
         return layout_size_;
     }
@@ -800,21 +808,29 @@ namespace ukive {
     }
 
     bool View::isLocalPointerInThis(InputEvent* e) const {
+        return isLocalPointerInThis(e->getX(), e->getY());
+    }
+
+    bool View::isLocalPointerInThis(int x, int y) const {
         switch (outline_) {
         case OUTLINE_OVAL:
         {
             float a = bounds_.width() / 2.f;
             float b = bounds_.height() / 2.f;
-            return std::pow(e->getX() / a - 1, 2) + std::pow(e->getY() / b - 1, 2) <= 1;
+            return std::pow(x / a - 1, 2) + std::pow(y / b - 1, 2) <= 1;
         }
 
         case OUTLINE_RECT:
         default:
-            return Rect(0, 0, bounds_.width(), bounds_.height()).hit(e->getX(), e->getY());
+            return Rect(0, 0, bounds_.width(), bounds_.height()).hit(x, y);
         }
     }
 
     bool View::isLocalPointerInThisVisible(InputEvent* e) const {
+        return isLocalPointerInThisVisible(e->getX(), e->getY());
+    }
+
+    bool View::isLocalPointerInThisVisible(int x, int y) const {
         auto bounds = getVisibleBounds();
         bounds.offset(-bounds_.x(), -bounds_.y());
 
@@ -823,29 +839,33 @@ namespace ukive {
         {
             float a = bounds.width() / 2.f;
             float b = bounds.height() / 2.f;
-            return std::pow(e->getX() / a - 1, 2) + std::pow(e->getY() / b - 1, 2) <= 1 &&
-                bounds.hit(e->getX(), e->getY());
+            return std::pow(x / a - 1, 2) + std::pow(y / b - 1, 2) <= 1 &&
+                bounds.hit(x, y);
         }
 
         case OUTLINE_RECT:
         default:
-            return bounds.hit(e->getX(), e->getY());
+            return bounds.hit(x, y);
         }
     }
 
     bool View::isParentPointerInThis(InputEvent* e) const {
+        return isParentPointerInThis(e->getX(), e->getY());
+    }
+
+    bool View::isParentPointerInThis(int x, int y) const {
         switch (outline_) {
         case OUTLINE_OVAL:
         {
             float a = bounds_.width() / 2.f;
             float b = bounds_.height() / 2.f;
-            return std::pow((e->getX() - bounds_.x()) / a - 1, 2)
-                + std::pow((e->getY() - bounds_.y()) / b - 1, 2) <= 1;
+            return std::pow((x - bounds_.x()) / a - 1, 2)
+                + std::pow((y - bounds_.y()) / b - 1, 2) <= 1;
         }
 
         case OUTLINE_RECT:
         default:
-            return bounds_.hit(e->getX(), e->getY());
+            return bounds_.hit(x, y);
         }
     }
 
@@ -1246,6 +1266,8 @@ namespace ukive {
                     prev.offsetInputPos(
                         cur_bounds.x() - prev_bounds.x(),
                         cur_bounds.y() - prev_bounds.y());
+                    // 可能出现虽然事件未被消费，但因种种原因导致鼠标位置超出最后接受输入的 View 的位置，
+                    // 此时需要发送 LEAVE 事件
                     send_leave = !prev_target->isLocalPointerInThisVisible(&prev);
                 }
 

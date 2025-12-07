@@ -19,8 +19,8 @@ namespace win {
 
     class NativeNonClientFrame : public NonClientFrame {
     public:
-        int onNcCreate(WindowImplWin* w, bool* handled) override;
-        int onNcDestroy(bool* handled) override;
+        int onNCCreate(WindowImplWin* w, bool* handled) override;
+        int onNCDestroy(bool* handled) override;
         void onTranslucentChanged(bool translucent) override {}
 
         void setExtraSpacingWhenMaximized(const Padding& spacing) override;
@@ -29,19 +29,33 @@ namespace win {
         void getClientOffset(POINT* offset) override;
 
         LRESULT onSize(WPARAM wParam, LPARAM lParam, bool* handled) override;
-        LRESULT onMouseMove(WPARAM wParam, LPARAM lParam, bool* handled) override;
-        LRESULT OnLButtonUp(WPARAM wParam, LPARAM lParam, bool* handled) override;
 
-        LRESULT onNcPaint(WPARAM wParam, LPARAM lParam, bool* handled) override;
-        LRESULT onNcActivate(WPARAM wParam, LPARAM lParam, bool* handled) override;
-        LRESULT onNcHitTest(
-            WPARAM wParam, LPARAM lParam, bool* handled,
-            bool* pass_to_window, POINT* p) override;
-        LRESULT onNcCalSize(WPARAM wParam, LPARAM lParam, bool* handled) override;
-        LRESULT onNcLButtonDown(WPARAM wParam, LPARAM lParam, bool* handled) override;
-        LRESULT onNcLButtonUp(WPARAM wParam, LPARAM lParam, bool* handled) override;
-        LRESULT onNcRButtonDown(WPARAM wParam, LPARAM lParam, bool* handled) override;
-        LRESULT onNcRButtonUp(WPARAM wParam, LPARAM lParam, bool* handled) override;
+        LRESULT onNCPaint(
+            WPARAM wParam, LPARAM lParam,
+            bool* handled, bool* pass_to_client) override;
+
+        LRESULT onNCActivate(
+            WPARAM wParam, LPARAM lParam,
+            bool* handled, bool* pass_to_client) override;
+
+        LRESULT onNCHitTest(
+            WPARAM wParam, LPARAM lParam,
+            bool* handled, bool* pass_to_client, POINT* p) override;
+
+        LRESULT onNCCalSize(
+            WPARAM wParam, LPARAM lParam,
+            bool* handled, bool* pass_to_client) override;
+
+        LRESULT onNCMouseRange(
+            UINT uMsg, WPARAM wParam, LPARAM lParam,
+            bool* handled, bool* pass_to_client) override;
+        LRESULT onNCMouseHover(
+            WPARAM wParam, LPARAM lParam,
+            bool* handled, bool* pass_to_client) override;
+        LRESULT onNCMouseLeave(
+            WPARAM wParam, LPARAM lParam,
+            bool* handled, bool* pass_to_client) override;
+
         LRESULT onDwmCompositionChanged(bool* handled) override;
         LRESULT onActivateAfterDwm() override { return 0; }
         LRESULT onInterceptDrawClassic(WPARAM wParam, LPARAM lParam, bool* handled) override;

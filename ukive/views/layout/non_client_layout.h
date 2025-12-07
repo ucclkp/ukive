@@ -29,6 +29,7 @@ namespace ukive {
         void onDraw(Canvas* canvas) override;
 
         void onAttachedToWindow(Window* w) override;
+        void onContextChanged(Context::Type type, const Context& context) override;
 
     private:
         Padding nc_padding_;

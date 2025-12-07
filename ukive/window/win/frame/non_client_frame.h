@@ -23,8 +23,8 @@ namespace win {
     public:
         virtual ~NonClientFrame() = default;
 
-        virtual int onNcCreate(WindowImplWin* w, bool* handled) = 0;
-        virtual int onNcDestroy(bool* handled) = 0;
+        virtual int onNCCreate(WindowImplWin* w, bool* handled) = 0;
+        virtual int onNCDestroy(bool* handled) = 0;
         virtual void onTranslucentChanged(bool translucent) = 0;
 
         virtual void setExtraSpacingWhenMaximized(const Padding& spacing) = 0;
@@ -33,19 +33,33 @@ namespace win {
         virtual void getClientOffset(POINT* offset) = 0;
 
         virtual LRESULT onSize(WPARAM wParam, LPARAM lParam, bool* handled) = 0;
-        virtual LRESULT onMouseMove(WPARAM wParam, LPARAM lParam, bool* handled) = 0;
-        virtual LRESULT OnLButtonUp(WPARAM wParam, LPARAM lParam, bool* handled) = 0;
 
-        virtual LRESULT onNcPaint(WPARAM wParam, LPARAM lParam, bool* handled) = 0;
-        virtual LRESULT onNcActivate(WPARAM wParam, LPARAM lParam, bool* handled) = 0;
-        virtual LRESULT onNcHitTest(
-            WPARAM wParam, LPARAM lParam, bool* handled,
-            bool* pass_to_window, POINT* p) = 0;
-        virtual LRESULT onNcCalSize(WPARAM wParam, LPARAM lParam, bool* handled) = 0;
-        virtual LRESULT onNcLButtonDown(WPARAM wParam, LPARAM lParam, bool* handled) = 0;
-        virtual LRESULT onNcLButtonUp(WPARAM wParam, LPARAM lParam, bool* handled) = 0;
-        virtual LRESULT onNcRButtonDown(WPARAM wParam, LPARAM lParam, bool* handled) = 0;
-        virtual LRESULT onNcRButtonUp(WPARAM wParam, LPARAM lParam, bool* handled) = 0;
+        virtual LRESULT onNCPaint(
+            WPARAM wParam, LPARAM lParam,
+            bool* handled, bool* pass_to_client) = 0;
+
+        virtual LRESULT onNCActivate(
+            WPARAM wParam, LPARAM lParam,
+            bool* handled, bool* pass_to_client) = 0;
+
+        virtual LRESULT onNCHitTest(
+            WPARAM wParam, LPARAM lParam,
+            bool* handled, bool* pass_to_client, POINT* p) = 0;
+
+        virtual LRESULT onNCCalSize(
+            WPARAM wParam, LPARAM lParam,
+            bool* handled, bool* pass_to_client) = 0;
+
+        virtual LRESULT onNCMouseRange(
+            UINT uMsg, WPARAM wParam, LPARAM lParam,
+            bool* handled, bool* pass_to_client) = 0;
+        virtual LRESULT onNCMouseHover(
+            WPARAM wParam, LPARAM lParam,
+            bool* handled, bool* pass_to_client) = 0;
+        virtual LRESULT onNCMouseLeave(
+            WPARAM wParam, LPARAM lParam,
+            bool* handled, bool* pass_to_client) = 0;
+
         virtual LRESULT onDwmCompositionChanged(bool* handled) = 0;
         virtual LRESULT onActivateAfterDwm() = 0;
         virtual LRESULT onInterceptDrawClassic(WPARAM wParam, LPARAM lParam, bool* handled) = 0;

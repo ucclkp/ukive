@@ -170,4 +170,15 @@ namespace ukive {
         }
     }
 
+    void NonClientLayout::onContextChanged(Context::Type type, const Context& context) {
+        LayoutView::onContextChanged(type, context);
+
+        auto w = getWindow();
+        if (w && !w->hasSizeBorder()) {
+            auto c = getContext();
+            nc_padding_.set(c.dp2pxi(0), c.dp2pxi(0), c.dp2pxi(0), c.dp2pxi(0));
+            sh_padding_.set(c.dp2pxi(4), c.dp2pxi(4), c.dp2pxi(4), c.dp2pxi(4));
+        }
+    }
+
 }

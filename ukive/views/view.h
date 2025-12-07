@@ -109,6 +109,13 @@ namespace ukive {
         // 一般由框架调用
         void setParent(LayoutView* parent);
 
+        /**
+         * 设置本 View 是否为非客户区控件，及其类型。
+         * 某些平台下可能没有效果。目前仅对 TitleBar 内的 View 生效。
+         * @param hp 指定非客户区类型。
+         */
+        void setNonClientType(HitPoint hp);
+
         void addStatusListener(OnViewStatusListener* l);
         void removeStatusListener(OnViewStatusListener* l);
         void removeAllStatusListeners();
@@ -139,6 +146,7 @@ namespace ukive {
 
         const Padding& getPadding() const;
         LayoutView* getParent() const;
+        HitPoint getNonClientType() const;
 
         const Size& getLayoutSize() const;
         const Margin& getLayoutMargin() const;
@@ -192,8 +200,11 @@ namespace ukive {
         bool isTouchCapturable() const;
         bool isLayouted() const;
         bool isLocalPointerInThis(InputEvent* e) const;
+        bool isLocalPointerInThis(int x, int y) const;
         bool isLocalPointerInThisVisible(InputEvent* e) const;
+        bool isLocalPointerInThisVisible(int x, int y) const;
         bool isParentPointerInThis(InputEvent* e) const;
+        bool isParentPointerInThis(int x, int y) const;
         bool isReceiveOutsideInputEvent() const;
         bool isTooltipEnabled() const;
         bool isClickable() const;
@@ -394,6 +405,8 @@ namespace ukive {
         bool is_layouted_ = false;
         bool need_layout_ = false;
         bool request_layout_ = false;
+        bool resp_leave_win_ev_type_ = 0;
+        HitPoint non_client_type_ = HitPoint::CLIENT;
 
         Window* window_ = nullptr;
         Context context_;

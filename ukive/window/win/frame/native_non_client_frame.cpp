@@ -16,13 +16,13 @@
 namespace ukive {
 namespace win {
 
-    int NativeNonClientFrame::onNcCreate(WindowImplWin* w, bool* handled) {
+    int NativeNonClientFrame::onNCCreate(WindowImplWin* w, bool* handled) {
         *handled = false;
         window_ = w;
         return TRUE;
     }
 
-    int NativeNonClientFrame::onNcDestroy(bool* handled) {
+    int NativeNonClientFrame::onNCDestroy(bool* handled) {
         *handled = false;
         window_ = nullptr;
         return FALSE;
@@ -61,7 +61,7 @@ namespace win {
     }
 
     void NativeNonClientFrame::getClientOffset(POINT* offset) {
-        ubassert(offset);
+        assert(offset);
         if (window_->isLayered() &&
             window_->isMaximized())
         {
@@ -80,33 +80,29 @@ namespace win {
         return FALSE;
     }
 
-    LRESULT NativeNonClientFrame::onMouseMove(WPARAM wParam, LPARAM lParam, bool* handled) {
+    LRESULT NativeNonClientFrame::onNCPaint(
+        WPARAM wParam, LPARAM lParam, bool* handled, bool* pass_to_client)
+    {
         *handled = false;
+        *pass_to_client = false;
         return FALSE;
     }
 
-    LRESULT NativeNonClientFrame::OnLButtonUp(WPARAM wParam, LPARAM lParam, bool* handled) {
+    LRESULT NativeNonClientFrame::onNCActivate(
+        WPARAM wParam, LPARAM lParam, bool* handled, bool* pass_to_client)
+    {
         *handled = false;
+        *pass_to_client = false;
         return FALSE;
     }
 
-    LRESULT NativeNonClientFrame::onNcPaint(WPARAM wParam, LPARAM lParam, bool* handled) {
-        *handled = false;
-        return FALSE;
-    }
-
-    LRESULT NativeNonClientFrame::onNcActivate(WPARAM wParam, LPARAM lParam, bool* handled) {
-        *handled = false;
-        return FALSE;
-    }
-
-    LRESULT NativeNonClientFrame::onNcHitTest(
-        WPARAM wParam, LPARAM lParam, bool* handled,
-        bool* pass_to_window, POINT* p)
+    LRESULT NativeNonClientFrame::onNCHitTest(
+        WPARAM wParam, LPARAM lParam,
+        bool* handled, bool* pass_to_client, POINT* p)
     {
         if (window_->isLayered()) {
             *handled = true;
-            *pass_to_window = true;
+            *pass_to_client = true;
 
             Point cp;
             cp.x(GET_X_LPARAM(lParam));
@@ -118,13 +114,16 @@ namespace win {
             p->y = cp.y();
         } else {
             *handled = false;
-            *pass_to_window = false;
+            *pass_to_client = false;
         }
 
         return HTNOWHERE;
     }
 
-    LRESULT NativeNonClientFrame::onNcCalSize(WPARAM wParam, LPARAM lParam, bool* handled) {
+    LRESULT NativeNonClientFrame::onNCCalSize(
+        WPARAM wParam, LPARAM lParam, bool* handled, bool* pass_to_client)
+    {
+        *pass_to_client = false;
         if (window_->isLayered()) {
             *handled = true;
             if (wParam == TRUE) {
@@ -150,24 +149,45 @@ namespace win {
         return FALSE;
     }
 
-    LRESULT NativeNonClientFrame::onNcLButtonDown(WPARAM wParam, LPARAM lParam, bool* handled) {
+    LRESULT NativeNonClientFrame::onNCMouseRange(
+        UINT uMsg, WPARAM wParam, LPARAM lParam,
+        bool* handled, bool* pass_to_client)
+    {
         *handled = false;
+        *pass_to_client = window_->isLayered();
+
+        if (*pass_to_client) {
+            switch (uMsg) {
+            case WM_NCRBUTTONUP:
+                window_->showTitlebarMenu();
+                break;
+
+            case WM_NCMOUSEMOVE:
+                *handled = true;
+                return FALSE;
+
+            default:
+                break;
+            }
+        }
+
         return FALSE;
     }
 
-    LRESULT NativeNonClientFrame::onNcLButtonUp(WPARAM wParam, LPARAM lParam, bool* handled) {
+    LRESULT NativeNonClientFrame::onNCMouseHover(
+        WPARAM wParam, LPARAM lParam, bool* handled, bool* pass_to_client)
+    {
         *handled = false;
-        return FALSE;
+        *pass_to_client = window_->isLayered();
+        return 0;
     }
 
-    LRESULT NativeNonClientFrame::onNcRButtonDown(WPARAM wParam, LPARAM lParam, bool* handled) {
+    LRESULT NativeNonClientFrame::onNCMouseLeave(
+        WPARAM wParam, LPARAM lParam, bool* handled, bool* pass_to_client)
+    {
         *handled = false;
-        return FALSE;
-    }
-
-    LRESULT NativeNonClientFrame::onNcRButtonUp(WPARAM wParam, LPARAM lParam, bool* handled) {
-        *handled = false;
-        return FALSE;
+        *pass_to_client = window_->isLayered();
+        return 0;
     }
 
     LRESULT NativeNonClientFrame::onDwmCompositionChanged(bool* handled) {

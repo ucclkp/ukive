@@ -80,6 +80,7 @@ namespace ukive {
         close_btn_ = new TitleBarButton(c);
         close_btn_->setOnClickListener(this);
         close_btn_->setType(WindowButton::Close);
+        close_btn_->setNonClientType(HitPoint::CLOSE_BUTTON);
         close_btn_->setLayoutSize(c.dp2pxi(46), View::LS_FILL);
         auto close_btn_lp = Rlp::Builder()
             .end(root_layout->getId())
@@ -91,6 +92,7 @@ namespace ukive {
         max_btn_ = new TitleBarButton(c);
         max_btn_->setOnClickListener(this);
         max_btn_->setType(WindowButton::Max);
+        max_btn_->setNonClientType(HitPoint::MAX_BUTTON);
         max_btn_->setLayoutSize(c.dp2pxi(46), View::LS_FILL);
         auto max_btn_lp = Rlp::Builder()
             .end(close_btn_->getId(), Rlp::START)
@@ -102,6 +104,7 @@ namespace ukive {
         min_btn_ = new TitleBarButton(c);
         min_btn_->setOnClickListener(this);
         min_btn_->setType(WindowButton::Min);
+        min_btn_->setNonClientType(HitPoint::MIN_BUTTON);
         min_btn_->setLayoutSize(c.dp2pxi(46), View::LS_FILL);
         auto min_btn_lp = Rlp::Builder()
             .end(max_btn_->getId(), Rlp::START)
@@ -201,14 +204,14 @@ namespace ukive {
     }
 
     HitPoint SmallTitleBar::onNCHitTest(int x, int y) {
-        if (min_btn_->getBounds().hit(x, y)) {
-            return HitPoint::CLIENT;
+        if (min_btn_->isParentPointerInThis(x, y)) {
+            return min_btn_->getNonClientType();
         }
-        if (max_btn_->getBounds().hit(x, y)) {
-            return HitPoint::CLIENT;
+        if (max_btn_->isParentPointerInThis(x, y)) {
+            return max_btn_->getNonClientType();
         }
-        if (close_btn_->getBounds().hit(x, y)) {
-            return HitPoint::CLIENT;
+        if (close_btn_->isParentPointerInThis(x, y)) {
+            return close_btn_->getNonClientType();
         }
         return HitPoint::CAPTION;
     }

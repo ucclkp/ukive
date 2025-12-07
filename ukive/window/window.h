@@ -269,6 +269,10 @@ namespace ukive {
         void capturePointer(int role);
         void releasePointer(int role);
 
+        void cleanMouseTouchHolders();
+        void cleanLastInputView();
+        void cleanHaulStatus();
+
         void draw(const DirtyRegion& region);
         void drawWithDebug(const DirtyRegion& region);
         void drawRootView(Canvas* canvas, const Rect& rect);

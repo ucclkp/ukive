@@ -146,6 +146,8 @@ namespace win {
 
         static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+        static std::string MapWndMsgTypeToString(UINT uMsg, WPARAM wParam, LPARAM lParam);
+
     private:
         struct TouchInputCache {
             std::unique_ptr<TOUCHINPUT[]> cache;
@@ -169,12 +171,19 @@ namespace win {
         LRESULT onNCDrawClassic2(WPARAM wParam, LPARAM lParam, bool* handled);
         LRESULT onNCPaint(WPARAM wParam, LPARAM lParam, bool* handled);
         LRESULT onPaint(WPARAM wParam, LPARAM lParam, bool* handled);
+
         LRESULT onNCActivate(WPARAM wParam, LPARAM lParam, bool* handled);
         LRESULT onNCHitTest(WPARAM wParam, LPARAM lParam, bool* handled);
         LRESULT onNCCalCSize(WPARAM wParam, LPARAM lParam, bool* handled);
+
+        LRESULT onNCMouseRange(UINT uMsg, WPARAM wParam, LPARAM lParam, bool* handled);
+        LRESULT onNCMouseHover(WPARAM wParam, LPARAM lParam, bool* handled);
+        LRESULT onNCMouseLeave(WPARAM wParam, LPARAM lParam, bool* handled);
+
         LRESULT onMouseRange(UINT uMsg, WPARAM wParam, LPARAM lParam, bool* handled);
         LRESULT onMouseHover(WPARAM wParam, LPARAM lParam, bool* handled);
         LRESULT onMouseLeave(WPARAM wParam, LPARAM lParam, bool* handled);
+
         LRESULT onClose(WPARAM wParam, LPARAM lParam, bool* handled);
         LRESULT onDestroy(WPARAM wParam, LPARAM lParam, bool* handled);
         LRESULT onNCDestroy(WPARAM wParam, LPARAM lParam, bool* handled);
@@ -252,11 +261,14 @@ namespace win {
         std::wstring title_;
         WINDOWPLACEMENT saved_place_;
         bool is_first_show_maximized_ = true;
+        bool is_nc_l_down_ = false;
 
         bool is_created_;
         bool is_showing_;
         bool need_mouse_leave_track_ = true;
         bool need_mouse_hover_track_ = true;
+        bool need_nc_mouse_leave_track_ = true;
+        bool need_nc_mouse_hover_track_ = true;
         bool is_first_nccalc_;
         bool is_fullscreen_ = false;
         bool is_resizable_ = true;

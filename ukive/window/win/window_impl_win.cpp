@@ -891,12 +891,24 @@ namespace win {
     }
 
     bool WindowImplWin::setMouseTrack(DWORD flags, bool force) {
-        if (!force) {
-            if (!need_mouse_leave_track_ && flags == TME_LEAVE) {
-                return false;
-            }
-            if (!need_mouse_hover_track_ && flags == TME_HOVER) {
-                return false;
+        bool is_cancel = (flags & TME_CANCEL);
+        bool is_non_client = (flags & TME_NONCLIENT);
+
+        if (!force && !is_cancel) {
+            if (is_non_client) {
+                if ((flags & TME_LEAVE) && !need_nc_mouse_leave_track_) {
+                    return false;
+                }
+                if ((flags & TME_HOVER) && !need_nc_mouse_hover_track_) {
+                    return false;
+                }
+            } else {
+                if ((flags & TME_LEAVE) && !need_mouse_leave_track_) {
+                    return false;
+                }
+                if ((flags & TME_HOVER) && !need_mouse_hover_track_) {
+                    return false;
+                }
             }
         }
 
@@ -924,11 +936,27 @@ namespace win {
             return false;
         }
 
-        if (flags & TME_LEAVE) {
-            need_mouse_leave_track_ = false;
-        }
-        if (flags & TME_HOVER) {
-            need_mouse_hover_track_ = false;
+        /*jour_di(
+            "TrackMouseEvent() %s%s%s%s",
+            is_cancel ? "cancel " : "",
+            is_non_client ? "non-client " : "",
+            (flags & TME_HOVER) ? "hover|" : "",
+            (flags & TME_LEAVE) ? "leave" : "");*/
+
+        if (is_non_client) {
+            if (flags & TME_LEAVE) {
+                need_nc_mouse_leave_track_ = is_cancel;
+            }
+            if (flags & TME_HOVER) {
+                need_nc_mouse_hover_track_ = is_cancel;
+            }
+        } else {
+            if (flags & TME_LEAVE) {
+                need_mouse_leave_track_ = is_cancel;
+            }
+            if (flags & TME_HOVER) {
+                need_mouse_hover_track_ = is_cancel;
+            }
         }
         return true;
     }
@@ -1206,6 +1234,7 @@ namespace win {
             break;
         case WA_INACTIVE:
             activate = false;
+            is_nc_l_down_ = false;
             break;
         default:
             break;
@@ -1370,12 +1399,36 @@ namespace win {
     bool WindowImplWin::onInputEvent(InputEvent* e) {
         // 追踪鼠标，以便产生 EVM_LEAVE_WIN 事件。
         if (e->getEvent() == InputEvent::EVM_LEAVE_WIN) {
-            need_mouse_leave_track_ = true;
-            need_mouse_hover_track_ = true;
-        } else if (e->getEvent() == InputEvent::EVM_HOVER) {
-            need_mouse_hover_track_ = true;
-        } else if (e->getEvent() == InputEvent::EVM_MOVE) {
-            setMouseTrack(TME_LEAVE, false);
+            if (e->isNCMouseEvent()) {
+                need_nc_mouse_leave_track_ = true;
+                need_nc_mouse_hover_track_ = true;
+            } else {
+                need_mouse_leave_track_ = true;
+                need_mouse_hover_track_ = true;
+            }
+        }
+        else if (e->getEvent() == InputEvent::EVM_HOVER) {
+            if (e->isNCMouseEvent()) {
+                need_nc_mouse_hover_track_ = true;
+            } else {
+                need_mouse_hover_track_ = true;
+            }
+        }
+        else if (e->getEvent() == InputEvent::EVM_MOVE) {
+            DWORD flags = TME_LEAVE;
+            // 设置鼠标追踪前先检查下有没有冲突的追踪设置，
+            // 例如当前正在监听客户区，但 EVM_MOVE 在非客户区发生的情况。
+            if (e->isNCMouseEvent()) {
+                flags |= TME_NONCLIENT;
+                if (!need_mouse_leave_track_) {
+                    setMouseTrack(TME_CANCEL | TME_LEAVE, true);
+                }
+            } else {
+                if (!need_nc_mouse_leave_track_) {
+                    setMouseTrack(TME_CANCEL | TME_LEAVE | TME_NONCLIENT, true);
+                }
+            }
+            setMouseTrack(flags, false);
         }
 
         e->transformInputPos(
@@ -1449,7 +1502,7 @@ namespace win {
         }
 
         createFrameIfNecessary();
-        auto nc_result = non_client_frame_->onNcCreate(this, handled);
+        auto nc_result = non_client_frame_->onNCCreate(this, handled);
 
         delegate_->onCreate();
         if (*handled) {
@@ -1483,7 +1536,9 @@ namespace win {
 
     LRESULT WindowImplWin::onNCPaint(WPARAM wParam, LPARAM lParam, bool* handled) {
         createFrameIfNecessary();
-        auto nc_result = non_client_frame_->onNcPaint(wParam, lParam, handled);
+
+        bool pass_to_client = false;
+        auto nc_result = non_client_frame_->onNCPaint(wParam, lParam, handled, &pass_to_client);
         if (*handled) {
             return nc_result;
         }
@@ -1513,7 +1568,9 @@ namespace win {
 
     LRESULT WindowImplWin::onNCActivate(WPARAM wParam, LPARAM lParam, bool* handled) {
         createFrameIfNecessary();
-        auto nc_result = non_client_frame_->onNcActivate(wParam, lParam, handled);
+
+        bool pass_to_client = false;
+        auto nc_result = non_client_frame_->onNCActivate(wParam, lParam, handled, &pass_to_client);
         if (*handled) {
             return nc_result;
         }
@@ -1525,7 +1582,7 @@ namespace win {
 
         POINT point;
         bool pass_to_window = false;
-        auto nc_result = non_client_frame_->onNcHitTest(wParam, lParam, handled, &pass_to_window, &point);
+        auto nc_result = non_client_frame_->onNCHitTest(wParam, lParam, handled, &pass_to_window, &point);
         if (*handled && pass_to_window) {
             Point pt{ point.x, point.y };
             ukive::scaleFromNative(this, &pt);
@@ -1574,6 +1631,7 @@ namespace win {
             nc_result = win_hp;
         }
         if (*handled) {
+            //jour_di("WindowImplWin::onNCHitTest() %d", nc_result);
             return nc_result;
         }
         return 0;
@@ -1590,53 +1648,234 @@ namespace win {
         }
 
         createFrameIfNecessary();
-        auto nc_result = non_client_frame_->onNcCalSize(wParam, lParam, handled);
+
+        bool pass_to_client = false;
+        auto nc_result = non_client_frame_->onNCCalSize(wParam, lParam, handled, &pass_to_client);
         if (*handled) {
             return nc_result;
         }
         return 0;
     }
 
-    LRESULT WindowImplWin::onMouseRange(UINT uMsg, WPARAM wParam, LPARAM lParam, bool* handled) {
+    LRESULT WindowImplWin::onNCMouseRange(UINT uMsg, WPARAM wParam, LPARAM lParam, bool* handled) {
         LRESULT nc_result = 0;
+        bool pass_to_client = false;
 
+        createFrameIfNecessary();
+
+        /**
+         * 目前想对自绘的【最小化】【最大化】【关闭】按钮应用系统标准的 HitTest 值。
+         * 但应用这些值之后，针对其的鼠标事件会变为非客户区版本。这里想要将这些非客户区版本
+         * 的鼠标事件转换为普通的鼠标事件。转换本身正常工作，不过这些非客户区版本的鼠标事件
+         * 一旦生成，紧随其后的就是 WM_MOUSELEAVE 事件，导致一些 UI 绘制状态不正确（例如悬浮态会被取消）。
+         * 似乎只能将这些按钮在框架侧标记为非客户区控件，框架对于非客户区控件将过滤鼠标离开事件即可。但
+         * 这样会带来两个问题：
+         * 1. 需要额外处理非客户区的鼠标离开事件，即 WM_NCMOUSELEAVE，并让非客户区控件处理该事件（当作普通的
+         *    鼠标离开事件处理），防止非客户区控件的 UI 绘制状态在鼠标离开其位置后卡住；
+         * 2. 有些控件本身会产生鼠标离开事件（例如下拉选择框），需要考虑兼容。
+         * 在找到更好的方法之前，先不应用系统标准的 HitTest 值。
+         */
+        nc_result = non_client_frame_->onNCMouseRange(uMsg, wParam, lParam, handled, &pass_to_client);
+        if (!pass_to_client) {
+            if (*handled) {
+                return nc_result;
+            }
+            return 0;
+        }
+
+        if (wParam == HTTOPLEFT ||
+            wParam == HTTOP ||
+            wParam == HTTOPRIGHT ||
+            wParam == HTLEFT ||
+            wParam == HTRIGHT ||
+            wParam == HTBOTTOMLEFT ||
+            wParam == HTBOTTOM ||
+            wParam == HTBOTTOMRIGHT)
+        {
+            return 0;
+        }
+        
         switch (uMsg) {
         case WM_NCLBUTTONDOWN:
-            createFrameIfNecessary();
-            nc_result = non_client_frame_->onNcLButtonDown(wParam, lParam, handled);
-            if (*handled) {
-                return nc_result;
+        {
+            int p_type = getPointerTypeFromMouseMsg();
+            if (p_type != InputEvent::PT_MOUSE &&
+                p_type != InputEvent::PT_PEN)
+            {
+                return 0;
+            }
+
+            int screen_x = GET_X_LPARAM(lParam);
+            int screen_y = GET_Y_LPARAM(lParam);
+            POINT pt{ screen_x, screen_y };
+            ::ScreenToClient(hWnd_, &pt);
+
+            InputEvent ev;
+            ev.setEvent(InputEvent::EVM_DOWN);
+            ev.setPointerType(InputEvent::PT_MOUSE);
+            ev.setMouseKey(InputEvent::MK_PRIMARY);
+            ev.setX(pt.x);
+            ev.setY(pt.y);
+            ev.setRawX(pt.x);
+            ev.setRawY(pt.y);
+            ev.setIsNCMouseEvent(true);
+
+            if (onInputEvent(&ev)) {
+                *handled = true;
+                /**
+                 * 非客户区的鼠标按下事件发生后，如果不调用 DefWindowProc()，则在保持按键按下的情况下，
+                 * 后续的鼠标移动事件会导致系统发送 WM_NCMOUSELEAVE 事件，进而导致 UI 状态异常（例如鼠标捕获被取消）。
+                 * 实际发生的事件顺序为：
+                 * WM_NCLBUTTONDOWN -> WM_MOUSEMOVE -> WM_NCMOUSELEAVE。
+                 * 在接收到 WM_MOUSEMOVE 之后尝试取消对非客户区的鼠标追踪无效，可能已经来不及了。
+                 * 这里记录在非客户区按下的状态，在 WM_LBUTTONUP 中、反激活回调和焦点消失回调中清除。并在
+                 * WM_NCMOUSELEAVE 发生时根据这个状态过滤。
+                 * 
+                 * 如果这里往后继续调用 DefWindowProc()，则后续无法收到 WM_NCLBUTTONUP，且实际的非客户区按键区域会变成
+                 * Windows 经典样式的区域。
+                 */
+                is_nc_l_down_ = true;
+                return 0;
             }
             break;
+        }
 
         case WM_NCLBUTTONUP:
-            createFrameIfNecessary();
-            nc_result = non_client_frame_->onNcLButtonUp(wParam, lParam, handled);
-            if (*handled) {
-                return nc_result;
+        {
+            int p_type = getPointerTypeFromMouseMsg();
+            if (p_type != InputEvent::PT_MOUSE &&
+                p_type != InputEvent::PT_PEN)
+            {
+                return 0;
             }
-            break;
 
-        case WM_NCRBUTTONDOWN:
-            createFrameIfNecessary();
-            nc_result = non_client_frame_->onNcRButtonDown(wParam, lParam, handled);
-            if (*handled) {
-                return nc_result;
-            }
-            break;
+            int screen_x = GET_X_LPARAM(lParam);
+            int screen_y = GET_Y_LPARAM(lParam);
+            POINT pt{ screen_x, screen_y };
+            ::ScreenToClient(hWnd_, &pt);
 
-        case WM_NCRBUTTONUP:
-            createFrameIfNecessary();
-            nc_result = non_client_frame_->onNcRButtonUp(wParam, lParam, handled);
-            if (*handled) {
-                return nc_result;
+            InputEvent ev;
+            ev.setEvent(InputEvent::EVM_UP);
+            ev.setPointerType(InputEvent::PT_MOUSE);
+            ev.setMouseKey(InputEvent::MK_PRIMARY);
+            ev.setX(pt.x);
+            ev.setY(pt.y);
+            ev.setRawX(pt.x);
+            ev.setRawY(pt.y);
+            ev.setIsNCMouseEvent(true);
+
+            if (onInputEvent(&ev)) {
+                *handled = true;
+                return 0;
             }
             break;
+        }
 
         case WM_NCMOUSEMOVE:
+        {
+            //jour_di("WM_NCMOUSEMOVE %d", wParam);
+
+            int screen_x = GET_X_LPARAM(lParam);
+            int screen_y = GET_Y_LPARAM(lParam);
+            POINT pt{ screen_x, screen_y };
+            ::ScreenToClient(hWnd_, &pt);
+
+            int p_type = getPointerTypeFromMouseMsg();
+            if (p_type != InputEvent::PT_MOUSE &&
+                p_type != InputEvent::PT_PEN)
+            {
+                prev_touch_x_ = pt.x;
+                prev_touch_y_ = pt.y;
+                return 0;
+            }
+
+            // 有时，在某些具有触屏的设备上启动程序时，以及接收到 WM_TOUCH 后，
+            // Windows 会随机触发 WM_MOUSEMOVE 或 WM_LBUTTONUP 事件，而这些
+            // 事件会被 GetMessageExtraInfo() 判定为鼠标事件（尽管这些事件是由操作触屏引发的）。
+            // 以下网址中包含有相关讨论和解决方法：
+            // https://social.msdn.microsoft.com/Forums/en-US/1b7217bb-1e60-4e00-83c9-193c7f88c249
+            if (is_prev_touched_) {
+                if (utl::TimeUtils::upTimeMillis() - prev_touch_time_ <= 1000) {
+                    if (pt.x == prev_touch_x_ && pt.y == prev_touch_y_) {
+                        is_prev_touched_ = false;
+                        return 0;
+                    }
+                } else {
+                    is_prev_touched_ = false;
+                }
+            }
+
+            InputEvent ev;
+            ev.setEvent(InputEvent::EVM_MOVE);
+            ev.setPointerType(InputEvent::PT_MOUSE);
+            ev.setX(pt.x);
+            ev.setY(pt.y);
+            ev.setRawX(pt.x);
+            ev.setRawY(pt.y);
+            ev.setIsNCMouseEvent(true);
+
+            if (onInputEvent(&ev)) {
+                *handled = true;
+                return 0;
+            }
+            break;
+        }
+
+        default:
+            break;
+        }
+        return 0;
+    }
+
+    LRESULT WindowImplWin::onNCMouseHover(WPARAM wParam, LPARAM lParam, bool* handled) {
+        *handled = false;
+        return 0;
+    }
+
+    LRESULT WindowImplWin::onNCMouseLeave(WPARAM wParam, LPARAM lParam, bool* handled) {
+        LRESULT nc_result = 0;
+        bool pass_to_client = false;
+
+        if (is_nc_l_down_) {
+            return 0;
+        }
+
+        createFrameIfNecessary();
+
+        nc_result = non_client_frame_->onNCMouseLeave(wParam, lParam, handled, &pass_to_client);
+        if (!pass_to_client) {
+            if (*handled) {
+                return nc_result;
+            }
+            return 0;
+        }
+
+        //jour_di("WindowImplWin: onNCMouseLeave");
+
+        int p_type = getPointerTypeFromMouseMsg();
+        if (p_type != InputEvent::PT_MOUSE &&
+            p_type != InputEvent::PT_PEN)
+        {
+            return 0;
+        }
+
+        InputEvent ev;
+        ev.setEvent(InputEvent::EVM_LEAVE_WIN);
+        ev.setPointerType(InputEvent::PT_MOUSE);
+        ev.setIsNCMouseEvent(true);
+        if (onInputEvent(&ev)) {
             *handled = true;
             return 0;
+        }
 
+        return 0;
+    }
+
+    LRESULT WindowImplWin::onMouseRange(UINT uMsg, WPARAM wParam, LPARAM lParam, bool* handled) {
+        LRESULT nc_result = 0;
+        bool pass_to_client = false;
+
+        switch (uMsg) {
         case WM_LBUTTONDOWN:
         {
             int p_type = getPointerTypeFromMouseMsg();
@@ -1671,11 +1910,7 @@ namespace win {
                 return 0;
             }
 
-            createFrameIfNecessary();
-            nc_result = non_client_frame_->OnLButtonUp(wParam, lParam, handled);
-            if (*handled) {
-                return nc_result;
-            }
+            is_nc_l_down_ = false;
 
             InputEvent ev;
             ev.setEvent(InputEvent::EVM_UP);
@@ -1867,12 +2102,6 @@ namespace win {
                 }
             }
 
-            createFrameIfNecessary();
-            nc_result = non_client_frame_->onMouseMove(wParam, lParam, handled);
-            if (*handled) {
-                return nc_result;
-            }
-
             InputEvent ev;
             ev.setEvent(InputEvent::EVM_MOVE);
             ev.setPointerType(InputEvent::PT_MOUSE);
@@ -1959,6 +2188,8 @@ namespace win {
             return 0;
         }
 
+        //jour_di("WindowImplWin: onMouseLeave");
+
         InputEvent ev;
         ev.setEvent(InputEvent::EVM_LEAVE_WIN);
         ev.setPointerType(InputEvent::PT_MOUSE);
@@ -1987,7 +2218,7 @@ namespace win {
     }
 
     LRESULT WindowImplWin::onNCDestroy(WPARAM wParam, LPARAM lParam, bool* handled) {
-        auto nc_result = non_client_frame_->onNcDestroy(handled);
+        auto nc_result = non_client_frame_->onNCDestroy(handled);
         if (*handled) {
             return nc_result;
         }
@@ -2070,6 +2301,7 @@ namespace win {
     }
 
     LRESULT WindowImplWin::onKillFocus(WPARAM wParam, LPARAM lParam, bool* handled) {
+        is_nc_l_down_ = false;
         delegate_->onKillFocus();
         return 0;
     }
@@ -2109,6 +2341,7 @@ namespace win {
         int height_px = w_rect.bottom - w_rect.top;
 
         onResize(int(wParam), width_px, height_px);
+
         createFrameIfNecessary();
         auto nc_result = non_client_frame_->onSize(wParam, lParam, handled);
         if (*handled) {
@@ -2570,8 +2803,13 @@ namespace win {
     }
 
     LRESULT WindowImplWin::processWindowMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool* handled) {
+        //jour_di("WindowImplWin::processWindowMessage() %s", MapWndMsgTypeToString(uMsg, wParam, lParam));
+
         WINDOW_MSG_RANGE_HANDLER(WM_MOUSEFIRST, WM_MOUSELAST, onMouseRange);
-        WINDOW_MSG_RANGE_HANDLER(WM_NCMOUSEFIRST, WM_NCMOUSELAST, onMouseRange);
+        WINDOW_MSG_RANGE_HANDLER(WM_NCMOUSEFIRST, WM_NCMOUSELAST, onNCMouseRange);
+
+        WINDOW_MSG_HANDLER(WM_NCMOUSEHOVER, onNCMouseHover);
+        WINDOW_MSG_HANDLER(WM_NCMOUSELEAVE, onNCMouseLeave);
 
         WINDOW_MSG_HANDLER(WM_MOUSEHOVER, onMouseHover);
         WINDOW_MSG_HANDLER(WM_MOUSELEAVE, onMouseLeave);
@@ -2832,6 +3070,89 @@ namespace win {
             hWnd_, HWND_TOP,
             bounds.x(), bounds.y(), bounds.width(), bounds.height(),
             SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+    }
+
+    // static
+    std::string WindowImplWin::MapWndMsgTypeToString(UINT uMsg, WPARAM wParam, LPARAM lParam) {
+        switch (uMsg) {
+        case WM_NCCREATE: return "WM_NCCREATE";
+        case WM_NCDRAWCLASSIC1: return "WM_NCDRAWCLASSIC1";
+        case WM_NCDRAWCLASSIC2: return "WM_NCDRAWCLASSIC2";
+        case WM_NCPAINT: return "WM_NCPAINT";
+        case WM_NCACTIVATE: return "WM_NCACTIVATE";
+        case WM_NCCALCSIZE: return "WM_NCCALCSIZE";
+        case WM_NCHITTEST: return "WM_NCHITTEST";
+        case WM_NCDESTROY: return "WM_NCDESTROY";
+        case WM_CREATE: return "WM_CREATE";
+        case WM_PAINT: return "WM_PAINT";
+        case WM_CLOSE: return "WM_CLOSE";
+        case WM_DESTROY: return "WM_DESTROY";
+        case WM_ACTIVATE: return "WM_ACTIVATE";
+        case WM_ACTIVATEAPP: return "WM_ACTIVATEAPP";
+        case WM_SHOWWINDOW: return "WM_SHOWWINDOW";
+        case WM_MOUSEMOVE: return "WM_MOUSEMOVE";
+        case WM_LBUTTONDOWN: return "WM_LBUTTONDOWN";
+        case WM_LBUTTONUP: return "WM_LBUTTONUP";
+        case WM_LBUTTONDBLCLK: return "WM_LBUTTONDBLCLK";
+        case WM_RBUTTONDOWN: return "WM_RBUTTONDOWN";
+        case WM_RBUTTONUP: return "WM_RBUTTONUP";
+        case WM_RBUTTONDBLCLK: return "WM_RBUTTONDBLCLK";
+        case WM_MBUTTONDOWN: return "WM_MBUTTONDOWN";
+        case WM_MBUTTONUP: return "WM_MBUTTONUP";
+        case WM_MBUTTONDBLCLK: return "WM_MBUTTONDBLCLK";
+        case WM_MOUSEWHEEL: return "WM_MOUSEWHEEL";
+        case WM_XBUTTONDOWN: return "WM_XBUTTONDOWN";
+        case WM_XBUTTONUP: return "WM_XBUTTONUP";
+        case WM_XBUTTONDBLCLK: return "WM_XBUTTONDBLCLK";
+        case WM_MOUSEHWHEEL: return "WM_MOUSEHWHEEL";
+        case WM_NCMOUSEMOVE: return "WM_NCMOUSEMOVE";
+        case WM_NCLBUTTONDOWN: return "WM_NCLBUTTONDOWN";
+        case WM_NCLBUTTONUP: return "WM_NCLBUTTONUP";
+        case WM_NCLBUTTONDBLCLK: return "WM_NCLBUTTONDBLCLK";
+        case WM_NCRBUTTONDOWN: return "WM_NCRBUTTONDOWN";
+        case WM_NCRBUTTONUP: return "WM_NCRBUTTONUP";
+        case WM_NCRBUTTONDBLCLK: return "WM_NCRBUTTONDBLCLK";
+        case WM_NCMBUTTONDOWN: return "WM_NCMBUTTONDOWN";
+        case WM_NCMBUTTONUP: return "WM_NCMBUTTONUP";
+        case WM_NCMBUTTONDBLCLK: return "WM_NCMBUTTONDBLCLK";
+        case WM_MOUSEHOVER: return "WM_MOUSEHOVER";
+        case WM_MOUSELEAVE: return "WM_MOUSELEAVE";
+        case WM_NCMOUSEHOVER: return "WM_NCMOUSEHOVER";
+        case WM_NCMOUSELEAVE: return "WM_NCMOUSELEAVE";
+        case WM_SETCURSOR: return "WM_SETCURSOR";
+        case WM_CAPTURECHANGED: return "WM_CAPTURECHANGED";
+        case WM_WINDOWPOSCHANGING: return "WM_WINDOWPOSCHANGING";
+        case WM_WINDOWPOSCHANGED: return "WM_WINDOWPOSCHANGED";
+        case WM_GETICON: return "WM_GETICON";
+        case WM_SETICON: return "WM_SETICON";
+        case WM_DISPLAYCHANGE: return "WM_DISPLAYCHANGE";
+        case WM_CONTEXTMENU: return "WM_CONTEXTMENU";
+        case WM_STYLECHANGING: return "WM_STYLECHANGING";
+        case WM_STYLECHANGED: return "WM_STYLECHANGED";
+        case WM_SIZE: return "WM_SIZE";
+        case WM_SIZING: return "WM_SIZING";
+        case WM_MOVE: return "WM_MOVE";
+        case WM_MOVING: return "WM_MOVING";
+        case WM_SETFOCUS: return "WM_SETFOCUS";
+        case WM_KILLFOCUS: return "WM_KILLFOCUS";
+        case WM_ERASEBKGND: return "WM_ERASEBKGND";
+        case WM_GETMINMAXINFO: return "WM_GETMINMAXINFO";
+        case WM_IME_SETCONTEXT: return "WM_IME_SETCONTEXT";
+        case WM_IME_NOTIFY: return "WM_IME_NOTIFY";
+        case WM_SETTEXT: return "WM_SETTEXT";
+        case WM_GETTEXT: return "WM_GETTEXT";
+        case WM_GETTEXTLENGTH: return "WM_GETTEXTLENGTH";
+        case WM_DWMNCRENDERINGCHANGED: "WM_DWMNCRENDERINGCHANGED";
+        case WM_POWERBROADCAST: return "WM_POWERBROADCAST";
+        case WM_QUERYOPEN: return "WM_QUERYOPEN";
+        case WM_COMMAND: return "WM_COMMAND";
+        case WM_SYSCOMMAND: return "WM_SYSCOMMAND";
+        case WM_ENTERIDLE: return "WM_ENTERIDLE";
+        case WM_ENTERSIZEMOVE: return "WM_ENTERSIZEMOVE";
+        case WM_EXITSIZEMOVE: return "WM_EXITSIZEMOVE";
+        default:
+            return std::to_string(uMsg);
+        }
     }
 
 }

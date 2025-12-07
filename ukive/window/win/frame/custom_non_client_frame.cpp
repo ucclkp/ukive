@@ -23,14 +23,14 @@ namespace win {
     CustomNonClientFrame::CustomNonClientFrame()
         : window_(nullptr) {}
 
-    int CustomNonClientFrame::onNcCreate(WindowImplWin* w, bool* handled) {
+    int CustomNonClientFrame::onNCCreate(WindowImplWin* w, bool* handled) {
         *handled = false;
         window_ = w;
 
         return TRUE;
     }
 
-    int CustomNonClientFrame::onNcDestroy(bool* handled) {
+    int CustomNonClientFrame::onNCDestroy(bool* handled) {
         *handled = false;
 
         window_ = nullptr;
@@ -48,7 +48,7 @@ namespace win {
     }
 
     void CustomNonClientFrame::getClientInsets(Padding* insets, int* bottom_beyond) {
-        ubassert(insets);
+        assert(insets);
         // 从 Windows 7 到 Windows 10 1703，窗口渲染缓冲的大小需要
         // 与窗口客户区的大小完全一致，否则会出现模糊（可能是因为窗口交换缓冲设置的缩放模式为拉伸），
         // 重要的是底边非客户区设置的 -1 需要考虑在内。
@@ -67,7 +67,7 @@ namespace win {
     }
 
     void CustomNonClientFrame::getClientOffset(POINT* offset) {
-        ubassert(offset);
+        assert(offset);
         if (window_->isMaximized()) {
             auto ext = getExtraSpacingWhenMaximized();
             offset->x = ext.start();
@@ -83,22 +83,14 @@ namespace win {
         return FALSE;
     }
 
-    LRESULT CustomNonClientFrame::onMouseMove(WPARAM wParam, LPARAM lParam, bool* handled) {
+    LRESULT CustomNonClientFrame::onNCPaint(WPARAM wParam, LPARAM lParam, bool* handled, bool* pass_to_client) {
         *handled = false;
-        return FALSE;
-    }
-
-    LRESULT CustomNonClientFrame::OnLButtonUp(WPARAM wParam, LPARAM lParam, bool* handled) {
-        *handled = false;
-        return FALSE;
-    }
-
-    LRESULT CustomNonClientFrame::onNcPaint(WPARAM wParam, LPARAM lParam, bool* handled) {
-        *handled = false;
+        *pass_to_client = false;
         return 0;
     }
 
-    LRESULT CustomNonClientFrame::onNcActivate(WPARAM wParam, LPARAM lParam, bool* handled) {
+    LRESULT CustomNonClientFrame::onNCActivate(WPARAM wParam, LPARAM lParam, bool* handled, bool* pass_to_client) {
+        *pass_to_client = false;
         if (window_->isMinimized()) {
             *handled = false;
             return 0;
@@ -107,11 +99,12 @@ namespace win {
         return TRUE;
     }
 
-    LRESULT CustomNonClientFrame::onNcHitTest(
-        WPARAM wParam, LPARAM lParam, bool* handled, bool* pass_to_window, POINT* p)
+    LRESULT CustomNonClientFrame::onNCHitTest(
+        WPARAM wParam, LPARAM lParam,
+        bool* handled, bool* pass_to_client, POINT* p)
     {
         *handled = true;
-        *pass_to_window = true;
+        *pass_to_client = true;
 
         Point cp;
         cp.x(GET_X_LPARAM(lParam));
@@ -122,11 +115,14 @@ namespace win {
         p->x = cp.x();
         p->y = cp.y();
 
-        return 0;
+        return HTNOWHERE;
     }
 
-    LRESULT CustomNonClientFrame::onNcCalSize(WPARAM wParam, LPARAM lParam, bool* handled) {
+    LRESULT CustomNonClientFrame::onNCCalSize(
+        WPARAM wParam, LPARAM lParam, bool* handled, bool* pass_to_client)
+    {
         *handled = true;
+        *pass_to_client = false;
 
         RECT* rect;
         if (wParam == TRUE) {
@@ -177,25 +173,42 @@ namespace win {
         return wParam == TRUE ? WVR_REDRAW : 0;
     }
 
-    LRESULT CustomNonClientFrame::onNcLButtonDown(WPARAM wParam, LPARAM lParam, bool* handled) {
+    LRESULT CustomNonClientFrame::onNCMouseRange(
+        UINT uMsg, WPARAM wParam, LPARAM lParam,
+        bool* handled, bool* pass_to_client)
+    {
         *handled = false;
+        *pass_to_client = true;
+
+        switch (uMsg) {
+        case WM_NCRBUTTONUP:
+            window_->showTitlebarMenu();
+            break;
+
+        case WM_NCMOUSEMOVE:
+            *handled = true;
+            return FALSE;
+
+        default:
+            break;
+        }
         return FALSE;
     }
 
-    LRESULT CustomNonClientFrame::onNcLButtonUp(WPARAM wParam, LPARAM lParam, bool* handled) {
+    LRESULT CustomNonClientFrame::onNCMouseHover(
+        WPARAM wParam, LPARAM lParam, bool* handled, bool* pass_to_client)
+    {
         *handled = false;
-        return FALSE;
+        *pass_to_client = true;
+        return 0;
     }
 
-    LRESULT CustomNonClientFrame::onNcRButtonDown(WPARAM wParam, LPARAM lParam, bool* handled) {
+    LRESULT CustomNonClientFrame::onNCMouseLeave(
+        WPARAM wParam, LPARAM lParam, bool* handled, bool* pass_to_client)
+    {
         *handled = false;
-        return FALSE;
-    }
-
-    LRESULT CustomNonClientFrame::onNcRButtonUp(WPARAM wParam, LPARAM lParam, bool* handled) {
-        *handled = false;
-        window_->showTitlebarMenu();
-        return FALSE;
+        *pass_to_client = true;
+        return 0;
     }
 
     LRESULT CustomNonClientFrame::onDwmCompositionChanged(bool* handled) {
