@@ -14,6 +14,7 @@
 #include "utils/multi_callbacks.hpp"
 
 #include "ukive/graphics/dirty_region.h"
+#include "ukive/graphics/images/image_options.h"
 #include "ukive/graphics/size.hpp"
 #include "ukive/system/theme_info.h"
 #include "ukive/views/layout_info/gravity.h"
@@ -279,6 +280,8 @@ namespace ukive {
         bool processPointerHolder(View* holder, InputEvent* e);
         void processKeyForDebugView(InputEvent* e);
 
+        ImageOptions determineImageOptions();
+
         Context context_;
         std::shared_ptr<WindowNative> impl_;
 
@@ -310,7 +313,7 @@ namespace ukive {
         Color background_color_;
         bool is_startup_window_;
         bool is_hdr_enabled_ = false;
-        bool using_hdr_when_available = false;
+        bool using_hdr_when_available_ = false;
         bool using_hp_rt_ = false;
         bool is_own_by_myself_ = false;
         int min_width_, min_height_;

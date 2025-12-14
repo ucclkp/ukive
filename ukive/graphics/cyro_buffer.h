@@ -34,7 +34,7 @@ namespace ukive {
             int width, int height,
             const ImageOptions& options) = 0;
         virtual GRet onResize(int width, int height) = 0;
-        virtual void onDPIChange(float dpi_x, float dpi_y) = 0;
+        virtual void onDPIChanged(float dpi_x, float dpi_y) = 0;
         virtual void onDestroy() = 0;
 
         virtual void onBeginDraw() = 0;

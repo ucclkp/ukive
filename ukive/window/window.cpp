@@ -248,7 +248,7 @@ namespace ukive {
     }
 
     void Window::setUsingHDRWhenAvailable(bool using_hdr) {
-        using_hdr_when_available = using_hdr;
+        using_hdr_when_available_ = using_hdr;
     }
 
     void Window::setUsingHighPreciseRenderTarget(bool hprt) {
@@ -728,26 +728,8 @@ namespace ukive {
         root_layout_->setId(0);
         root_layout_->setLayoutSize(View::LS_FILL, View::LS_FILL);
 
-        float dpi = context_.getDefaultDpi() * context_.getAutoScale();
-
-        auto display = Display::fromWindow(this);
-
         buffer_ = WindowBuffer::create(this);
-        ImageOptions options(dpi, dpi);
-        options.sdr_white_level = display->getSDRWhiteLevel() / 1000.f * 80.f;
-
-        if (display->isInHDRMode() && using_hdr_when_available) {
-            options.hdr_enabled = true;
-            options.pixel_format = ImagePixelFormat::R16G16B16A16_FLOAT;
-            is_hdr_enabled_ = true;
-        } else {
-            if (using_hp_rt_) {
-                options.pixel_format = ImagePixelFormat::R16G16B16A16_FLOAT;
-            } else {
-                options.pixel_format = ImagePixelFormat::B8G8R8A8_UNORM;
-            }
-        }
-        buffer_->onCreate(0, 0, options);
+        buffer_->onCreate(0, 0, determineImageOptions());
 
         rt_ = CyroRenderTarget::create();
         rt_->onCreate(buffer_);
@@ -776,7 +758,7 @@ namespace ukive {
             focus_holder_backup_->dispatchInputEvent(&ev);
             focus_holder_->discardFocus();
             }*/
-            
+
             cleanMouseTouchHolders();
             cleanHaulStatus();
             cleanLastInputView();
@@ -1400,7 +1382,15 @@ namespace ukive {
         {
             float dpi = context_.getDefaultDpi() * context_.getAutoScale();
             if (buffer_) {
-                buffer_->onDPIChange(dpi, dpi);
+                buffer_->onDPIChanged(dpi, dpi);
+            }
+        }
+        if (type == Context::HDR_CHANGED) {
+            if (using_hdr_when_available_ && buffer_ && rt_) {
+                rt_->onDestroy();
+                buffer_ = WindowBuffer::create(this);
+                buffer_->onCreate(0, 0, determineImageOptions());
+                rt_->onCreate(buffer_);
             }
         }
 
@@ -1421,6 +1411,28 @@ namespace ukive {
         if (w == parent_) {
             parent_ = nullptr;
         }
+    }
+
+    ImageOptions Window::determineImageOptions() {
+        float dpi = context_.getDefaultDpi() * context_.getAutoScale();
+        auto display = Display::fromWindow(this);
+
+        ImageOptions options(dpi, dpi);
+        options.sdr_white_level = display->getSDRWhiteLevel() / 1000.f * 80.f;
+
+        if (display->isInHDRMode() && using_hdr_when_available_) {
+            options.hdr_enabled = true;
+            options.pixel_format = ImagePixelFormat::R16G16B16A16_FLOAT;
+            is_hdr_enabled_ = true;
+        } else {
+            if (using_hp_rt_) {
+                options.pixel_format = ImagePixelFormat::R16G16B16A16_FLOAT;
+            } else {
+                options.pixel_format = ImagePixelFormat::B8G8R8A8_UNORM;
+            }
+        }
+
+        return options;
     }
 
 }

@@ -26,7 +26,7 @@ namespace win {
             int width, int height,
             const ImageOptions& options) override;
         GRet onResize(int width, int height) override;
-        void onDPIChange(float dpi_x, float dpi_y) override;
+        void onDPIChanged(float dpi_x, float dpi_y) override;
         void onDestroy() override;
 
         void onBeginDraw() override;

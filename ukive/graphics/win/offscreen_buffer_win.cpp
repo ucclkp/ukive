@@ -56,7 +56,7 @@ namespace win {
         return createHardwareBRT(width, height) ? GRet::Succeeded : GRet::Failed;
     }
 
-    void OffscreenBufferWin::onDPIChange(float dpi_x, float dpi_y) {
+    void OffscreenBufferWin::onDPIChanged(float dpi_x, float dpi_y) {
         if (dpi_x <= 0 || dpi_y <= 0) {
             DLOG(Log::ERR) << "Invalid dpi values.";
             return;

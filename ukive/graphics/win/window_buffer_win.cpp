@@ -18,6 +18,8 @@
 #include "ukive/graphics/win/images/lc_image_frame_win.h"
 #include "ukive/graphics/win/directx_manager.h"
 
+#include <VersionHelpers.h>
+
 
 namespace ukive {
 namespace win {
@@ -36,7 +38,7 @@ namespace win {
         return resizeSwapchainBRT();
     }
 
-    void WindowBufferWin::onDPIChange(float dpi_x, float dpi_y) {
+    void WindowBufferWin::onDPIChanged(float dpi_x, float dpi_y) {
         if (dpi_x <= 0 || dpi_y <= 0) {
             DLOG(Log::ERR) << "Invalid dpi values.";
             return;
@@ -128,11 +130,17 @@ namespace win {
     }
 
     uint32_t WindowBufferWin::getBackBufferCount() const {
-        if (img_options_.pixel_format == ImagePixelFormat::R16G16B16A16_FLOAT) {
-            return 2;
-        } else {
+        if (!swapchain_) {
             return 1;
         }
+
+        DXGI_SWAP_CHAIN_DESC1 desc;
+        HRESULT hr = swapchain_->GetDesc1(&desc);
+        if (FAILED(hr)) {
+            return 1;
+        }
+
+        return (uint32_t)desc.BufferCount;
     }
 
     bool WindowBufferWin::recreate() {
@@ -191,7 +199,13 @@ namespace win {
 
         HRESULT hr;
         if (!use_composition_) {
-            if (img_options_.pixel_format == ImagePixelFormat::R16G16B16A16_FLOAT) {
+            /**
+             * 注意：对于同一个窗口，无法从 Flip 模式的交换链切换到 Blt 模式，
+             * 实际切换后渲染内容将无法上屏，就好像停止渲染一样。
+             */
+            if (::IsWindows10OrGreater() ||
+                img_options_.pixel_format == ImagePixelFormat::R16G16B16A16_FLOAT)
+            {
                 desc.BufferCount = 2;
                 desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
                 desc.Scaling = DXGI_SCALING_NONE;

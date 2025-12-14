@@ -48,7 +48,7 @@ namespace win {
         return ret;
     }
 
-    void WindowBufferWin7::onDPIChange(float dpi_x, float dpi_y) {
+    void WindowBufferWin7::onDPIChanged(float dpi_x, float dpi_y) {
         if (dpi_x <= 0 || dpi_y <= 0) {
             DLOG(Log::ERR) << "Invalid dpi values.";
             return;

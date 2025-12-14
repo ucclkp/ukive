@@ -2588,9 +2588,21 @@ namespace win {
         static_cast<DisplayManagerWin*>(
             Application::getDisplayManager())->notifyChanged(hWnd_);
 
+        int prev_hdr_status;
+        if (display_) {
+            prev_hdr_status = display_->isInHDRMode() ? 1 : 0;
+        } else {
+            prev_hdr_status = -1;
+        }
+
+        // TODO: 在发通知前更新
         display_ = DisplayWin::fromWindowImpl(this);
 
-        //delegate_->onUpdateContext(Context::HDR_CHANGED);
+        if (prev_hdr_status >= 0) {
+            if (display_->isInHDRMode() != !!prev_hdr_status) {
+                delegate_->onUpdateContext(Context::HDR_CHANGED);
+            }
+        }
 
         ::InvalidateRect(hWnd_, nullptr, FALSE);
         ::UpdateWindow(hWnd_);
@@ -2704,11 +2716,23 @@ namespace win {
             is_keep_on_top_ = ::GetWindowLongPtr(hWnd_, GWL_EXSTYLE) & WS_EX_TOPMOST;
         }
 
+        int prev_hdr_status;
+        if (display_) {
+            prev_hdr_status = display_->isInHDRMode() ? 1 : 0;
+        } else {
+            prev_hdr_status = -1;
+        }
+
         auto display = DisplayWin::fromWindowImpl(this);
         if (!display_ || !display_->isSame(display.get())) {
             display_ = display;
-        }
 
+            if (prev_hdr_status >= 0) {
+                if (display_->isInHDRMode() != !!prev_hdr_status) {
+                    delegate_->onUpdateContext(Context::HDR_CHANGED);
+                }
+            }
+        }
         return 0;
     }
 
