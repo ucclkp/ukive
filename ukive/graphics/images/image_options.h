@@ -68,6 +68,7 @@ namespace ukive {
         ImageAlphaMode alpha_mode;
         ImageDPIType dpi_type;
         bool hdr_enabled;
+        float sdr_white_level; // nit
     };
 
 }

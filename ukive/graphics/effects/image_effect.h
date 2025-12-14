@@ -30,6 +30,20 @@ namespace ukive {
         virtual bool setParameterSize(uint32_t size) = 0;
         virtual void setParameterUpdateHandler(const ParameterUpdateHandler& h) = 0;
         virtual bool updateParameters() = 0;
+
+        virtual bool setInput(const GPtr<GPUTexture>& texture) {
+            clearInputs();
+            return addInput(texture);
+        }
+
+        virtual bool setInputs(std::initializer_list<GPtr<GPUTexture>> textures) {
+            clearInputs();
+            for (auto& a : textures) {
+                if (!addInput(a)) return false;
+            }
+            return true;
+        }
+
     };
 
 }

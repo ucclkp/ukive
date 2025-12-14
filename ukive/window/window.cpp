@@ -734,6 +734,8 @@ namespace ukive {
 
         buffer_ = WindowBuffer::create(this);
         ImageOptions options(dpi, dpi);
+        options.sdr_white_level = display->getSDRWhiteLevel() / 1000.f * 80.f;
+
         if (display->isInHDRMode() && using_hdr_when_available) {
             options.hdr_enabled = true;
             options.pixel_format = ImagePixelFormat::R16G16B16A16_FLOAT;

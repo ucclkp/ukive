@@ -60,7 +60,7 @@ namespace ukive {
 
             if (options.hdr_enabled) {
                 // TODO:
-                float wp_scale = 200.f / D2D1_SCENE_REFERRED_SDR_WHITE_LEVEL;
+                float wp_scale = options.sdr_white_level / D2D1_SCENE_REFERRED_SDR_WHITE_LEVEL;
                 color.r *= wp_scale;
                 color.g *= wp_scale;
                 color.b *= wp_scale;

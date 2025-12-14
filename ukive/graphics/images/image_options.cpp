@@ -26,11 +26,7 @@ namespace {
 namespace ukive {
 
     ImageOptions::ImageOptions(ImagePixelFormat pf, ImageAlphaMode am, bool hdr_enabled)
-        : dpi_x(0), dpi_y(0),
-          pixel_format(pf),
-          alpha_mode(am),
-          dpi_type(ImageDPIType::DEFAULT),
-          hdr_enabled(hdr_enabled) {}
+        : ImageOptions(0, 0, pf, am, hdr_enabled) {}
 
     ImageOptions::ImageOptions(
         float dpi_x, float dpi_y,
@@ -38,7 +34,8 @@ namespace ukive {
         : dpi_x(dpi_x), dpi_y(dpi_y),
           pixel_format(pf), alpha_mode(am),
           dpi_type(ImageDPIType::SPECIFIED),
-          hdr_enabled(hdr_enabled) {}
+          hdr_enabled(hdr_enabled),
+          sdr_white_level(80.f) {}
 
     bool ImageOptions::operator==(const ImageOptions& rhs) const {
         if (pixel_format == rhs.pixel_format &&

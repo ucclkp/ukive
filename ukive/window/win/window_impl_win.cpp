@@ -2583,11 +2583,14 @@ namespace win {
     }
 
     LRESULT WindowImplWin::onDisplayChanged(WPARAM wParam, LPARAM lParam, bool* handled) {
+        *handled = false;
+
         static_cast<DisplayManagerWin*>(
             Application::getDisplayManager())->notifyChanged(hWnd_);
 
-        *handled = false;
         display_ = DisplayWin::fromWindowImpl(this);
+
+        //delegate_->onUpdateContext(Context::HDR_CHANGED);
 
         ::InvalidateRect(hWnd_, nullptr, FALSE);
         ::UpdateWindow(hWnd_);
