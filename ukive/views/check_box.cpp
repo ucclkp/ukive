@@ -31,7 +31,7 @@ namespace ukive {
         anim_.setValueRange(0, 1);
 
         Padding space;
-        space.start(c.dp2pxi(24));
+        space.start(c.dp2pxi(22));
         setSpace(space);
 
         setClickable(true);
@@ -39,12 +39,16 @@ namespace ukive {
     }
 
     void CheckBox::setChecked(bool checked) {
+        setChecked(checked, true);
+    }
+
+    void CheckBox::setChecked(bool checked, bool notify) {
         if (checked == checked_) {
             return;
         }
         checked_ = checked;
 
-        if (listener_) {
+        if (notify && listener_) {
             listener_->onCheckChanged(this, checked);
         }
 

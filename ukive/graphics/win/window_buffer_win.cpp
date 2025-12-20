@@ -183,12 +183,27 @@ namespace win {
         swapchain_.reset();
         auto hwnd = window_->getHandle();
 
+        HRESULT hr;
         DXGI_SWAP_CHAIN_DESC1 desc;
         ZeroMemory(&desc, sizeof(desc));
 
         // https://docs.microsoft.com/en-us/windows/win32/direct3darticles/high-dynamic-range
         if (img_options_.pixel_format == ImagePixelFormat::R16G16B16A16_FLOAT) {
-            desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+            UINT support;
+            hr = gdm->getD3DDevice()->CheckFormatSupport(DXGI_FORMAT_R16G16B16A16_FLOAT, &support);
+            if (SUCCEEDED(hr)) {
+                if (support & D3D11_FORMAT_SUPPORT_RENDER_TARGET) {
+                    desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+                } else {
+                    LOG(Log::WARNING) << "R16G16B16A16_FLOAT format not supported for render target, fallback to B8G8R8A8_UNORM.";
+                    desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+                    img_options_.pixel_format = ImagePixelFormat::B8G8R8A8_UNORM;
+                }
+            } else {
+                LOG(Log::WARNING) << "Failed to check format R16G16B16A16_FLOAT support: " << hr << ", fallback to B8G8R8A8_UNORM.";
+                desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+                img_options_.pixel_format = ImagePixelFormat::B8G8R8A8_UNORM;
+            }
         } else {
             desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
         }
@@ -197,7 +212,6 @@ namespace win {
         desc.SampleDesc.Quality = 0;
         desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
-        HRESULT hr;
         if (!use_composition_) {
             /**
              * 注意：对于同一个窗口，无法从 Flip 模式的交换链切换到 Blt 模式，

@@ -38,7 +38,7 @@ namespace ukive {
         ~ComboBox();
 
         void addItem(const std::u16string_view& title);
-        void addItem(size_t index, const std::u16string_view& title);
+        void addItemAt(size_t index, const std::u16string_view& title);
         bool modifyItem(size_t index, const std::u16string_view& title);
         void removeItem(size_t index);
         void clearItems();
@@ -62,7 +62,7 @@ namespace ukive {
         }
 
         template <typename Ty>
-        void addItem(size_t index, const std::u16string_view& title, const Ty& data) {
+        void addItemAt(size_t index, const std::u16string_view& title, const Ty& data) {
             addItemItl(index, title, std::make_shared<Ty>(data));
         }
 

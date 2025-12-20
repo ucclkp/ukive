@@ -1159,7 +1159,7 @@ namespace ukive {
                 return false;
             }
 
-            bool has_nc_leave_ev = getFrameType() == WINDOW_FRAME_CUSTOM ||
+            bool has_nc_leave_ev = (getFrameType() == WINDOW_FRAME_CUSTOM) ||
                 (getTranslucentType() & TRANS_LAYERED);
 
             if (valid_holder) {

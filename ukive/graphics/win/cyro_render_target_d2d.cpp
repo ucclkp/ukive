@@ -59,12 +59,12 @@ namespace ukive {
                 D2D1_COLOR_SPACE_SRGB, D2D1_COLOR_SPACE_SCRGB, c);
 
             if (options.hdr_enabled) {
-                // TODO:
                 float wp_scale = options.sdr_white_level / D2D1_SCENE_REFERRED_SDR_WHITE_LEVEL;
                 color.r *= wp_scale;
                 color.g *= wp_scale;
                 color.b *= wp_scale;
             }
+            color.a = (std::min)(pow(color.a, 0.8f), 1.f); // 临时处理，补偿 alpha 以模拟伽马空间下的混合结果
             *c = color;
         }
     }
@@ -106,7 +106,7 @@ namespace win {
 
             utl::win::ComPtr<IDWriteRenderingParams> new_params;
             hr = dwrite_factory->CreateCustomRenderingParams(
-                gamma, contrast, ctl, pixel_geo, DWRITE_RENDERING_MODE_GDI_NATURAL, &new_params);
+                gamma, contrast, ctl, pixel_geo, DWRITE_RENDERING_MODE_DEFAULT, &new_params);
             if (SUCCEEDED(hr)) {
                 rt_->SetTextRenderingParams(new_params.get());
             }

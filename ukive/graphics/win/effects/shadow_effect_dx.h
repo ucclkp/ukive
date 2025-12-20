@@ -69,7 +69,8 @@ namespace win {
         };
         struct PConstBuffer {
             utl::math::VectorT<uint32_t, 2> rt_size;
-            uint32_t unused[2];
+            float alpha_mul;
+            uint32_t unused;
         };
 
         struct VertexData {

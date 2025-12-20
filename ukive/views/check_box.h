@@ -22,6 +22,7 @@ namespace ukive {
         CheckBox(Context c, AttrsRef attrs);
 
         void setChecked(bool checked);
+        void setChecked(bool checked, bool notify);
         void setOnCheckListener(OnCheckListener* l);
 
         bool isChecked() const;

@@ -4,7 +4,8 @@ Texture2D<float> kernel_ : register(t2);
 
 cbuffer cbData {
     uint2 rt_size;
-    uint2 unused;
+    float alpha_mul;
+    uint unused;
 };
 
 struct PixelInputType {
@@ -14,14 +15,14 @@ struct PixelInputType {
 float4 main(PixelInputType input) : SV_TARGET {
     uint kw = 0, kh = 0;
     kernel_.GetDimensions(kw, kh);
-    
+
     uint sw = 0, sh = 0;
     bg_img_.GetDimensions(sw, sh);
-    
+
     int radius = kw - 1;
     int x = (int)(input.position.x);
     int y = (int)(input.position.y);
-    
+
     float4 init_color = bg_img_.Load(int3(x - (rt_size.x - sw) / 2, y - (rt_size.y - sh) / 2, 0));
 
     float4 color = img_.Load(int3(x, y, 0)) * kernel_.Load(int3(radius, 0, 0));
@@ -33,6 +34,6 @@ float4 main(PixelInputType input) : SV_TARGET {
     }
 
     color.rgb = 0;
-    color.a *= 0.4f;
+    color.a *= alpha_mul;
     return init_color + color * (1 - init_color.w);
 }

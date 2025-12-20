@@ -1502,7 +1502,7 @@ namespace ukive {
         resetLastInputView();
     }
 
-    bool View::processPointerUp(PointerKeyData& p) {
+    bool View::processPointerUp(PointerKeyData& p, InputEvent* e) {
         if (!click_listener_) {
             return true;
         }
@@ -1552,7 +1552,9 @@ namespace ukive {
         switch (perform_type) {
         case CLK_SINGLE:
             if (p.is_clkable) {
-                performClick(p.key);
+                if (!onClickEvent(p.key, e)) {
+                    performClick(p.key);
+                }
                 if (wptr.expired() || !isAttachedToWindow()) {
                     return false;
                 }
@@ -1560,7 +1562,9 @@ namespace ukive {
             break;
         case CLK_DOUBLE:
             if (p.is_dclkable) {
-                performDoubleClick(p.key);
+                if (!onClickEvent(p.key, e)) {
+                    performDoubleClick(p.key);
+                }
                 if (wptr.expired() || !isAttachedToWindow()) {
                     return false;
                 }
@@ -1568,7 +1572,9 @@ namespace ukive {
             break;
         case CLK_TRIPLE:
             if (p.is_tclkable) {
-                performTripleClick(p.key);
+                if (!onClickEvent(p.key, e)) {
+                    performTripleClick(p.key);
+                }
                 if (wptr.expired() || !isAttachedToWindow()) {
                     return false;
                 }
@@ -1732,7 +1738,7 @@ namespace ukive {
                             should_refresh = bg_element_->setState(Element::STATE_HOVERED);
                         }
 
-                        if (!processPointerUp(pri_pt_data_)) {
+                        if (!processPointerUp(pri_pt_data_, e)) {
                             return consumed;
                         }
                     } else {
@@ -1749,7 +1755,7 @@ namespace ukive {
                 sec_mk_data_.is_pressed = false;
                 if (pressed) {
                     if (isLocalPointerInThisVisible(e)) {
-                        if (!processPointerUp(sec_mk_data_)) {
+                        if (!processPointerUp(sec_mk_data_, e)) {
                             return consumed;
                         }
                     }
@@ -1759,7 +1765,7 @@ namespace ukive {
                 mid_mk_data_.is_pressed = false;
                 if (pressed) {
                     if (isLocalPointerInThisVisible(e)) {
-                        if (!processPointerUp(mid_mk_data_)) {
+                        if (!processPointerUp(mid_mk_data_, e)) {
                             return consumed;
                         }
                     }
@@ -1769,7 +1775,7 @@ namespace ukive {
                 xb1_mk_data_.is_pressed = false;
                 if (pressed) {
                     if (isLocalPointerInThisVisible(e)) {
-                        if (!processPointerUp(xb1_mk_data_)) {
+                        if (!processPointerUp(xb1_mk_data_, e)) {
                             return consumed;
                         }
                     }
@@ -1779,7 +1785,7 @@ namespace ukive {
                 xb2_mk_data_.is_pressed = false;
                 if (pressed) {
                     if (isLocalPointerInThisVisible(e)) {
-                        if (!processPointerUp(xb2_mk_data_)) {
+                        if (!processPointerUp(xb2_mk_data_, e)) {
                             return consumed;
                         }
                     }
@@ -1817,7 +1823,7 @@ namespace ukive {
             }
 
             if (isLocalPointerInThisVisible(e) && pressed) {
-                if (!processPointerUp(pri_pt_data_)) {
+                if (!processPointerUp(pri_pt_data_, e)) {
                     return consumed;
                 }
             }

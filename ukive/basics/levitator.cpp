@@ -53,8 +53,9 @@ namespace ukive {
         if (frame_view_) {
             if (is_showing_) {
                 dismiss();
+            } else {
+                delete frame_view_;
             }
-            delete frame_view_;
         } else {
             if (background_) {
                 delete background_;

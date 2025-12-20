@@ -214,7 +214,6 @@ namespace ukive {
 
         Color text_color_;
         Color sel_bg_color_;
-
         float line_spacing_;
         TextLayout::LineSpacing line_spacing_method_;
 
@@ -222,7 +221,8 @@ namespace ukive {
         bool is_editable_;
         bool is_selectable_;
 
-        int prev_x_, prev_y_;
+        Point prev_m_down_pt_;
+        Point prev_m_sec_up_pt_;
         bool is_plkey_down_;
         bool is_prkey_down_;
         bool is_plkey_down_on_text_;
@@ -231,7 +231,6 @@ namespace ukive {
 
         size_t last_sel_ = 0;
         size_t first_sel_ = 0;
-        int sel_x_pos_ = 0;
 
         Padding space_;
         int vert_offset_ = 0;

@@ -307,6 +307,7 @@ namespace ukive {
             const Rect& new_bounds, const Rect& old_bounds) {}
 
         virtual bool onInputEvent(InputEvent* e);
+        virtual bool onClickEvent(int pointer_key, InputEvent* e) { return false; }
 
         /**
          * 绘制 View 的内容。
@@ -365,7 +366,7 @@ namespace ukive {
 
         void cleanInteracted();
 
-        bool processPointerUp(PointerKeyData& p);
+        bool processPointerUp(PointerKeyData& p, InputEvent* e);
         bool processInputEvent(InputEvent* e);
 
         long long id_;

@@ -87,7 +87,7 @@ namespace ukive {
         addItemItl(title, {});
     }
 
-    void ComboBox::addItem(size_t index, const std::u16string_view& title) {
+    void ComboBox::addItemAt(size_t index, const std::u16string_view& title) {
         addItemItl(index, title, {});
     }
 

@@ -13,6 +13,7 @@
 #include <tchar.h>
 #include <tpcshrd.h>
 #include <VersionHelpers.h>
+#include <Tpcshrd.h>
 
 #include "utils/log.h"
 #include "utils/message/win/message_pump_ui_win.h"
@@ -1694,7 +1695,7 @@ namespace win {
         {
             return 0;
         }
-        
+
         switch (uMsg) {
         case WM_NCLBUTTONDOWN:
         {
@@ -1730,7 +1731,7 @@ namespace win {
                  * 在接收到 WM_MOUSEMOVE 之后尝试取消对非客户区的鼠标追踪无效，可能已经来不及了。
                  * 这里记录在非客户区按下的状态，在 WM_LBUTTONUP 中、反激活回调和焦点消失回调中清除。并在
                  * WM_NCMOUSELEAVE 发生时根据这个状态过滤。
-                 * 
+                 *
                  * 如果这里往后继续调用 DefWindowProc()，则后续无法收到 WM_NCLBUTTONUP，且实际的非客户区按键区域会变成
                  * Windows 经典样式的区域。
                  */
@@ -3177,6 +3178,16 @@ namespace win {
         case WM_ENTERIDLE: return "WM_ENTERIDLE";
         case WM_ENTERSIZEMOVE: return "WM_ENTERSIZEMOVE";
         case WM_EXITSIZEMOVE: return "WM_EXITSIZEMOVE";
+        case WM_NCPOINTERUPDATE: return "WM_NCPOINTERUPDATE";
+        case WM_NCPOINTERDOWN: return "WM_NCPOINTERDOWN";
+        case WM_NCPOINTERUP: return "WM_NCPOINTERUP";
+        case WM_POINTERENTER: return "WM_POINTERENTER";
+        case WM_POINTERLEAVE: return "WM_POINTERLEAVE";
+        case WM_TOUCH: return "WM_TOUCH";
+        case WM_POINTERUPDATE: return "WM_POINTERUPDATE";
+        case WM_POINTERDOWN: return "WM_POINTERDOWN";
+        case WM_POINTERUP: return "WM_POINTERUP";
+        case WM_TABLET_QUERYSYSTEMGESTURESTATUS: return "WM_TABLET_QUERYSYSTEMGESTURESTATUS";
         default:
             return std::to_string(uMsg);
         }

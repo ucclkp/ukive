@@ -370,6 +370,7 @@ namespace win {
                 pconst_buffer_.get(), GPUContext::LOCK_WRITE, nullptr);
             if (data) {
                 static_cast<PConstBuffer*>(data)->rt_size = { (uint32_t)width_, (uint32_t)height_ };
+                static_cast<PConstBuffer*>(data)->alpha_mul = (format_ == GPUDataFormat::R16G16B16A16_FLOAT) ? 0.8f : 0.4f;
                 context->unlock(pconst_buffer_.get());
             }
             context->setPConstantBuffers(0, 1, &pconst_buffer_);

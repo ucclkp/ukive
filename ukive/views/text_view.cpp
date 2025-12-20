@@ -127,7 +127,9 @@ namespace ukive {
           hori_alignment_(TextLayout::Alignment::START),
           vert_alignment_(TextLayout::Alignment::START),
           font_weight_(TextLayout::FontWeight::NORMAL),
-          font_style_(TextLayout::FontStyle::NORMAL)
+          font_style_(TextLayout::FontStyle::NORMAL),
+          prev_m_down_pt_(Point::Z()),
+          prev_m_sec_up_pt_(Point::Z())
     {
         base_text_ = new Editable(
             utl::u8to16(
@@ -916,7 +918,7 @@ namespace ukive {
                     e->getX() - getPadding().start() - space_.start() + getScrollX(),
                     e->getY() - getPadding().top() - space_.top() + getScrollY());
 
-                if (is_selectable_ && (is_down_on_text || is_editable_)) {
+                if (is_selectable_ || is_editable_) {
                     setCursor(Cursor::IBEAM);
                 }
 
@@ -958,18 +960,13 @@ namespace ukive {
                 is_plkey_down_ = false;
                 is_plkey_down_on_text_ = false;
 
-                if (is_selectable_
-                    && (isTextAtPoint(
-                        e->getX() - getPadding().start() - space_.start() + getScrollX(),
-                        e->getY() - getPadding().top() - space_.top() + getScrollY()) || is_editable_))
-                {
+                if (is_selectable_ || is_editable_) {
                     setCursor(Cursor::IBEAM);
                 } else {
                     setCursor(Cursor::ARROW);
                 }
             } else if (e->getMouseKey() == InputEvent::MK_SECONDARY) {
-                prev_x_ = e->getX();
-                prev_y_ = e->getY();
+                prev_m_sec_up_pt_ = e->getPos();
                 is_prkey_down_ = false;
 
                 if (is_editable_ || is_selectable_) {
@@ -1017,11 +1014,7 @@ namespace ukive {
 
                 base_text_->setSelection(start, end, Editable::Reason::USER_INPUT);
             } else {
-                if (is_selectable_
-                    && (isTextAtPoint(
-                        e->getX() - getPadding().start() - space_.start() + getScrollX(),
-                        e->getY() - getPadding().top() - space_.top() + getScrollY()) || is_editable_))
-                {
+                if (is_selectable_ || is_editable_) {
                     setCursor(Cursor::IBEAM);
                 } else {
                     setCursor(Cursor::ARROW);
@@ -1849,8 +1842,8 @@ namespace ukive {
         bounds.pos({ 0, 0 });
 
         *v = this;
-        *x = bounds.x() + prev_x_;
-        *y = bounds.y() + prev_y_;
+        *x = bounds.x() + prev_m_sec_up_pt_.x();
+        *y = bounds.y() + prev_m_sec_up_pt_.y();
     }
 
 }

@@ -45,9 +45,9 @@ namespace ukive {
         bg_->setRadius(getContext().dp2px(2.f));
 
         setPadding(
-            getContext().dp2pxi(24),
+            getContext().dp2pxi(18),
             getContext().dp2pxi(6),
-            getContext().dp2pxi(24),
+            getContext().dp2pxi(18),
             getContext().dp2pxi(6));
         setBackground(bg_);
         setShadowRadius(getContext().dp2pxi(2.0f));
