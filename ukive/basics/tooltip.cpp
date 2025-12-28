@@ -98,4 +98,8 @@ namespace ukive {
         }
     }
 
+    bool Tooltip::isShowing() const {
+        return levitator_.isShowing();
+    }
+
 }

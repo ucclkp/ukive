@@ -2151,9 +2151,15 @@ namespace ukive {
 
         case InputEvent::EVM_MOVE:
             if (is_tooltip_enabled_ && !is_tracking_hover_) {
-                if (window_) {
-                    window_->waitForHover(true);
-                    is_tracking_hover_ = true;
+                auto w = getWindow();
+                if (w && !tooltip_ && !tooltip_text_.empty()) {
+                    if (w->isTooltipShowing()) {
+                            tooltip_ = w->startTooltip(
+                                e->getRawX(), e->getRawY(), tooltip_text_);
+                    } else {
+                        w->waitForHover(true);
+                        is_tracking_hover_ = true;
+                    }
                 }
             }
             break;

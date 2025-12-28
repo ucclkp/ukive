@@ -704,6 +704,10 @@ namespace ukive {
         return tooltip_.get();
     }
 
+    bool Window::isTooltipShowing() const {
+        return tooltip_ && tooltip_->isShowing();
+    }
+
     void Window::startHaul(HaulSource* src) {
         haul_src_ = src;
         if (src) {

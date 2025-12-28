@@ -29,6 +29,8 @@ namespace ukive {
         void setTextSize(int size);
         void setTimeout(utl::TimeUtils::nsp timeout);
 
+        bool isShowing() const;
+
     private:
         Timer timer_;
         TextView* tv_ = nullptr;

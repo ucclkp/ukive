@@ -214,6 +214,7 @@ namespace ukive {
         Tooltip* startTooltip(
             int x, int y,
             const std::u16string_view& text);
+        bool isTooltipShowing() const;
 
         void startHaul(HaulSource* src);
         void stopHaul(HaulSource* src);
