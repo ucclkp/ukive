@@ -315,12 +315,16 @@ namespace win {
         cache_.reset();
 
         if (texture) {
-            auto ret = texture->createSRV();
-            if (ret.raw_code() != 0) {
-                LOG(Log::WARNING) << "Failed to create SRV: " << ret.raw_code();
-                return false;
+            auto srv = texture->srv();
+            if (!srv) {
+                auto ret = texture->createSRV();
+                if (ret.raw_code() != 0) {
+                    LOG(Log::WARNING) << "Failed to create SRV: " << ret.raw_code();
+                    return false;
+                }
+                srv = texture->srv();
             }
-            org_srvs_.push_back(texture->srv());
+            org_srvs_.push_back(srv);
         } else {
             org_srvs_.push_back({});
         }

@@ -63,6 +63,7 @@ namespace ukive {
             uint32_t width, uint32_t height,
             GPUDataFormat format);
 
+        void adoptSRV(const GPtr<GPUShaderResource>& res);
         GPtr<GPUShaderResource> srv() const;
         GPtr<GPUOutputResource> uav() const;
 

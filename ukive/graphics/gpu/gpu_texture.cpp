@@ -75,6 +75,10 @@ namespace ukive {
         shader_res_ = res;
     }
 
+    void GPUTexture::adoptSRV(const GPtr<GPUShaderResource>& res) {
+        setSRV(res);
+    }
+
     GPtr<GPUShaderResource> GPUTexture::srv() const {
         return shader_res_;
     }
